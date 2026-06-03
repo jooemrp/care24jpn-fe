@@ -44,10 +44,10 @@ export default function Navbar() {
           <Image
             src="/images/logo.png"
             alt={brand.logoAlt.en}
-            width={320}
-            height={120}
+            width={427}
+            height={160}
             priority
-            className="h-auto w-30"
+            className="h-auto w-36"
           />
         </Link>
 
