@@ -1,7 +1,7 @@
 "use client";
 
 import type { Bilingual } from "@/constants/copy";
-import { useLang, t } from "@/context/LanguageContext";
+import { useLangStore, t } from "@/features/lang/store";
 
 export type Step = {
   title: Bilingual;
@@ -13,7 +13,7 @@ type StepFlowProps = {
 };
 
 export default function StepFlow({ steps }: StepFlowProps) {
-  const { lang } = useLang();
+  const { lang } = useLangStore();
 
   return (
     <ol className="relative space-y-10 border-l border-border pl-8">

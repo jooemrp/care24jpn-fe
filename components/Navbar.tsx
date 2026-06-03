@@ -5,23 +5,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { brand, nav, cta } from "@/constants/copy";
-import { useLang, t } from "@/context/LanguageContext";
-import { useAuth } from "@/context/AuthContext";
+import { useLangStore, t } from "@/features/lang/store";
 
 function LangToggle() {
-  const { lang, toggle } = useLang();
+  const { lang, toggle } = useLangStore();
   return (
     <button
       type="button"
       onClick={toggle}
       className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary"
-      aria-label={lang === "jp" ? "Switch to English" : "日本語に切り替える"}
+      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
     >
       <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>
         EN
       </span>
       <span className="text-border">/</span>
-      <span className={lang === "jp" ? "font-bold text-primary" : "text-muted"}>
+      <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>
         JP
       </span>
     </button>
@@ -30,8 +29,7 @@ function LangToggle() {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { lang } = useLang();
-  const { logout } = useAuth();
+  const { lang } = useLangStore();
   const [open, setOpen] = useState(false);
 
   return (
@@ -81,13 +79,6 @@ export default function Navbar() {
           >
             {t(cta.secondary, lang)}
           </Link>
-          <button
-            type="button"
-            onClick={logout}
-            className="text-xs text-muted hover:text-accent transition"
-          >
-            {lang === "jp" ? "ログアウト" : "Sign out"}
-          </button>
         </div>
 
         {/* Mobile: lang toggle + hamburger */}
@@ -136,15 +127,6 @@ export default function Navbar() {
               >
                 {t(cta.secondary, lang)}
               </Link>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={logout}
-                className="text-xs text-muted hover:text-accent transition"
-              >
-                {lang === "jp" ? "ログアウト" : "Sign out"}
-              </button>
             </li>
           </ul>
         </div>

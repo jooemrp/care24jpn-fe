@@ -67,7 +67,7 @@ export default function TabPanel({ tabs }: TabPanelProps) {
               }`}
             >
               <span className="block" lang="ja">
-                {tab.label.jp}
+                {tab.label.ja}
               </span>
               <span className="block text-[0.65rem] uppercase tracking-widest text-muted" lang="en">
                 {tab.label.en}
