@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "../styles/globals.css";
-import AppShell from "@/components/AppShell";
-import { LanguageProvider } from "@/context/LanguageContext";
-import { AuthProvider } from "@/context/AuthContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Providers } from "@/components/providers";
 import { brand } from "@/constants/copy";
 
 const notoSansJP = Noto_Sans_JP({
@@ -35,11 +35,11 @@ export default function RootLayout({
       className={`${notoSansJP.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
-        <AuthProvider>
-          <LanguageProvider>
-            <AppShell>{children}</AppShell>
-          </LanguageProvider>
-        </AuthProvider>
+        <Providers>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

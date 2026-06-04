@@ -3,7 +3,7 @@ import type { Bilingual } from "@/constants/copy";
 /**
  * Renders JP primary + EN secondary label — the site-wide bilingual pattern.
  * Used when both languages should always show (headings, card labels, etc.)
- * For single-language switching, use `t()` from LanguageContext directly.
+ * For single-language switching, use `t()` from `@/features/lang/store`.
  */
 type BilingualTextProps = {
   text: Bilingual;
@@ -28,7 +28,7 @@ export default function BilingualText({
         className={`block ${multiline ? "whitespace-pre-line" : ""} ${jpClassName}`}
         lang="ja"
       >
-        {text.jp}
+        {text.ja}
       </span>
       <span
         className={`mt-1 block text-xs uppercase tracking-widest text-muted ${enClassName}`}

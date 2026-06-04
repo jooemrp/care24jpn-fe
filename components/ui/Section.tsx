@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { Bilingual } from "@/constants/copy";
-import { useLang, t } from "@/context/LanguageContext";
+import { useLangStore, t } from "@/features/lang/store";
 
 type SectionProps = {
   heading?: Bilingual;
@@ -12,7 +12,7 @@ type SectionProps = {
 };
 
 export default function Section({ heading, children, surface = false, className = "" }: SectionProps) {
-  const { lang } = useLang();
+  const { lang } = useLangStore();
 
   return (
     <section className={`${surface ? "bg-surface" : ""} py-12 md:py-20 ${className}`}>
