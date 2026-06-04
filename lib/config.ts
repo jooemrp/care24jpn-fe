@@ -1,3 +1,2 @@
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-export const CMS_API_KEY = process.env.NEXT_PUBLIC_CMS_API_KEY || "";
+export const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+export const CMS_API_KEY = process.env.CMS_API_KEY || "";
