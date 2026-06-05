@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "../styles/globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import AppShell from "@/components/AppShell";
 import { Providers } from "@/components/providers";
 import { brand } from "@/constants/copy";
 
@@ -36,9 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

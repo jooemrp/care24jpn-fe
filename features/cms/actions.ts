@@ -1,4 +1,6 @@
-import { API_URL, CMS_API_KEY } from "@/lib/config";
+"use server";
+
+import { bff } from "@/lib/bff";
 import type { ApiResult } from "@/lib/api";
 import type { Bilingual } from "@/constants/copy";
 import type {
@@ -31,62 +33,6 @@ export type {
   BilingualPageData,
   CMSApiResponse,
 } from "./types";
-
-const API_PREFIX = "/api/v1/cms/public";
-
-async function request<T>(
-  path: string,
-  lang?: string
-): Promise<ApiResult<T>> {
-  const searchParams = lang ? `?lang=${lang}` : "";
-  const url = `${API_URL}${API_PREFIX}${path}${searchParams}`;
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-Key": CMS_API_KEY,
-      },
-      next: { revalidate: 300 },
-    });
-
-    if (!response.ok) {
-      let errorBody: CMSApiResponse<unknown> | null = null;
-      try {
-        errorBody = await response.json();
-      } catch {}
-      return {
-        success: false,
-        error: {
-          code: errorBody?.code || `HTTP_${response.status}`,
-          message: errorBody?.message || response.statusText,
-          traceId: errorBody?.traceId,
-        },
-      };
-    }
-
-    const body = (await response.json()) as CMSApiResponse<T>;
-    if (body.data !== undefined) {
-      return { success: true, data: body.data };
-    }
-    return {
-      success: false,
-      error: {
-        code: "INVALID_RESPONSE",
-        message: "Unexpected response format from server",
-      },
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: {
-        code: "NETWORK_ERROR",
-        message:
-          error instanceof Error ? error.message : "Network request failed",
-      },
-    };
-  }
-}
 
 function mergeBilingual<T extends Record<string, string>>(
   ja: T | undefined | null,
@@ -220,8 +166,14 @@ export async function getBilingualPage(
   slug: string
 ): Promise<ApiResult<BilingualPageData>> {
   const [jaResult, enResult] = await Promise.all([
-    request<PublicPageData>(`/${slug}`, "ja"),
-    request<PublicPageData>(`/${slug}`, "en"),
+    bff.get<PublicPageData>(`/${slug}`, "ja", {
+      feature: "cms",
+      action: "page-read",
+    }),
+    bff.get<PublicPageData>(`/${slug}`, "en", {
+      feature: "cms",
+      action: "page-read",
+    }),
   ]);
 
   if (!jaResult.success && !enResult.success) {
