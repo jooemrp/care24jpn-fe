@@ -5,7 +5,7 @@ import ServiceCard from "@/components/ui/ServiceCard";
 import { useCase } from "@/constants/copy";
 import { useLang, t } from "@/context/LanguageContext";
 
-export default function UseCasePage() {
+export default function ServiceDetailsPage() {
   const { lang } = useLang();
 
   return (
@@ -24,7 +24,6 @@ export default function UseCasePage() {
               title={item.title}
               body={item.body}
               image={{ src: `/images/use-case-${i + 1}.jpg`, alt: item.imageAlt }}
-              href={`/use-case/${item.slug}`}
               index={i}
             />
           ))}

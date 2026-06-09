@@ -30,8 +30,8 @@ export const brand = {
 export const nav: { href: string; label: Bilingual }[] = [
   { href: "/", label: { ja: "ホーム", en: "Home" } },
   { href: "/service-details", label: { ja: "サービス内容", en: "Service Details" } },
-  { href: "/pricing", label: { ja: "料金", en: "Pricing" } },
-  { href: "/fees", label: { ja: "料金", en: "Fees" } },
+  { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
+  { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },
 ];
 
 /** Shared call-to-action buttons reused across pages. */
@@ -581,8 +581,8 @@ export const footer = {
         { href: "/", label: { ja: "ホーム", en: "Home" } },
         { href: "/service-details", label: { ja: "サービス内容", en: "Service Details" } },
         { href: "/service-flow", label: { ja: "ご利用の流れ", en: "Service flow" } },
-        { href: "/pricing", label: { ja: "料金", en: "Pricing" } },
-        { href: "/fees", label: { ja: "料金", en: "Fees" } },
+        { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
+        { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },
       ],
     },
   ],

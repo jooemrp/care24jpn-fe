@@ -6,7 +6,7 @@ import { staffPricing as staffCopy } from "@/constants/copy";
 import { staffRates, formatYen, nightSurchargeMultiplier } from "@/constants/pricing";
 import { useLang, t } from "@/context/LanguageContext";
 
-export default function StaffPricingPage() {
+export default function FeesPage() {
   const { lang } = useLang();
 
   const tabs: Tab[] = staffRates.map((rate) => ({
