@@ -12,11 +12,11 @@ function LangToggle() {
       type="button"
       onClick={toggle}
       className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary"
-      aria-label={lang === "jp" ? "Switch to English" : "日本語に切り替える"}
+      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
     >
       <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>EN</span>
       <span className="text-border">/</span>
-      <span className={lang === "jp" ? "font-bold text-primary" : "text-muted"}>JP</span>
+      <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>JP</span>
     </button>
   );
 }
@@ -97,7 +97,7 @@ export default function Footer() {
 
       <div className="border-t border-border">
         <p className="max-w-5xl mx-auto px-6 py-6 text-xs text-muted">
-          {footer.legal.jp}
+          {footer.legal.ja}
         </p>
       </div>
     </footer>

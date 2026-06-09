@@ -24,7 +24,7 @@ export default function StaffPricingPage() {
             {formatYen(rate.hourlyRate)}
           </span>
           <span className="text-xs uppercase tracking-widest text-muted">
-            {lang === "jp" ? "1時間あたり" : "per hour"}
+            {lang === "ja" ? "1時間あたり" : "per hour"}
           </span>
         </div>
 
@@ -35,12 +35,12 @@ export default function StaffPricingPage() {
         <dl className="mt-6 border-t border-border pt-6">
           <div className="flex items-baseline justify-between gap-4">
             <dt className="text-sm text-body">
-              {lang === "jp" ? "深夜・早朝料金（22:00〜6:00）" : "Night / early-morning rate (22:00–6:00)"}
+              {lang === "ja" ? "深夜・早朝料金（22:00〜6:00）" : "Night / early-morning rate (22:00–6:00)"}
             </dt>
             <dd className="text-sm font-medium text-heading">
               {formatYen(Math.round(rate.hourlyRate * nightSurchargeMultiplier))}
               <span className="ml-2 text-xs text-muted">
-                {lang === "jp" ? "/ 時間" : "per hour"}
+                {lang === "ja" ? "/ 時間" : "per hour"}
               </span>
             </dd>
           </div>

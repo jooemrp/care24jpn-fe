@@ -31,7 +31,7 @@ export default function UseCaseDetailPage({ params }: Props) {
               href="/use-case"
               className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-muted hover:text-primary transition"
             >
-              ← {lang === "jp" ? "ご利用シーン一覧" : "All use cases"}
+              ← {lang === "ja" ? "ご利用シーン一覧" : "All use cases"}
             </Link>
             <h1 className="text-3xl md:text-4xl font-bold text-heading">
               {t(item.title, lang)}
@@ -56,7 +56,7 @@ export default function UseCaseDetailPage({ params }: Props) {
 
       {/* Highlights */}
       <Section
-        heading={{ jp: "このサービスの特徴", en: "Key highlights" }}
+        heading={{ ja: "このサービスの特徴", en: "Key highlights" }}
         surface
       >
         <ul className="grid gap-4 sm:grid-cols-2">
@@ -77,10 +77,10 @@ export default function UseCaseDetailPage({ params }: Props) {
       <Section>
         <div className="rounded-2xl bg-primary-light px-6 py-10 text-center animate-fade-up">
           <h2 className="text-2xl font-bold text-heading">
-            {lang === "jp" ? "このサービスについて相談する" : "Talk to us about this service"}
+            {lang === "ja" ? "このサービスについて相談する" : "Talk to us about this service"}
           </h2>
           <p className="mt-3 text-sm text-body max-w-xl mx-auto">
-            {lang === "jp"
+            {lang === "ja"
               ? "専門スタッフが丁寧にお話を伺い、最適なプランをご提案します。まずはお気軽にご連絡ください。"
               : "Our team will listen carefully and propose a plan tailored to your situation. No obligation — just a conversation."}
           </p>

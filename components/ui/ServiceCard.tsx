@@ -38,7 +38,7 @@ export default function ServiceCard({ title, body, image, href, index = 0 }: Ser
         <p className="text-sm leading-relaxed text-body">{t(body, lang)}</p>
         {href && (
           <p className="pt-1 text-xs font-medium text-primary">
-            {lang === "jp" ? "詳しく見る →" : "Learn more →"}
+            {lang === "ja" ? "詳しく見る →" : "Learn more →"}
           </p>
         )}
       </div>

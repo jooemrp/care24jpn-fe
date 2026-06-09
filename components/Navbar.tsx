@@ -15,13 +15,13 @@ function LangToggle() {
       type="button"
       onClick={toggle}
       className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary"
-      aria-label={lang === "jp" ? "Switch to English" : "日本語に切り替える"}
+      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
     >
       <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>
         EN
       </span>
       <span className="text-border">/</span>
-      <span className={lang === "jp" ? "font-bold text-primary" : "text-muted"}>
+      <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>
         JP
       </span>
     </button>
@@ -86,7 +86,7 @@ export default function Navbar() {
             onClick={logout}
             className="text-xs text-muted hover:text-accent transition"
           >
-            {lang === "jp" ? "ログアウト" : "Sign out"}
+            {lang === "ja" ? "ログアウト" : "Sign out"}
           </button>
         </div>
 
@@ -143,7 +143,7 @@ export default function Navbar() {
                 onClick={logout}
                 className="text-xs text-muted hover:text-accent transition"
               >
-                {lang === "jp" ? "ログアウト" : "Sign out"}
+                {lang === "ja" ? "ログアウト" : "Sign out"}
               </button>
             </li>
           </ul>

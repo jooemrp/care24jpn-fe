@@ -28,7 +28,7 @@ export default function BilingualText({
         className={`block ${multiline ? "whitespace-pre-line" : ""} ${jpClassName}`}
         lang="ja"
       >
-        {text.jp}
+        {text.ja}
       </span>
       <span
         className={`mt-1 block text-xs uppercase tracking-widest text-muted ${enClassName}`}

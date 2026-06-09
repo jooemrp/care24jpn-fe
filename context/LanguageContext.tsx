@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type Lang = "jp" | "en";
+type Lang = "ja" | "en";
 
 type LanguageContextValue = {
   lang: Lang;
@@ -10,13 +10,13 @@ type LanguageContextValue = {
 };
 
 const LanguageContext = createContext<LanguageContextValue>({
-  lang: "jp",
+  lang: "ja",
   toggle: () => {},
 });
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("jp");
-  const toggle = () => setLang((l) => (l === "jp" ? "en" : "jp"));
+  const [lang, setLang] = useState<Lang>("ja");
+  const toggle = () => setLang((l) => (l === "ja" ? "en" : "ja"));
   return (
     <LanguageContext.Provider value={{ lang, toggle }}>
       {children}
@@ -29,6 +29,6 @@ export function useLang() {
 }
 
 /** Pick the correct string for the active language. */
-export function t(text: { jp: string; en: string }, lang: Lang): string {
+export function t(text: { ja: string; en: string }, lang: Lang): string {
   return text[lang];
 }

@@ -28,7 +28,7 @@ export default function PricingTable({ plans, note }: PricingTableProps) {
           >
             {plan.featured && (
               <span className="mb-3 inline-flex w-fit rounded-full bg-accent-light px-3 py-1 text-xs font-medium text-accent">
-                {lang === "jp" ? "おすすめ" : "Recommended"}
+                {lang === "ja" ? "おすすめ" : "Recommended"}
               </span>
             )}
 
