@@ -181,17 +181,198 @@ export const home = {
           { ja: "窓拭き", en: "Window cleaning" } satisfies Bilingual,
         ],
       },
+      {
+        title: { ja: "病院・施設内の介護", en: "Hospital and facility caregiving" } satisfies Bilingual,
+        imageAlt: {
+          ja: "施設で車椅子の高齢男性に寄り添う介護スタッフ",
+          en: "A caregiver assisting an elderly man in a wheelchair at a facility",
+        } satisfies Bilingual,
+        items: [
+          { ja: "日中の居室介護支援", en: "Daytime in-room care support" } satisfies Bilingual,
+          { ja: "施設内外の移動介助", en: "Mobility assistance in and out of the facility" } satisfies Bilingual,
+          { ja: "夜間の見守り", en: "Overnight supervision" } satisfies Bilingual,
+          { ja: "話し相手", en: "Companionship" } satisfies Bilingual,
+          { ja: "入浴サポート", en: "Bathing support" } satisfies Bilingual,
+          { ja: "居室のお掃除", en: "Room cleaning" } satisfies Bilingual,
+          { ja: "買い物代行", en: "Shopping on your behalf" } satisfies Bilingual,
+        ],
+      },
+      {
+        title: { ja: "通院・外出の付き添い", en: "Hospital-visit and outing accompaniment" } satisfies Bilingual,
+        imageAlt: {
+          ja: "車椅子の高齢女性の外出に付き添う介護スタッフ",
+          en: "A caregiver accompanying an elderly woman in a wheelchair on an outing",
+        } satisfies Bilingual,
+        items: [
+          { ja: "通院の行き帰りの介助", en: "Assistance to and from medical appointments" } satisfies Bilingual,
+          { ja: "診察内容の聞き取り", en: "Noting down consultation details" } satisfies Bilingual,
+          { ja: "薬の受け取り", en: "Picking up medication" } satisfies Bilingual,
+          { ja: "お散歩", en: "Walks" } satisfies Bilingual,
+          { ja: "イベントへの出席", en: "Attending events" } satisfies Bilingual,
+          { ja: "買い物", en: "Shopping" } satisfies Bilingual,
+        ],
+      },
     ],
   },
 
-  closing: {
-    heading: {
-      ja: "まずは、お話を聞かせてください。",
-      en: "Let's talk about what you need",
+  nursingCourse: {
+    leadIn: {
+      ja: "医療行為が必要な方に対しては、\n看護師の手配が可能です",
+      en: "For those who require medical care, we can arrange a registered nurse.",
     } satisfies Bilingual,
-    body: {
-      ja: "ご相談は無料です。専門スタッフが丁寧にお伺いし、最適なプランをご提案します。",
-      en: "Consultations are free. We'll listen carefully and propose the right plan.",
+    badge: { ja: "看護コース", en: "Nursing course" } satisfies Bilingual,
+    price: {
+      label: { ja: "日中基本料金", en: "Daytime base rate" } satisfies Bilingual,
+      hours: { ja: "（9:00〜18:00）", en: "(9:00–18:00)" } satisfies Bilingual,
+      amount: { ja: "5,000円", en: "¥5,000" } satisfies Bilingual,
+      unit: { ja: "/時間", en: "/hour" } satisfies Bilingual,
+      taxNote: { ja: "税抜", en: "excl. tax" } satisfies Bilingual,
+      taxIncluded: { ja: "税込価格 5,500円", en: "Tax included ¥5,500" } satisfies Bilingual,
+    },
+    note: {
+      ja: "※詳しくは料金表をご覧ください。",
+      en: "*Please see the price list for details.",
+    } satisfies Bilingual,
+    panel: {
+      heading: {
+        ja: "介護コースの内容に加えて\n医療行為に対応",
+        en: "In addition to the caregiving course, medical care is provided.",
+      } satisfies Bilingual,
+      items: [
+        { ja: "バイタル測定・健康状態の管理", en: "Vital checks and health monitoring" } satisfies Bilingual,
+        { ja: "医療処置（たん吸引や経管栄養）", en: "Medical procedures (suctioning, tube feeding)" } satisfies Bilingual,
+        { ja: "お薬の管理・相談", en: "Medication management and consultation" } satisfies Bilingual,
+        { ja: "療養生活の相談・支援", en: "Recuperation guidance and support" } satisfies Bilingual,
+        { ja: "終末期ケア・緩和ケア", en: "End-of-life and palliative care" } satisfies Bilingual,
+        { ja: "医療機関との連携", en: "Coordination with medical institutions" } satisfies Bilingual,
+      ],
+    },
+  },
+
+  examples: {
+    leadIn: {
+      ja: "お客様に合わせたプランニングが可能",
+      en: "Planning tailored to each customer",
+    } satisfies Bilingual,
+    heading: {
+      ja: "ご利用事例",
+      en: "Examples of use",
+    } satisfies Bilingual,
+    timelines: [
+      {
+        title: { ja: "介護コースの一日", en: "A day on the caregiving course" } satisfies Bilingual,
+        steps: [
+          {
+            time: "10:00〜",
+            icon: "care",
+            label: { ja: "身のまわりの\nお世話・家事", en: "Personal care\nand housework" } satisfies Bilingual,
+          },
+          {
+            time: "12:30〜",
+            icon: "medication",
+            label: { ja: "お食事・お薬の\nご用意", en: "Meal and\nmedication prep" } satisfies Bilingual,
+          },
+          {
+            time: "13:30〜",
+            icon: "outing",
+            label: { ja: "散歩・お買い物", en: "Walks and shopping" } satisfies Bilingual,
+          },
+        ],
+      },
+      {
+        title: { ja: "看護コースの一日", en: "A day on the nursing course" } satisfies Bilingual,
+        steps: [
+          {
+            time: "10:00〜",
+            icon: "outing",
+            label: { ja: "通院サポート\n（診察のお付き添い）", en: "Hospital-visit support\n(accompanying consultations)" } satisfies Bilingual,
+          },
+          {
+            time: "12:00〜",
+            icon: "medication",
+            label: { ja: "薬の管理", en: "Medication management" } satisfies Bilingual,
+          },
+          {
+            time: "13:00〜",
+            icon: "injection",
+            label: { ja: "インシュリン注射\n食事介助", en: "Insulin injection\nand meal assistance" } satisfies Bilingual,
+          },
+          {
+            time: "15:00〜",
+            icon: "rehab",
+            label: { ja: "散歩\nリハビリテーション", en: "Walks and\nrehabilitation" } satisfies Bilingual,
+          },
+        ],
+      },
+    ],
+  },
+
+  flow: {
+    heading: { ja: "ご利用の流れ", en: "How it works" } satisfies Bilingual,
+    steps: [
+      {
+        number: "01",
+        icon: "contact",
+        title: { ja: "お問い合わせ", en: "Inquiry" } satisfies Bilingual,
+        body: {
+          ja: "お電話やWEBからまずはお気軽にお問い合わせください。\nお客様のご質問・ご要望に丁寧にお答えします。",
+          en: "Please feel free to contact us by phone or through our website. We will carefully answer your questions and requests.",
+        } satisfies Bilingual,
+        hasCta: true,
+      },
+      {
+        number: "02",
+        icon: "register",
+        title: { ja: "ご登録", en: "Register" } satisfies Bilingual,
+        body: {
+          ja: "お客様のご要望やお体の状況をご入力いただき、最適なスタッフの選定を行います。",
+          en: "Please enter your requests and physical condition, and we will select the most suitable staff member for you.",
+        } satisfies Bilingual,
+      },
+      {
+        number: "03",
+        icon: "confirm",
+        title: { ja: "ご予約の確定", en: "Reservation Confirmation" } satisfies Bilingual,
+        body: {
+          ja: "ご予約が確定しましたら、メール・お電話にてご連絡いたします。\n事前に指定の方法でご入金をお願いします。",
+          en: "Once your reservation is confirmed, we will contact you by email or phone. Please make your payment using the method specified in advance.",
+        } satisfies Bilingual,
+      },
+      {
+        number: "04",
+        icon: "start",
+        title: { ja: "サービス開始", en: "Service Launch" } satisfies Bilingual,
+        body: {
+          ja: "ご予約の日時にスタッフがご自宅へお伺いします。",
+          en: "A staff member will visit your home at the scheduled time.",
+        } satisfies Bilingual,
+      },
+      {
+        number: "05",
+        icon: "report",
+        title: { ja: "終了ご報告", en: "Completion Report" } satisfies Bilingual,
+        body: {
+          ja: "サービスが終了次第、スタッフよりサービス内容のご報告をお送りしますのでご感想などご入力ください。\n問題がなければ以上で終了となります。",
+          en: "Once the service has ended, our staff will send you a report detailing the service, so please feel free to provide any feedback you may have. If there are no problems, this concludes the process.",
+        } satisfies Bilingual,
+      },
+    ],
+  },
+
+  contact: {
+    leadIn: { ja: "ご相談は無料です", en: "Consultations are free of charge." } satisfies Bilingual,
+    heading: {
+      ja: "お気軽にお問い合わせください",
+      en: "Please feel free to contact us.",
+    } satisfies Bilingual,
+    phone: "0120-00-0000",
+    hours: {
+      ja: "【受付時間】平日 9:00〜18:00",
+      en: "[Reception Hours] Weekdays 9:00 AM – 6:00 PM",
+    } satisfies Bilingual,
+    isms: {
+      ja: "メディカルインフォグラフィックス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+      en: "Medical Infographics Co., Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
     } satisfies Bilingual,
   },
 };
@@ -395,12 +576,13 @@ export const footer = {
   } satisfies Bilingual,
   columns: [
     {
-      title: { ja: "サービス", en: "Service" } satisfies Bilingual,
+      title: { ja: "メニュー", en: "Menu" } satisfies Bilingual,
       links: [
-        { href: "/use-case", label: { ja: "ご利用シーン", en: "Use cases" } },
+        { href: "/", label: { ja: "ホーム", en: "Home" } },
+        { href: "/service-details", label: { ja: "サービス内容", en: "Service Details" } },
         { href: "/service-flow", label: { ja: "ご利用の流れ", en: "Service flow" } },
         { href: "/pricing", label: { ja: "料金", en: "Pricing" } },
-        { href: "/staff-pricing", label: { ja: "スタッフ料金", en: "Staff pricing" } },
+        { href: "/fees", label: { ja: "料金", en: "Fees" } },
       ],
     },
   ],
