@@ -1,8 +1,25 @@
-import { getBilingualPage } from "@/features/cms/actions";
-import PricingView from "@/features/cms/components/PricingView";
+"use client";
 
-export default async function PricingPage() {
-  const result = await getBilingualPage("pricing-user");
-  const data = result.success ? result.data : undefined;
-  return <PricingView data={data} />;
+import Section from "@/components/ui/Section";
+import PricingTable from "@/components/ui/PricingTable";
+import { pricing as pricingCopy } from "@/constants/copy";
+import { plans } from "@/constants/pricing";
+import { useLangStore, t } from "@/features/lang/store";
+
+export default function PricingPage() {
+  const { lang } = useLangStore();
+
+  return (
+    <>
+      <Section heading={pricingCopy.hero.heading}>
+        <p className="max-w-2xl text-base leading-relaxed text-body">
+          {t(pricingCopy.hero.body, lang)}
+        </p>
+      </Section>
+
+      <Section surface>
+        <PricingTable plans={plans} note={pricingCopy.note} />
+      </Section>
+    </>
+  );
 }
