@@ -26,15 +26,16 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [loggedIn, setLoggedIn] = useState(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem(SESSION_KEY) === "1";
-    }
-    return false;
-  });
-  const [ready] = useState(() => typeof window !== "undefined");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [ready, setReady] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  /* Read session state after mount so server and client first renders match. */
+  useEffect(() => {
+    setLoggedIn(sessionStorage.getItem(SESSION_KEY) === "1");
+    setReady(true);
+  }, []);
 
   /* Redirect unauthenticated users away from protected routes. */
   useEffect(() => {

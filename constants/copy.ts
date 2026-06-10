@@ -29,7 +29,7 @@ export const brand = {
 /** Primary navigation links. `href` must match the App Router routes. */
 export const nav: { href: string; label: Bilingual }[] = [
   { href: "/", label: { ja: "ホーム", en: "Home" } },
-  { href: "/service-details", label: { ja: "サービス内容", en: "Service Details" } },
+  { href: "/#service-details", label: { ja: "サービス内容", en: "Service Details" } },
   { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
   { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },
 ];
@@ -39,6 +39,45 @@ export const cta = {
   primary: { ja: "無料相談を予約する", en: "Book a free consultation" } satisfies Bilingual,
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
   contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
+};
+
+/* ------------------------------------------------------------------ */
+/* Auth modal                                                          */
+/* ------------------------------------------------------------------ */
+
+export const auth = {
+  navButton: { ja: "ログイン / 登録", en: "Login / Register" } satisfies Bilingual,
+  close: { ja: "閉じる", en: "Close" } satisfies Bilingual,
+  tabs: {
+    login: { ja: "ログイン", en: "Login" } satisfies Bilingual,
+    register: { ja: "新規登録", en: "Register" } satisfies Bilingual,
+  },
+  login: {
+    username: { ja: "ユーザー名", en: "Username" } satisfies Bilingual,
+    password: { ja: "パスワード", en: "Password" } satisfies Bilingual,
+    submit: { ja: "ログイン", en: "Sign in" } satisfies Bilingual,
+    submitting: { ja: "確認中…", en: "Signing in…" } satisfies Bilingual,
+    error: {
+      ja: "ユーザー名またはパスワードが正しくありません。",
+      en: "Invalid username or password.",
+    } satisfies Bilingual,
+  },
+  register: {
+    name: { ja: "お名前", en: "Name" } satisfies Bilingual,
+    email: { ja: "メールアドレス", en: "Email" } satisfies Bilingual,
+    password: { ja: "パスワード", en: "Password" } satisfies Bilingual,
+    confirmPassword: { ja: "パスワード（確認）", en: "Confirm password" } satisfies Bilingual,
+    submit: { ja: "登録する", en: "Create account" } satisfies Bilingual,
+    submitting: { ja: "送信中…", en: "Submitting…" } satisfies Bilingual,
+    passwordMismatch: {
+      ja: "パスワードが一致しません。",
+      en: "Passwords do not match.",
+    } satisfies Bilingual,
+    success: {
+      ja: "ご登録ありがとうございます。担当者より追ってご連絡いたします。",
+      en: "Thank you for registering. We'll be in touch shortly.",
+    } satisfies Bilingual,
+  },
 };
 
 /* ------------------------------------------------------------------ */
@@ -560,20 +599,52 @@ export const staffPricing = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Action plan pricing                                                 */
+/* ------------------------------------------------------------------ */
+
+export const actionPlan = {
+  hero: {
+    heading: { ja: "Care24Japan アクションプラン", en: "Care24Japan Action Plan" } satisfies Bilingual,
+    body: {
+      ja: "シンプルな料金体系のアクションプランです。すべて税込価格です。",
+      en: "A simple, straightforward pricing plan. Prices include tax.",
+    } satisfies Bilingual,
+  },
+  note: {
+    ja: "※ 表示価格はすべて税込です。登録料は無料です。",
+    en: "All prices include tax. Registration is free.",
+  } satisfies Bilingual,
+};
+
+/* ------------------------------------------------------------------ */
 /* Pricing                                                             */
 /* ------------------------------------------------------------------ */
 
 export const pricing = {
   hero: {
-    heading: { ja: "スタッフ料金", en: "Staff rates" } satisfies Bilingual,
+    heading: { ja: "ご利用者様向け料金", en: "Pricing for users" } satisfies Bilingual,
     body: {
-      ja: "資格や対応内容に応じたスタッフごとの時間単価です。",
-      en: "Hourly rates by caregiver qualification and scope of care.",
+      ja: "わかりやすい料金体系で、安心してご利用いただけます。すべて税込価格です。",
+      en: "Transparent, all-inclusive pricing. Prices include tax.",
     } satisfies Bilingual,
   },
+  highlights: [
+    {
+      ja: "入会金・登録料無料",
+      en: "No membership or registration fee",
+    } satisfies Bilingual,
+    {
+      ja: "最低利用2時間から",
+      en: "Minimum usage time: 2 hours",
+    } satisfies Bilingual,
+    {
+      ja: "月の利用回数に応じて割引あり",
+      en: "Discounts available depending on monthly usage",
+    } satisfies Bilingual,
+  ],
   note: {
-    ja: "※ 深夜・早朝（22:00〜6:00）は割増料金となります。",
-    en: "Night and early-morning hours (22:00–6:00) are charged at a premium.",
+    ja: "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
+    en: "All prices include tax and may vary based on care requirements.",
   } satisfies Bilingual,
 };
 
@@ -591,7 +662,7 @@ export const footer = {
       title: { ja: "メニュー", en: "Menu" } satisfies Bilingual,
       links: [
         { href: "/", label: { ja: "ホーム", en: "Home" } },
-        { href: "/service-details", label: { ja: "サービス内容", en: "Service Details" } },
+        { href: "/#service-details", label: { ja: "サービス内容", en: "Service Details" } },
         { href: "/service-flow", label: { ja: "ご利用の流れ", en: "Service flow" } },
         { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
         { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },

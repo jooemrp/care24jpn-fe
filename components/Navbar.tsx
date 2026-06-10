@@ -4,9 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { brand, nav, cta } from "@/constants/copy";
+import { brand, nav, auth } from "@/constants/copy";
 import { useLangStore, t } from "@/features/lang/store";
 import { useAuth } from "@/context/AuthContext";
+import AuthModal from "./AuthModal";
 
 function LangToggle() {
   const { lang, toggle } = useLangStore();
@@ -33,6 +34,7 @@ export default function Navbar() {
   const { lang } = useLangStore();
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 h-24 border-b border-border bg-surface/20 backdrop-blur-md">
@@ -75,12 +77,13 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <LangToggle />
-          <Link
-            href="/pricing"
+          <button
+            type="button"
+            onClick={() => setAuthOpen(true)}
             className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
           >
-            {t(cta.secondary, lang)}
-          </Link>
+            {t(auth.navButton, lang)}
+          </button>
           <button
             type="button"
             onClick={logout}
@@ -129,13 +132,16 @@ export default function Navbar() {
               );
             })}
             <li>
-              <Link
-                href="/pricing"
-                onClick={() => setOpen(false)}
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setAuthOpen(true);
+                }}
                 className="inline-flex bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
               >
-                {t(cta.secondary, lang)}
-              </Link>
+                {t(auth.navButton, lang)}
+              </button>
             </li>
             <li>
               <button
@@ -149,6 +155,8 @@ export default function Navbar() {
           </ul>
         </div>
       )}
+
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }

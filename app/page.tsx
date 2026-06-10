@@ -40,7 +40,7 @@ export default function HomePage() {
           </div>
           <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border border-border animate-fade-up [animation-delay:120ms]">
             <Image
-              src="/images/hero.jpg"
+              src="/images/hero.webp"
               alt={t(home.hero.imageAlt, lang)}
               fill
               priority
@@ -95,7 +95,7 @@ export default function HomePage() {
       </div>
 
       {/* Care course */}
-      <Section>
+      <Section id="service-details">
         {/* Lead-in heading */}
         <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
           {t(home.careCourse.leadIn, lang)}
@@ -144,7 +144,7 @@ export default function HomePage() {
             <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 120}ms` }}>
               <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
                 <Image
-                  src={`/images/use-case-${i + 1}.jpg`}
+                  src={`/images/use-case-${i + 1}.webp`}
                   alt={t(card.imageAlt, lang)}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

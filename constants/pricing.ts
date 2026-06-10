@@ -121,3 +121,204 @@ export const staffRates: StaffRate[] = [
 
 /** Surcharge applied to night / early-morning hours, as a multiplier. */
 export const nightSurchargeMultiplier = 1.25;
+
+/** "Action Plan" rate tables shown on /fees — a simpler, lower-cost user plan. */
+export const actionPlanRates: CourseRates[] = [
+  {
+    key: "care",
+    name: { ja: "介護コース", en: "Caregiving course" },
+    rows: [
+      {
+        key: "basic-day",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
+        price: 2200,
+      },
+      {
+        key: "basic-night",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
+        price: 2420,
+      },
+      {
+        key: "nomination",
+        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
+        price: 500,
+      },
+      {
+        key: "transport",
+        label: { ja: "交通費", en: "Transportation expenses" },
+        price: 900,
+      },
+    ],
+  },
+  {
+    key: "nursing",
+    name: { ja: "看護コース", en: "Nursing course" },
+    rows: [
+      {
+        key: "basic-day",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
+        price: 3500,
+      },
+      {
+        key: "basic-night",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
+        price: 3850,
+      },
+      {
+        key: "nomination",
+        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
+        price: 500,
+      },
+      {
+        key: "transport",
+        label: { ja: "交通費", en: "Transportation expenses" },
+        price: 900,
+      },
+    ],
+  },
+];
+
+export type CourseRateRow = {
+  key: string;
+  label: Bilingual;
+  /** Optional sub-label, e.g. the time band or condition for this row. */
+  detail?: Bilingual;
+  /** Integer yen amount for this row. */
+  price: number;
+};
+
+export type CourseRates = {
+  key: string;
+  name: Bilingual;
+  rows: CourseRateRow[];
+};
+
+/** Detailed user-facing rate tables shown on /pricing. */
+export const courseRates: CourseRates[] = [
+  {
+    key: "care",
+    name: { ja: "介護コース", en: "Caregiving course" },
+    rows: [
+      {
+        key: "basic-day",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
+        price: 3385,
+      },
+      {
+        key: "basic-night",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
+        price: 3723,
+      },
+      {
+        key: "nomination",
+        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
+        price: 500,
+      },
+      {
+        key: "transport",
+        label: { ja: "交通費", en: "Transportation expenses" },
+        price: 900,
+      },
+      {
+        key: "after-hours",
+        label: { ja: "時間外（18時～9時）", en: "Outside of regular hours (6 PM – 9 AM)" },
+        detail: { ja: "基本料金の10％増額", en: "10% increase on the base fee" },
+        price: 3723,
+      },
+      {
+        key: "same-day",
+        label: { ja: "当日予約（1時間あたり）", en: "Same-day booking (per hour)" },
+        detail: { ja: "基本料金の30％増額", en: "30% increase on the base fee" },
+        price: 4400,
+      },
+      {
+        key: "package",
+        label: { ja: "パック料金（8時間～）", en: "Package rate (8 hours or more)" },
+        detail: { ja: "基本料金の5％割引", en: "5% discount on the base fee" },
+        price: 3215,
+      },
+      {
+        key: "regular-day",
+        label: { ja: "定期9時～18時", en: "Regular hours (9:00 AM – 6:00 PM)" },
+        detail: {
+          ja: "週2回4時間以上×月4回以上、基本料金の10％割引",
+          en: "4+ hours, 2x/week, 4+ times/month — 10% discount on the base fee",
+        },
+        price: 3046,
+      },
+      {
+        key: "regular-after-hours",
+        label: { ja: "定期時間外", en: "Outside of regular hours, on a regular basis" },
+        detail: { ja: "月8回以上、基本料金の10％割引", en: "8+ times/month — 10% discount on the base fee" },
+        price: 3351,
+      },
+    ],
+  },
+  {
+    key: "nursing",
+    name: { ja: "看護コース", en: "Nursing course" },
+    rows: [
+      {
+        key: "basic-day",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
+        price: 5385,
+      },
+      {
+        key: "basic-night",
+        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
+        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
+        price: 5923,
+      },
+      {
+        key: "nomination",
+        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
+        price: 500,
+      },
+      {
+        key: "transport",
+        label: { ja: "交通費", en: "Transportation expenses" },
+        price: 900,
+      },
+      {
+        key: "after-hours",
+        label: { ja: "時間外（18時～9時）", en: "Outside of regular hours (6 PM – 9 AM)" },
+        detail: { ja: "基本料金の10％増額", en: "10% increase on the base fee" },
+        price: 5923,
+      },
+      {
+        key: "same-day",
+        label: { ja: "当日予約（1時間あたり）", en: "Same-day booking (per hour)" },
+        detail: { ja: "基本料金の30％増額", en: "30% increase on the base fee" },
+        price: 7000,
+      },
+      {
+        key: "package",
+        label: { ja: "パック料金（8時間～）", en: "Package rate (8 hours or more)" },
+        detail: { ja: "基本料金の5％割引", en: "5% discount on the base fee" },
+        price: 5115,
+      },
+      {
+        key: "regular-day",
+        label: { ja: "定期9時～18時", en: "Regular hours (9:00 AM – 6:00 PM)" },
+        detail: {
+          ja: "週2回4時間以上×月4回以上、基本料金の10％割引",
+          en: "4+ hours, 2x/week, 4+ times/month — 10% discount on the base fee",
+        },
+        price: 4846,
+      },
+      {
+        key: "regular-after-hours",
+        label: { ja: "定期時間外", en: "Outside of regular hours, on a regular basis" },
+        detail: { ja: "月8回以上、基本料金の10％割引", en: "8+ times/month — 10% discount on the base fee" },
+        price: 5331,
+      },
+    ],
+  },
+];
