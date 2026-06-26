@@ -4,10 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { brand, nav, auth } from "@/constants/copy";
+import { brand, nav, cta } from "@/constants/copy";
 import { useLangStore, t } from "@/features/lang/store";
-import { useAuth } from "@/context/AuthContext";
-import AuthModal from "./AuthModal";
 
 function LangToggle() {
   const { lang, toggle } = useLangStore();
@@ -32,9 +30,7 @@ function LangToggle() {
 export default function Navbar() {
   const pathname = usePathname();
   const { lang } = useLangStore();
-  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 h-24 border-b border-border bg-surface/20 backdrop-blur-md">
@@ -77,20 +73,12 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <LangToggle />
-          <button
-            type="button"
-            onClick={() => setAuthOpen(true)}
+          <Link
+            href="/pricing"
             className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
           >
-            {t(auth.navButton, lang)}
-          </button>
-          <button
-            type="button"
-            onClick={logout}
-            className="text-xs text-muted hover:text-accent transition"
-          >
-            {lang === "ja" ? "ログアウト" : "Sign out"}
-          </button>
+            {t(cta.secondary, lang)}
+          </Link>
         </div>
 
         {/* Mobile: lang toggle + hamburger */}
@@ -132,31 +120,17 @@ export default function Navbar() {
               );
             })}
             <li>
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setAuthOpen(true);
-                }}
+              <Link
+                href="/pricing"
+                onClick={() => setOpen(false)}
                 className="inline-flex bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
               >
-                {t(auth.navButton, lang)}
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={logout}
-                className="text-xs text-muted hover:text-accent transition"
-              >
-                {lang === "ja" ? "ログアウト" : "Sign out"}
-              </button>
+                {t(cta.secondary, lang)}
+              </Link>
             </li>
           </ul>
         </div>
       )}
-
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }
