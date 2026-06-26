@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { brand, nav, cta } from "@/constants/copy";
 import { useLangStore, t } from "@/features/lang/store";
-import { useAuth } from "@/context/AuthContext";
 
 function LangToggle() {
   const { lang, toggle } = useLangStore();
@@ -31,7 +30,6 @@ function LangToggle() {
 export default function Navbar() {
   const pathname = usePathname();
   const { lang } = useLangStore();
-  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -81,13 +79,6 @@ export default function Navbar() {
           >
             {t(cta.secondary, lang)}
           </Link>
-          <button
-            type="button"
-            onClick={logout}
-            className="text-xs text-muted hover:text-accent transition"
-          >
-            {lang === "ja" ? "ログアウト" : "Sign out"}
-          </button>
         </div>
 
         {/* Mobile: lang toggle + hamburger */}
@@ -136,15 +127,6 @@ export default function Navbar() {
               >
                 {t(cta.secondary, lang)}
               </Link>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={logout}
-                className="text-xs text-muted hover:text-accent transition"
-              >
-                {lang === "ja" ? "ログアウト" : "Sign out"}
-              </button>
             </li>
           </ul>
         </div>
