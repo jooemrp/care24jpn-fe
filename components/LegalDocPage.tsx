@@ -15,13 +15,13 @@ export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
 
   return (
     <Section heading={doc.heading}>
-      <div className="max-w-3xl animate-fade-up">
+      <div className="max-w-3xl rounded-3xl border border-border/50 bg-white p-6 shadow-[0_8px_24px_rgba(27,31,94,0.04)] animate-fade-up sm:p-8 md:p-12">
         {blocks.map((block, i) => {
           if (block.type === "h2") {
             return (
               <h2
                 key={i}
-                className="mt-10 border-l-4 border-primary pl-3 text-lg font-bold leading-snug text-heading first:mt-0"
+                className="mt-12 rounded-xl bg-primary-light/50 px-5 py-3 text-base font-bold leading-snug text-heading first:mt-0 md:text-lg"
               >
                 {block.text}
               </h2>
@@ -29,13 +29,20 @@ export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
           }
           if (block.type === "h3") {
             return (
-              <h3 key={i} className="mt-6 text-base font-bold leading-snug text-heading">
+              <h3
+                key={i}
+                className="mt-8 flex items-baseline gap-2.5 text-[15px] font-bold leading-snug text-heading md:text-base"
+              >
+                <span
+                  className="h-2.5 w-2.5 shrink-0 translate-y-px rounded-[3px] bg-primary/70"
+                  aria-hidden="true"
+                />
                 {block.text}
               </h3>
             );
           }
           return (
-            <p key={i} className="mt-4 text-sm leading-relaxed text-body">
+            <p key={i} className="mt-5 text-[15px] leading-[1.9] text-body">
               {block.text}
             </p>
           );
