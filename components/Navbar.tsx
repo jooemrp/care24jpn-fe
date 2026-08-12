@@ -55,6 +55,62 @@ function useCondensedOnScroll() {
   return { sentinelRef, condensed };
 }
 
+/** In-page hash targets from `nav` (e.g. "service-details"), computed once. */
+const SECTION_IDS = nav
+  .map((item) => item.href.split("#")[1])
+  .filter((id): id is string => Boolean(id));
+
+/**
+ * Tracks which in-page section (if any) currently sits in the "active" band
+ * of the viewport, so the tier-2 nav can highlight `/#service-details` while
+ * scrolling — not just on exact-pathname matches.
+ *
+ * The rootMargin trims the observed viewport to a band just below the sticky
+ * header, so a section is only "active" once it has actually reached reading
+ * position, not the instant its bottom edge appears.
+ */
+function useActiveSection(ids: string[], pathname: string) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (ids.length === 0 || typeof IntersectionObserver === "undefined") return;
+
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0) return;
+
+    const intersecting = new Map<string, DOMRectReadOnly>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            intersecting.set(entry.target.id, entry.boundingClientRect);
+          } else {
+            intersecting.delete(entry.target.id);
+          }
+        }
+        let topId: string | null = null;
+        let topY = Infinity;
+        for (const [id, rect] of intersecting) {
+          if (rect.top < topY) {
+            topY = rect.top;
+            topId = id;
+          }
+        }
+        setActiveId(topId);
+      },
+      { rootMargin: "-140px 0px -200px 0px", threshold: 0 },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [ids, pathname]);
+
+  return activeId;
+}
+
 function LangToggle() {
   const { lang, toggle } = useLangStore();
   return (
@@ -125,6 +181,9 @@ export default function Navbar() {
   const { lang } = useLangStore();
   const [open, setOpen] = useState(false);
   const { sentinelRef, condensed } = useCondensedOnScroll();
+  const activeSectionId = useActiveSection(SECTION_IDS, pathname);
+  const activeHref =
+    pathname === "/" && activeSectionId ? `/#${activeSectionId}` : pathname;
 
   return (
     <>
@@ -216,7 +275,7 @@ export default function Navbar() {
             }`}
           >
             {nav.map((item) => {
-              const active = pathname === item.href;
+              const active = item.href === activeHref;
               return (
                 <li key={item.href}>
                   <Link
@@ -241,7 +300,7 @@ export default function Navbar() {
           <div className="md:hidden border-t border-border bg-surface">
             <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
               {nav.map((item) => {
-                const active = pathname === item.href;
+                const active = item.href === activeHref;
                 return (
                   <li key={item.href}>
                     <Link
