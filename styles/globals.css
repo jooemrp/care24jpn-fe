@@ -100,7 +100,7 @@ h4 {
 
 .legal-body > :is(h2, h3) {
   color: var(--color-heading);
-  font-weight: 600;
+  font-weight: 700;
   text-wrap: balance;
   /* Without this, every table-of-contents jump parks the heading behind
      the sticky two-tier header. */
@@ -169,12 +169,12 @@ h4 {
 }
 
 .legal-body ol > li::marker {
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .legal-body strong {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-strong);
 }
 
@@ -220,8 +220,24 @@ h4 {
 
 /* Zebra banding — rows carry long text, and the eye loses the row halfway
    across a multi-column table without it. */
-.legal-body tbody tr:nth-child(even) {
+.legal-body tbody tr:nth-child(odd) {
   background: color-mix(in oklab, var(--color-heading) 3%, transparent);
+}
+
+.legal-body:lang(en) {
+  max-width: 36rem;
+  line-height: 1.65;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.legal-body:lang(en) > p:first-child {
+  line-height: 1.6;
+}
+
+.legal-body:lang(en) > :is(h2, h3) {
+  hyphens: manual;
+  -webkit-hyphens: manual;
 }
 
 /* Respect reduced-motion preferences — disable load animations. */

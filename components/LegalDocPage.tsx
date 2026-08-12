@@ -126,15 +126,27 @@ function renderBlocks(blocks: LegalBlock[]): ReactNode[] {
     }
 
     if (block.type === "table") {
+      const [headerRow, ...bodyRows] = block.rows;
       out.push(
         <div key={out.length} className="table-wrap" tabIndex={0}>
           <table>
+            {headerRow && (
+              <thead>
+                <tr>
+                  {headerRow.map((cell, ci) => (
+                    <th key={ci} scope="col">
+                      {cell}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
             <tbody>
-              {block.rows.map((row, ri) => (
+              {bodyRows.map((row, ri) => (
                 <tr key={ri}>
-                  {row.map((cell, ci) =>
-                    ri === 0 ? <th key={ci}>{cell}</th> : <td key={ci}>{cell}</td>,
-                  )}
+                  {row.map((cell, ci) => (
+                    <td key={ci}>{cell}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>

@@ -7,6 +7,18 @@
  * English block lists — the two languages are full texts, not line-by-line
  * translations of each other. Do not hand-edit wording here without a new
  * legal-checked source document.
+ *
+ * Deviations from source (2026-08-12 docx-fidelity audit):
+ * (a) terms.heading.en keeps the half-width "Terms & Conditions" rather than
+ *     the docx's full-width "Terms ＆Conditions" (no following space) — a
+ *     typographic normalisation, not a wording change.
+ * (b) Every other patch in this change set is docx-cited against
+ *     output/docx-extract.json block indices:
+ *     - privacy_policy blocks 100, 125
+ *     - specified_commercial_transactions_disclosure blocks 1, 18, 3, 38, 39, 9, 10
+ *     - care_supporter_remuneration_regulations blocks 26, 27, 28, 1, 34
+ *     - cancellation_policy blocks 1, 22
+ *     See <run>/output/patch-legal.py for the exact substitutions applied.
  */
 
 import type { Bilingual } from "./copy";
@@ -123,7 +135,7 @@ export const legalDocs = {
         { type: "li", list: "ul", text: "Providing customer support and maintenance for this service, and responding to inquiries and consultations" },
         { type: "li", list: "ul", text: "Sending information, advertisements, and materials regarding this service" },
         { type: "li", list: "ul", text: "Notification of important notices related to this service, such as changes to the terms of service" },
-        { type: "p", text: "(3) Personal information regarding care supporters (registered workers) of Care24Japan" },
+        { type: "h3", text: "(3) Personal information regarding care supporters (registered workers) of Care24Japan" },
         { type: "li", list: "ul", text: "Registration screening, confirmation of skills/qualifications, and identity verification" },
         { type: "li", list: "ul", text: "Matching on the platform and disclosure of information such as profiles to users" },
         { type: "li", list: "ul", text: "Payment of remuneration, bank transfer administration, and related administrative procedures" },
@@ -154,7 +166,8 @@ export const legalDocs = {
         { type: "h2", text: "7. Inquiries and Disclosure Procedures Regarding Personal Information" },
         { type: "p", text: "For inquiries and requests regarding the disclosure, correction, deletion, suspension of use, etc., of your personal information (including disclosure of third-party provision records), please contact us via the inquiry form. We will respond sincerely and promptly after verifying your identity. Note that a fee of 1,000 yen (excluding tax) per request may be charged for the notification of the purpose of use and disclosure requests of retained personal data." },
         { type: "h2", text: "8. Other Matters" },
-        { type: "p", text: "(1) Access Information and Cookies On this site, we may acquire and use access log information and cookies in order to provide better services. Since these alone cannot identify a specific individual, we do not consider them to be personal information. You can reject cookie information via your browser settings." },
+        { type: "h3", text: "(1) Access Information and Cookies" },
+        { type: "p", text: "On this site, we may acquire and use access log information and cookies in order to provide better services. Since these alone cannot identify a specific individual, we do not consider them to be personal information. You can reject cookie information via your browser settings." },
         { type: "h3", text: "(2) External Transmission of Information" },
         { type: "p", text: "To analyze user behavior, improve services, and measure advertising effectiveness, the Company transmits information to the following external tools using identifiers such as cookies." },
         { type: "li", list: "ul", text: "AWS | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | Amazon Web Services, Inc." },
@@ -181,57 +194,57 @@ export const legalDocs = {
     },
   },
   tokushoho: {
-    heading: { ja: "特定商取引法に基づく表示", en: "Disclosure under the Specified Commercial Transactions Act" },
+    heading: { ja: "特定商取引法に基づく表記", en: "Notation based on the Act on Specified Commercial Transactions" },
     body: {
       ja: [
-        { type: "h3", text: "提供事業者の名称" },
+        { type: "h2", text: "提供事業者の名称" },
         { type: "p", text: "メディカルインフォマティクス株式会社" },
-        { type: "h3", text: "住所" },
-        { type: "p", text: "〒100-0005東京都千代田区丸の内二丁目1番1号 明治生命館4階" },
-        { type: "h3", text: "代表者" },
+        { type: "h2", text: "住所" },
+        { type: "p", text: "〒100-0005 東京都千代田区丸の内二丁目1番1号 明治生命館4階" },
+        { type: "h2", text: "代表者" },
         { type: "p", text: "代表取締役 佐々木 美樹" },
-        { type: "h3", text: "問い合わせ先" },
+        { type: "h2", text: "問い合わせ先" },
         { type: "p", text: "【問い合わせ専用メールアドレス】 からお問い合わせください。 ※上記宛にお問い合わせいただければ、連絡先電話番号についても遅滞なく開示いたします。 （※公開用電話番号を設定した場合は、「電話番号03-XXXX-XXXX」と直接記載）" },
-        { type: "h3", text: "利用料金" },
+        { type: "h2", text: "利用料金" },
         { type: "p", text: "ご利用料金については、こちらの[料金表ページへのリンク]をご確認ください。（※料金ページはこれから作成）" },
-        { type: "h3", text: "利用料金の支払い方法" },
+        { type: "h2", text: "利用料金の支払い方法" },
         { type: "p", text: "クレジットカード決済、または口座振込のうち、お客様の選択した方法によりお支払いいただきます。" },
-        { type: "h3", text: "利用料金以外に必要となる費用" },
-        { type: "p", text: "サービス提供にかかる事務手数料、交通費、指名料、当日ケアサポーターによって立替え払いされた実費等が発生する場合があります。これらの費用については、上記料金表等に記載がありますのでご確認ください。" },
-        { type: "p", text: "銀行振込（口座振込）のご利用時には、振込手数料がお客様のご負担となります。" },
-        { type: "h3", text: "利用料金の支払い時期" },
+        { type: "h2", text: "利用料金以外に必要となる費用" },
+        { type: "li", list: "ul", text: "サービス提供にかかる事務手数料、交通費、指名料、当日ケアサポーターによって立替え払いされた実費等が発生する場合があります。これらの費用については、上記料金表等に記載がありますのでご確認ください。" },
+        { type: "li", list: "ul", text: "銀行振込（口座振込）のご利用時には、振込手数料がお客様のご負担となります。" },
+        { type: "h2", text: "利用料金の支払い時期" },
         { type: "li", list: "ul", text: "クレジットカード決済の場合 予約成立時に決済が行われます。お引き落とし時期については、ご利用のクレジットカード会社にお問い合わせください。" },
         { type: "li", list: "ul", text: "口座振込の場合 ご利用お申し込み（予約リクエスト）後、当社指定の期日までにお振込みいただきます。（※入金確認をもって予約が成立します）" },
-        { type: "h3", text: "サービスのご利用が可能となる時期" },
+        { type: "h2", text: "サービスのご利用が可能となる時期" },
         { type: "p", text: "当社サービスに登録後、成立した予約に記載された日程にてご利用いただけます。" },
-        { type: "h3", text: "返品、キャンセルに関する事項" },
+        { type: "h2", text: "返品、キャンセルに関する事項" },
         { type: "p", text: "本サービスの予約をキャンセルする場合には、当社の別途定める方法によりキャンセルの手続きを行うものとします。ただし、キャンセルを行う時期によってはキャンセル料が発生いたしますので、詳細は[料金表等へのリンク]をご確認ください。（※キャンセルポリシーはこれから作成）" },
       ],
       en: [
-        { type: "h3", text: "Name of Business Operator" },
+        { type: "h2", text: "Name of Business Operator" },
         { type: "p", text: "Medical Informatics Co., Ltd." },
-        { type: "h3", text: "Address" },
+        { type: "h2", text: "Address" },
         { type: "p", text: "4F Meiji Seimei Kan, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005" },
-        { type: "h3", text: "Representative" },
+        { type: "h2", text: "Representative" },
         { type: "p", text: "Miki Sasaki, Representative Director" },
-        { type: "h3", text: "Contact Information" },
+        { type: "h2", text: "Contact Information" },
         { type: "p", text: "Please contact us via [Dedicated Inquiry Email Address]." },
         { type: "p", text: "*If you contact us at the address above, we will disclose our contact phone number without delay." },
         { type: "p", text: "(*If a public phone number is set, state it directly as \"Phone Number: 03-XXXX-XXXX\")" },
-        { type: "h3", text: "Usage Fees" },
+        { type: "h2", text: "Usage Fees" },
         { type: "p", text: "Regarding usage fees, please check the [Link to Fee Schedule Page] here." },
         { type: "p", text: "(*Fee page to be created later)" },
-        { type: "h3", text: "Payment Method for Usage Fees" },
+        { type: "h2", text: "Payment Method for Usage Fees" },
         { type: "p", text: "Payment must be made by the method chosen by the customer, either by credit card or bank transfer." },
-        { type: "h3", text: "Costs Required Other Than Usage Fees" },
+        { type: "h2", text: "Costs Required Other Than Usage Fees" },
         { type: "p", text: "Administrative fees, transportation expenses, nomination fees, and actual expenses paid in advance by the care supporter on the day of service may be incurred for the provision of services. Please check the fee schedule mentioned above, as these costs are outlined there." },
         { type: "p", text: "When using a bank transfer, the transfer fee will be borne by the customer." },
-        { type: "h3", text: "Timing of Payment for Usage Fees" },
-        { type: "p", text: "For Credit Card Payment: Payment is processed when the reservation is confirmed. Please contact your credit card company regarding the exact billing timing." },
-        { type: "p", text: "For Bank Transfer: After applying for use (reservation request), please transfer the funds by the date specified by the Company. (*The reservation is confirmed upon confirmation of payment.)" },
-        { type: "h3", text: "Timing When Services Can Be Used" },
+        { type: "h2", text: "Timing of Payment for Usage Fees" },
+        { type: "li", list: "ul", text: "For Credit Card Payment: Payment is processed when the reservation is confirmed. Please contact your credit card company regarding the exact billing timing." },
+        { type: "li", list: "ul", text: "For Bank Transfer: After applying for use (reservation request), please transfer the funds by the date specified by the Company. (*The reservation is confirmed upon confirmation of payment.)" },
+        { type: "h2", text: "Timing When Services Can Be Used" },
         { type: "p", text: "After registering for our service, you can use the service on the dates specified in the confirmed reservation." },
-        { type: "h3", text: "Matters Regarding Returns and Cancellations" },
+        { type: "h2", text: "Matters Regarding Returns and Cancellations" },
         { type: "p", text: "If you wish to cancel a reservation for this service, you must complete the cancellation procedures in accordance with the methods separately determined by the Company. However, please note that a cancellation fee may be incurred depending on the timing of the cancellation, so please check the [Link to Fee Schedule, etc.] for details." },
         { type: "p", text: "(*Cancellation policy to be created later)" },
       ],
@@ -337,7 +350,7 @@ export const legalDocs = {
     },
   },
   cancellationPolicy: {
-    heading: { ja: "キャンセルポリシー", en: "Cancellation Policy" },
+    heading: { ja: "Care24Japan キャンセルポリシー", en: "Care24Japan Cancellation Policy" },
     body: {
       ja: [
         { type: "h2", text: "第1条（目的）" },
@@ -380,7 +393,7 @@ export const legalDocs = {
     },
   },
   compensation: {
-    heading: { ja: "ケアサポーター報酬規程", en: "Care Supporter Remuneration Regulations" },
+    heading: { ja: "Care24Japan ケアサポーター報酬規程", en: "Care24Japan Care Supporter Remuneration Regulations" },
     body: {
       ja: [
         { type: "h2", text: "第1条（目的）" },
@@ -405,9 +418,9 @@ export const legalDocs = {
         { type: "h2", text: "第9条（ケアサポーター都合によるキャンセル時の取り扱い）" },
         { type: "li", list: "ol", text: "ケアサポーターは、個別契約成立後、自己の都合により当該業務をキャンセルする場合、速やかに本システムを通じて利用者および当社へ通知しなければならない。" },
         { type: "li", list: "ol", text: "ケアサポーターの都合によるキャンセルが頻発する場合、または直前のキャンセルを行った場合、当社は以下の措置を講じることができるものとする。" },
-        { type: "li", list: "ol", text: "(1) 当該案件にかかる報酬の全額不支給" },
-        { type: "li", list: "ol", text: "(2) 当社が定める算定基準に基づく違約金の請求または報酬からの差し引き" },
-        { type: "li", list: "ol", text: "(3) 本サービスの利用制限、またはアカウントの停止措置" },
+        { type: "li", list: "ul", text: "(1) 当該案件にかかる報酬の全額不支給" },
+        { type: "li", list: "ul", text: "(2) 当社が定める算定基準に基づく違約金の請求または報酬からの差し引き" },
+        { type: "li", list: "ul", text: "(3) 本サービスの利用制限、またはアカウントの停止措置" },
         { type: "h2", text: "第10条（禁止事項およびペナルティに伴う報酬の制限）" },
         { type: "p", text: "サポーターが本サービスの利用規約または個別契約に違反した場合（利用者との直接交渉・中抜き行為、無断欠勤、ハラスメント行為、守秘義務違反等）、当社は該当する案件の報酬支払いを差し止め、またはアカウントの停止措置等を行うことができる。" },
         { type: "h2", text: "附則" },

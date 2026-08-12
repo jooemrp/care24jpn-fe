@@ -8,6 +8,11 @@
  * - All values below are EDITABLE PLACEHOLDERS. Replace with final copy.
  */
 
+// Value import of legalDocs. Safe despite legal.ts importing from this file:
+// legal.ts only does `import type { Bilingual } from "./copy"`, which is
+// type-only and erased at compile time, so there is no runtime cycle.
+import { legalDocs } from "./legal";
+
 export type Bilingual = {
   ja: string;
   en: string;
@@ -544,7 +549,10 @@ export const home = {
         en: "For those seeking employment",
       } satisfies Bilingual,
       label: { ja: "登録はこちらから", en: "Register here" } satisfies Bilingual,
-      href: "https://my-nurse.jp/",
+      // The client's real staff-registration URL is still pending. Mirrors
+      // the customer banner's "#contact" anchor (see app/page.tsx) until the
+      // client provides the actual registration destination.
+      href: "#contact",
     },
   },
 
@@ -807,10 +815,9 @@ export const footer = {
     { href: "/privacy", label: { ja: "プライバシーポリシー", en: "Privacy Policy" } },
     {
       href: "/tokushoho",
-      label: {
-        ja: "特定商取引法に基づく表示",
-        en: "Disclosure under the Specified Commercial Transactions Act",
-      },
+      // Sourced from legalDocs.tokushoho.heading (constants/legal.ts) so the
+      // footer label can never drift from the page heading again.
+      label: legalDocs.tokushoho.heading,
     },
     { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
     {

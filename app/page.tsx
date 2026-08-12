@@ -8,6 +8,7 @@ import { useLangStore, t } from "@/features/lang/store";
 
 export default function HomePage() {
   const { lang } = useLangStore();
+  const staffHrefIsExternal = /^https?:\/\//.test(home.apply.staff.href);
 
   return (
     <>
@@ -399,7 +400,9 @@ export default function HomePage() {
       </Section>
 
       {/* Application banners — one for prospective users, one for nursing
-          staff recruitment (external site). Original layout: text stack with a
+          staff recruitment. The staff banner's target/rel are conditional
+          because the client's real registration URL is still pending and may
+          end up pointing off-site. Original layout: text stack with a
           circular arrow chip, tinted per audience. */}
       <Section surface>
         <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
@@ -421,8 +424,9 @@ export default function HomePage() {
           </a>
           <a
             href={home.apply.staff.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(staffHrefIsExternal
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
             className="group flex items-center justify-between gap-4 rounded-3xl bg-primary-light px-7 py-6 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(43,126,193,0.18)] animate-fade-up"
             style={{ animationDelay: "100ms" }}
           >

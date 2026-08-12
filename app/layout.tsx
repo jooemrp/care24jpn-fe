@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import AppShell from "@/components/AppShell";
 import { Providers } from "@/components/providers";
 import { brand } from "@/constants/copy";
+import { HtmlLangSync } from "@/features/lang/HtmlLangSync";
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
       className={`${notoSansJP.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
+        <HtmlLangSync />
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
