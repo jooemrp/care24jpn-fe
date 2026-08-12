@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { brand, footer } from "@/constants/copy";
+import { brand, nav, footer } from "@/constants/copy";
 import { useLangStore, t } from "@/features/lang/store";
 
 function LangToggle() {
@@ -26,79 +26,55 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="max-w-5xl mx-auto px-6 py-12 grid gap-10 md:grid-cols-3">
-        {/* Brand + description */}
-        <div className="space-y-4">
-          <Image
-            src="/images/logo.png"
-            alt={brand.logoAlt.en}
-            width={320}
-            height={120}
-            className="h-auto w-30"
-          />
-          <p className="text-sm leading-relaxed text-body">
-            {t(footer.description, lang)}
-          </p>
-          <LangToggle />
-        </div>
+      <div className="mx-auto max-w-6xl px-6 py-14 text-center">
+        {/* Brand */}
+        <Image
+          src="/images/logo.png"
+          alt={brand.logoAlt.en}
+          width={320}
+          height={120}
+          className="mx-auto h-auto w-32"
+        />
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-body">
+          {t(footer.description, lang)}
+        </p>
 
-        {/* Link columns */}
-        {footer.columns.map((col) => (
-          <div key={col.title.en} className="space-y-4">
-            <h4 className="text-sm font-bold text-heading">
-              {t(col.title, lang)}
-            </h4>
-            <ul className="space-y-2">
-              {col.links.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-body transition hover:text-primary"
-                  >
-                    {t(link.label, lang)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {/* Primary menu — same pill style as the top navigation tabs */}
+        <nav className="mt-8">
+          <ul className="flex flex-wrap items-center justify-center gap-2">
+            {nav.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary"
+                >
+                  {t(item.label, lang)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        {/* Contact */}
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-heading">
-            {t(footer.contact.title, lang)}
-          </h4>
-          <dl className="space-y-3 text-sm text-body">
-            <div>
-              <dt className="text-xs uppercase tracking-widest text-muted">
-                {t(footer.contact.phoneLabel, lang)}
-              </dt>
-              <dd>
-                <a href={`tel:${footer.contact.phone}`} className="hover:text-primary">
-                  {footer.contact.phone}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-widest text-muted">
-                {t(footer.contact.hoursLabel, lang)}
-              </dt>
-              <dd>{t(footer.contact.hours, lang)}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-widest text-muted">
-                {t(footer.contact.addressLabel, lang)}
-              </dt>
-              <dd>{t(footer.contact.address, lang)}</dd>
-            </div>
-          </dl>
-        </div>
+        {/* Legal / company links */}
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+          {footer.legalLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="text-xs text-muted transition hover:text-primary"
+              >
+                {t(link.label, lang)}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="border-t border-border">
-        <p className="max-w-5xl mx-auto px-6 py-6 text-xs text-muted">
-          {footer.legal.ja}
-        </p>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+          <p className="text-xs text-muted">{footer.legal.ja}</p>
+          <LangToggle />
+        </div>
       </div>
     </footer>
   );

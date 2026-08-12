@@ -11,11 +11,41 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-surface">
-        <div className="max-w-5xl mx-auto px-6 py-16 md:py-24 grid items-center gap-12 md:grid-cols-2">
-          <div className="animate-fade-up">
-            <h1 className="whitespace-pre-line text-4xl md:text-5xl font-bold leading-tight text-heading">
+      {/* Hero — full-bleed key visual */}
+      <section className="relative isolate overflow-hidden">
+        {/* Key visual: spans the full viewport width behind the copy */}
+        <Image
+          src="/images/hero.webp"
+          alt={t(home.hero.imageAlt, lang)}
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          className="-z-20 object-cover object-[center_40%]"
+        />
+
+        {/* Scrim — keeps the navy copy legible over the photo.
+            Horizontal on desktop (copy sits left), vertical on mobile. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-linear-to-b from-bg/95 via-bg/85 to-bg/60 md:bg-linear-to-r md:from-bg md:from-28% md:via-bg/72 md:via-52% md:to-transparent md:to-78%"
+        />
+        {/* Soft sakura glow + bottom fade into the next section */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-40"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg"
+        />
+
+        {/* Fills the screen below the sticky header. Measured header height:
+            81px on mobile (tier 1 + border) and 130px from md up (tier 1 +
+            nav tab row + both borders). */}
+        <div className="relative mx-auto flex min-h-[calc(100dvh-81px)] max-w-6xl flex-col justify-center px-6 py-20 md:min-h-[calc(100dvh-130px)] md:py-24">
+          <div className="max-w-xl animate-fade-up">
+            <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
               {t(home.hero.heading, lang)}
             </h1>
             {t(home.hero.body, lang) && (
@@ -23,30 +53,45 @@ export default function HomePage() {
                 {t(home.hero.body, lang)}
               </p>
             )}
+
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/service-flow"
-                className="bg-primary text-white px-8 py-3 rounded-full font-medium transition hover:bg-primary-mid"
+                className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
               >
-                {t(cta.primary, lang)}
+                {t(home.hero.ctaPrimary, lang)}
               </Link>
               <Link
                 href="/pricing"
-                className="border-2 border-primary text-primary px-8 py-3 rounded-full font-medium transition hover:bg-primary-light"
+                className="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light"
               >
-                {t(cta.secondary, lang)}
+                {t(home.hero.ctaSecondary, lang)}
               </Link>
             </div>
-          </div>
-          <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border border-border animate-fade-up [animation-delay:120ms]">
-            <Image
-              src="/images/hero.webp"
-              alt={t(home.hero.imageAlt, lang)}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
+
+            {/* Trust strip — the three reasons families choose us */}
+            <ul className="mt-10 flex flex-wrap gap-2.5">
+              {home.values.items.map((item, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up"
+                  style={{ animationDelay: `${120 + i * 80}ms` }}
+                >
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+                    <svg viewBox="0 0 16 16" fill="none" className="h-2.5 w-2.5" aria-hidden="true">
+                      <path
+                        d="M3 8l3.5 3.5L13 4.5"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  {t(item.title, lang)}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -57,45 +102,90 @@ export default function HomePage() {
           {home.problems.items.map((item, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 rounded-2xl border border-border bg-white px-5 py-4 animate-fade-up"
+              className="flex items-start gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
-                <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3" aria-hidden="true">
-                  <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+                <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                  <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <p className="text-sm leading-snug text-body">{t(item, lang)}</p>
+              <p className="text-base leading-relaxed text-body">{t(item, lang)}</p>
             </div>
           ))}
         </div>
       </Section>
 
-      {/* Triangle badge */}
-      <div className="flex flex-col items-center bg-surface py-8 md:py-8">
-        <svg viewBox="0 0 357 173" xmlns="http://www.w3.org/2000/svg" className="w-80 md:w-104 h-auto animate-fade-up">
-          {/* Triangle shape from public/triangle_badge.svg */}
-          <path
-            d="M188.285 168.439C182.641 173.348 174.242 173.348 168.598 168.439L5.18646 26.3183C-5.28121 17.2144 1.15736 0 15.0301 0L341.853 0C355.726 0 362.164 17.2145 351.696 26.3183L188.285 168.439Z"
-            fill="#C94F7C"
-          />
-          <text x="178.5" y="50" textAnchor="middle" fill="white" fontSize="22" fontWeight="400" fontFamily="var(--font-sans)">
-            {t(home.hero.badge, lang).split("\n")[0]}
-          </text>
-          <text x="178.5" y="80" textAnchor="middle" fill="white" fontSize="22" fontWeight="400" fontFamily="var(--font-sans)">
-            {t(home.hero.badge, lang).split("\n")[1]}
-          </text>
-          <text x="178.5" y="110" textAnchor="middle" fill="white" fontSize="22" fontWeight="400" fontFamily="var(--font-sans)">
-            {t(home.hero.badge, lang).split("\n")[2]}
-          </text>
-        </svg>
-        <p className="mt-16 text-3xl font-bold text-heading animate-fade-up">
-          {t(home.hero.resolve, lang)}
+      {/* Answer to the problems above — inverted pyramid, redrawn as an
+          original shape (softly concave "funnel" sides, rounded corners,
+          sakura gradient) rather than the competitor's flat sharp triangle. */}
+      <div className="flex flex-col items-center bg-surface px-6 pb-12 pt-2 md:pb-16">
+        <PyramidStatement
+          badge={t(home.hero.badge, lang)}
+          resolve={t(home.hero.resolve, lang)}
+        />
+        <p className="mx-auto mt-8 max-w-2xl text-center text-base leading-relaxed text-heading animate-fade-up md:text-lg">
+          {t(home.hero.assist, lang)}
         </p>
       </div>
 
-      {/* Care course */}
+      {/* Nursing course — now leads the service block.
+          Reworked away from the competitor's signature: the course name is a
+          pill rather than a solid rectangle, the rate label sits above the
+          figure instead of in a colour block welded to its left, and the whole
+          offer is one tinted card rather than loose chips on the page. */}
       <Section id="service-details">
+        {/* Lead-in heading */}
+        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
+          {t(home.nursingCourse.leadIn, lang)}
+        </h2>
+
+        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
+          {/* Left: the offer, as a single card */}
+          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-7 animate-fade-up">
+            <span className="inline-flex items-center rounded-full bg-accent px-5 py-1.5 text-sm font-bold text-white">
+              {t(home.nursingCourse.badge, lang)}
+            </span>
+
+            <p className="mt-6 text-xs font-medium text-body">
+              {t(home.nursingCourse.price.label, lang)}
+              {t(home.nursingCourse.price.hours, lang)}
+            </p>
+            <p className="mt-1 flex items-baseline gap-1.5">
+              <span className="text-5xl font-bold tabular-nums text-heading">
+                {t(home.nursingCourse.price.amount, lang)}
+              </span>
+              <span className="text-xs text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
+              <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
+            </p>
+            <p className="mt-1 text-sm text-body">
+              {t(home.nursingCourse.price.taxIncluded, lang)}
+            </p>
+
+            <p className="mt-6 text-sm text-muted">{t(home.nursingCourse.note, lang)}</p>
+          </div>
+
+          {/* Right: what the course covers */}
+          <div className="animate-fade-up [animation-delay:120ms] md:pt-2">
+            <h3 className="whitespace-pre-line text-lg font-bold leading-relaxed text-heading md:text-xl">
+              {t(home.nursingCourse.panel.heading, lang)}
+            </h3>
+            <ul className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              {home.nursingCourse.panel.items.map((item, i) => (
+                <li key={i} className="flex items-center gap-3.5">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+                    <NursingIcon name={item.icon} />
+                  </span>
+                  <span className="text-sm leading-snug text-body">{t(item.label, lang)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Section>
+
+      {/* Care course — second, after the nursing course */}
+      <Section surface>
         {/* Lead-in heading */}
         <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
           {t(home.careCourse.leadIn, lang)}
@@ -106,7 +196,10 @@ export default function HomePage() {
           <span className="inline-flex items-center rounded-lg bg-primary px-6 py-2 text-lg font-bold text-white">
             {t(home.careCourse.badge, lang)}
           </span>
-          <span className="text-base text-body">{t(home.careCourse.tagline, lang)}</span>
+          <div className="text-base text-body">
+            <p>{t(home.careCourse.tagline, lang)}</p>
+            <p>{t(home.careCourse.taglineSub, lang)}</p>
+          </div>
         </div>
 
         {/* Pricing row */}
@@ -165,137 +258,195 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Nursing course */}
-      <Section surface>
-        {/* Lead-in heading */}
-        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
-          {t(home.nursingCourse.leadIn, lang)}
-        </h2>
-
-        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
-          {/* Left: badge + pricing + note */}
-          <div className="animate-fade-up">
-            <span className="inline-flex items-center rounded-lg bg-accent px-6 py-2 text-lg font-bold text-white">
-              {t(home.nursingCourse.badge, lang)}
-            </span>
-
-            <div className="mt-6 flex items-center gap-4">
-              <span className="inline-flex flex-col items-center rounded-lg bg-accent px-4 py-2 text-center text-sm font-bold leading-tight text-white">
-                {t(home.nursingCourse.price.label, lang)}
-                <span className="text-xs font-normal">{t(home.nursingCourse.price.hours, lang)}</span>
-              </span>
-              <div className="flex flex-col">
-                <span className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-heading">{t(home.nursingCourse.price.amount, lang)}</span>
-                  <span className="text-xs text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
-                  <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
-                </span>
-                <span className="text-sm text-body">{t(home.nursingCourse.price.taxIncluded, lang)}</span>
-              </div>
-            </div>
-
-            <p className="mt-6 text-sm text-muted">{t(home.nursingCourse.note, lang)}</p>
-          </div>
-
-          {/* Right: panel heading + list */}
-          <div className="animate-fade-up [animation-delay:120ms]">
-            <h3 className="whitespace-pre-line text-xl font-bold leading-snug text-heading">
-              {t(home.nursingCourse.panel.heading, lang)}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              {home.nursingCourse.panel.items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-body">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
-                  {t(item, lang)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Section>
-
-      {/* Examples header + timeline */}
+      {/* Examples — three usage cases, each with its request, services and a
+          vertical schedule. (Replaced the horizontal icon timelines, which
+          followed the competitor's layout.) */}
       <Section>
         <div className="text-center animate-fade-up">
           <p className="text-sm font-bold text-body">{t(home.examples.leadIn, lang)}</p>
           <h2 className="mt-2 text-3xl font-bold text-primary">{t(home.examples.heading, lang)}</h2>
         </div>
 
-        {/* Sample-day timelines */}
-        {home.examples.timelines.map((timeline, ti) => (
-          <div key={ti} className="mt-12">
-            <h3 className="text-center text-lg font-bold text-heading animate-fade-up">
-              {t(timeline.title, lang)}
-            </h3>
-            <ol
-              className="mt-8 grid gap-10"
-              style={{ gridTemplateColumns: `repeat(${timeline.steps.length}, minmax(0, 1fr))` }}
-            >
-              {timeline.steps.map((step, i) => (
-                <li
-                  key={i}
-                  className="relative flex flex-col items-center text-center animate-fade-up"
-                  style={{ animationDelay: `${i * 120}ms` }}
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {home.examples.cases.map((c, ci) => {
+            const accent = c.tone === "accent";
+            return (
+              <article
+                key={ci}
+                className="flex flex-col rounded-3xl border border-border/50 bg-white p-6 shadow-[0_8px_24px_rgba(27,31,94,0.05)] animate-fade-up"
+                style={{ animationDelay: `${ci * 100}ms` }}
+              >
+                {/* Case pill + scenario category */}
+                <span
+                  className={`self-start rounded-full px-3.5 py-1 text-xs font-bold ${
+                    accent ? "bg-accent-light text-accent" : "bg-primary-light text-primary"
+                  }`}
                 >
-                  {/* Connector line to the next step */}
-                  {i < timeline.steps.length - 1 && (
-                    <span
-                      className="absolute left-1/2 top-16 h-px w-full bg-border"
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span className="relative z-10 flex h-32 w-32 items-center justify-center rounded-full bg-primary-light text-primary">
-                    <TimelineIcon name={step.icon} />
-                  </span>
-                  <span className="mt-4 flex items-center gap-1 text-sm font-medium text-body">
+                  {t(c.label, lang)}
+                </span>
+                <p className="mt-3 text-xs font-medium tracking-wide text-muted">
+                  {t(c.title, lang)}
+                </p>
+
+                {/* The family's request — the headline of the card */}
+                <div
+                  className={`relative mt-2 rounded-2xl px-4 py-3.5 ${
+                    accent ? "bg-accent-light/50" : "bg-primary-light/50"
+                  }`}
+                >
+                  <h3 className="text-base font-bold leading-relaxed text-heading">
+                    {t(c.request, lang)}
+                  </h3>
+                  {/* Speech-bubble tail */}
+                  <span
+                    className={`absolute -bottom-1.5 left-6 h-3 w-3 rotate-45 rounded-[3px] ${
+                      accent ? "bg-accent-light/50" : "bg-primary-light/50"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </div>
+
+                {/* Services provided */}
+                <p className="mt-5 text-xs font-bold text-muted">
+                  {t(home.examples.servicesLabel, lang)}
+                </p>
+                <ul className="mt-2 flex flex-wrap gap-1.5">
+                  {c.services.map((s, si) => (
+                    <li
+                      key={si}
+                      className="rounded-full bg-bg px-3 py-1 text-xs text-body"
+                    >
+                      {t(s, lang)}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Schedule header: label + usage time */}
+                <div className="mt-5 flex items-center justify-between gap-2 border-t border-border/60 pt-4">
+                  <p className="text-xs font-bold text-muted">
+                    {t(home.examples.scheduleLabel, lang)}
+                  </p>
+                  <p className="flex items-center gap-1.5 text-xs text-body">
                     <ClockIcon />
-                    {step.time}
-                  </span>
-                  <span className="mt-1 whitespace-pre-line text-base font-bold text-primary">
-                    {t(step.label, lang)}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        ))}
+                    {t(home.examples.hoursLabel, lang)}
+                    <span className="text-sm font-bold text-heading">{t(c.hours, lang)}</span>
+                  </p>
+                </div>
+
+                {/* Timetable rows */}
+                <ol className="mt-2 divide-y divide-border/40">
+                  {c.schedule.map((row, ri) => (
+                    <li key={ri} className="grid grid-cols-[5.5rem_1fr] gap-x-3 py-2.5">
+                      <span
+                        className={`pt-0.5 text-xs font-semibold tabular-nums ${
+                          accent ? "text-accent" : "text-primary"
+                        }`}
+                      >
+                        {row.time}
+                      </span>
+                      <span className="text-sm leading-snug text-body">
+                        {t(row.activity, lang)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </article>
+            );
+          })}
+        </div>
       </Section>
 
-      {/* Service flow */}
+      {/* Service flow — vertical timeline: numbered nodes on a dashed rail so
+          the sequence reads top-to-bottom in one glance; title sits beside the
+          node, description underneath, line-art icon floats at the right. */}
       <Section surface heading={home.flow.heading}>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {home.flow.steps.map((step, i) => (
-            <div
-              key={step.number}
-              className="flex flex-col items-center rounded-2xl bg-white px-5 py-8 text-center animate-fade-up"
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <span className="text-3xl font-bold text-primary-mid">{step.number}</span>
-              <h3 className="mt-2 whitespace-pre-line text-base font-bold text-heading">
-                {t(step.title, lang)}
-              </h3>
-              <span className="mt-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary-light text-primary">
-                <FlowIcon name={step.icon} />
+        <ol className="mx-auto max-w-2xl">
+          {home.flow.steps.map((step, i) => {
+            const last = i === home.flow.steps.length - 1;
+            return (
+              <li
+                key={step.number}
+                className="relative flex gap-6 pb-12 last:pb-0 animate-fade-up"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {/* Rail connecting this node to the next */}
+                {!last && (
+                  <span
+                    className="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25"
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+                  <span className="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">
+                    STEP
+                  </span>
+                  <span className="mt-0.5 text-base font-bold leading-none tabular-nums">
+                    {step.number}
+                  </span>
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="pt-3 text-lg font-bold leading-snug text-heading">
+                    {t(step.title, lang)}
+                  </h3>
+                  <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">
+                    {t(step.body, lang)}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </Section>
+
+      {/* Application banners — one for prospective users, one for nursing
+          staff recruitment (external site). Original layout: text stack with a
+          circular arrow chip, tinted per audience. */}
+      <Section surface>
+        <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+          <a
+            href="#contact"
+            className="group flex items-center justify-between gap-4 rounded-3xl bg-accent-light px-7 py-6 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(201,79,124,0.18)] animate-fade-up"
+          >
+            <span className="min-w-0">
+              <span className="block text-sm font-medium text-accent">
+                {t(home.apply.user.eyebrow, lang)}
               </span>
-              <p className="mt-5 whitespace-pre-line text-sm leading-relaxed text-body">
-                {t(step.body, lang)}
-              </p>
-              {step.hasCta && (
-                <Link
-                  href="/service-flow"
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2 text-sm font-medium text-white transition hover:opacity-90"
-                >
-                  {t(cta.contact, lang)}
-                </Link>
-              )}
-            </div>
-          ))}
+              <span className="mt-1.5 block text-lg font-bold leading-snug text-heading md:text-xl">
+                {t(home.apply.user.label, lang)}
+              </span>
+            </span>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-accent shadow-[0_4px_12px_rgba(201,79,124,0.15)] transition group-hover:translate-x-1">
+              <ArrowRightIcon />
+            </span>
+          </a>
+          <a
+            href={home.apply.staff.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-between gap-4 rounded-3xl bg-primary-light px-7 py-6 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(43,126,193,0.18)] animate-fade-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            <span className="min-w-0">
+              <span className="block text-sm font-medium text-primary">
+                {t(home.apply.staff.eyebrow, lang)}
+              </span>
+              <span className="mt-1.5 block text-lg font-bold leading-snug text-heading md:text-xl">
+                {t(home.apply.staff.label, lang)}
+              </span>
+            </span>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-[0_4px_12px_rgba(43,126,193,0.15)] transition group-hover:translate-x-1">
+              <ArrowRightIcon />
+            </span>
+          </a>
         </div>
       </Section>
 
       {/* Contact */}
       <Section surface>
-        <div className="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up">
+        <div
+          id="contact"
+          className="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up scroll-mt-36"
+        >
           <p className="text-sm font-medium text-primary">
             ＼ {t(home.contact.leadIn, lang)} ／
           </p>
@@ -312,7 +463,6 @@ export default function HomePage() {
                 <PhoneIcon />
                 {home.contact.phone}
               </a>
-              <span className="mt-1 text-xs text-muted">{t(home.contact.hours, lang)}</span>
             </div>
             <Link
               href="/service-flow"
@@ -322,11 +472,16 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Certification: mics logo + BSI ISO 27001 badge (placeholders) */}
+          {/* Certification: mics logo + BSI ISO 27001 badge */}
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
-            {/* TODO: replace with /images/mics-logo.png */}
-            <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded border border-dashed border-border bg-white text-[10px] text-muted">
-              mics logo
+            <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
+              <Image
+                src="/images/mics-logo.png"
+                alt="mics — MedicalInformatics Co.,Ltd."
+                width={401}
+                height={140}
+                className="h-auto max-h-12 w-auto"
+              />
             </div>
             {/* TODO: replace with /images/iso27001-bsi.png */}
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded border border-dashed border-border bg-white text-[10px] text-muted">
@@ -342,68 +497,150 @@ export default function HomePage() {
   );
 }
 
-/** Line-art icons for the service-flow step circles. */
-function FlowIcon({ name }: { name: string }) {
+/**
+ * Inverted pyramid that answers the problem list above.
+ *
+ * A true inverted triangle (the client's requested silhouette). What keeps it
+ * off the competitor's design: generously rounded corners via a round-joined
+ * stroke of the same paint, and the flat brand sakura fill that matches the
+ * other solid colour blocks on the page.
+ *
+ * The copy is real HTML over the shape — not SVG `<text>` — so it wraps and is
+ * read out properly in either language. It sits in the upper band, where the
+ * triangle is still wide enough to hold a line of text.
+ */
+function PyramidStatement({ badge, resolve }: { badge: string; resolve: string }) {
+  return (
+    <div className="relative w-full max-w-2xl animate-fade-up">
+      {/* Narrow, deeper triangle for small screens */}
+      <svg viewBox="0 0 600 500" className="block h-auto w-full md:hidden" aria-hidden="true">
+        <path
+          d="M24 24 H576 L300 476 Z"
+          fill="var(--color-accent)"
+          stroke="var(--color-accent)"
+          strokeWidth="36"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {/* Wide, shallower triangle from md up */}
+      <svg viewBox="0 0 800 380" className="hidden h-auto w-full md:block" aria-hidden="true">
+        <path
+          d="M24 24 H776 L400 356 Z"
+          fill="var(--color-accent)"
+          stroke="var(--color-accent)"
+          strokeWidth="36"
+          strokeLinejoin="round"
+        />
+      </svg>
+
+      {/* Copy — centred on the triangle's visual mass. A triangle's centroid
+          sits ~40% down, not at the bounding box's halfway line, so the flex
+          centre is biased upward with bottom padding; the max-widths keep the
+          lines inside the slanted edges at the block's lowest point. */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pb-[18%] px-[10%] text-center text-white">
+        <p className="text-xs font-medium tracking-wide text-white/90 md:text-sm">
+          {badge}
+        </p>
+        <p className="mt-1.5 max-w-[56%] text-lg font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-xl">
+          {resolve}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Line-art icons for the nursing-course coverage list. */
+function NursingIcon({ name }: { name: string }) {
   const common = {
-    viewBox: "0 0 48 48",
+    viewBox: "0 0 24 24",
     fill: "none",
-    className: "h-10 w-10",
+    className: "h-5.5 w-5.5",
     "aria-hidden": true,
     stroke: "currentColor" as const,
-    strokeWidth: 1.75,
+    strokeWidth: 1.6,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
 
-  if (name === "register") {
+  if (name === "vitals") {
     return (
       <svg {...common}>
-        {/* Clipboard / form */}
-        <rect x="13" y="12" width="22" height="26" rx="2" />
-        <path d="M19 12v-2h10v2M18 20h12M18 26h12M18 32h7" />
+        {/* Pulse line over a heart */}
+        <path d="M12 20.5C6.5 16.5 3.5 13 3.5 9.5a4.5 4.5 0 018.5-2 4.5 4.5 0 018.5 2c0 3.5-3 7-8.5 11z" />
+        <path d="M6.5 12h3l1.5-3 2 5 1.5-2.5h3" />
       </svg>
     );
   }
 
-  if (name === "confirm") {
+  if (name === "procedure") {
     return (
       <svg {...common}>
-        {/* Calendar with check */}
-        <rect x="11" y="14" width="26" height="22" rx="2" />
-        <path d="M11 20h26M17 11v6M31 11v6" />
-        <path d="M19 27l4 4 7-8" />
+        {/* Syringe angled down-left: barrel, needle, plunger, dose ticks */}
+        <path d="M16.5 5.5L6.5 15.5M18.5 7.5L8.5 17.5M16.5 5.5l2 2M6.5 15.5l2 2" />
+        <path d="M7.5 16.5L4 20" />
+        <path d="M17.5 6.5L20 4M18.6 2.6l2.8 2.8" />
+        <path d="M13.5 8.5l1.5 1.5M11 11l1.5 1.5" />
       </svg>
     );
   }
 
-  if (name === "report") {
+  if (name === "medication") {
     return (
       <svg {...common}>
-        {/* Document with checkmark */}
-        <path d="M15 10h13l6 6v22H15z" />
-        <path d="M28 10v6h6" />
-        <path d="M19 28l3 3 6-7" />
+        {/* Pill bottle */}
+        <rect x="7" y="7.5" width="8" height="13" rx="1.5" />
+        <path d="M6.5 7.5h9M9 4.5h4v3H9zM9.5 13.5h3M11 12v3" />
+        <circle cx="18.5" cy="16.5" r="0.2" />
       </svg>
     );
   }
 
-  if (name === "start") {
+  if (name === "consult") {
     return (
       <svg {...common}>
-        {/* Caregiver assisting */}
-        <circle cx="18" cy="14" r="3.5" />
-        <path d="M18 17.5v9l-4 8M18 26.5l4 8M18 21l-5 3M18 21l6 2" />
-        <circle cx="33" cy="16" r="3" />
-        <path d="M33 19v8M33 23l4 3" />
+        {/* Two speech bubbles */}
+        <path d="M4 5.5h10a1.5 1.5 0 011.5 1.5v5a1.5 1.5 0 01-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 012.5 12V7A1.5 1.5 0 014 5.5z" />
+        <path d="M18.5 9.5h1.5A1.5 1.5 0 0121.5 11v4.5a1.5 1.5 0 01-1.5 1.5h-.5v2.5l-3-2.5h-3" />
       </svg>
     );
   }
 
-  // default: "contact" — envelope
+  if (name === "palliative") {
+    return (
+      <svg {...common}>
+        {/* Heart resting on an open palm */}
+        <path d="M12 12.5c-2.8-2-4.3-3.8-4.3-5.7A2.55 2.55 0 0112 5.4a2.55 2.55 0 014.3 1.4c0 1.9-1.5 3.7-4.3 5.7z" />
+        <path d="M4.5 17c2-1.5 3.5-2 5-2h4a1.25 1.25 0 010 2.5H10" />
+        <path d="M13.5 17.5l4.5-1.5a1.3 1.3 0 011 2.4l-5.5 2.6c-1.5.7-3 .5-4.5-.2l-4.5-2" />
+      </svg>
+    );
+  }
+
+  // default: "hospital" — building with a cross
   return (
     <svg {...common}>
-      <rect x="9" y="14" width="30" height="20" rx="2" />
-      <path d="M10 16l14 10 14-10" />
+      <rect x="5" y="5.5" width="14" height="15" rx="1" />
+      <path d="M3.5 20.5h17" />
+      <path d="M12 8.5v4M10 10.5h4" />
+      <path d="M8.5 16h2v4.5h3V16h2" />
+    </svg>
+  );
+}
+
+/** Right arrow used in the application banner chips. */
+function ArrowRightIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className="h-5 w-5"
+      aria-hidden="true"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
     </svg>
   );
 }
@@ -428,78 +665,6 @@ function ClockIcon() {
     <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-muted" aria-hidden="true">
       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
       <path d="M12 7.5V12l3 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/** Line-art icons for the sample-day timeline circles. */
-function TimelineIcon({ name }: { name: string }) {
-  const common = {
-    viewBox: "0 0 48 48",
-    fill: "none",
-    className: "h-14 w-14",
-    "aria-hidden": true,
-    stroke: "currentColor" as const,
-    strokeWidth: 1.75,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (name === "medication") {
-    return (
-      <svg {...common}>
-        {/* Pill bottle */}
-        <rect x="14" y="14" width="14" height="22" rx="2" />
-        <path d="M13 14h16M18 10h6v4h-6z" />
-        <path d="M18 24h6M21 21v6" />
-        {/* Clock */}
-        <circle cx="34" cy="30" r="6" />
-        <path d="M34 27v3l2 1.5" />
-      </svg>
-    );
-  }
-
-  if (name === "outing") {
-    return (
-      <svg {...common}>
-        {/* Two walking figures */}
-        <circle cx="17" cy="11" r="3" />
-        <path d="M17 14v8l-4 8M17 22l4 6M17 18l-4 2M17 18l4 2" />
-        <circle cx="32" cy="13" r="3" />
-        <path d="M32 16v7l-4 7M32 23l4 6M32 20l-4 2M32 20l4 2" />
-      </svg>
-    );
-  }
-
-  if (name === "injection") {
-    return (
-      <svg {...common}>
-        {/* Syringe */}
-        <path d="M30 12l6 6M33 9l6 6" />
-        <path d="M31.5 16.5L16 32l-4 1-1 4-2-2 4-1 1-4 15.5-15.5z" />
-        <path d="M27 21l3 3M23 25l3 3" />
-      </svg>
-    );
-  }
-
-  if (name === "rehab") {
-    return (
-      <svg {...common}>
-        {/* Seated person with assisting hand (rehabilitation) */}
-        <circle cx="20" cy="13" r="3" />
-        <path d="M20 16v6l-5 4M20 22l5 3 6-1M15 26l-1 8M15 26h7" />
-        <path d="M31 21l5-2" />
-      </svg>
-    );
-  }
-
-  // default: "care" — two people side by side (assistance)
-  return (
-    <svg {...common}>
-      <circle cx="18" cy="12" r="3.5" />
-      <path d="M18 15.5v12M18 19l-5 3M18 19l5 3M18 27.5l-4 8M18 27.5l4 8" />
-      <circle cx="32" cy="13" r="3" />
-      <path d="M32 16v10l-3 8M32 26l3 8M32 19l4 2" />
     </svg>
   );
 }
