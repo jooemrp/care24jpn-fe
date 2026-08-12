@@ -1,7 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function QuasiMandatePage() {
-  return (
-    <LegalStubPage heading={{ ja: "準委任契約", en: "Quasi-Mandate Contract" }} />
-  );
+  return <LegalDocPage doc={legalDocs.quasiMandate} />;
 }

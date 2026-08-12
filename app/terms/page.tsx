@@ -1,7 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function TermsPage() {
-  return (
-    <LegalStubPage heading={{ ja: "利用規約", en: "Terms of Service" }} />
-  );
+  return <LegalDocPage doc={legalDocs.terms} />;
 }

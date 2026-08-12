@@ -888,11 +888,3 @@ export const company = {
     },
   ],
 };
-
-/** Shared notice for legal pages whose documents are still pending. */
-export const legalStub = {
-  notice: {
-    ja: "本ページの内容は現在準備中です。今しばらくお待ちください。",
-    en: "This page is currently being prepared. Please check back soon.",
-  } satisfies Bilingual,
-};

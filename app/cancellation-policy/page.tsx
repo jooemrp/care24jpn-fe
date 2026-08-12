@@ -1,9 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function CancellationPolicyPage() {
-  return (
-    <LegalStubPage
-      heading={{ ja: "キャンセルポリシー", en: "Cancellation Policy" }}
-    />
-  );
+  return <LegalDocPage doc={legalDocs.cancellationPolicy} />;
 }

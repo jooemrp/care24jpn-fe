@@ -1,9 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function PrivacyPage() {
-  return (
-    <LegalStubPage
-      heading={{ ja: "プライバシーポリシー", en: "Privacy Policy" }}
-    />
-  );
+  return <LegalDocPage doc={legalDocs.privacy} />;
 }

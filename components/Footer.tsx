@@ -26,22 +26,23 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="mx-auto max-w-6xl px-6 py-14 text-center">
+      <div className="mx-auto max-w-6xl px-6 py-14">
         {/* Brand */}
         <Image
           src="/images/logo.png"
           alt={brand.logoAlt.en}
           width={320}
           height={120}
-          className="mx-auto h-auto w-32"
+          className="h-auto w-32"
         />
-        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-body">
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
           {t(footer.description, lang)}
         </p>
 
         {/* Primary menu — same pill style as the top navigation tabs */}
         <nav className="mt-8">
-          <ul className="flex flex-wrap items-center justify-center gap-2">
+          {/* -ml-4 cancels the first pill's padding so its text lines up with the logo */}
+          <ul className="-ml-4 flex flex-wrap items-center gap-2">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
@@ -56,7 +57,7 @@ export default function Footer() {
         </nav>
 
         {/* Legal / company links */}
-        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+        <ul className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
           {footer.legalLinks.map((link) => (
             <li key={link.href}>
               <Link

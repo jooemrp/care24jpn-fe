@@ -1,12 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function CompensationPage() {
-  return (
-    <LegalStubPage
-      heading={{
-        ja: "報酬規程",
-        en: "Care Supporter Remuneration Regulations",
-      }}
-    />
-  );
+  return <LegalDocPage doc={legalDocs.compensation} />;
 }

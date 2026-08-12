@@ -1,12 +1,6 @@
-import LegalStubPage from "@/components/LegalStubPage";
+import LegalDocPage from "@/components/LegalDocPage";
+import { legalDocs } from "@/constants/legal";
 
 export default function TokushohoPage() {
-  return (
-    <LegalStubPage
-      heading={{
-        ja: "特定商取引法に基づく表示",
-        en: "Disclosure under the Specified Commercial Transactions Act",
-      }}
-    />
-  );
+  return <LegalDocPage doc={legalDocs.tokushoho} />;
 }
