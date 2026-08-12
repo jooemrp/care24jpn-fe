@@ -184,7 +184,9 @@ export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
 
   return (
     <Section heading={doc.heading}>
-      <div className="lg:flex lg:items-start lg:gap-12">
+      {/* No items-start here: the aside must stretch to the article's full
+          height, or the sticky TOC inside it has no room to travel. */}
+      <div className="lg:flex lg:gap-12">
         <div className="max-w-[42rem] lg:flex-1">
           {showToc && (
             <div className="mb-10 animate-fade-up lg:hidden">
