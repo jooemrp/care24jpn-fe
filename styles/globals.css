@@ -56,6 +56,85 @@ h4 {
   color: var(--color-heading);
 }
 
+/* ------------------------------------------------------------------
+   Legal document body (privacy policy, terms, ...).
+
+   Kept in CSS rather than per-element Tailwind classes because the rules
+   that matter for a long read are relational: a heading needs to know it
+   follows a paragraph, the first heading needs to know it is first.
+   ------------------------------------------------------------------ */
+.legal-body {
+  --ink: color-mix(in oklab, var(--color-heading) 80%, transparent);
+
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.8;
+  color: var(--ink);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+@media (width >= 768px) {
+  .legal-body {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.85;
+  }
+}
+
+.legal-body > p {
+  margin-block: 0 1.25em;
+}
+
+.legal-body > :last-child {
+  margin-bottom: 0;
+}
+
+.legal-body > :is(h2, h3) {
+  color: var(--color-heading);
+  font-weight: 600;
+  text-wrap: balance;
+  /* Without this, every table-of-contents jump parks the heading behind
+     the sticky two-tier header. */
+  scroll-margin-top: 9.5rem;
+}
+
+.legal-body > h2 {
+  font-size: 1.375rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-block: 3rem 1rem;
+}
+
+.legal-body > h3 {
+  font-size: 1.125rem;
+  line-height: 1.45;
+  margin-block: 2.25rem 0.625rem;
+}
+
+@media (width >= 768px) {
+  .legal-body > h2 {
+    font-size: 1.5rem;
+  }
+  .legal-body > h3 {
+    font-size: 1.1875rem;
+  }
+}
+
+/* A short accent rule marks where each section starts, so the document can
+   be scanned without reading it. */
+.legal-body > h2::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+
+.legal-body > :is(h2, h3):first-child {
+  margin-top: 0;
+}
+
 /* Respect reduced-motion preferences — disable load animations. */
 @media (prefers-reduced-motion: reduce) {
   *,
