@@ -5,6 +5,18 @@ import Section from "@/components/ui/Section";
 import { home, cta } from "@/constants/copy";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
 
+/** "9:00" -> 540 (minutes since midnight). */
+function toMinutes(clock: string): number {
+  const [h, m] = clock.split(":").map(Number);
+  return h * 60 + m;
+}
+
+/** "9:00〜10:00" -> { start: 540, end: 600 }, in minutes since midnight. */
+function parseTimeRange(range: string): { start: number; end: number } {
+  const [start, end] = range.split("〜");
+  return { start: toMinutes(start), end: toMinutes(end) };
+}
+
 export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
@@ -103,15 +115,15 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           {home.problems.items.map((item, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up"
+              className="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
                 <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
                   <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <p className="text-base leading-relaxed text-body">{t(item, lang)}</p>
+              <p className="text-xl leading-relaxed text-body">{t(item, lang)}</p>
             </div>
           ))}
         </div>
@@ -141,43 +153,49 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           {t(home.nursingCourse.leadIn, lang)}
         </h2>
 
+        {/* The coverage list runs as one tall column, so the price card sticks
+            below the header (130px tall) and stays in view the whole way
+            down it. `items-start` is required — a stretched or centred grid
+            item can't stick. */}
         <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
           {/* Left: the offer, as a single card */}
-          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-7 animate-fade-up">
-            <span className="inline-flex items-center rounded-full bg-accent px-5 py-1.5 text-sm font-bold text-white">
+          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
+            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
               {t(home.nursingCourse.badge, lang)}
             </span>
 
-            <p className="mt-6 text-xs font-medium text-body">
+            <p className="mt-6 text-lg font-medium text-body">
               {t(home.nursingCourse.price.label, lang)}
               {t(home.nursingCourse.price.hours, lang)}
             </p>
-            <p className="mt-1 flex items-baseline gap-1.5">
+            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
               <span className="text-5xl font-bold tabular-nums text-heading">
                 {t(home.nursingCourse.price.amount, lang)}
               </span>
-              <span className="text-xs text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
+              <span className="text-lg text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
               <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
             </p>
-            <p className="mt-1 text-sm text-body">
+            <p className="mt-1 text-lg text-body">
               {t(home.nursingCourse.price.taxIncluded, lang)}
             </p>
 
-            <p className="mt-6 text-sm text-muted">{t(home.nursingCourse.note, lang)}</p>
+            <p className="mt-6 text-lg text-muted">{t(home.nursingCourse.note, lang)}</p>
           </div>
 
           {/* Right: what the course covers */}
-          <div className="animate-fade-up [animation-delay:120ms] md:pt-2">
-            <h3 className="whitespace-pre-line text-lg font-bold leading-relaxed text-heading md:text-xl">
+          <div className="animate-fade-up [animation-delay:120ms]">
+            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
               {t(home.nursingCourse.panel.heading, lang)}
             </h3>
-            <ul className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+            {/* One column: each item gets the full width, so labels wrap at
+                most twice and the icons stay on a single vertical rhythm. */}
+            <ul className="mt-6 flex flex-col gap-5">
               {home.nursingCourse.panel.items.map((item, i) => (
                 <li key={i} className="flex items-center gap-3.5">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
                     <NursingIcon name={item.icon} />
                   </span>
-                  <span className="text-sm leading-snug text-body">{t(item.label, lang)}</span>
+                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
                 </li>
               ))}
             </ul>
@@ -187,48 +205,60 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
       {/* Care course — second, after the nursing course */}
       <Section surface lang={lang}>
-        {/* Lead-in heading */}
+        {/* Lead-in heading, with the course description directly under it —
+            it explains the heading, so it belongs there rather than floating
+            beside the price. */}
         <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
           {t(home.careCourse.leadIn, lang)}
         </h2>
+        <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-body animate-fade-up">
+          {t(home.careCourse.tagline, lang)}
+          {t(home.careCourse.taglineSub, lang)}
+        </p>
 
-        {/* Course badge + tagline */}
-        <div className="mt-10 flex flex-wrap items-center gap-4 animate-fade-up">
-          <span className="inline-flex items-center rounded-lg bg-primary px-6 py-2 text-lg font-bold text-white">
-            {t(home.careCourse.badge, lang)}
-          </span>
-          <div className="text-base text-body">
-            <p>{t(home.careCourse.tagline, lang)}</p>
-            <p>{t(home.careCourse.taglineSub, lang)}</p>
-          </div>
-        </div>
-
-        {/* Pricing row */}
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 animate-fade-up">
-          <div className="flex items-center gap-4">
-            <span className="inline-flex flex-col items-center rounded-lg bg-primary-mid px-4 py-2 text-center text-sm font-bold leading-tight text-white">
-              {t(home.careCourse.price.label, lang)}
-              <span className="text-xs font-normal">{t(home.careCourse.price.hours, lang)}</span>
-            </span>
-            <div className="flex flex-col">
-              <span className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-heading">{t(home.careCourse.price.amount, lang)}</span>
-                <span className="text-xs text-muted">{t(home.careCourse.price.taxNote, lang)}</span>
-                <span className="text-lg font-medium text-body">{t(home.careCourse.price.unit, lang)}</span>
+        {/* The whole offer as ONE band: price on the left, the three extra
+            terms as equal cells on the right, hairline-divided (gap-px over
+            the band's own border colour). Section palette only — the blue
+            tint already used for the care course. */}
+        <div className="mt-10 rounded-2xl border border-primary/25 bg-primary-light/50 p-6 animate-fade-up sm:p-8">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
+            <div className="lg:w-[38%] lg:shrink-0">
+              <span className="inline-flex w-fit items-center rounded-full bg-primary px-5 py-1.5 text-lg font-bold text-white">
+                {t(home.careCourse.badge, lang)}
               </span>
-              <span className="text-sm text-body">{t(home.careCourse.price.taxIncluded, lang)}</span>
+              <p className="mt-5 text-lg font-medium text-body">
+                {t(home.careCourse.price.label, lang)}
+                {t(home.careCourse.price.hours, lang)}
+              </p>
+              <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                <span className="text-5xl font-bold tabular-nums text-heading">
+                  {t(home.careCourse.price.amount, lang)}
+                </span>
+                <span className="text-lg text-muted">{t(home.careCourse.price.taxNote, lang)}</span>
+                <span className="text-lg font-medium text-body">
+                  {t(home.careCourse.price.unit, lang)}
+                </span>
+              </p>
+              <p className="mt-1 text-lg text-body">
+                {t(home.careCourse.price.taxIncluded, lang)}
+              </p>
             </div>
-          </div>
 
-          {/* Fee chips */}
-          <div className="flex flex-wrap gap-3">
-            {home.careCourse.fees.map((fee, i) => (
-              <div key={i} className="flex flex-col items-center rounded-lg border border-border px-4 py-2 text-center">
-                <span className="text-xs text-muted">{t(fee.label, lang)}</span>
-                <span className="text-sm font-bold text-heading">{t(fee.value, lang)}</span>
-                {fee.note && <span className="text-[10px] text-muted">{t(fee.note, lang)}</span>}
-              </div>
-            ))}
+            {/* Three equal cells, hairline-divided */}
+            <dl className="grid flex-1 auto-rows-fr gap-px overflow-hidden rounded-xl bg-primary/20 sm:grid-cols-3">
+              {home.careCourse.fees.map((fee, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center"
+                >
+                  <dt className="text-lg text-muted">{t(fee.label, lang)}</dt>
+                  <dd className="mt-1.5 text-lg font-bold text-heading">{t(fee.value, lang)}</dd>
+                  {fee.note && (
+                    <dd className="mt-1 text-lg leading-snug text-muted">{t(fee.note, lang)}</dd>
+                  )}
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
 
@@ -248,8 +278,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               <h3 className="mt-5 text-xl font-bold text-heading">{t(card.title, lang)}</h3>
               <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
                 {card.items.map((item, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm text-body">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                  <li key={j} className="flex items-start gap-2 text-lg leading-snug text-body">
+                    <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                     {t(item, lang)}
                   </li>
                 ))}
@@ -259,98 +289,109 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </div>
       </Section>
 
-      {/* Examples — three usage cases, each with its request, services and a
-          vertical schedule. (Replaced the horizontal icon timelines, which
-          followed the competitor's layout.) */}
+      {/* Examples — three usage cases as an alternating editorial spread:
+          the person's request stands on one half, their actual day on the
+          other, sides flipping per case. The day is drawn like a calendar
+          column — each block's height follows its real duration — so a
+          reader sees how a visit is shaped without reading every line.
+          No cards, no tabs: all three cases stay open. */}
       <Section lang={lang}>
         <div className="text-center animate-fade-up">
-          <p className="text-sm font-bold text-body">{t(home.examples.leadIn, lang)}</p>
+          <p className="text-lg font-bold text-body">{t(home.examples.leadIn, lang)}</p>
           <h2 className="mt-2 text-3xl font-bold text-primary">{t(home.examples.heading, lang)}</h2>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-4 flex flex-col">
           {home.examples.cases.map((c, ci) => {
             const accent = c.tone === "accent";
+            const flip = ci % 2 === 1;
+            const ranges = c.schedule.map((row) => parseTimeRange(row.time));
+            const dayStart = c.schedule[0].time.split("〜")[0];
+            const dayEnd = c.schedule[c.schedule.length - 1].time.split("〜")[1];
             return (
               <article
                 key={ci}
-                className="flex flex-col rounded-3xl border border-border/50 bg-white p-6 shadow-[0_8px_24px_rgba(27,31,94,0.05)] animate-fade-up"
+                className="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16"
                 style={{ animationDelay: `${ci * 100}ms` }}
               >
-                {/* Case pill + scenario category */}
-                <span
-                  className={`self-start rounded-full px-3.5 py-1 text-xs font-bold ${
-                    accent ? "bg-accent-light text-accent" : "bg-primary-light text-primary"
-                  }`}
-                >
-                  {t(c.label, lang)}
-                </span>
-                <p className="mt-3 text-xs font-medium tracking-wide text-muted">
-                  {t(c.title, lang)}
-                </p>
-
-                {/* The family's request — the headline of the card */}
-                <div
-                  className={`relative mt-2 rounded-2xl px-4 py-3.5 ${
-                    accent ? "bg-accent-light/50" : "bg-primary-light/50"
-                  }`}
-                >
-                  <h3 className="text-base font-bold leading-relaxed text-heading">
+                {/* The ask */}
+                <div className={flip ? "lg:order-2" : ""}>
+                  <p
+                    className={`text-lg font-bold tracking-wide ${
+                      accent ? "text-accent" : "text-primary"
+                    }`}
+                  >
+                    {t(c.label, lang)}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">
                     {t(c.request, lang)}
                   </h3>
-                  {/* Speech-bubble tail */}
-                  <span
-                    className={`absolute -bottom-1.5 left-6 h-3 w-3 rotate-45 rounded-[3px] ${
-                      accent ? "bg-accent-light/50" : "bg-primary-light/50"
-                    }`}
-                    aria-hidden="true"
-                  />
-                </div>
+                  <p className="mt-4 text-lg leading-relaxed text-body">{t(c.title, lang)}</p>
 
-                {/* Services provided */}
-                <p className="mt-5 text-xs font-bold text-muted">
-                  {t(home.examples.servicesLabel, lang)}
-                </p>
-                <ul className="mt-2 flex flex-wrap gap-1.5">
-                  {c.services.map((s, si) => (
-                    <li
-                      key={si}
-                      className="rounded-full bg-bg px-3 py-1 text-xs text-body"
-                    >
-                      {t(s, lang)}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Schedule header: label + usage time */}
-                <div className="mt-5 flex items-center justify-between gap-2 border-t border-border/60 pt-4">
-                  <p className="text-xs font-bold text-muted">
-                    {t(home.examples.scheduleLabel, lang)}
+                  <p className="mt-7 text-lg font-bold text-muted">
+                    {t(home.examples.servicesLabel, lang)}
                   </p>
-                  <p className="flex items-center gap-1.5 text-xs text-body">
-                    <ClockIcon />
-                    {t(home.examples.hoursLabel, lang)}
-                    <span className="text-sm font-bold text-heading">{t(c.hours, lang)}</span>
-                  </p>
-                </div>
-
-                {/* Timetable rows */}
-                <ol className="mt-2 divide-y divide-border/40">
-                  {c.schedule.map((row, ri) => (
-                    <li key={ri} className="grid grid-cols-[5.5rem_1fr] gap-x-3 py-2.5">
-                      <span
-                        className={`pt-0.5 text-xs font-semibold tabular-nums ${
-                          accent ? "text-accent" : "text-primary"
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {c.services.map((s, si) => (
+                      <li
+                        key={si}
+                        className={`rounded-full px-4 py-1.5 text-lg text-heading ${
+                          accent ? "bg-accent-light" : "bg-primary-light"
                         }`}
                       >
-                        {row.time}
+                        {t(s, lang)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* The day, drawn to scale */}
+                <div className={flip ? "lg:order-1" : ""}>
+                  <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+                    <p className="flex items-center gap-2 text-lg font-bold text-muted">
+                      <ClockIcon />
+                      {t(home.examples.scheduleLabel, lang)}
+                    </p>
+                    <p className="text-lg font-bold tabular-nums text-heading">
+                      {dayStart}–{dayEnd}
+                      <span className="ml-2 text-lg font-normal text-muted">
+                        {t(c.hours, lang)}
                       </span>
-                      <span className="text-sm leading-snug text-body">
-                        {t(row.activity, lang)}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
+                    </p>
+                  </div>
+
+                  <ol className="mt-3 flex flex-col gap-1.5">
+                    {c.schedule.map((row, ri) => {
+                      const minutes = ranges[ri].end - ranges[ri].start;
+                      return (
+                        <li
+                          key={ri}
+                          style={{ minHeight: `${minutes * 1.05}px` }}
+                          className={`flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 ${
+                            accent
+                              ? ri % 2 === 0
+                                ? "border-accent bg-accent-light"
+                                : "border-accent/50 bg-accent-light/50"
+                              : ri % 2 === 0
+                                ? "border-primary bg-primary-light"
+                                : "border-primary/50 bg-primary-light/50"
+                          }`}
+                        >
+                          <span
+                            className={`w-[7.5rem] shrink-0 text-lg font-bold tabular-nums ${
+                              accent ? "text-accent" : "text-primary"
+                            }`}
+                          >
+                            {row.time}
+                          </span>
+                          <span className="text-lg leading-snug text-body">
+                            {t(row.activity, lang)}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
               </article>
             );
           })}
@@ -406,42 +447,21 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           circular arrow chip, tinted per audience. */}
       <Section surface lang={lang}>
         <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
-          <a
+          <ApplyBanner
             href="#contact"
-            className="group flex items-center justify-between gap-4 rounded-3xl bg-accent-light px-7 py-6 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(201,79,124,0.18)] animate-fade-up"
-          >
-            <span className="min-w-0">
-              <span className="block text-sm font-medium text-accent">
-                {t(home.apply.user.eyebrow, lang)}
-              </span>
-              <span className="mt-1.5 block text-lg font-bold leading-snug text-heading md:text-xl">
-                {t(home.apply.user.label, lang)}
-              </span>
-            </span>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-accent shadow-[0_4px_12px_rgba(201,79,124,0.15)] transition group-hover:translate-x-1">
-              <ArrowRightIcon />
-            </span>
-          </a>
-          <a
+            eyebrow={t(home.apply.user.eyebrow, lang)}
+            label={t(home.apply.user.label, lang)}
+            tone="accent"
+            delay={0}
+          />
+          <ApplyBanner
             href={home.apply.staff.href}
-            {...(staffHrefIsExternal
-              ? { target: "_blank", rel: "noopener noreferrer" }
-              : {})}
-            className="group flex items-center justify-between gap-4 rounded-3xl bg-primary-light px-7 py-6 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(43,126,193,0.18)] animate-fade-up"
-            style={{ animationDelay: "100ms" }}
-          >
-            <span className="min-w-0">
-              <span className="block text-sm font-medium text-primary">
-                {t(home.apply.staff.eyebrow, lang)}
-              </span>
-              <span className="mt-1.5 block text-lg font-bold leading-snug text-heading md:text-xl">
-                {t(home.apply.staff.label, lang)}
-              </span>
-            </span>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-[0_4px_12px_rgba(43,126,193,0.15)] transition group-hover:translate-x-1">
-              <ArrowRightIcon />
-            </span>
-          </a>
+            eyebrow={t(home.apply.staff.eyebrow, lang)}
+            label={t(home.apply.staff.label, lang)}
+            tone="primary"
+            external={staffHrefIsExternal}
+            delay={100}
+          />
         </div>
       </Section>
 
@@ -520,7 +540,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
  */
 function PyramidStatement({ badge, resolve }: { badge: string; resolve: string }) {
   return (
-    <div className="relative w-full max-w-2xl animate-fade-up">
+    <div className="relative w-full max-w-lg animate-fade-up">
       {/* Narrow, deeper triangle for small screens */}
       <svg viewBox="0 0 600 500" className="block h-auto w-full md:hidden" aria-hidden="true">
         <path
@@ -637,12 +657,61 @@ function NursingIcon({ name }: { name: string }) {
 }
 
 /** Right arrow used in the application banner chips. */
-function ArrowRightIcon() {
+/**
+ * The two entry points off this page (book care / apply to work).
+ *
+ * Solid in the audience's own colour at rest — no tint, no gradient, no
+ * shadow. The weight comes from the fill, not from size or ornament; hover
+ * only deepens it and moves the arrow.
+ *
+ * The eyebrow is 20px rather than 18px on purpose: white on these two fills
+ * is 4.0:1 / 3.4:1, which only clears WCAG AA as *large* text (bold ≥18.66px).
+ */
+function ApplyBanner({
+  href,
+  eyebrow,
+  label,
+  tone,
+  external = false,
+  delay,
+}: {
+  href: string;
+  eyebrow: string;
+  label: string;
+  tone: "accent" | "primary";
+  external?: boolean;
+  delay: number;
+}) {
+  const accent = tone === "accent";
+  return (
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      style={{ animationDelay: `${delay}ms` }}
+      className={`group flex items-center justify-between gap-4 rounded-2xl px-7 py-6 text-white transition duration-200 animate-fade-up hover:brightness-95 motion-reduce:transition-none ${
+        accent ? "bg-accent" : "bg-primary"
+      }`}
+    >
+      <span className="min-w-0">
+        <span className="block text-xl font-bold">{eyebrow}</span>
+        <span className="mt-1.5 block text-2xl font-bold leading-snug tracking-tight md:text-3xl">
+          {label}
+        </span>
+      </span>
+
+      <span className="shrink-0 transition-transform duration-200 group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+        <ArrowRightIcon className="h-8 w-8" />
+      </span>
+    </a>
+  );
+}
+
+function ArrowRightIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      className="h-5 w-5"
+      className={className}
       aria-hidden="true"
       stroke="currentColor"
       strokeWidth={2.5}
