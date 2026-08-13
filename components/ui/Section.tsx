@@ -16,7 +16,14 @@ export default function Section({ id, heading, children, surface = false, classN
   const HeadingTag = level;
 
   return (
-    <section id={id} className={`${surface ? "bg-surface" : ""} py-12 md:py-20 ${className}`}>
+    // `scroll-mt-36` (144px) only matters when this section is an anchor
+    // target: the header is sticky and 130px tall, so without the margin an
+    // in-page link (#service-details, #contact) parks the section heading
+    // underneath it.
+    <section
+      id={id}
+      className={`${surface ? "bg-surface" : ""} py-12 md:py-20 ${id ? "scroll-mt-36" : ""} ${className}`}
+    >
       <div className="max-w-5xl mx-auto px-6">
         {heading && (
           <header className="mb-10 animate-fade-up">

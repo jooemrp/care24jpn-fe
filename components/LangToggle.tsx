@@ -28,7 +28,7 @@ export default function LangToggle({
     // so this never participates in static prerendering and needs no
     // Suspense boundary — see dev-fix-langtoggle-suspense.md.
     const q = window.location.search;
-    router.push(q ? `${newPath}${q}` : newPath);
+    router.push(q ? `${newPath}${q}` : newPath, { scroll: false });
   };
 
   return (
