@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
-import TabPanel, { type Tab } from "@/components/ui/TabPanel";
-import CourseRateTable from "@/components/ui/CourseRateTable";
+import CourseRateCard from "@/components/ui/CourseRateCard";
 import JsonLd from "@/components/JsonLd";
 import { pricing as pricingCopy } from "@/constants/copy";
 import { courseRates } from "@/constants/pricing";
 import { t, isLang } from "@/features/lang/i18n";
 
 // PriceSpecification per rate row, built directly from constants/pricing.ts
-// (`courseRates`) so the JSON-LD amounts can never drift from the table
-// rendered by CourseRateTable above.
+// (`courseRates`) so the JSON-LD amounts can never drift from the rates
+// rendered by CourseRateCard below.
 const pricingJsonLd = {
   "@context": "https://schema.org",
   "@type": "OfferCatalog",
@@ -58,25 +57,24 @@ export default async function PricingPage({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  const tabs: Tab[] = courseRates.map((course) => ({
-    key: course.key,
-    label: course.name,
-    content: <CourseRateTable course={course} lang={lang} />,
-  }));
-
   return (
     <>
       <JsonLd data={pricingJsonLd} />
       <Section heading={pricingCopy.hero.heading} level="h1" lang={lang}>
-        <p className="max-w-2xl text-base leading-relaxed text-body">
+        <p className="max-w-2xl text-lg leading-relaxed text-body">
           {t(pricingCopy.hero.body, lang)}
         </p>
 
-        <ul className="mt-6 flex flex-wrap gap-3">
+        {/* The two standing terms (no joining fee, two-hour minimum) decide
+            whether a visitor can use the service at all, so they are solid
+            blocks — same flat language as the apply banners and the course
+            headers. 20px rather than 18px because white on this fill is
+            4.0:1, which only clears WCAG AA as large text (bold ≥18.66px). */}
+        <ul className="mt-7 grid gap-3 sm:grid-cols-2">
           {pricingCopy.highlights.map((highlight) => (
             <li
               key={highlight.en}
-              className="rounded-full bg-accent-light px-4 py-2 text-sm font-medium text-accent"
+              className="rounded-xl bg-accent px-6 py-5 text-xl font-bold text-white"
             >
               {t(highlight, lang)}
             </li>
@@ -84,11 +82,21 @@ export default async function PricingPage({
         </ul>
       </Section>
 
+      {/* Both courses side by side instead of behind tabs: choosing between
+          caregiving and nursing is the whole job of this page, and a tab
+          hides exactly the number the visitor wants to compare against. */}
       <Section surface lang={lang}>
-        <TabPanel tabs={tabs} lang={lang} />
-        <p className="mt-6 text-xs text-muted">
-          {t(pricingCopy.note, lang)}
-        </p>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {courseRates.map((course) => (
+            <CourseRateCard
+              key={course.key}
+              course={course}
+              lang={lang}
+              tone={course.key === "nursing" ? "accent" : "primary"}
+            />
+          ))}
+        </div>
+        <p className="mt-8 text-lg text-muted">{t(pricingCopy.note, lang)}</p>
       </Section>
     </>
   );
