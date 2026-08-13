@@ -3,7 +3,7 @@ Copy
 # Care 24 Japan — Design System
 
 ## Logo
-File: /public/images/logo.svg
+File: /public/images/logo.png (intrinsic 427×160, ~2.67:1 aspect ratio)
 Always render via next/image. Minimum width 120px. Never recolor or crop.
 
 ## Aesthetic Direction
@@ -65,7 +65,7 @@ English label
 
 ## Navbar
 - Background: white, border-bottom border-[--color-border], sticky top-0 z-50
-- Logo: next/image of /public/images/logo.png, height 40px
+- Logo: next/image of /public/images/logo.png (427×160 intrinsic), rendered w-36 h-auto (scales to 0.78 when condensed); Footer uses w-32 h-auto with a 320×120 intrinsic size
 - Nav links: text-sm text-[--color-body] hover:text-[--color-primary] transition
 - CTA button in navbar: Button primary (small), rounded-full
 

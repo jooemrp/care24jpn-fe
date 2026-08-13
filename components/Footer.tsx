@@ -1,36 +1,18 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { brand, nav, footer } from "@/constants/copy";
-import { useLangStore, t } from "@/features/lang/store";
+import { legalDocs } from "@/constants/legal";
+import { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import LangToggle from "./LangToggle";
 
-function LangToggle() {
-  const { lang, toggle } = useLangStore();
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary"
-      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
-    >
-      <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>EN</span>
-      <span className="text-border">/</span>
-      <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>JP</span>
-    </button>
-  );
-}
-
-export default function Footer() {
-  const { lang } = useLangStore();
-
+export default function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-6xl px-6 py-14">
         {/* Brand */}
         <Image
           src="/images/logo.png"
-          alt={brand.logoAlt.en}
+          alt={t(brand.logoAlt, lang)}
           width={320}
           height={120}
           className="h-auto w-32"
@@ -46,7 +28,7 @@ export default function Footer() {
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
-                  href={item.href}
+                  href={localizeHref(item.href, lang)}
                   className="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary"
                 >
                   {t(item.label, lang)}
@@ -61,10 +43,10 @@ export default function Footer() {
           {footer.legalLinks.map((link) => (
             <li key={link.href}>
               <Link
-                href={link.href}
+                href={localizeHref(link.href, lang)}
                 className="text-xs text-muted transition hover:text-primary"
               >
-                {t(link.label, lang)}
+                {t("key" in link ? legalDocs.tokushoho.heading : link.label, lang)}
               </Link>
             </li>
           ))}
@@ -74,7 +56,7 @@ export default function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <p className="text-xs text-muted">{footer.legal.ja}</p>
-          <LangToggle />
+          <LangToggle lang={lang} />
         </div>
       </div>
     </footer>

@@ -5,13 +5,9 @@
  * - Japanese (`ja`) is primary; English (`en`) renders beneath as a small
  *   uppercase secondary label.
  * - Never hardcode copy inside components — import from this file.
- * - All values below are EDITABLE PLACEHOLDERS. Replace with final copy.
+ * - All values below are the live, client-reviewed copy. Edit here — never
+ *   inline in components.
  */
-
-// Value import of legalDocs. Safe despite legal.ts importing from this file:
-// legal.ts only does `import type { Bilingual } from "./copy"`, which is
-// type-only and erased at compile time, so there is no runtime cycle.
-import { legalDocs } from "./legal";
 
 export type Bilingual = {
   ja: string;
@@ -64,6 +60,12 @@ export const cta = {
   primary: { ja: "無料相談を予約する", en: "Book a free consultation" } satisfies Bilingual,
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
   contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
+};
+
+/** Labels for non-visible UI chrome (aria-labels) that still need both languages. */
+export const ui = {
+  menuToggleLabel: { ja: "メニュー", en: "Menu" } satisfies Bilingual,
+  tabSwitchLabel: { ja: "プラン切り替え", en: "Plan tabs" } satisfies Bilingual,
 };
 
 /* ------------------------------------------------------------------ */
@@ -171,18 +173,6 @@ export const home = {
         } satisfies Bilingual,
       },
     ],
-  },
-
-  // Used only by the (currently CMS-driven, not yet live) HomeView fallback.
-  closing: {
-    heading: {
-      ja: "まずは、お話を聞かせてください。",
-      en: "Let's talk about what you need",
-    } satisfies Bilingual,
-    body: {
-      ja: "ご相談は無料です。専門スタッフが丁寧にお伺いし、最適なプランをご提案します。",
-      en: "Consultations are free. We'll listen carefully and propose the right plan.",
-    } satisfies Bilingual,
   },
 
   problems: {
@@ -815,9 +805,11 @@ export const footer = {
     { href: "/privacy", label: { ja: "プライバシーポリシー", en: "Privacy Policy" } },
     {
       href: "/tokushoho",
-      // Sourced from legalDocs.tokushoho.heading (constants/legal.ts) so the
-      // footer label can never drift from the page heading again.
-      label: legalDocs.tokushoho.heading,
+      // Label sourced from legalDocs.tokushoho.heading (constants/legal.ts)
+      // so the footer label can never drift from the page heading again.
+      // Resolved by Footer.tsx at render time (Footer is a Server Component,
+      // so importing legal.ts there doesn't push its bundle to the client).
+      key: "tokushoho",
     },
     { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
     {
@@ -832,7 +824,10 @@ export const footer = {
       href: "/quasi-mandate",
       label: { ja: "準委任契約", en: "Quasi-Mandate Contract" },
     },
-  ] satisfies { href: string; label: Bilingual }[],
+  ] satisfies (
+    | { href: string; label: Bilingual }
+    | { href: string; key: "tokushoho" }
+  )[],
   legal: {
     ja: "© 2026 Care 24 Japan. All rights reserved.",
     en: "© 2026 Care 24 Japan. All rights reserved.",

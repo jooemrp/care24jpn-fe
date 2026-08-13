@@ -1,96 +1,43 @@
-"use client";
-
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
 import Section from "@/components/ui/Section";
+import TableOfContents, { type TocItem } from "@/components/TableOfContents";
 import type { LegalBlock, LegalDoc } from "@/constants/legal";
-import { useLangStore } from "@/features/lang/store";
+import { localizeHref, type Lang } from "@/features/lang/i18n";
 
-/** Scroll offset that clears the sticky two-tier header. */
-const HEADER_OFFSET = 150;
-
-type TocItem = { id: string; text: string };
+const INLINE_LINK_PATTERN = /\[([^\]]+)\]\(([^)]+)\)/g;
 
 /**
- * Table-of-contents card, used both above the document (mobile) and in the
- * sticky sidebar (desktop). The active item is the last heading above the
- * reading position; a small pill indicator slides in beside it.
+ * Renders a legal block's text, turning any `[label](/path)` markdown-style
+ * link into a real Next.js `<Link>`. Plain text (the common case) is
+ * returned as-is; this is the only inline markup legal.ts block text
+ * supports.
  */
-function TableOfContents({ items, label }: { items: TocItem[]; label: string }) {
-  const [activeId, setActiveId] = useState("");
+function renderInlineText(text: string, keyPrefix: string, lang: Lang): ReactNode {
+  INLINE_LINK_PATTERN.lastIndex = 0;
+  if (!INLINE_LINK_PATTERN.test(text)) return text;
+  INLINE_LINK_PATTERN.lastIndex = 0;
 
-  useEffect(() => {
-    if (items.length === 0) return;
-
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + HEADER_OFFSET + 10;
-      let currentId = "";
-      for (const item of items) {
-        const el = document.getElementById(item.id);
-        if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY;
-          if (top <= scrollPos) currentId = item.id;
-          else break;
-        }
-      }
-      setActiveId(currentId);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [items]);
-
-  const scrollToHeading = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-  };
-
-  if (items.length === 0) return null;
-
-  return (
-    <nav
-      className="w-full overflow-hidden rounded-2xl border border-border/60 bg-white"
-      aria-label={label}
-    >
-      <div className="border-b border-border/50 px-5 py-3.5">
-        <p className="text-xs font-bold uppercase tracking-wider text-heading">{label}</p>
-      </div>
-      <ul className="space-y-0.5 p-3">
-        {items.map((item) => {
-          const isActive = activeId === item.id;
-          return (
-            <li key={item.id}>
-              <button
-                type="button"
-                onClick={() => scrollToHeading(item.id)}
-                aria-current={isActive ? "location" : undefined}
-                className={`group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ${
-                  isActive ? "text-primary" : "text-heading/50 hover:text-heading"
-                }`}
-              >
-                {/* Sliding pill indicator */}
-                <span
-                  className={`absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 ${
-                    isActive ? "h-6 opacity-100" : "opacity-0"
-                  }`}
-                />
-                <span
-                  className={`text-[13px] leading-snug transition-colors duration-200 ${
-                    isActive ? "font-semibold" : "font-normal"
-                  }`}
-                >
-                  {item.text}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let n = 0;
+  while ((match = INLINE_LINK_PATTERN.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const [, label, href] = match;
+    parts.push(
+      <Link
+        key={`${keyPrefix}-link-${n++}`}
+        href={localizeHref(href, lang)}
+        className="font-medium text-primary underline underline-offset-2 hover:no-underline"
+      >
+        {label}
+      </Link>,
+    );
+    lastIndex = INLINE_LINK_PATTERN.lastIndex;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
 }
 
 /**
@@ -98,7 +45,7 @@ function TableOfContents({ items, label }: { items: TocItem[]; label: string }) 
  * into a single <ul>/<ol> and wrapping tables for horizontal overflow.
  * Anchors use the block's index within the list so the TOC stays in sync.
  */
-function renderBlocks(blocks: LegalBlock[]): ReactNode[] {
+function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
   const out: ReactNode[] = [];
   let i = 0;
 
@@ -118,7 +65,7 @@ function renderBlocks(blocks: LegalBlock[]): ReactNode[] {
       out.push(
         <ListTag key={out.length}>
           {items.map((text, n) => (
-            <li key={n}>{text}</li>
+            <li key={n}>{renderInlineText(text, `li-${out.length}-${n}`, lang)}</li>
           ))}
         </ListTag>,
       );
@@ -166,7 +113,7 @@ function renderBlocks(blocks: LegalBlock[]): ReactNode[] {
     } else if (block.type === "h3") {
       out.push(<h3 key={out.length}>{block.text}</h3>);
     } else {
-      out.push(<p key={out.length}>{block.text}</p>);
+      out.push(<p key={out.length}>{renderInlineText(block.text, `p-${out.length}`, lang)}</p>);
     }
     i++;
   }
@@ -184,8 +131,7 @@ function renderBlocks(blocks: LegalBlock[]): ReactNode[] {
  * The JA and EN bodies are separate full texts, so the active language picks
  * the whole block list rather than translating block by block.
  */
-export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
-  const { lang } = useLangStore();
+export default function LegalDocPage({ doc, lang }: { doc: LegalDoc; lang: Lang }) {
   const blocks = doc.body[lang];
 
   const tocItems: TocItem[] = blocks.flatMap((block, i) =>
@@ -195,7 +141,7 @@ export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
   const showToc = tocItems.length > 2;
 
   return (
-    <Section heading={doc.heading}>
+    <Section heading={doc.heading} level="h1" lang={lang}>
       {/* No items-start here: the aside must stretch to the article's full
           height, or the sticky TOC inside it has no room to travel. */}
       <div className="lg:flex lg:gap-12">
@@ -206,7 +152,7 @@ export default function LegalDocPage({ doc }: { doc: LegalDoc }) {
             </div>
           )}
 
-          <div className="legal-body animate-fade-up">{renderBlocks(blocks)}</div>
+          <div className="legal-body animate-fade-up">{renderBlocks(blocks, lang)}</div>
         </div>
 
         {showToc && (

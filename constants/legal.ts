@@ -19,6 +19,14 @@
  *     - care_supporter_remuneration_regulations blocks 26, 27, 28, 1, 34
  *     - cancellation_policy blocks 1, 22
  *     See <run>/output/patch-legal.py for the exact substitutions applied.
+ * (c) 2026-08-12 SEO/AEO hygiene fix (F-15): tokushoho's literal
+ *     "［料金表等へのリンク］" placeholders now link to the live /pricing and
+ *     /cancellation-policy routes (both pages already existed), and the
+ *     stale "page to be created later" notes were removed since those pages
+ *     are live. Paragraph text supports inline `[label](/path)` markdown-style
+ *     links, rendered by LegalDocPage.tsx. The "［〇］月［〇］日 制定"
+ *     enactment-date placeholders in `terms` were left untouched per policy —
+ *     see the TODO comments directly above those blocks.
  */
 
 import type { Bilingual } from "./copy";
@@ -206,7 +214,7 @@ export const legalDocs = {
         { type: "h2", text: "問い合わせ先" },
         { type: "p", text: "【問い合わせ専用メールアドレス】 からお問い合わせください。 ※上記宛にお問い合わせいただければ、連絡先電話番号についても遅滞なく開示いたします。 （※公開用電話番号を設定した場合は、「電話番号03-XXXX-XXXX」と直接記載）" },
         { type: "h2", text: "利用料金" },
-        { type: "p", text: "ご利用料金については、こちらの[料金表ページへのリンク]をご確認ください。（※料金ページはこれから作成）" },
+        { type: "p", text: "ご利用料金については、[こちらの料金ページ](/pricing)をご確認ください。" },
         { type: "h2", text: "利用料金の支払い方法" },
         { type: "p", text: "クレジットカード決済、または口座振込のうち、お客様の選択した方法によりお支払いいただきます。" },
         { type: "h2", text: "利用料金以外に必要となる費用" },
@@ -218,7 +226,7 @@ export const legalDocs = {
         { type: "h2", text: "サービスのご利用が可能となる時期" },
         { type: "p", text: "当社サービスに登録後、成立した予約に記載された日程にてご利用いただけます。" },
         { type: "h2", text: "返品、キャンセルに関する事項" },
-        { type: "p", text: "本サービスの予約をキャンセルする場合には、当社の別途定める方法によりキャンセルの手続きを行うものとします。ただし、キャンセルを行う時期によってはキャンセル料が発生いたしますので、詳細は[料金表等へのリンク]をご確認ください。（※キャンセルポリシーはこれから作成）" },
+        { type: "p", text: "本サービスの予約をキャンセルする場合には、当社の別途定める方法によりキャンセルの手続きを行うものとします。ただし、キャンセルを行う時期によってはキャンセル料が発生いたしますので、詳細は[キャンセルポリシー](/cancellation-policy)をご確認ください。" },
       ],
       en: [
         { type: "h2", text: "Name of Business Operator" },
@@ -232,8 +240,7 @@ export const legalDocs = {
         { type: "p", text: "*If you contact us at the address above, we will disclose our contact phone number without delay." },
         { type: "p", text: "(*If a public phone number is set, state it directly as \"Phone Number: 03-XXXX-XXXX\")" },
         { type: "h2", text: "Usage Fees" },
-        { type: "p", text: "Regarding usage fees, please check the [Link to Fee Schedule Page] here." },
-        { type: "p", text: "(*Fee page to be created later)" },
+        { type: "p", text: "Regarding usage fees, please check [our pricing page](/pricing)." },
         { type: "h2", text: "Payment Method for Usage Fees" },
         { type: "p", text: "Payment must be made by the method chosen by the customer, either by credit card or bank transfer." },
         { type: "h2", text: "Costs Required Other Than Usage Fees" },
@@ -245,8 +252,7 @@ export const legalDocs = {
         { type: "h2", text: "Timing When Services Can Be Used" },
         { type: "p", text: "After registering for our service, you can use the service on the dates specified in the confirmed reservation." },
         { type: "h2", text: "Matters Regarding Returns and Cancellations" },
-        { type: "p", text: "If you wish to cancel a reservation for this service, you must complete the cancellation procedures in accordance with the methods separately determined by the Company. However, please note that a cancellation fee may be incurred depending on the timing of the cancellation, so please check the [Link to Fee Schedule, etc.] for details." },
-        { type: "p", text: "(*Cancellation policy to be created later)" },
+        { type: "p", text: "If you wish to cancel a reservation for this service, you must complete the cancellation procedures in accordance with the methods separately determined by the Company. However, please note that a cancellation fee may be incurred depending on the timing of the cancellation, so please check our [cancellation policy](/cancellation-policy) for details." },
       ],
     },
   },
@@ -298,6 +304,7 @@ export const legalDocs = {
         { type: "h2", text: "第11条（準拠法および管轄裁判所）" },
         { type: "li", list: "ol", text: "本規約の解釈および適用にあたっては、日本法を準拠法とします。" },
         { type: "li", list: "ol", text: "本サービスまたは個別契約に関して、ケアサポーターと当社の間で紛争が生じた場合には、当社の本店所在地を管轄する地方裁判所を第一審の専属的合意管轄裁判所とします。" },
+        // TODO: enactment date placeholder — do not fill in; must be provided by the client/legal team.
         { type: "p", text: "2026年［〇］月［〇］日 制定" },
       ],
       en: [
@@ -345,6 +352,7 @@ export const legalDocs = {
         { type: "h2", text: "Article 11 (Governing Law and Jurisdiction)" },
         { type: "li", list: "ul", text: "The interpretation and application of these Terms shall be governed by Japanese law." },
         { type: "li", list: "ul", text: "If a dispute arises between a Care Supporter and the Company regarding this Service or an Individual Contract, the district court having jurisdiction over the location of the Company's head office shall be the exclusive agreement jurisdictional court of the first instance." },
+        // TODO: enactment date placeholder — do not fill in; must be provided by the client/legal team.
         { type: "p", text: "Established on [Month] [Day], 2026" },
       ],
     },

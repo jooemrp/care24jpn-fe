@@ -1,15 +1,12 @@
-"use client";
-
 import { formatYen, type CourseRates } from "@/constants/pricing";
-import { useLangStore, t } from "@/features/lang/store";
+import { t, type Lang } from "@/features/lang/i18n";
 
 type CourseRateTableProps = {
   course: CourseRates;
+  lang: Lang;
 };
 
-export default function CourseRateTable({ course }: CourseRateTableProps) {
-  const { lang } = useLangStore();
-
+export default function CourseRateTable({ course, lang }: CourseRateTableProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
       <table className="w-full text-left text-sm">
