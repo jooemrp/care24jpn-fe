@@ -122,8 +122,8 @@ export const home = {
       en: "Resolving your anxieties and problems",
     } satisfies Bilingual,
     assist: {
-      ja: "⇒ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
-      en: "⇒We will assist you with everything from housework to personal care, according to your needs.",
+      ja: "ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
+      en: "We will assist you with everything from housework to personal care, according to your needs.",
     } satisfies Bilingual,
     heading: {
       ja: "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
@@ -812,18 +812,10 @@ export const footer = {
       key: "tokushoho",
     },
     { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
-    {
-      href: "/cancellation-policy",
-      label: { ja: "キャンセルポリシー", en: "Cancellation Policy" },
-    },
-    {
-      href: "/compensation",
-      label: { ja: "報酬規程", en: "Care Supporter Remuneration Regulations" },
-    },
-    {
-      href: "/quasi-mandate",
-      label: { ja: "準委任契約", en: "Quasi-Mandate Contract" },
-    },
+    // /cancellation-policy, /compensation and /quasi-mandate are deliberately
+    // NOT listed here. The pages stay live and reachable by direct URL (they
+    // are still linked from the terms text and kept in the sitemap) — they
+    // just don't belong in the footer navigation.
   ] satisfies (
     | { href: string; label: Bilingual }
     | { href: string; key: "tokushoho" }
