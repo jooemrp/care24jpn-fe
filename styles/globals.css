@@ -56,6 +56,190 @@ h4 {
   color: var(--color-heading);
 }
 
+/* ------------------------------------------------------------------
+   Legal document body (privacy policy, terms, ...).
+
+   Kept in CSS rather than per-element Tailwind classes because the rules
+   that matter for a long read are relational: a heading needs to know it
+   follows a paragraph, the first heading needs to know it is first.
+   ------------------------------------------------------------------ */
+.legal-body {
+  --ink: color-mix(in oklab, var(--color-heading) 80%, transparent);
+  --ink-strong: var(--color-heading);
+  --rule: color-mix(in oklab, var(--color-heading) 12%, transparent);
+
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.8;
+  color: var(--ink);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+/* Lede — the opening paragraph is the document's preamble, so it reads one
+   step larger and darker than the body it introduces. */
+.legal-body > p:first-child {
+  font-size: 1.125em;
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--color-heading) 90%, transparent);
+}
+
+@media (width >= 768px) {
+  .legal-body {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.85;
+  }
+}
+
+.legal-body > p {
+  margin-block: 0 1.25em;
+}
+
+.legal-body > :last-child {
+  margin-bottom: 0;
+}
+
+.legal-body > :is(h2, h3) {
+  color: var(--color-heading);
+  font-weight: 700;
+  text-wrap: balance;
+  /* Without this, every table-of-contents jump parks the heading behind
+     the sticky two-tier header. */
+  scroll-margin-top: 9.5rem;
+}
+
+.legal-body > h2 {
+  font-size: 1.375rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-block: 3rem 1rem;
+}
+
+.legal-body > h3 {
+  font-size: 1.125rem;
+  line-height: 1.45;
+  margin-block: 2.25rem 0.625rem;
+}
+
+@media (width >= 768px) {
+  .legal-body > h2 {
+    font-size: 1.5rem;
+  }
+  .legal-body > h3 {
+    font-size: 1.1875rem;
+  }
+}
+
+/* A short accent rule marks where each section starts, so the document can
+   be scanned without reading it. */
+.legal-body > h2::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+
+.legal-body > :is(h2, h3):first-child {
+  margin-top: 0;
+}
+
+/* Lists — markers carry the brand color so enumerated clauses scan easily. */
+.legal-body :is(ul, ol) {
+  margin-block: 0 1.5em;
+  padding-left: 1.4em;
+}
+
+.legal-body ul {
+  list-style: disc;
+}
+
+.legal-body ol {
+  list-style: decimal;
+}
+
+.legal-body li {
+  margin-block: 0.5em;
+  padding-left: 0.25em;
+}
+
+.legal-body li::marker {
+  color: var(--color-primary);
+}
+
+.legal-body ol > li::marker {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.legal-body strong {
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+/* Tables — fee schedules and rate tables from the source documents. The
+   scroll wrapper keeps a phone usable: below ~30rem three columns of prose
+   collapse into slivers, so scrolling the table is the better trade. */
+.legal-body .table-wrap {
+  margin-block: 0.5em 2rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  -webkit-overflow-scrolling: touch;
+}
+
+.legal-body table {
+  width: 100%;
+  min-width: 30rem;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.legal-body th {
+  padding: 0.75rem 1rem;
+  background: color-mix(in oklab, var(--color-primary-light) 60%, transparent);
+  color: var(--color-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.legal-body td {
+  padding: 0.875rem 1rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink);
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zebra banding — rows carry long text, and the eye loses the row halfway
+   across a multi-column table without it. */
+.legal-body tbody tr:nth-child(odd) {
+  background: color-mix(in oklab, var(--color-heading) 3%, transparent);
+}
+
+.legal-body:lang(en) {
+  max-width: 36rem;
+  line-height: 1.65;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.legal-body:lang(en) > p:first-child {
+  line-height: 1.6;
+}
+
+.legal-body:lang(en) > :is(h2, h3) {
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
 /* Respect reduced-motion preferences — disable load animations. */
 @media (prefers-reduced-motion: reduce) {
   *,

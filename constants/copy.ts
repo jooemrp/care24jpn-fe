@@ -8,6 +8,11 @@
  * - All values below are EDITABLE PLACEHOLDERS. Replace with final copy.
  */
 
+// Value import of legalDocs. Safe despite legal.ts importing from this file:
+// legal.ts only does `import type { Bilingual } from "./copy"`, which is
+// type-only and erased at compile time, so there is no runtime cycle.
+import { legalDocs } from "./legal";
+
 export type Bilingual = {
   ja: string;
   en: string;
@@ -30,9 +35,29 @@ export const brand = {
 export const nav: { href: string; label: Bilingual }[] = [
   { href: "/", label: { ja: "ホーム", en: "Home" } },
   { href: "/#service-details", label: { ja: "サービス内容", en: "Service Details" } },
-  { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
-  { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },
+  {
+    href: "/service-flow",
+    label: { ja: "ご利用の流れ", en: "How to Use Our Services" },
+  },
+  { href: "/pricing", label: { ja: "利用料金", en: "Usage Fees" } },
 ];
+
+/**
+ * Contact number shown in the header (and reused in the footer).
+ * Rendered on two lines: the number large and prominent, the note beneath.
+ */
+export const contactPhone = {
+  display: "0120-001-224",
+  tel: "0120001224",
+  /**
+   * Kept to a single line in both languages so the header block is the same
+   * height in JA and EN — the number never moves when the language changes.
+   */
+  note: {
+    ja: "24時間365日、お気軽にお問い合わせください。",
+    en: "Contact us 24 hours a day, 365 days a year.",
+  } satisfies Bilingual,
+};
 
 /** Shared call-to-action buttons reused across pages. */
 export const cta = {
@@ -87,20 +112,33 @@ export const auth = {
 export const home = {
   hero: {
     badge: {
-      ja: "完全\nオーダーメイド型\n看護で",
-      en: "Complete\nPersonalized\nNursing Care",
+      ja: "完全オーダーメイドで",
+      en: "Completely custom-made",
     } satisfies Bilingual,
     resolve: {
-      ja: "不安やお困りごとをすべて解消",
-      en: "We will resolve all your anxieties and concerns.",
+      ja: "不安やお困りごとを解消",
+      en: "Resolving your anxieties and problems",
+    } satisfies Bilingual,
+    assist: {
+      ja: "⇒ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
+      en: "⇒We will assist you with everything from housework to personal care, according to your needs.",
     } satisfies Bilingual,
     heading: {
-      ja: "公的介護保険を使わない、在宅介護の家事支援サービス",
-      en: "Home care and household support services that do not use public long-term care insurance.",
+      ja: "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
+      en: "Care and nursing support services that do not utilize medical insurance or long-term care insurance.",
     } satisfies Bilingual,
     body: {
-      ja: "",
-      en: "",
+      ja: "介護保険の「できない」を、家族の「当たり前」に変えていく。",
+      en: 'We\'re transforming the "impossible" aspects of long-term care insurance into "normal" for families.',
+    } satisfies Bilingual,
+    /** Hero-only CTA labels — the shared `cta` block still drives the header. */
+    ctaPrimary: {
+      ja: "お申込みはこちら",
+      en: "Apply here",
+    } satisfies Bilingual,
+    ctaSecondary: {
+      ja: "まずは無料登録",
+      en: "Register for free first.",
     } satisfies Bilingual,
     imageAlt: {
       ja: "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
@@ -172,16 +210,20 @@ export const home = {
     } satisfies Bilingual,
     badge: { ja: "介護コース", en: "Caregiving course" } satisfies Bilingual,
     tagline: {
-      ja: "介護も家事もまるっとお任せ",
-      en: "Leave both caregiving and housework entirely to us.",
+      ja: "介護士資格を保有したスタッフが身の回りのケアや見守り、外出の付き添いなど",
+      en: "Staff members holding caregiving qualifications provide personal care, supervision, and accompany residents on outings.",
+    } satisfies Bilingual,
+    taglineSub: {
+      ja: "幅広くサポートするコースです。",
+      en: "This course provides comprehensive support.",
     } satisfies Bilingual,
     price: {
       label: { ja: "日中基本料金", en: "Daytime base rate" } satisfies Bilingual,
-      hours: { ja: "（9:00〜18:00）", en: "(9:00–18:00)" } satisfies Bilingual,
-      amount: { ja: "3,200円", en: "¥3,200" } satisfies Bilingual,
+      hours: { ja: "（9:00〜18:00）", en: " (9:00–18:00)" } satisfies Bilingual,
+      amount: { ja: "3,400円", en: "¥3,400" } satisfies Bilingual,
       unit: { ja: "/時間", en: "/hour" } satisfies Bilingual,
       taxNote: { ja: "税抜", en: "excl. tax" } satisfies Bilingual,
-      taxIncluded: { ja: "税込価格 3,520円", en: "Tax included ¥3,520" } satisfies Bilingual,
+      taxIncluded: { ja: "税込価格 3,740円", en: "Tax included ¥3,740" } satisfies Bilingual,
     },
     fees: [
       {
@@ -274,11 +316,13 @@ export const home = {
     badge: { ja: "看護コース", en: "Nursing course" } satisfies Bilingual,
     price: {
       label: { ja: "日中基本料金", en: "Daytime base rate" } satisfies Bilingual,
-      hours: { ja: "（9:00〜18:00）", en: "(9:00–18:00)" } satisfies Bilingual,
-      amount: { ja: "5,000円", en: "¥5,000" } satisfies Bilingual,
+      // Rendered inline after the label. JA needs no space (the bracket is
+      // full-width); EN carries its own leading space.
+      hours: { ja: "（9:00〜18:00）", en: " (9:00–18:00)" } satisfies Bilingual,
+      amount: { ja: "6,000円", en: "¥6,000" } satisfies Bilingual,
       unit: { ja: "/時間", en: "/hour" } satisfies Bilingual,
       taxNote: { ja: "税抜", en: "excl. tax" } satisfies Bilingual,
-      taxIncluded: { ja: "税込価格 5,500円", en: "Tax included ¥5,500" } satisfies Bilingual,
+      taxIncluded: { ja: "税込価格 6,600円", en: "Tax included ¥6,600" } satisfies Bilingual,
     },
     note: {
       ja: "※詳しくは料金表をご覧ください。",
@@ -286,16 +330,34 @@ export const home = {
     } satisfies Bilingual,
     panel: {
       heading: {
-        ja: "介護コースの内容に加えて\n医療行為に対応",
-        en: "In addition to the caregiving course, medical care is provided.",
+        ja: "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\nなにかあったときに安心のコースです。",
+        en: "This course provides peace of mind, as staff with nursing qualifications will provide care when medical attention is needed and in case of any emergencies.",
       } satisfies Bilingual,
       items: [
-        { ja: "バイタル測定・健康状態の管理", en: "Vital checks and health monitoring" } satisfies Bilingual,
-        { ja: "医療処置（たん吸引や経管栄養）", en: "Medical procedures (suctioning, tube feeding)" } satisfies Bilingual,
-        { ja: "お薬の管理・相談", en: "Medication management and consultation" } satisfies Bilingual,
-        { ja: "療養生活の相談・支援", en: "Recuperation guidance and support" } satisfies Bilingual,
-        { ja: "終末期ケア・緩和ケア", en: "End-of-life and palliative care" } satisfies Bilingual,
-        { ja: "医療機関との連携", en: "Coordination with medical institutions" } satisfies Bilingual,
+        {
+          icon: "vitals",
+          label: { ja: "バイタル測定・健康状態の管理", en: "Vital checks and health monitoring" } satisfies Bilingual,
+        },
+        {
+          icon: "procedure",
+          label: { ja: "医療処置（たん吸引や経管栄養）", en: "Medical procedures (suctioning, tube feeding)" } satisfies Bilingual,
+        },
+        {
+          icon: "medication",
+          label: { ja: "お薬の管理・相談", en: "Medication management and consultation" } satisfies Bilingual,
+        },
+        {
+          icon: "consult",
+          label: { ja: "療養生活の相談・支援", en: "Recuperation guidance and support" } satisfies Bilingual,
+        },
+        {
+          icon: "palliative",
+          label: { ja: "終末期ケア・緩和ケア", en: "End-of-life and palliative care" } satisfies Bilingual,
+        },
+        {
+          icon: "hospital",
+          label: { ja: "医療機関との連携", en: "Coordination with medical institutions" } satisfies Bilingual,
+        },
       ],
     },
   },
@@ -309,49 +371,122 @@ export const home = {
       ja: "ご利用事例",
       en: "Examples of use",
     } satisfies Bilingual,
-    timelines: [
+    hoursLabel: { ja: "ご利用時間", en: "Usage time" } satisfies Bilingual,
+    servicesLabel: { ja: "ご利用内容", en: "Services provided" } satisfies Bilingual,
+    scheduleLabel: { ja: "1日の流れ", en: "Schedule" } satisfies Bilingual,
+    /** Three usage cases — JA wording is the client's official copy (Aug 2026 sheet). */
+    cases: [
       {
-        title: { ja: "介護コースの一日", en: "A day on the caregiving course" } satisfies Bilingual,
-        steps: [
+        label: { ja: "ケース1", en: "Case 1" } satisfies Bilingual,
+        tone: "primary",
+        title: {
+          ja: "日中の見守り中心のご利用例",
+          en: "Example of use: primarily daytime monitoring",
+        } satisfies Bilingual,
+        request: {
+          ja: "「仕事に行っている間、見守りをお願いしたい」",
+          en: "“I would like you to look after them while I am at work.”",
+        } satisfies Bilingual,
+        services: [
+          { ja: "話し相手", en: "Conversation partner" } satisfies Bilingual,
+          { ja: "近隣の散歩", en: "Neighborhood walks" } satisfies Bilingual,
+          { ja: "自宅の掃除", en: "House cleaning" } satisfies Bilingual,
+          { ja: "買い物付き添い", en: "Shopping assistance" } satisfies Bilingual,
+        ],
+        hours: { ja: "8時間", en: "8 hours" } satisfies Bilingual,
+        schedule: [
           {
-            time: "10:00〜",
-            icon: "care",
-            label: { ja: "身のまわりの\nお世話・家事", en: "Personal care\nand housework" } satisfies Bilingual,
+            time: "9:00〜10:00",
+            activity: { ja: "ご挨拶、お話、近隣のお散歩、休憩", en: "Greetings, conversations, walks around the neighborhood, and rest" } satisfies Bilingual,
           },
           {
-            time: "12:30〜",
-            icon: "medication",
-            label: { ja: "お食事・お薬の\nご用意", en: "Meal and\nmedication prep" } satisfies Bilingual,
+            time: "10:00〜12:00",
+            activity: { ja: "お食事サポート", en: "Meal support" } satisfies Bilingual,
           },
           {
-            time: "13:30〜",
-            icon: "outing",
-            label: { ja: "散歩・お買い物", en: "Walks and shopping" } satisfies Bilingual,
+            time: "12:00〜13:00",
+            activity: { ja: "お掃除", en: "Cleaning" } satisfies Bilingual,
+          },
+          {
+            time: "13:00〜14:00",
+            activity: { ja: "買い物付き添い", en: "Shopping escort" } satisfies Bilingual,
+          },
+          {
+            time: "14:00〜16:00",
+            activity: { ja: "お話", en: "Conversation" } satisfies Bilingual,
+          },
+          {
+            time: "16:00〜17:00",
+            activity: { ja: "夕飯見守り", en: "Watching over dinner" } satisfies Bilingual,
           },
         ],
       },
       {
-        title: { ja: "看護コースの一日", en: "A day on the nursing course" } satisfies Bilingual,
-        steps: [
+        label: { ja: "ケース2", en: "Case 2" } satisfies Bilingual,
+        tone: "accent",
+        title: {
+          ja: "医療＋介護の見守りでのご利用例",
+          en: "Example of use: medical and nursing care monitoring",
+        } satisfies Bilingual,
+        request: {
+          ja: "「胃瘻の主人の見守り」",
+          en: "“Watching over the patient with a gastrostomy tube.”",
+        } satisfies Bilingual,
+        services: [
+          { ja: "経管栄養", en: "Tube feeding" } satisfies Bilingual,
+          { ja: "見守り", en: "Monitoring" } satisfies Bilingual,
+          { ja: "おむつ交換", en: "Diaper changes" } satisfies Bilingual,
+        ],
+        hours: { ja: "5時間", en: "5 hours" } satisfies Bilingual,
+        schedule: [
           {
-            time: "10:00〜",
-            icon: "outing",
-            label: { ja: "通院サポート\n（診察のお付き添い）", en: "Hospital-visit support\n(accompanying consultations)" } satisfies Bilingual,
+            time: "9:00〜10:00",
+            activity: { ja: "おむつ交換・経管栄養の準備", en: "Diaper change and tube-feeding preparation" } satisfies Bilingual,
           },
           {
-            time: "12:00〜",
-            icon: "medication",
-            label: { ja: "薬の管理", en: "Medication management" } satisfies Bilingual,
+            time: "10:00〜12:00",
+            activity: { ja: "経管栄養（胃ろう）の実施と食後の見守り", en: "Tube feeding (gastrostomy) and post-meal monitoring" } satisfies Bilingual,
           },
           {
-            time: "13:00〜",
-            icon: "injection",
-            label: { ja: "インシュリン注射\n食事介助", en: "Insulin injection\nand meal assistance" } satisfies Bilingual,
+            time: "12:00〜13:00",
+            activity: { ja: "おむつ交換と見守り", en: "Diaper changing and supervision" } satisfies Bilingual,
           },
           {
-            time: "15:00〜",
-            icon: "rehab",
-            label: { ja: "散歩\nリハビリテーション", en: "Walks and\nrehabilitation" } satisfies Bilingual,
+            time: "13:00〜14:00",
+            activity: { ja: "状態確認・記録作成とご家族への報告", en: "Condition check, record keeping, and report to family" } satisfies Bilingual,
+          },
+        ],
+      },
+      {
+        label: { ja: "ケース3", en: "Case 3" } satisfies Bilingual,
+        tone: "primary",
+        title: {
+          ja: "外出同行でのご利用例",
+          en: "Example of use: accompanying someone on an outing",
+        } satisfies Bilingual,
+        request: {
+          ja: "「病院の付き添いでバスで移動・診察の同行をしてほしい」",
+          en: "“I need someone to accompany me to the hospital by bus and to the doctor's appointment.”",
+        } satisfies Bilingual,
+        services: [
+          { ja: "着替え介助", en: "Help with changing clothes" } satisfies Bilingual,
+          { ja: "歩行見守り", en: "Walking supervision" } satisfies Bilingual,
+          { ja: "通院付き添い", en: "Accompaniment to appointments" } satisfies Bilingual,
+          { ja: "トイレ介助", en: "Toilet assistance" } satisfies Bilingual,
+        ],
+        hours: { ja: "3時間", en: "3 hours" } satisfies Bilingual,
+        schedule: [
+          {
+            time: "13:00〜14:00",
+            activity: { ja: "ご挨拶、お着換え、トイレ介助", en: "Greetings, changing clothes, toilet assistance" } satisfies Bilingual,
+          },
+          {
+            time: "14:00〜15:30",
+            activity: { ja: "歩行見守り、バス乗車、診察", en: "Walking supervision, bus boarding, medical examination" } satisfies Bilingual,
+          },
+          {
+            time: "15:30〜16:00",
+            activity: { ja: "ご自宅到着、お着替え", en: "Arriving home, changing clothes" } satisfies Bilingual,
           },
         ],
       },
@@ -363,67 +498,78 @@ export const home = {
     steps: [
       {
         number: "01",
-        icon: "contact",
-        title: { ja: "お問い合わせ", en: "Inquiry" } satisfies Bilingual,
+        icon: "register",
+        title: { ja: "ご登録", en: "Registration" } satisfies Bilingual,
         body: {
-          ja: "お電話やWEBからまずはお気軽にお問い合わせください。\nお客様のご質問・ご要望に丁寧にお答えします。",
-          en: "Please feel free to contact us by phone or through our website. We will carefully answer your questions and requests.",
+          ja: "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
+          en: "Please enter your information to register as a member in order to use the service.",
         } satisfies Bilingual,
-        hasCta: true,
       },
       {
         number: "02",
-        icon: "register",
-        title: { ja: "ご登録", en: "Register" } satisfies Bilingual,
+        icon: "confirm",
+        title: { ja: "ご予約の確定", en: "Confirmation of your reservation" } satisfies Bilingual,
         body: {
-          ja: "お客様のご要望やお体の状況をご入力いただき、最適なスタッフの選定を行います。",
-          en: "Please enter your requests and physical condition, and we will select the most suitable staff member for you.",
+          ja: "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
+          en: "Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc.",
         } satisfies Bilingual,
       },
       {
         number: "03",
-        icon: "confirm",
-        title: { ja: "ご予約の確定", en: "Reservation Confirmation" } satisfies Bilingual,
+        icon: "start",
+        title: { ja: "サービス開始", en: "Service Start" } satisfies Bilingual,
         body: {
-          ja: "ご予約が確定しましたら、メール・お電話にてご連絡いたします。\n事前に指定の方法でご入金をお願いします。",
-          en: "Once your reservation is confirmed, we will contact you by email or phone. Please make your payment using the method specified in advance.",
+          ja: "ご予約の日時にケアサポーターがご自宅へお伺いします。",
+          en: "A care supporter will visit your home at the scheduled date and time.",
         } satisfies Bilingual,
       },
       {
         number: "04",
-        icon: "start",
-        title: { ja: "サービス開始", en: "Service Launch" } satisfies Bilingual,
-        body: {
-          ja: "ご予約の日時にスタッフがご自宅へお伺いします。",
-          en: "A staff member will visit your home at the scheduled time.",
-        } satisfies Bilingual,
-      },
-      {
-        number: "05",
         icon: "report",
         title: { ja: "終了ご報告", en: "Completion Report" } satisfies Bilingual,
         body: {
-          ja: "サービスが終了次第、スタッフよりサービス内容のご報告をお送りしますのでご感想などご入力ください。\n問題がなければ以上で終了となります。",
-          en: "Once the service has ended, our staff will send you a report detailing the service, so please feel free to provide any feedback you may have. If there are no problems, this concludes the process.",
+          ja: "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
+          en: "After the service is completed, the care supporter will send you a report, and the service will be finished.",
         } satisfies Bilingual,
       },
     ],
   },
 
+  apply: {
+    user: {
+      eyebrow: {
+        ja: "サービスをご利用されたい方",
+        en: "For those who wish to use our service",
+      } satisfies Bilingual,
+      label: { ja: "お申込みはこちらから", en: "Apply here" } satisfies Bilingual,
+    },
+    staff: {
+      eyebrow: {
+        ja: "お仕事を希望される方",
+        en: "For those seeking employment",
+      } satisfies Bilingual,
+      label: { ja: "登録はこちらから", en: "Register here" } satisfies Bilingual,
+      // The client's real staff-registration URL is still pending. Mirrors
+      // the customer banner's "#contact" anchor (see app/page.tsx) until the
+      // client provides the actual registration destination.
+      href: "#contact",
+    },
+  },
+
   contact: {
     leadIn: { ja: "ご相談は無料です", en: "Consultations are free of charge." } satisfies Bilingual,
     heading: {
-      ja: "お気軽にお問い合わせください",
-      en: "Please feel free to contact us.",
+      ja: "24時間365日お気軽にご相談ください",
+      en: "Please feel free to contact us anytime, 24 hours a day, 365 days a year.",
     } satisfies Bilingual,
-    phone: "0120-00-0000",
+    phone: contactPhone.display,
     hours: {
       ja: "【受付時間】平日 9:00〜18:00",
       en: "[Reception Hours] Weekdays 9:00 AM – 6:00 PM",
     } satisfies Bilingual,
     isms: {
-      ja: "メディカルインフォグラフィックス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-      en: "Medical Infographics Co., Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
+      ja: "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+      en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
     } satisfies Bilingual,
   },
 };
@@ -544,37 +690,37 @@ export const serviceFlow = {
   hero: {
     heading: { ja: "ご利用の流れ", en: "How it works" } satisfies Bilingual,
     body: {
-      ja: "お問い合わせからケア開始まで、4つのステップで進みます。",
-      en: "From first contact to care, in four simple steps.",
+      ja: "ご登録からサービス終了まで、4つのステップで進みます。",
+      en: "From registration to completion, in four simple steps.",
     } satisfies Bilingual,
   },
   steps: [
     {
-      title: { ja: "お問い合わせ", en: "Get in touch" } satisfies Bilingual,
+      title: { ja: "ご登録", en: "Registration" } satisfies Bilingual,
       body: {
-        ja: "お電話またはフォームから、お気軽にご相談ください。",
-        en: "Reach out by phone or our contact form — no obligation.",
+        ja: "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
+        en: "Please enter your information to register as a member in order to use the service.",
       } satisfies Bilingual,
     },
     {
-      title: { ja: "無料アセスメント", en: "Free assessment" } satisfies Bilingual,
+      title: { ja: "ご予約の確定", en: "Confirmation of your reservation" } satisfies Bilingual,
       body: {
-        ja: "専門スタッフがご自宅に伺い、必要なケアを丁寧に確認します。",
-        en: "A professional visits your home to assess care needs.",
+        ja: "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
+        en: "Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc.",
       } satisfies Bilingual,
     },
     {
-      title: { ja: "ケアプランのご提案", en: "Personalized plan" } satisfies Bilingual,
+      title: { ja: "サービス開始", en: "Service Start" } satisfies Bilingual,
       body: {
-        ja: "ご希望とご予算に合わせた最適なケアプランをご提案します。",
-        en: "We propose a plan tailored to your wishes and budget.",
+        ja: "ご予約の日時にケアサポーターがご自宅へお伺いします。",
+        en: "A care supporter will visit your home at the scheduled date and time.",
       } satisfies Bilingual,
     },
     {
-      title: { ja: "ケアの開始", en: "Care begins" } satisfies Bilingual,
+      title: { ja: "終了ご報告", en: "Completion Report" } satisfies Bilingual,
       body: {
-        ja: "担当スタッフが決まり、安心のケアがスタートします。",
-        en: "Your dedicated caregiver begins, and support starts.",
+        ja: "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
+        en: "After the service is completed, the care supporter will send you a report, and the service will be finished.",
       } satisfies Bilingual,
     },
   ],
@@ -604,11 +750,18 @@ export const staffPricing = {
 
 export const actionPlan = {
   hero: {
-    heading: { ja: "Care24Japan アクションプラン", en: "Care24Japan Action Plan" } satisfies Bilingual,
-    body: {
-      ja: "シンプルな料金体系のアクションプランです。すべて税込価格です。",
-      en: "A simple, straightforward pricing plan. Prices include tax.",
+    heading: {
+      ja: "ケアサポーターの時給・給与体系",
+      en: "Hourly wage/salary system for care supporters",
     } satisfies Bilingual,
+    body: {
+      ja: "1時間単価・税込み表記です。",
+      en: "Hourly rates, tax included.",
+    } satisfies Bilingual,
+  },
+  columns: {
+    customer: { ja: "お客様", en: "Customer" } satisfies Bilingual,
+    supporter: { ja: "ケアサポーター", en: "Care supporter" } satisfies Bilingual,
   },
   note: {
     ja: "※ 表示価格はすべて税込です。登録料は無料です。",
@@ -637,10 +790,6 @@ export const pricing = {
       ja: "最低利用2時間から",
       en: "Minimum usage time: 2 hours",
     } satisfies Bilingual,
-    {
-      ja: "月の利用回数に応じて割引あり",
-      en: "Discounts available depending on monthly usage",
-    } satisfies Bilingual,
   ],
   note: {
     ja: "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
@@ -657,29 +806,92 @@ export const footer = {
     ja: "Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。",
     en: "Premium 24-hour in-home elderly care across Japan.",
   } satisfies Bilingual,
-  columns: [
+  /**
+   * Legal / company links (client sheet Aug 2026). Pages whose source
+   * documents have not been shared yet render a "coming soon" notice.
+   */
+  legalLinks: [
+    { href: "/company", label: { ja: "運営会社", en: "Operating Company" } },
+    { href: "/privacy", label: { ja: "プライバシーポリシー", en: "Privacy Policy" } },
     {
-      title: { ja: "メニュー", en: "Menu" } satisfies Bilingual,
-      links: [
-        { href: "/", label: { ja: "ホーム", en: "Home" } },
-        { href: "/#service-details", label: { ja: "サービス内容", en: "Service Details" } },
-        { href: "/service-flow", label: { ja: "ご利用の流れ", en: "Service flow" } },
-        { href: "/pricing", label: { ja: "料金 Page2", en: "Pricing" } },
-        { href: "/fees", label: { ja: "料金 Giver", en: "Fees" } },
-      ],
+      href: "/tokushoho",
+      // Sourced from legalDocs.tokushoho.heading (constants/legal.ts) so the
+      // footer label can never drift from the page heading again.
+      label: legalDocs.tokushoho.heading,
     },
-  ],
-  contact: {
-    title: { ja: "お問い合わせ", en: "Contact" } satisfies Bilingual,
-    phoneLabel: { ja: "電話", en: "Phone" } satisfies Bilingual,
-    phone: "0120-000-000",
-    hoursLabel: { ja: "受付時間", en: "Hours" } satisfies Bilingual,
-    hours: { ja: "24時間 365日対応", en: "24/7, 365 days" } satisfies Bilingual,
-    addressLabel: { ja: "所在地", en: "Address" } satisfies Bilingual,
-    address: { ja: "東京都千代田区0-0-0", en: "0-0-0 Chiyoda, Tokyo" } satisfies Bilingual,
-  },
+    { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
+    {
+      href: "/cancellation-policy",
+      label: { ja: "キャンセルポリシー", en: "Cancellation Policy" },
+    },
+    {
+      href: "/compensation",
+      label: { ja: "報酬規程", en: "Care Supporter Remuneration Regulations" },
+    },
+    {
+      href: "/quasi-mandate",
+      label: { ja: "準委任契約", en: "Quasi-Mandate Contract" },
+    },
+  ] satisfies { href: string; label: Bilingual }[],
   legal: {
     ja: "© 2026 Care 24 Japan. All rights reserved.",
     en: "© 2026 Care 24 Japan. All rights reserved.",
   } satisfies Bilingual,
+};
+
+/* ------------------------------------------------------------------ */
+/* Operating company (/company — content from mics.tokyo/company)      */
+/* ------------------------------------------------------------------ */
+
+export const company = {
+  heading: { ja: "運営会社", en: "Operating Company" } satisfies Bilingual,
+  rows: [
+    {
+      label: { ja: "商号", en: "Trade name" } satisfies Bilingual,
+      value: {
+        ja: "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
+        en: "MedicalInformatics Co.,Ltd.",
+      } satisfies Bilingual,
+    },
+    {
+      label: { ja: "本社", en: "Head office" } satisfies Bilingual,
+      value: {
+        ja: "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
+        en: "Meiji Seimei Building 4F, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005",
+      } satisfies Bilingual,
+    },
+    {
+      label: { ja: "Tel", en: "Tel" } satisfies Bilingual,
+      value: { ja: "03-5733-6600", en: "03-5733-6600" } satisfies Bilingual,
+    },
+    {
+      label: { ja: "設立", en: "Established" } satisfies Bilingual,
+      value: { ja: "2002年10月18日", en: "October 18, 2002" } satisfies Bilingual,
+    },
+    {
+      label: { ja: "資本金", en: "Capital" } satisfies Bilingual,
+      value: { ja: "1億円", en: "¥100 million" } satisfies Bilingual,
+    },
+    {
+      label: { ja: "代表者", en: "Representative" } satisfies Bilingual,
+      value: {
+        ja: "代表取締役 佐々木 美樹",
+        en: "Representative Director: Miki Sasaki",
+      } satisfies Bilingual,
+    },
+    {
+      label: { ja: "株主構成", en: "Shareholders" } satisfies Bilingual,
+      value: {
+        ja: "Social Impact Solutions株式会社 100％",
+        en: "Social Impact Solutions Inc. 100%",
+      } satisfies Bilingual,
+    },
+    {
+      label: { ja: "グループ企業", en: "Group companies" } satisfies Bilingual,
+      value: {
+        ja: "Aegis Care Advisors Pvt.ltd (Care24)、PT. SIPS Edutech Indonesia、EvoCare Japan株式会社",
+        en: "Aegis Care Advisors Pvt. Ltd. (Care24), PT. SIPS Edutech Indonesia, EvoCare Japan Co., Ltd.",
+      } satisfies Bilingual,
+    },
+  ],
 };
