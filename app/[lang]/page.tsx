@@ -487,9 +487,14 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
                 className="h-auto max-h-12 w-auto"
               />
             </div>
-            {/* TODO: replace with /images/iso27001-bsi.png */}
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded border border-dashed border-border bg-white text-[10px] text-muted">
-              ISO 27001
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+              <Image
+                src="/images/iso27001-bsi.png"
+                alt="BSI ISMS-AC ISO27001 認証マーク（IS 793656）"
+                width={257}
+                height={182}
+                className="h-auto max-h-full w-auto"
+              />
             </div>
             <p className="text-left text-xs leading-relaxed text-muted">
               {t(home.contact.isms, lang)}

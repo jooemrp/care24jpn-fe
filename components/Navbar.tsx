@@ -193,8 +193,8 @@ export default function Navbar({ lang }: { lang: Lang }) {
         <div
           className={`pointer-events-auto border-b border-border backdrop-blur-md ${MOTION} ${
             condensed
-              ? "bg-surface/85 shadow-[0_2px_12px_rgba(27,31,94,0.07)]"
-              : "bg-surface/70 shadow-none"
+              ? "bg-surface/65 shadow-[0_2px_12px_rgba(27,31,94,0.07)]"
+              : "bg-surface/45 shadow-none"
           }`}
         >
         {/* Tier 1 — brand, contact, actions */}
