@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { brand, nav, cta, contactPhone } from "@/constants/copy";
-import { useLangStore, t } from "@/features/lang/store";
-import type { Lang } from "@/features/lang/store";
+import { brand, nav, cta, contactPhone, ui } from "@/constants/copy";
+import { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import LangToggle from "./LangToggle";
 
 /** Scroll distance (px) after which the header condenses. */
 const CONDENSE_AT = 72;
@@ -111,26 +111,6 @@ function useActiveSection(ids: string[], pathname: string) {
   return activeId;
 }
 
-function LangToggle() {
-  const { lang, toggle } = useLangStore();
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      className={`flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary ${HIT_AREA}`}
-      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
-    >
-      <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>
-        EN
-      </span>
-      <span className="text-border">/</span>
-      <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>
-        JP
-      </span>
-    </button>
-  );
-}
-
 /**
  * Phone number on top, supporting note beneath.
  *
@@ -176,14 +156,16 @@ function PhoneBlock({
   );
 }
 
-export default function Navbar() {
+export default function Navbar({ lang }: { lang: Lang }) {
   const pathname = usePathname();
-  const { lang } = useLangStore();
   const [open, setOpen] = useState(false);
   const { sentinelRef, condensed } = useCondensedOnScroll();
   const activeSectionId = useActiveSection(SECTION_IDS, pathname);
+  const homeHref = localizeHref("/", lang);
   const activeHref =
-    pathname === "/" && activeSectionId ? `/#${activeSectionId}` : pathname;
+    pathname === homeHref && activeSectionId
+      ? `${homeHref}#${activeSectionId}`
+      : pathname;
 
   return (
     <>
@@ -222,14 +204,14 @@ export default function Navbar() {
           }`}
         >
           <Link
-            href="/"
+            href={homeHref}
             className="flex items-center shrink-0"
-            aria-label={brand.logoAlt.en}
+            aria-label={t(brand.logoAlt, lang)}
             onClick={() => setOpen(false)}
           >
             <Image
               src="/images/logo.png"
-              alt={brand.logoAlt.en}
+              alt={t(brand.logoAlt, lang)}
               width={427}
               height={160}
               priority
@@ -241,9 +223,9 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-6">
             <PhoneBlock lang={lang} condensed={condensed} />
-            <LangToggle />
+            <LangToggle lang={lang} className={HIT_AREA} />
             <Link
-              href="/pricing"
+              href={localizeHref("/pricing", lang)}
               className="inline-flex min-h-11 min-w-36 items-center justify-center bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid whitespace-nowrap"
             >
               {t(cta.secondary, lang)}
@@ -252,11 +234,11 @@ export default function Navbar() {
 
           {/* Mobile: lang toggle + hamburger */}
           <div className="md:hidden flex items-center gap-3">
-            <LangToggle />
+            <LangToggle lang={lang} className={HIT_AREA} />
             <button
               type="button"
               className="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2"
-              aria-label="メニュー"
+              aria-label={t(ui.menuToggleLabel, lang)}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
             >
@@ -269,46 +251,24 @@ export default function Navbar() {
 
         {/* Tier 2 — navigation tabs */}
         <div className="hidden md:block border-t border-border/70">
-          <ul
-            className={`max-w-6xl mx-auto px-6 flex items-center gap-2 ${MOTION} ${
-              condensed ? "h-11" : "h-12"
-            }`}
-          >
-            {nav.map((item) => {
-              const active = item.href === activeHref;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    className={`block rounded-full px-4 py-1.5 text-sm transition ${HIT_AREA} ${
-                      active
-                        ? "bg-primary-light font-medium text-primary"
-                        : "text-body hover:bg-primary-light/60 hover:text-primary"
-                    }`}
-                  >
-                    {t(item.label, lang)}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        {/* Mobile menu */}
-        {open && (
-          <div className="md:hidden border-t border-border bg-surface">
-            <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
+          <nav>
+            <ul
+              className={`max-w-6xl mx-auto px-6 flex items-center gap-2 ${MOTION} ${
+                condensed ? "h-11" : "h-12"
+              }`}
+            >
               {nav.map((item) => {
-                const active = item.href === activeHref;
+                const href = localizeHref(item.href, lang);
+                const active = href === activeHref;
                 return (
                   <li key={item.href}>
                     <Link
-                      href={item.href}
-                      onClick={() => setOpen(false)}
+                      href={href}
                       aria-current={active ? "page" : undefined}
-                      className={`block text-sm ${
-                        active ? "text-primary" : "text-body"
+                      className={`block rounded-full px-4 py-1.5 text-sm transition ${HIT_AREA} ${
+                        active
+                          ? "bg-primary-light font-medium text-primary"
+                          : "text-body hover:bg-primary-light/60 hover:text-primary"
                       }`}
                     >
                       {t(item.label, lang)}
@@ -316,19 +276,47 @@ export default function Navbar() {
                   </li>
                 );
               })}
-              <li>
-                <Link
-                  href="/pricing"
-                  onClick={() => setOpen(false)}
-                  className="inline-flex min-h-11 items-center bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
-                >
-                  {t(cta.secondary, lang)}
-                </Link>
-              </li>
-              <li className="border-t border-border pt-4">
-                <PhoneBlock lang={lang} align="start" />
-              </li>
             </ul>
+          </nav>
+        </div>
+
+        {/* Mobile menu */}
+        {open && (
+          <div className="md:hidden border-t border-border bg-surface">
+            <nav>
+              <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
+                {nav.map((item) => {
+                  const href = localizeHref(item.href, lang);
+                  const active = href === activeHref;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`block text-sm ${
+                          active ? "text-primary" : "text-body"
+                        }`}
+                      >
+                        {t(item.label, lang)}
+                      </Link>
+                    </li>
+                  );
+                })}
+                <li>
+                  <Link
+                    href={localizeHref("/pricing", lang)}
+                    onClick={() => setOpen(false)}
+                    className="inline-flex min-h-11 items-center bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
+                  >
+                    {t(cta.secondary, lang)}
+                  </Link>
+                </li>
+                <li className="border-t border-border pt-4">
+                  <PhoneBlock lang={lang} align="start" />
+                </li>
+              </ul>
+            </nav>
           </div>
         )}
         </div>

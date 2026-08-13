@@ -1,7 +1,9 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
-import type { Bilingual } from "@/constants/copy";
+import { ui, type Bilingual } from "@/constants/copy";
+import { t } from "@/features/lang/i18n";
+import type { Lang } from "@/features/lang/i18n";
 
 /**
  * Accessible tabbed interface. The only interactive component in the app.
@@ -17,9 +19,10 @@ export type Tab = {
 
 type TabPanelProps = {
   tabs: Tab[];
+  lang: Lang;
 };
 
-export default function TabPanel({ tabs }: TabPanelProps) {
+export default function TabPanel({ tabs, lang }: TabPanelProps) {
   const [active, setActive] = useState(0);
   const baseId = useId();
 
@@ -36,7 +39,7 @@ export default function TabPanel({ tabs }: TabPanelProps) {
     <div>
       <div
         role="tablist"
-        aria-label="プラン切り替え"
+        aria-label={t(ui.tabSwitchLabel, lang)}
         className="flex flex-wrap gap-2 border-b border-border"
       >
         {tabs.map((tab, i) => {

@@ -1,7 +1,5 @@
-"use client";
-
 import type { Bilingual } from "@/constants/copy";
-import { useLangStore, t } from "@/features/lang/store";
+import { t, type Lang } from "@/features/lang/i18n";
 
 export type Step = {
   title: Bilingual;
@@ -10,11 +8,10 @@ export type Step = {
 
 type StepFlowProps = {
   steps: Step[];
+  lang: Lang;
 };
 
-export default function StepFlow({ steps }: StepFlowProps) {
-  const { lang } = useLangStore();
-
+export default function StepFlow({ steps, lang }: StepFlowProps) {
   return (
     <ol className="relative space-y-10 border-l border-border pl-8">
       {steps.map((step, i) => (
