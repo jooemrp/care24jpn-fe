@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import Section from "@/components/ui/Section";
-import TabPanel, { type Tab } from "@/components/ui/TabPanel";
-import { actionPlan as feesCopy } from "@/constants/copy";
+import { actionPlan as feesCopy, cta } from "@/constants/copy";
 import {
   supporterRates,
   formatYen,
   type SupporterRates,
 } from "@/constants/pricing";
-import { t, isLang, type Lang } from "@/features/lang/i18n";
+import { t, isLang, localizeHref, type Lang } from "@/features/lang/i18n";
 
-/** Two-column rate table: what the customer pays vs. what the supporter earns. */
+/**
+ * Two-column rate table: what the customer pays vs. what the supporter earns.
+ * The course name is the table's own caption, because both courses are shown
+ * at once rather than switched between.
+ */
 function SupporterRateTable({
   course,
   lang,
@@ -19,41 +23,46 @@ function SupporterRateTable({
   lang: Lang;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-border text-left">
-            <th className="py-3 pr-4 font-bold text-heading" />
-            <th className="py-3 pr-4 text-right font-bold text-heading">
-              {t(feesCopy.columns.customer, lang)}
-            </th>
-            <th className="py-3 text-right font-bold text-heading">
-              {t(feesCopy.columns.supporter, lang)}
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border/60">
-          {course.rows.map((row) => (
-            <tr key={row.key}>
-              <td className="py-4 pr-4">
-                <span className="font-medium text-heading">{t(row.label, lang)}</span>
-                {row.detail && (
-                  <span className="mt-0.5 block text-xs text-muted">
-                    {t(row.detail, lang)}
-                  </span>
-                )}
-              </td>
-              <td className="py-4 pr-4 text-right tabular-nums text-body">
-                {formatYen(row.customer)}
-              </td>
-              <td className="py-4 text-right font-bold tabular-nums text-primary">
-                {formatYen(row.supporter)}
-              </td>
+    <section className="overflow-hidden rounded-2xl border border-border bg-surface">
+      <h2 className="bg-primary-light px-7 py-5 text-xl font-bold text-heading">
+        {t(course.name, lang)}
+      </h2>
+      <div className="overflow-x-auto px-7 pb-6">
+        <table className="w-full text-lg">
+          <thead>
+            <tr className="border-b border-border text-left">
+              <th className="py-4 pr-4 font-bold text-heading" />
+              <th className="py-4 pr-4 text-right font-bold text-heading">
+                {t(feesCopy.columns.customer, lang)}
+              </th>
+              <th className="py-4 text-right font-bold text-heading">
+                {t(feesCopy.columns.supporter, lang)}
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="divide-y divide-border/60">
+            {course.rows.map((row) => (
+              <tr key={row.key}>
+                <td className="py-4 pr-4">
+                  <span className="font-medium text-heading">{t(row.label, lang)}</span>
+                  {row.detail && (
+                    <span className="mt-0.5 block text-lg text-muted">
+                      {t(row.detail, lang)}
+                    </span>
+                  )}
+                </td>
+                <td className="py-4 pr-4 text-right tabular-nums text-body">
+                  {formatYen(row.customer)}
+                </td>
+                <td className="py-4 text-right font-bold tabular-nums text-primary">
+                  {formatYen(row.supporter)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 
@@ -91,23 +100,36 @@ export default async function FeesPage({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  const tabs: Tab[] = supporterRates.map((course) => ({
-    key: course.key,
-    label: course.name,
-    content: <SupporterRateTable course={course} lang={lang} />,
-  }));
-
   return (
     <>
       <Section heading={feesCopy.hero.heading} level="h1" lang={lang}>
-        <p className="max-w-2xl text-base leading-relaxed text-body">
+        <p className="max-w-2xl text-lg leading-relaxed text-body">
           {t(feesCopy.hero.body, lang)}
         </p>
       </Section>
 
+      {/* Both courses stacked, not tabbed — a supporter comparing caregiving
+          against nursing pay shouldn't have to click between them. */}
       <Section surface lang={lang}>
-        <TabPanel tabs={tabs} lang={lang} />
-        <p className="mt-6 text-xs text-muted">{t(feesCopy.note, lang)}</p>
+        <div className="flex flex-col gap-6">
+          {supporterRates.map((course) => (
+            <SupporterRateTable key={course.key} course={course} lang={lang} />
+          ))}
+        </div>
+        <p className="mt-8 text-lg text-muted">{t(feesCopy.note, lang)}</p>
+
+        {/* A care supporter who has read the rates needs somewhere to go. The
+            client's registration URL is still pending, so this points at the
+            home page's contact block — the same channel the recruitment banner
+            used before it was pointed here. */}
+        <div className="mt-10 animate-fade-up">
+          <Link
+            href={localizeHref("/#contact", lang)}
+            className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
+          >
+            {t(cta.contact, lang)}
+          </Link>
+        </div>
       </Section>
     </>
   );

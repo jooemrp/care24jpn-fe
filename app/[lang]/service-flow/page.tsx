@@ -37,7 +37,7 @@ export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) 
   return (
     <>
       <Section heading={serviceFlow.hero.heading} level="h1" lang={lang}>
-        <p className="max-w-2xl text-base leading-relaxed text-body">
+        <p className="max-w-2xl text-lg leading-relaxed text-body">
           {t(serviceFlow.hero.body, lang)}
         </p>
       </Section>
@@ -47,7 +47,7 @@ export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) 
         <div className="mt-12 animate-fade-up">
           <Link
             href={localizeHref("/pricing", lang)}
-            className="inline-flex bg-primary text-white px-8 py-3 rounded-full font-medium transition hover:bg-primary-mid"
+            className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
             {t(cta.primary, lang)}
           </Link>
