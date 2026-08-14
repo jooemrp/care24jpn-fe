@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { brand, nav, cta, contactPhone, ui } from "@/constants/copy";
+import { brand, nav, contactPhone, ui } from "@/constants/copy";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
 import LangToggle from "./LangToggle";
 
@@ -221,15 +221,14 @@ export default function Navbar({ lang }: { lang: Lang }) {
             />
           </Link>
 
+          {/* No pricing button here: the tier-2 tab row already links to
+              /pricing, so a second control with the same destination is pure
+              duplication — and on /pricing itself it pointed at the page the
+              visitor was already on. The client update sheet (0727) specifies
+              this row as tabs + phone number only. */}
           <div className="hidden md:flex items-center gap-6">
             <PhoneBlock lang={lang} condensed={condensed} />
             <LangToggle lang={lang} className={HIT_AREA} />
-            <Link
-              href={localizeHref("/pricing", lang)}
-              className="inline-flex min-h-11 min-w-36 items-center justify-center bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid whitespace-nowrap"
-            >
-              {t(cta.secondary, lang)}
-            </Link>
           </div>
 
           {/* Mobile: lang toggle + hamburger */}
@@ -303,15 +302,8 @@ export default function Navbar({ lang }: { lang: Lang }) {
                     </li>
                   );
                 })}
-                <li>
-                  <Link
-                    href={localizeHref("/pricing", lang)}
-                    onClick={() => setOpen(false)}
-                    className="inline-flex min-h-11 items-center bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-primary-mid"
-                  >
-                    {t(cta.secondary, lang)}
-                  </Link>
-                </li>
+                {/* Dropped alongside the desktop one — /pricing is already the
+                    fourth item in the list directly above. */}
                 <li className="border-t border-border pt-4">
                   <PhoneBlock lang={lang} align="start" />
                 </li>

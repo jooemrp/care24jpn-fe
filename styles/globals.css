@@ -19,6 +19,15 @@
   --color-primary-light: #eaf3fb; /* blue tint */
   --color-accent: #c94f7c; /* sakura pink */
   --color-accent-light: #fceef4; /* pink tint */
+  /*
+   * Deepened fills, used where white text sits on a large solid block (the two
+   * application banners). White on --color-primary is 4.32:1 and on
+   * --color-accent 4.29:1 — both pass WCAG AA only as *large* text, which
+   * forces every word on such a block to be 18.66px+ bold. These two clear
+   * 5.5:1 at any size, so a block can have a small label above a big one.
+   */
+  --color-primary-deep: #206ba4; /* white on this: 5.67:1 */
+  --color-accent-deep: #b53a67; /* white on this: 5.58:1 */
   --color-border: #d8e4f0;
   --color-muted: #8a9bb0;
 

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import Section from "@/components/ui/Section";
-import { actionPlan as feesCopy } from "@/constants/copy";
+import { actionPlan as feesCopy, cta } from "@/constants/copy";
 import {
   supporterRates,
   formatYen,
   type SupporterRates,
 } from "@/constants/pricing";
-import { t, isLang, type Lang } from "@/features/lang/i18n";
+import { t, isLang, localizeHref, type Lang } from "@/features/lang/i18n";
 
 /**
  * Two-column rate table: what the customer pays vs. what the supporter earns.
@@ -116,6 +117,19 @@ export default async function FeesPage({
           ))}
         </div>
         <p className="mt-8 text-lg text-muted">{t(feesCopy.note, lang)}</p>
+
+        {/* A care supporter who has read the rates needs somewhere to go. The
+            client's registration URL is still pending, so this points at the
+            home page's contact block — the same channel the recruitment banner
+            used before it was pointed here. */}
+        <div className="mt-10 animate-fade-up">
+          <Link
+            href={localizeHref("/#contact", lang)}
+            className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
+          >
+            {t(cta.contact, lang)}
+          </Link>
+        </div>
       </Section>
     </>
   );

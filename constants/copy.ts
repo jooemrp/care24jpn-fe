@@ -35,7 +35,8 @@ export const nav: { href: string; label: Bilingual }[] = [
     href: "/service-flow",
     label: { ja: "ご利用の流れ", en: "How to Use Our Services" },
   },
-  { href: "/pricing", label: { ja: "利用料金", en: "Usage Fees" } },
+  // Label per the client update sheet (0727), row J4: 「ご利用料金」 / "Usage Fees".
+  { href: "/pricing", label: { ja: "ご利用料金", en: "Usage Fees" } },
 ];
 
 /**
@@ -539,10 +540,14 @@ export const home = {
         en: "For those seeking employment",
       } satisfies Bilingual,
       label: { ja: "登録はこちらから", en: "Register here" } satisfies Bilingual,
-      // The client's real staff-registration URL is still pending. Mirrors
-      // the customer banner's "#contact" anchor (see app/page.tsx) until the
-      // client provides the actual registration destination.
-      href: "#contact",
+      // The client's real staff-registration URL is still pending (the 0727
+      // update sheet gives both banners a label but no destination). Until it
+      // arrives this points at /fees — the care-supporter wage table, which is
+      // what this audience actually wants to see first, and which the client
+      // wants indexed but is otherwise unlinked from anywhere on the site.
+      // Swap this one string for the real URL when it lands; the banner picks
+      // up target="_blank" on its own once the value is absolute.
+      href: "/fees",
     },
   },
 
@@ -797,8 +802,12 @@ export const footer = {
     en: "Premium 24-hour in-home elderly care across Japan.",
   } satisfies Bilingual,
   /**
-   * Legal / company links (client sheet Aug 2026). Pages whose source
-   * documents have not been shared yet render a "coming soon" notice.
+   * Legal / company links.
+   *
+   * The client update sheet (0727) lists seven entries here; the client later
+   * asked for the last three to be taken out of the UI while keeping the pages
+   * live. This list is therefore four items on purpose — see the note at the
+   * end of the array before adding any back.
    */
   legalLinks: [
     { href: "/company", label: { ja: "運営会社", en: "Operating Company" } },
@@ -812,10 +821,12 @@ export const footer = {
       key: "tokushoho",
     },
     { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
-    // /cancellation-policy, /compensation and /quasi-mandate are deliberately
-    // NOT listed here. The pages stay live and reachable by direct URL (they
-    // are still linked from the terms text and kept in the sitemap) — they
-    // just don't belong in the footer navigation.
+    // /cancellation-policy, /compensation and /quasi-mandate are omitted at
+    // the client's request: the pages stay live and are kept in the sitemap,
+    // they just must not appear in the UI. Note this leaves /compensation and
+    // /quasi-mandate with no inbound link anywhere on the site; only
+    // /cancellation-policy is still reached from the tokushoho document body
+    // (constants/legal.ts). Do not "fix" that by re-adding them here.
   ] satisfies (
     | { href: string; label: Bilingual }
     | { href: string; key: "tokushoho" }

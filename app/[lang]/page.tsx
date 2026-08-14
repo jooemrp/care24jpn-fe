@@ -443,10 +443,14 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       {/* Application banners — one for prospective users, one for nursing
           staff recruitment. The staff banner's target/rel are conditional
           because the client's real registration URL is still pending and may
-          end up pointing off-site. Original layout: text stack with a
-          circular arrow chip, tinted per audience. */}
+          end up pointing off-site.
+
+          The two explicit rows are load-bearing, not decoration: each card
+          spans them via `grid-rows-subgrid`, which is what keeps the audience
+          lines and the action lines aligned across the pair. Removing them
+          leaves each card sizing its own rows again. */}
       <Section surface lang={lang}>
-        <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
           <ApplyBanner
             href="#contact"
             eyebrow={t(home.apply.user.eyebrow, lang)}
@@ -455,7 +459,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             delay={0}
           />
           <ApplyBanner
-            href={home.apply.staff.href}
+            href={localizeHref(home.apply.staff.href, lang)}
             eyebrow={t(home.apply.staff.eyebrow, lang)}
             label={t(home.apply.staff.label, lang)}
             tone="primary"
@@ -656,16 +660,23 @@ function NursingIcon({ name }: { name: string }) {
   );
 }
 
-/** Right arrow used in the application banner chips. */
 /**
  * The two entry points off this page (book care / apply to work).
  *
- * Solid in the audience's own colour at rest — no tint, no gradient, no
- * shadow. The weight comes from the fill, not from size or ornament; hover
- * only deepens it and moves the arrow.
+ * Solid in the audience's own colour — no gradient, no glass, no glow. What
+ * carries the design is hierarchy, not ornament: the audience line is small
+ * and slightly recessed, the action is large and pure white, and the arrow
+ * lives in a chip that inverts on hover.
  *
- * The eyebrow is 20px rather than 18px on purpose: white on these two fills
- * is 4.0:1 / 3.4:1, which only clears WCAG AA as *large* text (bold ≥18.66px).
+ * Two things make the pair read as a set rather than two loose blocks:
+ *
+ * 1. `grid-rows-subgrid` — both cards borrow the *parent's* two rows, so the
+ *    audience lines share one row and the actions share another. The English
+ *    「For those who wish to use our service」 wraps to two lines while its
+ *    twin does not, and the two actions still land on the same line.
+ * 2. The deepened fills (see --color-*-deep in globals.css), which take white
+ *    past 4.5:1 at any size. On the undeepened brand colours every word here
+ *    would have to be 18.66px+ bold, which is what flattened the hierarchy.
  */
 function ApplyBanner({
   href,
@@ -683,26 +694,63 @@ function ApplyBanner({
   delay: number;
 }) {
   const accent = tone === "accent";
-  return (
-    <a
-      href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      style={{ animationDelay: `${delay}ms` }}
-      className={`group flex items-center justify-between gap-4 rounded-2xl px-7 py-6 text-white transition duration-200 animate-fade-up hover:brightness-95 motion-reduce:transition-none ${
-        accent ? "bg-accent" : "bg-primary"
-      }`}
-    >
-      <span className="min-w-0">
-        <span className="block text-xl font-bold">{eyebrow}</span>
-        <span className="mt-1.5 block text-2xl font-bold leading-snug tracking-tight md:text-3xl">
-          {label}
-        </span>
+
+  // The shadow is tinted from the fill rather than black — a grey shadow under
+  // a saturated block reads as dirt.
+  const className = [
+    "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5",
+    "rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15",
+    "sm:row-span-2 sm:grid-rows-subgrid",
+    "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
+    "motion-reduce:transition-none",
+    "focus-visible:outline-2 focus-visible:outline-offset-3",
+    accent
+      ? "bg-accent-deep shadow-[0_2px_10px_-4px_rgba(122,32,68,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(122,32,68,0.7)] focus-visible:outline-accent-deep"
+      : "bg-primary-deep shadow-[0_2px_10px_-4px_rgba(16,66,105,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(16,66,105,0.7)] focus-visible:outline-primary-deep",
+  ].join(" ");
+
+  const style = { animationDelay: `${delay}ms` };
+  const content = (
+    <>
+      {/* white/90 rather than a lighter tint: it still reads as secondary but
+          holds 4.8:1, so the line stays legible at 14px. */}
+      <span className="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">
+        {eyebrow}
+      </span>
+      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">
+        {label}
       </span>
 
-      <span className="shrink-0 transition-transform duration-200 group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
-        <ArrowRightIcon className="h-8 w-8" />
+      <span
+        aria-hidden="true"
+        className={`col-start-2 row-start-1 row-span-2 flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none ${
+          accent ? "group-hover:text-accent-deep" : "group-hover:text-primary-deep"
+        }`}
+      >
+        <ArrowRightIcon className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
       </span>
-    </a>
+    </>
+  );
+
+  // A same-page anchor and an off-site URL both want a plain <a>; an in-app
+  // route wants <Link>, or the click costs a full document reload.
+  if (external || href.startsWith("#")) {
+    return (
+      <a
+        href={href}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        style={style}
+        className={className}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} style={style} className={className}>
+      {content}
+    </Link>
   );
 }
 
