@@ -46,7 +46,7 @@ export default function GlobalNotFound() {
           </div>
 
           <Link
-            href="/ja"
+            href="/"
             className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
           >
             トップページへ / Back to home

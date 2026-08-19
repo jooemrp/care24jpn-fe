@@ -37,12 +37,6 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           className="-z-20 object-cover object-[center_40%]"
         />
 
-        {/* Scrim — keeps the navy copy legible over the photo.
-            Horizontal on desktop (copy sits left), vertical on mobile. */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-linear-to-b from-bg/95 via-bg/85 to-bg/60 md:bg-linear-to-r md:from-bg md:from-28% md:via-bg/72 md:via-52% md:to-transparent md:to-78%"
-        />
         {/* Soft sakura glow + bottom fade into the next section */}
         <div
           aria-hidden="true"

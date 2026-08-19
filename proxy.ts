@@ -8,14 +8,28 @@ export function proxy(request: NextRequest) {
 
   const firstSegment = pathname.split("/")[1] ?? "";
 
+  if (firstSegment === DEFAULT_LANG) {
+    // "/ja/..." is no longer a public URL — the default language now lives
+    // at the bare path. Send old/bookmarked links to their new home.
+    const rest = pathname.slice(`/${DEFAULT_LANG}`.length);
+    return NextResponse.redirect(
+      new URL(`${rest || "/"}${search}`, request.url),
+      308,
+    );
+  }
+
   if (isLang(firstSegment)) {
+    // A still-prefixed, non-default locale (e.g. "en") — serve as-is.
     return NextResponse.next();
   }
 
-  const suffix = pathname === "/" ? "" : pathname;
-
-  return NextResponse.redirect(
-    new URL(`/${DEFAULT_LANG}${suffix}${search}`, request.url),
+  // No locale prefix: resolve against the default locale's route
+  // internally, without changing what's shown in the address bar.
+  return NextResponse.rewrite(
+    new URL(
+      `/${DEFAULT_LANG}${pathname === "/" ? "" : pathname}${search}`,
+      request.url,
+    ),
   );
 }
 

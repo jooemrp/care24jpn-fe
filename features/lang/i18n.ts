@@ -13,6 +13,12 @@ export type Lang = "ja" | "en";
 
 export const LANGS = ["ja", "en"] as const;
 
+/**
+ * The default language has no URL prefix — proxy.ts rewrites bare paths
+ * ("/", "/pricing", ...) to "/ja/..." internally, and redirects any
+ * incoming "/ja/..." link to its prefix-less equivalent. "en" keeps its
+ * "/en" prefix.
+ */
 export const DEFAULT_LANG: Lang = "ja";
 
 export function t(text: { ja: string; en: string }, lang: Lang): string {
@@ -32,9 +38,10 @@ export function isLang(v: string): v is Lang {
  *
  * Otherwise the href is treated as an app-relative path (optionally already
  * prefixed with "/ja" or "/en", optionally followed by a "#hash"), and is
- * rewritten to be prefixed with `lang` exactly once. The root path becomes
- * the bare "/<lang>" (no trailing slash), and a hash on the root path is
- * appended directly ("/<lang>#hash", not "/<lang>/#hash").
+ * rewritten to be prefixed with `lang` exactly once — except the default
+ * language, which is prefix-less. The root path becomes the bare "/<lang>"
+ * (no trailing slash) for non-default languages, and a hash on the root
+ * path is appended directly ("/<lang>#hash", not "/<lang>/#hash").
  */
 export function localizeHref(href: string, lang: Lang): string {
   if (href.startsWith("#")) {
@@ -61,6 +68,10 @@ export function localizeHref(href: string, lang: Lang): string {
     bare = path.slice(3);
   } else {
     bare = path;
+  }
+
+  if (lang === DEFAULT_LANG) {
+    return `${bare}${hash}`;
   }
 
   const newPath = bare === "/" || bare === "" ? `/${lang}` : `/${lang}${bare}`;

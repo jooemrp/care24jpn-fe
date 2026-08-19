@@ -85,9 +85,9 @@ export async function generateMetadata({
         ? "Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。"
         : "Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.",
     alternates: {
-      canonical: `/${lang}/fees`,
+      canonical: lang === "ja" ? "/fees" : `/${lang}/fees`,
       languages: {
-        ja: "/ja/fees",
+        ja: "/fees",
         en: "/en/fees",
       },
     },

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/constants/site";
-import { LANGS, type Lang } from "@/features/lang/i18n";
+import { DEFAULT_LANG, LANGS, type Lang } from "@/features/lang/i18n";
 
 const routes = [
   "/",
@@ -20,7 +20,10 @@ const routes = [
 
 function localizedUrl(lang: Lang, route: string): string {
   const suffix = route === "/" ? "" : route;
-  return `${SITE_URL}/${lang}${suffix}`;
+  // "ja" is the default, prefix-less language (see features/lang/i18n.ts).
+  return lang === DEFAULT_LANG
+    ? `${SITE_URL}${suffix || "/"}`
+    : `${SITE_URL}/${lang}${suffix}`;
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -19,9 +19,9 @@ export async function generateMetadata({
         ? "Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。"
         : "Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.",
     alternates: {
-      canonical: `/${lang}/company`,
+      canonical: lang === "ja" ? "/company" : `/${lang}/company`,
       languages: {
-        ja: "/ja/company",
+        ja: "/company",
         en: "/en/company",
       },
     },

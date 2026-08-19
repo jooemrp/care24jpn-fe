@@ -55,7 +55,7 @@ export default function Footer({ lang }: { lang: Lang }) {
 
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <p className="text-xs text-muted">{footer.legal.ja}</p>
+          <p className="text-xs text-muted">{t(footer.legal, lang)}</p>
           <LangToggle lang={lang} />
         </div>
       </div>

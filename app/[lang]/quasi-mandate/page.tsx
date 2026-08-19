@@ -20,9 +20,9 @@ export async function generateMetadata({
         ? `${doc.heading.ja} | ${doc.heading.en} — ${brand.name}`
         : `${doc.heading.en} — ${brand.name}`,
     alternates: {
-      canonical: `/${lang}/quasi-mandate`,
+      canonical: lang === "ja" ? "/quasi-mandate" : `/${lang}/quasi-mandate`,
       languages: {
-        ja: "/ja/quasi-mandate",
+        ja: "/quasi-mandate",
         en: "/en/quasi-mandate",
       },
     },

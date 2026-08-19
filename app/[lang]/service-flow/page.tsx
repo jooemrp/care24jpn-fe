@@ -21,9 +21,9 @@ export async function generateMetadata({
         ? "ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。"
         : "From registration to completion, in four simple steps. How to use Care 24 Japan's services.",
     alternates: {
-      canonical: `/${lang}/service-flow`,
+      canonical: lang === "ja" ? "/service-flow" : `/${lang}/service-flow`,
       languages: {
-        ja: "/ja/service-flow",
+        ja: "/service-flow",
         en: "/en/service-flow",
       },
     },
