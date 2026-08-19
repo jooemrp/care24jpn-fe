@@ -446,14 +446,14 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       <Section surface lang={lang}>
         <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
           <ApplyBanner
-            href="#contact"
+            href="https://portal.care24.jp/register"
             eyebrow={t(home.apply.user.eyebrow, lang)}
             label={t(home.apply.user.label, lang)}
             tone="accent"
             delay={0}
           />
           <ApplyBanner
-            href={localizeHref(home.apply.staff.href, lang)}
+            href="https://portal.care24.jp/caregiver"
             eyebrow={t(home.apply.staff.eyebrow, lang)}
             label={t(home.apply.staff.label, lang)}
             tone="primary"
@@ -538,7 +538,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
  */
 function PyramidStatement({ badge, resolve }: { badge: string; resolve: string }) {
   return (
-    <div className="relative w-full max-w-lg animate-fade-up">
+    <div className="relative w-full max-w-sm animate-fade-up">
       {/* Narrow, deeper triangle for small screens */}
       <svg viewBox="0 0 600 500" className="block h-auto w-full md:hidden" aria-hidden="true">
         <path
@@ -564,11 +564,11 @@ function PyramidStatement({ badge, resolve }: { badge: string; resolve: string }
           sits ~40% down, not at the bounding box's halfway line, so the flex
           centre is biased upward with bottom padding; the max-widths keep the
           lines inside the slanted edges at the block's lowest point. */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pb-[18%] px-[10%] text-center text-white">
+      <div className="absolute inset-0 pt-5 flex flex-col items-center justify-center pb-[18%] px-[10%] text-center text-white">
         <p className="text-xs font-medium tracking-wide text-white/90 md:text-sm">
           {badge}
         </p>
-        <p className="mt-1.5 max-w-[56%] text-lg font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-xl">
+        <p className="mt-1.5 max-w-[56%] text-md font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-lg">
           {resolve}
         </p>
       </div>

@@ -10,7 +10,7 @@ Run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser. Requests to `/` are redirected to the default locale (`/ja`) by [proxy.ts](proxy.ts).
+Open [http://localhost:3000](http://localhost:3000) with your browser. The default locale (`ja`) is served prefix-less (e.g. `/`, `/pricing`); `/ja/...` links redirect to their prefix-less equivalent, and non-default locales keep their prefix (e.g. `/en/pricing`). See [proxy.ts](proxy.ts).
 
 ## Scripts
 
@@ -23,12 +23,12 @@ npm run lint     # run ESLint
 
 ## Internationalization
 
-Routes are prefixed with a language segment: `app/[lang]/...`, where `lang` is `ja` (default) or `en`. There is no client-side language store — `lang` is resolved from the route segment and passed down from there. See [features/lang/i18n.ts](features/lang/i18n.ts) for the language helpers (`t`, `isLang`, `localizeHref`) and [proxy.ts](proxy.ts) for the locale redirect.
+Routes are backed internally by a language segment, `app/[lang]/...`, where `lang` is `ja` (default) or `en`. The default locale (`ja`) has no URL prefix — [proxy.ts](proxy.ts) rewrites bare paths to `/ja/...` internally and 308-redirects any incoming `/ja/...` link to its prefix-less form; `en` keeps its `/en` prefix. There is no client-side language store — `lang` is resolved from the route segment and passed down from there. See [features/lang/i18n.ts](features/lang/i18n.ts) for the language helpers (`t`, `isLang`, `localizeHref`).
 
 ## Project Structure
 
-- [app/[lang]/](app/%5Blang%5D) — localized routes (pricing, fees, company, terms, privacy, etc.)
-- [components/](components) — shared UI (`Navbar`, `Footer`, `AppShell`, `LangToggle`, `LegalDocPage`, `JsonLd`, and `components/ui`)
+- [app/[lang]/](app/%5Blang%5D) — localized routes (pricing, fees, company, terms, privacy, service-flow, use-case, compensation, cancellation-policy, quasi-mandate, tokushoho, etc.)
+- [components/](components) — shared UI (`Navbar`, `Footer`, `AppShell`, `LangToggle`, `LegalDocPage`, `TableOfContents`, `JsonLd`, and `components/ui`)
 - [features/lang/](features/lang) — i18n utilities
 - [constants/](constants) — site copy, pricing, and legal content
 - [styles/](styles) — global styles
