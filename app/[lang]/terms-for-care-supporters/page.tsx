@@ -20,16 +20,21 @@ export async function generateMetadata({
         ? `${doc.heading.ja} | ${doc.heading.en} — ${brand.name}`
         : `${doc.heading.en} — ${brand.name}`,
     alternates: {
-      canonical: lang === "ja" ? "/terms" : `/${lang}/terms`,
+      canonical:
+        lang === "ja"
+          ? "/terms-for-care-supporters"
+          : `/${lang}/terms-for-care-supporters`,
       languages: {
-        ja: "/terms",
-        en: "/en/terms",
+        ja: "/terms-for-care-supporters",
+        en: "/en/terms-for-care-supporters",
       },
     },
   };
 }
 
-export default async function TermsPage({ params }: PageProps<"/[lang]">) {
+export default async function TermsForCareSupportersPage({
+  params,
+}: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   return <LegalDocPage doc={legalDocs.terms} lang={lang} />;
