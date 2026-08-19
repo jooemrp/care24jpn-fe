@@ -27,6 +27,17 @@
  *     links, rendered by LegalDocPage.tsx. The "［〇］月［〇］日 制定"
  *     enactment-date placeholders in `terms` were left untouched per policy —
  *     see the TODO comments directly above those blocks.
+ * (d) 2026-08-19 `termsForUsers` added (client's 20260819 .docx, EN + JA, 12
+ *     articles). The source's Article 2 table had one blank row artefact
+ *     between the header and the first data row (identical in both
+ *     languages) — dropped as a document/extraction artefact, not a wording
+ *     change. heading.en uses "Terms of Service" because that is what the
+ *     source .docx title says, even though the footer label the client
+ *     locked in reads "Terms & Conditions" — see the comment above
+ *     `termsForUsers.heading` below before "fixing" either one to match the
+ *     other. Article 6's JA placeholders (［2］/［金50万円］/［3］) are kept
+ *     verbatim per client instruction; see the TODO comments above those
+ *     blocks.
  */
 
 import type { Bilingual } from "./copy";
@@ -354,6 +365,119 @@ export const legalDocs = {
         { type: "li", list: "ul", text: "If a dispute arises between a Care Supporter and the Company regarding this Service or an Individual Contract, the district court having jurisdiction over the location of the Company's head office shall be the exclusive agreement jurisdictional court of the first instance." },
         // TODO: enactment date placeholder — do not fill in; must be provided by the client/legal team.
         { type: "p", text: "Established on [Month] [Day], 2026" },
+      ],
+    },
+  },
+  termsForUsers: {
+    // heading.en says "Terms of Service" (verbatim from the source .docx
+    // title) while the client-locked footer label for this document reads
+    // "Terms & Conditions (For Users)" — the divergence is intentional, see
+    // docblock deviation (d) above. Do not "align" one to match the other.
+    heading: { ja: "Care24Japan プラットフォーム利用規約（ご利用者様向け）", en: "Care24Japan Platform Terms of Service (For Users)" },
+    body: {
+      ja: [
+        { type: "p", text: "本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外サービスマッチングプラットフォーム「Care24Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスの利用者（以下「契約者」といいます。）は、本規約に同意の上、本サービスを利用するものとします。" },
+        { type: "h2", text: "第1条（目的および当社の立ち位置）" },
+        { type: "li", list: "ol", text: "本サービスは、訪問介護・在宅支援サービスおよび訪問看護サービス（以下総称して「ケアサービス」といいます。）の提供を希望する契約者（被介護者・被看護者を含みます。）と、所定の資格を有する看護師または介護士（以下「ケアサポーター」といいます。）をマッチングするプラットフォームです。" },
+        { type: "li", list: "ol", text: "当社は、契約者とケアサポーターとの間のマッチングおよび契約締結の場、ならびに本システムを通じた決済手段を提供すると共に、契約者とケアサポーターに対するサポート・フォロー等を行う役割を担うものであり、契約者に対するケアサービスそのものの提供主体ではありません。" },
+        { type: "li", list: "ol", text: "ケアサービスに関する契約（以下「個別契約」といいます。）は、本システムを通じてマッチングが成立した時点で、契約者とケアサポーターとの間で直接成立するものとします。" },
+        { type: "h2", text: "第2条（ケアサービスの区分および内容）" },
+        { type: "p", text: "本サービスにおいて提供されるケアサービスは、以下の2つの区分に分かれます。契約者は、自身の目的および必要とする資格に応じて選択するものとします。" },
+        { type: "table", rows: [["区分", "① 訪問介護・在宅支援サービス", "② 訪問看護サービス"], ["担当サポーター", "介護士、初任者研修修了者、実務者研修修了者、介護福祉士等", "看護師、准看護師等の医療有資格者"], ["業務内容", "身体介助（入浴、排泄、食事介助等）、生活支援（調理、掃除、買い物等）、見守り、通院・外出の付き添い等", "健康状態の観察、療養上の世話、医師の指示に基づく医療処置（点滴、インスリン注射、褥瘡処置、カテーテル管理等）等"], ["医療行為", "不可（法律上認められた一部の軽微な行為を除く）", "可能（医師の「訪問看護指示書」がある場合に限る）"]] },
+        { type: "h2", text: "第3条（訪問看護サービスにおける医療行為の特則）" },
+        { type: "li", list: "ol", text: "契約者は、本サービスを利用するにあたり、既に介護保険サービス等を利用している場合は、担当のケアマネジャー等に対して本サービスの利用について事前に共有・相談するものとします。" },
+        { type: "li", list: "ol", text: "契約者が第2条に定める「訪問看護サービス」を利用し、ケアサポーターに対して医療行為の提供を希望する場合、主治医が発行した有効な「訪問看護指示書」を事前に取得し、本システムを通じて当社および担当ケアサポーターに提示しなければなりません。" },
+        { type: "li", list: "ol", text: "訪問看護指示書が提示されない場合、または指示書の有効期限が切れている場合、ケアサポーターは一切の医療行為を行うことはできません。この場合、ケアサポーターは健康状態の観察や療養上の世話などの範囲内でのみサービスを提供します。" },
+        { type: "li", list: "ol", text: "契約者が訪問看護指示書を提示しなかったことにより、希望する医療行為が提供できなかった場合であっても、予約された時間に対応する利用料金は全額発生するものとし、当社およびケアサポーターは一切の減額または返金義務を負いません。" },
+        { type: "li", list: "ol", text: "提示された訪問看護指示書に、特定の施設基準や高度な専門研修を要する医療処置が含まれている場合、当社のプラットフォームに登録されているケアサポーターの資格・スキル等の状況によっては、マッチングが成立しない、または該当する医療行為を提供できない場合があります。" },
+        { type: "h2", text: "第4条（個別契約の成立および予約）" },
+        { type: "li", list: "ol", text: "契約者は、本システムより希望する日時、具体的な業務内容、ケアサポーターへの要望等の条件を指定して利用予約を申し込むものとします。" },
+        { type: "li", list: "ol", text: "当社が当該申込みに対し、本システム上でマッチングが成立し、契約者とケアサポーターとでオンライン面談を行った後、契約者とケアサポーターとの間の個別契約が確定し、成立するものとします。" },
+        { type: "li", list: "ol", text: "本サービスは、介護保険および医療保険の適用外（全額自己負担）のプライベートサービスです。契約者は、当社が別途定める料金表に基づき、算出された利用料金の全額を支払う義務を負います。" },
+        { type: "h2", text: "第5条（利用料金および支払い方法）" },
+        { type: "li", list: "ol", text: "契約者は、本サービス利用の対価として、基本料金、時間外加算（夜間・早朝・年末年始等）、当日予約加算、ケアサポーター指名料、およびケアサポーターの交通費等の合計額（以下「利用料金」といいます。）を支払うものとします。料金体系の詳細は別途料金表に定めます。" },
+        { type: "li", list: "ol", text: "利用料金の支払いは、当社が指定する決済手段により行うものとします。" },
+        { type: "li", list: "ol", text: "当社は、ケアサポーターから契約者に対する利用料金の債権について、集金代行権限を授与されているものとします。契約者が当社に対して決済を完了した時点で、契約者のケアサポーターに対する利用料金債務は消滅します。" },
+        { type: "li", list: "ol", text: "個別契約の成立後、契約者の都合により予約をキャンセルまたは変更する場合、当社が別途定めるキャンセルポリシーに基づき、所定のキャンセル料が発生します。" },
+        { type: "h2", text: "第6条（直接契約および引き抜きの禁止）" },
+        // TODO: bracketed placeholder ［2］ is verbatim from the client's 20260819 .docx — do not fill in from the English text; must be provided by the client/legal team.
+        { type: "li", list: "ol", text: "契約者は、本サービス（過去の利用を含みます。）を通じて知ったケアサポーターに対し、本サービスを介さずに直接ケアサービスの提供を依頼し、または個別に雇用契約、業務委託契約その他の契約を締結してはなりません。本サービスの利用終了後またはアカウント削除後［2］年間も同様の制限が適用されるものとします。" },
+        // TODO: bracketed placeholders ［金50万円］ and ［3］ are verbatim from the client's 20260819 .docx — do not fill in from the English text; must be provided by the client/legal team.
+        { type: "li", list: "ol", text: "契約者が前項に違反した場合、契約者は当社に対し、違約金として［金50万円］、または当該ケアサポーターへの直接発注（直接契約）によって免れたプラットフォーム利用料相当額の［3］倍の金額のいずれか高い方の金額を直ちに支払うものとします。" },
+        { type: "h2", text: "第7条（禁止事項と利用停止）" },
+        { type: "p", text: "契約者は、本サービスの利用にあたり、自らまたは被介護者・被看護者をして、以下の行為を行ってはなりません。" },
+        { type: "li", list: "ol", text: "ケアサポーターに対し、事前に本システム上で合意した業務範囲を超えた危険な作業（重量物の運搬、高所での作業等）や、法令に違反する行為を現場で直接要求・指示すること。" },
+        { type: "li", list: "ol", text: "ケアサポーターに対するハラスメント行為（セクシャルハラスメント、パワーハラスメント等）、暴言、暴力、威嚇、または名誉・信用を毀損する行為。" },
+        { type: "li", list: "ol", text: "本システムへの登録において、被介護者・被看護者の病状、認知症の症状、感染症の有無、その他身体状況について虚偽の情報を登録する行為。" },
+        { type: "li", list: "ol", text: "ケアサポーターに対し、現金、貴金属、その他高価な物品の管理や買い物を、適切な合意や記録なしに依頼する行為。" },
+        { type: "li", list: "ol", text: "その他、当社がプラットフォームの運営上不適切と判断する一切の行為。" },
+        { type: "p", text: "利用者が本規約に違反した場合、または利用者として不適当と当社が判断した場合、当社は何らの通知・催告を要せず、直ちに本システムの利用停止、マッチングの取消、または登録抹消（強制退会）の措置を講じることができるものとします。" },
+        { type: "h2", text: "第8条（免責および責任制限）" },
+        { type: "li", list: "ol", text: "ケアサービスは契約者とケアサポーターとの間の直接の契約に基づき提供されるものであり、ケアサービスの実施に伴い発生した契約者または被介護者・被看護者の怪我、病状の悪化、死亡、または器物破損、盗難等のトラブルについて、当社は原則として一切の責任を負わないものとし、該当するケアサポーターが直接責任を負うものとします。" },
+        { type: "li", list: "ol", text: "前項の規定にかかわらず、当社はプラットフォームの信頼性維持のため、カスタマーサポートによる相談受付や、当社が加入する損害賠償責任保険の適用範囲内での救済措置を行う場合があります。ただし、これにより当社が個別契約の当事者としての責任を引き受けるものではありません。" },
+        { type: "li", list: "ol", text: "何らかの理由により当社が契約者に対して法的責任を負う場合であっても、当社の賠償責任は、損害事由が発生した当該個別契約において契約者が実際に支払った利用料金の総額を上限とします。ただし、当社に故意または重大な過失がある場合はこの限りではありません。" },
+        { type: "h2", text: "第9条（契約者によるキャンセル）" },
+        { type: "p", text: "契約者は、個別契約成立後であっても、本システム所定の手続きに従い、予約をキャンセルすることができます。ただし、キャンセル時期に応じて、当社が別途定める料金表に基づき、所定のキャンセル料が発生する場合があります。" },
+        { type: "h2", text: "第10条（ケアサポーターによるキャンセル・欠勤）" },
+        { type: "p", text: "ケアサポーターの都合によるキャンセルや当日欠勤によりサービスが提供されなかった場合、契約者は当該サービスの利用料金の返金を受けるものとします。当社は代替のケアサポーターの紹介に努めますが、代替者の手配を保証するものではありません。" },
+        { type: "h2", text: "第11条（規約の変更）" },
+        { type: "li", list: "ol", text: "当社は、必要と判断した場合には、契約者に事前に通知（本システム上での掲示、または登録されたメールアドレスへの送信）することにより、本規約および料金表等の関連規程をいつでも変更することができるものとします。" },
+        { type: "li", list: "ol", text: "変更の通知後、契約者が本サービス利用をした場合、または当社の定める相当の期間内に退会手続きを行わなかった場合、契約者は変更後の規約に同意したものとみなします。" },
+        { type: "h2", text: "第12条（準拠法および管轄裁判所）" },
+        { type: "li", list: "ol", text: "本規約の解釈および適用にあたっては、日本法を準拠法とします。" },
+        { type: "li", list: "ol", text: "本サービスまたは個別契約に関して、契約者と当社の間で紛争が生じた場合には、当社の本店所在地を管轄する地方裁判所を第一審の専属的合意管轄裁判所とします。" },
+        { type: "p", text: "2026年8月3日 制定" },
+      ],
+      en: [
+        { type: "p", text: "These Terms of Service (hereinafter referred to as the \"Terms\") stipulate the terms and conditions for using the non-insurance care service matching platform \"Care24Japan\" (hereinafter referred to as the \"Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Users of the Service (hereinafter referred to as \"Contractors\") shall use the Service upon agreeing to these Terms." },
+        { type: "h2", text: "Article 1 (Purpose and Our Position)" },
+        { type: "li", list: "ul", text: "The Service is a platform that matches Contractors (including care receivers and nursing care receivers) who wish to be provided with visiting care/in-home support services and visiting nursing services (hereinafter collectively referred to as \"Care Services\") with nurses or caregivers possessing prescribed qualifications (hereinafter referred to as \"Care Supporters\")." },
+        { type: "li", list: "ul", text: "The Company assumes the role of providing a venue for matching and contract conclusion between the Contractor and the Care Supporter, providing a payment method through this system, and providing support and follow-up for the Contractor and the Care Supporter. The Company is not the direct provider of the Care Services to the Contractor." },
+        { type: "li", list: "ul", text: "A contract regarding Care Services (hereinafter referred to as an \"Individual Contract\") shall be directly concluded between the Contractor and the Care Supporter at the time matching is established through this system." },
+        { type: "h2", text: "Article 2 (Classification and Content of Care Services)" },
+        { type: "p", text: "The Care Services provided in this Service are divided into the following two classifications. The Contractor shall select the appropriate service according to their purpose and required qualifications." },
+        { type: "table", rows: [["Classification", "1. Visiting Care / In-home Support Services", "2. Visiting Nursing Services"], ["Assigned Supporter", "Caregivers, those who have completed initial training, those who have completed practical training, certified care workers, etc.", "Medical professionals such as registered nurses and assistant nurses."], ["Work Description", "Physical care (bathing, excretion, eating assistance, etc.), daily life support (cooking, cleaning, shopping, etc.), monitoring, accompanying to hospitals/outings, etc.", "Observation of health conditions, medical care for recuperation, medical treatments based on doctor's instructions (IV drips, insulin injections, bedsore treatments, catheter management, etc.), etc."], ["Medical Acts", "Prohibited (except for some minor acts permitted by law)", "Permitted (Limited to cases where there is a \"Visiting Nursing Instruction\" from a doctor)"]] },
+        { type: "h2", text: "Article 3 (Special Provisions on Medical Acts in Visiting Nursing Services)" },
+        { type: "li", list: "ul", text: "When using the Service, if the Contractor is already using nursing care insurance services, etc., they shall share and consult with their assigned care manager, etc. in advance regarding the use of the Service." },
+        { type: "li", list: "ul", text: "If the Contractor uses the \"Visiting Nursing Services\" stipulated in Article 2 and wishes for the Care Supporter to provide medical acts, the Contractor must obtain a valid \"Visiting Nursing Instruction\" issued by the attending physician in advance and present it to the Company and the assigned Care Supporter through this system." },
+        { type: "li", list: "ul", text: "If the Visiting Nursing Instruction is not presented, or if the instruction has expired, the Care Supporter cannot perform any medical acts. In this case, the Care Supporter will only provide services within the scope of observing health conditions and providing care for recuperation." },
+        { type: "li", list: "ul", text: "Even if the desired medical acts could not be provided because the Contractor failed to present the Visiting Nursing Instruction, the full usage fee corresponding to the reserved time shall be incurred, and the Company and the Care Supporter shall not bear any obligation to reduce or refund the fee." },
+        { type: "li", list: "ul", text: "If the presented Visiting Nursing Instruction includes medical treatments requiring specific facility standards or advanced specialized training, matching may not be established or the relevant medical acts may not be provided depending on the qualifications and skills of the Care Supporters registered on the Company's platform." },
+        { type: "h2", text: "Article 4 (Establishment of Individual Contracts and Reservations)" },
+        { type: "li", list: "ul", text: "The Contractor shall apply for a reservation by specifying the desired date and time, specific work description, requests to the Care Supporter, and other conditions through this system." },
+        { type: "li", list: "ul", text: "In response to the application, matching is established on this system, and after an online interview between the Contractor and the Care Supporter, the Individual Contract between the Contractor and the Care Supporter is confirmed and established." },
+        { type: "li", list: "ul", text: "The Service is a private service not covered by nursing care insurance and medical insurance (fully self-funded). The Contractor is obligated to pay the full amount of the calculated usage fee based on the fee schedule separately determined by the Company." },
+        { type: "h2", text: "Article 5 (Usage Fees and Payment Methods)" },
+        { type: "li", list: "ul", text: "As consideration for using the Service, the Contractor shall pay the total amount of the basic fee, overtime surcharges (nighttime, early morning, year-end and New Year holidays, etc.), same-day reservation surcharges, Care Supporter nomination fees, and transportation expenses for the Care Supporter (hereinafter referred to as the \"Usage Fee\"). Details of the fee structure are specified in a separate fee schedule." },
+        { type: "li", list: "ul", text: "Payment of the Usage Fee shall be made through a payment method designated by the Company." },
+        { type: "li", list: "ul", text: "The Company shall be granted the authority to act as a collection agent for the Usage Fee claims held by the Care Supporter against the Contractor. At the time the Contractor completes the payment to the Company, the Contractor's obligation to pay the Usage Fee to the Care Supporter shall be extinguished." },
+        { type: "li", list: "ul", text: "If a reservation is canceled or changed for the Contractor's convenience after the Individual Contract is established, a prescribed cancellation fee shall be incurred based on the cancellation policy separately determined by the Company." },
+        { type: "h2", text: "Article 6 (Prohibition of Direct Contracting and Poaching)" },
+        { type: "li", list: "ul", text: "The Contractor shall not request the provision of Care Services directly from a Care Supporter they came to know through the Service (including past use) without going through the Service, nor shall they individually conclude an employment contract, outsourcing contract, or any other contract. The same restriction shall apply for two (2) years after the termination of the use of the Service or the deletion of the account." },
+        { type: "li", list: "ul", text: "If the Contractor violates the preceding paragraph, the Contractor shall immediately pay the Company a penalty of 500,000 yen, or an amount equal to three (3) times the platform usage fee evaded by direct ordering (direct contracting) to the Care Supporter, whichever is higher." },
+        { type: "h2", text: "Article 7 (Prohibited Acts and Suspension of Use)" },
+        { type: "p", text: "In using the Service, the Contractor must not, either personally or through the care receiver/nursing care receiver, engage in the following acts:" },
+        { type: "li", list: "ul", text: "Directly requesting or instructing the Care Supporter on site to perform dangerous work (carrying heavy objects, working in high places, etc.) that exceeds the scope of work previously agreed upon on this system, or acts that violate laws and regulations." },
+        { type: "li", list: "ul", text: "Harassment (sexual harassment, power harassment, etc.), abusive language, violence, intimidation, or acts that defame or damage the credibility of the Care Supporter." },
+        { type: "li", list: "ul", text: "Registering false information regarding the care receiver/nursing care receiver's medical condition, dementia symptoms, presence of infectious diseases, or other physical conditions when registering on this system." },
+        { type: "li", list: "ul", text: "Requesting the Care Supporter to manage cash, precious metals, or other valuable items, or to go shopping, without appropriate agreement and recording." },
+        { type: "li", list: "ul", text: "Any other acts that the Company deems inappropriate for the operation of the platform." },
+        { type: "p", text: "If a user violates these Terms, or if the Company determines that the user is inappropriate, the Company may, without requiring any notice or demand, immediately take measures to suspend the use of this system, cancel the matching, or erase the registration (forced withdrawal)." },
+        { type: "h2", text: "Article 8 (Disclaimer and Limitation of Liability)" },
+        { type: "li", list: "ul", text: "Care Services are provided based on a direct contract between the Contractor and the Care Supporter, and as a general rule, the Company shall not be held liable for any injuries, worsening of medical conditions, death of the Contractor or care receiver/nursing care receiver, or troubles such as property damage or theft that occur in connection with the implementation of Care Services. The corresponding Care Supporter shall bear direct responsibility." },
+        { type: "li", list: "ul", text: "Notwithstanding the provisions of the preceding paragraph, in order to maintain the reliability of the platform, the Company may accept consultations through customer support or take remedial measures within the scope of the liability insurance subscribed to by the Company. However, this does not mean that the Company assumes responsibility as a party to the Individual Contract." },
+        { type: "li", list: "ul", text: "Even if the Company assumes legal liability to the Contractor for any reason, the Company's liability for damages shall be capped at the total amount of Usage Fees actually paid by the Contractor under the relevant Individual Contract in which the cause of damages occurred. However, this shall not apply if there is willful misconduct or gross negligence on the part of the Company." },
+        { type: "h2", text: "Article 9 (Cancellation by the Contractor)" },
+        { type: "p", text: "Even after the establishment of an Individual Contract, the Contractor may cancel the reservation in accordance with the procedures prescribed by this system. However, depending on the timing of the cancellation, a prescribed cancellation fee may be incurred based on the fee schedule separately determined by the Company." },
+        { type: "h2", text: "Article 10 (Cancellation/Absence by Care Supporter)" },
+        { type: "p", text: "If the service is not provided due to cancellation or same-day absence for the Care Supporter's convenience, the Contractor shall receive a refund of the Usage Fee for the relevant service. The Company will make efforts to introduce a substitute Care Supporter, but does not guarantee the arrangement of a substitute." },
+        { type: "h2", text: "Article 11 (Modification of Terms)" },
+        { type: "li", list: "ul", text: "If the Company deems it necessary, it may modify these Terms and related regulations such as the fee schedule at any time by notifying the Contractor in advance (by posting on this system or sending to the registered email address)." },
+        { type: "li", list: "ul", text: "If the Contractor uses the Service after the notice of modification, or fails to complete the withdrawal procedure within a reasonable period specified by the Company, the Contractor shall be deemed to have agreed to the modified Terms." },
+        { type: "h2", text: "Article 12 (Governing Law and Jurisdiction)" },
+        { type: "li", list: "ul", text: "The interpretation and application of these Terms shall be governed by Japanese law." },
+        { type: "li", list: "ul", text: "If any dispute arises between the Contractor and the Company regarding the Service or an Individual Contract, the district court having jurisdiction over the location of the Company's head office shall be the exclusive agreement jurisdictional court of first instance." },
+        { type: "p", text: "Established on August 3, 2026" },
       ],
     },
   },

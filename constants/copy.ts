@@ -806,8 +806,10 @@ export const footer = {
    *
    * The client update sheet (0727) lists seven entries here; the client later
    * asked for the last three to be taken out of the UI while keeping the pages
-   * live. This list is therefore four items on purpose — see the note at the
-   * end of the array before adding any back.
+   * live. This list is therefore five items on purpose — see the note at the
+   * end of the array before adding any back. (It was four items until the
+   * client's PPTX dated 20260819 asked for the single 利用規約 entry to be
+   * split into two: one for users, one for Care Supporters.)
    */
   legalLinks: [
     { href: "/company", label: { ja: "運営会社", en: "Operating Company" } },
@@ -820,7 +822,14 @@ export const footer = {
       // so importing legal.ts there doesn't push its bundle to the client).
       key: "tokushoho",
     },
-    { href: "/terms", label: { ja: "利用規約", en: "Terms of Service" } },
+    {
+      href: "/terms-for-users",
+      label: { ja: "利用規約（ご利用者様向け）", en: "Terms & Conditions (For Users)" },
+    },
+    {
+      href: "/terms-for-care-supporters",
+      label: { ja: "利用規約（ケアサポーター向け）", en: "Terms & Conditions (For Care Supporters)" },
+    },
     // /cancellation-policy, /compensation and /quasi-mandate are omitted at
     // the client's request: the pages stay live and are kept in the sitemap,
     // they just must not appear in the UI. Note this leaves /compensation and
