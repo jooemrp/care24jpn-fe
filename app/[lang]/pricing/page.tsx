@@ -42,9 +42,9 @@ export async function generateMetadata({
         ? "介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。"
         : "Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.",
     alternates: {
-      canonical: `/${lang}/pricing`,
+      canonical: lang === "ja" ? "/pricing" : `/${lang}/pricing`,
       languages: {
-        ja: "/ja/pricing",
+        ja: "/pricing",
         en: "/en/pricing",
       },
     },

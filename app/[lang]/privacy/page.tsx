@@ -20,9 +20,9 @@ export async function generateMetadata({
         ? `${doc.heading.ja} | ${doc.heading.en} — ${brand.name}`
         : `${doc.heading.en} — ${brand.name}`,
     alternates: {
-      canonical: `/${lang}/privacy`,
+      canonical: lang === "ja" ? "/privacy" : `/${lang}/privacy`,
       languages: {
-        ja: "/ja/privacy",
+        ja: "/privacy",
         en: "/en/privacy",
       },
     },

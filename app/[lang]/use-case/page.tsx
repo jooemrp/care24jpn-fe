@@ -21,9 +21,9 @@ export async function generateMetadata({
         ? "退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。"
         : "After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan's in-home care helps.",
     alternates: {
-      canonical: `/${lang}/use-case`,
+      canonical: lang === "ja" ? "/use-case" : `/${lang}/use-case`,
       languages: {
-        ja: "/ja/use-case",
+        ja: "/use-case",
         en: "/en/use-case",
       },
     },

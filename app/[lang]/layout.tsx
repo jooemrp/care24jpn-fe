@@ -33,9 +33,10 @@ export async function generateMetadata({
     },
     description: brand.tagline[lang],
     alternates: {
-      canonical: `/${lang}`,
+      // "ja" is the default, prefix-less language (see features/lang/i18n.ts).
+      canonical: lang === "ja" ? "/" : `/${lang}`,
       languages: {
-        ja: "/ja",
+        ja: "/",
         en: "/en",
       },
     },
