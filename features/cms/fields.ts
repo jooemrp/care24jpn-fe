@@ -179,6 +179,75 @@ export function pickNumber(
   return fallback;
 }
 
+/**
+ * Absolute `http(s)` URL check, by parsing — not by prefix matching.
+ *
+ * `new URL()` throws on anything that is not absolute, which is exactly the
+ * case that matters here: a raw media UUID (`"01a01e63-687a-79bd-..."`) is a
+ * perfectly ordinary string and would sail through a `startsWith("http")`
+ * test's inverse just as happily as a `data:`/`javascript:` scheme would sail
+ * through nothing at all. Protocol is then checked explicitly, so only
+ * `http:`/`https:` — the two `next/image` can fetch — are accepted.
+ */
+function isHttpUrl(value: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
+  }
+  return parsed.protocol === "http:" || parsed.protocol === "https:";
+}
+
+/**
+ * `image` field (`home_hero.image`, `use_case_item.image`, `site_brand.logo`,
+ * ...) — returns a URL safe to hand to `next/image`, or `fallback`.
+ *
+ * What arrives here is a URL, not an id: the delivery API rewrites every media
+ * UUID inside a block's `data` into its public S3 URL before responding
+ * (`backend/internal/page/usecase/public_get_page.go#expandBlockMedia`). So
+ * loaders never call `media.get()` and there is no media cache anywhere in
+ * this feature.
+ *
+ * The reason this function exists at all is that that rewrite is documented
+ * **best-effort**: "on error the stored data is returned unchanged". When the
+ * media lookup fails, the field still arrives — carrying the RAW UUID. Passing
+ * that to `next/image` produces a hard error in dev and a broken `src` in
+ * production, i.e. Atlas having a bad minute would break the page rather than
+ * degrade it. Anything that is not an absolute `http(s)` URL therefore falls
+ * back to the file bundled in `public/images/`, and says so once.
+ *
+ * An ABSENT field (`undefined`/`null`) is silent: `image` fields are optional
+ * in the workspace schema, so "no image chosen" is content, not corruption —
+ * same contract as every other picker here. A PRESENT but unusable value
+ * warns.
+ *
+ * Reads `.ja` like `pickJa`: these fields are non-localizable, so
+ * `client.ts#mergeBlockData` wrapped one URL into `{ ja, en }` with both sides
+ * equal.
+ */
+export function pickImage(
+  data: CmsBlock["data"],
+  key: string,
+  fallback: string,
+  context: string,
+): string {
+  const value = data[key];
+  // Absent, or empty in both locales — `mergeBlockData` collapses `""`/`""`
+  // to `undefined`, which is how a cleared image field reaches us.
+  if (value === undefined || value === null) return fallback;
+
+  const merged = pick(data, key);
+  const url = merged ? merged.ja : value;
+  if (typeof url === "string" && isHttpUrl(url)) return url;
+
+  warnOnce(
+    `image:${context}:${key}`,
+    `[cms:unexpected-content] ${context}: field "${key}" is not a usable image URL (got ${JSON.stringify(value)}) — using the bundled file ${fallback ? `"${fallback}"` : "(none)"} instead. Atlas normally expands an image field's media id into a public URL on the way out; a raw UUID here means that best-effort expansion did not run for this block. The page still renders from Atlas — only this one image is the file shipped in public/images/, so it may not be the one selected in the dashboard. This warning only prints once per field per process.`,
+  );
+  return fallback;
+}
+
 // ---------------------------------------------------------------------------
 // Block-type mapping
 //

@@ -129,7 +129,7 @@ async function captureWarnings(run: () => void | Promise<void>): Promise<string[
 
 async function main(): Promise<void> {
   const fields = (await import(fieldsPath)) as typeof FieldsModule;
-  const { mapBlocksByType, pick, pickBi, pickJa, pickLines, pickNumber } = fields;
+  const { mapBlocksByType, pick, pickBi, pickImage, pickJa, pickLines, pickNumber } = fields;
   const noop = () => {};
 
   // -------------------------------------------------------------------------
@@ -500,6 +500,96 @@ async function main(): Promise<void> {
       assert.equal(pickNumber({}, "p", 100, "t6"), 100);
       assert.equal(pickNumber({ p: "" }, "p", 100, "t7"), 100);
     });
+  });
+
+  // -------------------------------------------------------------------------
+  // (f) pickImage — the media URL vs the raw UUID the backend leaks when its
+  //     best-effort expansion fails
+  // -------------------------------------------------------------------------
+
+  /** A real expanded URL from the live workspace — the shape a healthy
+   * delivery response carries, wrapped as `mergeBlockData` wraps every string
+   * field (non-localizable, so ja === en). */
+  const S3_URL =
+    "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg";
+
+  test("pickImage returns the expanded S3 URL and does not warn", async () => {
+    const warnings = await captureWarnings(() => {
+      assert.equal(
+        pickImage({ image: { ja: S3_URL, en: S3_URL } }, "image", "/images/hero.webp", "img/ok"),
+        S3_URL,
+      );
+      // http is accepted too (a self-hosted/dev media origin).
+      assert.equal(
+        pickImage(
+          { image: { ja: "http://localhost:9000/care-24/media/x.png", en: "" } },
+          "image",
+          "/images/hero.webp",
+          "img/ok2",
+        ),
+        "http://localhost:9000/care-24/media/x.png",
+      );
+    });
+    assert.deepEqual(warnings, [], "a usable URL must not warn");
+  });
+
+  test("pickImage REJECTS a raw media UUID — the backend's best-effort expansion failing", async () => {
+    // `public_get_page.go#expandBlockMedia` is documented "best-effort: on
+    // error the stored data is returned unchanged", i.e. the media id reaches
+    // the loader verbatim. Handing that to next/image is a hard error, so it
+    // must degrade to the bundled file instead.
+    const uuid = "01a01e63-687a-79bd-a631-c689d4d63355";
+    let value = "";
+    const warnings = await captureWarnings(() => {
+      value = pickImage({ image: { ja: uuid, en: uuid } }, "image", "/images/hero.webp", "home/hero");
+      // Same field again -> still one warning.
+      pickImage({ image: { ja: uuid, en: uuid } }, "image", "/images/hero.webp", "home/hero");
+    });
+
+    assert.equal(value, "/images/hero.webp");
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /\[cms:unexpected-content\]/);
+    assert.match(warnings[0], /"image"/);
+    assert.match(warnings[0], /home\/hero/);
+  });
+
+  test("pickImage rejects an empty string, a non-string and any non-http scheme", async () => {
+    await captureWarnings(() => {
+      assert.equal(pickImage({ image: "" }, "image", "/images/logo.png", "e1"), "/images/logo.png");
+      assert.equal(pickImage({ image: 42 }, "image", "/images/logo.png", "e2"), "/images/logo.png");
+      assert.equal(pickImage({ image: true }, "image", "/images/logo.png", "e3"), "/images/logo.png");
+      assert.equal(
+        pickImage({ image: { ja: { url: S3_URL } } }, "image", "/images/logo.png", "e4"),
+        "/images/logo.png",
+      );
+      // A relative path is not a URL either: only absolute http(s) passes.
+      assert.equal(
+        pickImage({ image: { ja: "care-24/media/x.jpg", en: "" } }, "image", "/images/logo.png", "e5"),
+        "/images/logo.png",
+      );
+      assert.equal(
+        pickImage({ image: { ja: "javascript:alert(1)", en: "" } }, "image", "/images/logo.png", "e6"),
+        "/images/logo.png",
+      );
+      assert.equal(
+        pickImage({ image: { ja: `data:image/png;base64,AAA`, en: "" } }, "image", "/images/logo.png", "e7"),
+        "/images/logo.png",
+      );
+    });
+  });
+
+  test("pickImage stays silent when the optional field is simply absent", async () => {
+    const warnings = await captureWarnings(() => {
+      // An unset image field, and a field both locales cleared (which
+      // `mergeBlockData` collapses to `undefined`) — content, not corruption.
+      assert.equal(pickImage({}, "image", "/images/hero.webp", "a1"), "/images/hero.webp");
+      assert.equal(
+        pickImage({ image: undefined }, "image", "/images/hero.webp", "a2"),
+        "/images/hero.webp",
+      );
+      assert.equal(pickImage({ image: null }, "image", "", "a3"), "");
+    });
+    assert.deepEqual(warnings, [], "an absent optional image must not warn");
   });
 
   // -------------------------------------------------------------------------

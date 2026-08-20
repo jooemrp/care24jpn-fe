@@ -11,18 +11,18 @@ cd marketing-web
 npm run atlas:seed
 ```
 
-Runs `schema.ts` first, then `seed-site.ts`, `seed-home.ts`, `seed-legal.ts`,
-`seed-rates.ts`, `seed-pages.ts` (the last five in parallel — see "Why this
-order" below). Prints a per-stage summary (created/unchanged marker counts,
-duration) and exits non-zero the moment a stage fails, naming exactly which
-one.
+Runs `schema.ts`, then `upload-media.ts`, then `seed-site.ts`,
+`seed-home.ts`, `seed-legal.ts`, `seed-rates.ts`, `seed-pages.ts` (the last
+five in parallel — see "Why this order" below). Prints a per-stage summary
+(created/unchanged marker counts, duration) and exits non-zero the moment a
+stage fails, naming exactly which one.
 
 The npm scripts, all run from `marketing-web/`:
 
 | Script               | Does                                                     |
 | -------------------- | -------------------------------------------------------- |
 | `npm run atlas:schema` | Content types + fields only (`schema.ts`)              |
-| `npm run atlas:seed`   | Full pipeline: schema, then all five seeds (`seed-all.ts`) |
+| `npm run atlas:seed`   | Full pipeline: schema, media upload, then all five seeds (`seed-all.ts`) |
 | `npm run atlas:verify` | HTML parity gate (`verify-html-parity.ts`) — **builds and starts the app twice**, so don't run it while a dev server or another build is using `.next` |
 | `npm run atlas:types`  | Regenerates `features/cms/atlas.types.ts` from the live workspace via `@latellu/atlas-cli` |
 
@@ -45,7 +45,7 @@ keys below):
 | ----------------- | ------------------------------------------------ |
 | `ATLAS_BASE_URL`  | Base URL of the Atlas backend (no trailing slash) |
 | `ATLAS_MGMT_KEY`  | `atlas_mgmt_...` — schema + content writes        |
-| `ATLAS_API_KEY`   | `atlas_live_...` — not used by these scripts, but the same `.env` also feeds the app's read-only delivery client (`features/cms/client.ts`) |
+| `ATLAS_API_KEY`   | `atlas_live_...` — read-only delivery key. Used by `upload-media.ts` to check whether a media asset in the manifest still exists, and by the app's delivery client (`features/cms/client.ts`). Optional for the scripts: without it `upload-media.ts` trusts its manifest instead of re-checking |
 
 **`ATLAS_MGMT_KEY` must never reach runtime app code.** It has
 `content:write` / `content:publish` / `media:write` / `schema:write` scope —
@@ -65,6 +65,11 @@ block counts and the content are all identical:
   nothing created. A field whose live `field_type` / `localizable` /
   `required` no longer matches the spec in `schema.ts` is NOT skipped: it
   throws (see the schema-drift pitfall below).
+- `upload-media.ts`: every asset already in `media-manifest.json` is
+  confirmed present through the delivery API and reused → `0 uploaded,
+  8 reused`, and the manifest comes out byte-identical apart from
+  `generated_at`. It re-uploads only an asset that was actually deleted from
+  Atlas.
 - `seed-*.ts`: all five go through one helper,
   `lib.ts#ensurePublishedPage`. It sends the complete desired page to
   `PUT /pages/:slug` and only falls back to `POST /pages` on a 404, so an
@@ -90,6 +95,15 @@ if schema hasn't run yet, or a type is missing, the seed script throws
 immediately naming the missing type rather than writing a page with a bad
 block type id. So `schema` is a hard prerequisite and `seed-all.ts` runs it
 first, sequentially, and only proceeds to the seed scripts if it exits 0.
+
+`upload-media.ts` is the second hard prerequisite. It uploads
+`public/images/*` into the Atlas media library and writes
+`scripts/atlas/media-manifest.json`; `seed-site.ts`, `seed-home.ts` and
+`seed-pages.ts` read that manifest (`requireMediaManifest()` /
+`mediaId()` in `lib.ts`) to fill their `image` fields, and throw if it isn't
+there. It does not itself depend on `schema.ts` — media and content types are
+disjoint — but `seed-all.ts` still runs the two prerequisites one after the
+other so a failing prerequisite is unambiguous in the log.
 
 The five `seed-*.ts` scripts write to disjoint page slugs — `site`, `home`,
 the 7 `legal-*` pages, `rates`/`pricing`/`fees`, and
@@ -178,6 +192,41 @@ Expected: 30.
   migrating the field by hand (or renaming it in `schema.ts`). `label` and
   `sort_order` are not compared — both are editable in the dashboard and
   neither changes the stored shape.
+- **The delivery API hands back media URLs, not the media ids you seeded.**
+  This is the single most surprising thing about `image` fields.
+  `page/usecase/public_get_page.go#expandBlockMedia` collects every
+  UUID-shaped string value in a block's `data` (and its translations),
+  batch-resolves the ones that are media in this workspace, and rewrites them
+  to the public URL before the response leaves the backend
+  (`common/mediaref`). So the stored value is a media id — which is what the
+  dashboard writes and what `seed-*.ts` must write — but
+  `features/cms/client.ts` sees a `https://...` string. Do NOT call
+  `media.get()` on it: by then the id is gone and you get
+  `400 invalid input provided`. Corollary: **width/height do not come through
+  the page response.** An `<Image>` on a CMS-served picture needs `fill` or
+  its own literal `width`/`height` in JSX.
+- **The media library cannot be listed with either key this repo holds.**
+  `GET /api/v1/media` is behind `SessionAuth` + `RequireActiveAccount`
+  (a dashboard login) — a management key gets
+  `401 missing authorization header`. The management plane exposes only
+  `POST /media/upload`, `PUT /media/:id`, `DELETE /media/:id`; delivery
+  exposes only `GET /api/v1/public/media/:id`. Nothing maps a filename back
+  to an id, which is exactly why `media-manifest.json` exists and must be
+  committed — lose it and a re-run uploads eight duplicates it has no way to
+  detect.
+- **WebP uploads are rejected.** `media/usecase/upload_media.go
+  #extractImageDimensions` calls `image.DecodeConfig` with only
+  `image/gif`, `image/jpeg` and `image/png` registered (no
+  `golang.org/x/image/webp` in `backend/go.mod`), so a `.webp` fails with
+  `400 invalid input provided: failed to extract image dimensions: image:
+  unknown format`. `upload-media.ts` transcodes WebP to JPEG with `sharp`
+  before uploading.
+- **The upload size limit is 1MB, not the 10MB the backend advertises.**
+  Atlas's own `maxFileSize` is 10MB, but the deployment sits behind nginx
+  1.24 with its default `client_max_body_size` — a 1.38MB PNG returned a
+  bare `413` from nginx before the app ever saw it. That is why
+  `upload-media.ts` transcodes to JPEG q92 (64-146KB per file) rather than
+  lossless PNG (500KB-1.4MB).
 - **The backend normalizes content-type slugs: underscores become
   hyphens.** Send `page_hero`, get back `page-hero`. `lib.ts`'s
   `normalizeSlug()` / `ensureContentType()` account for this; anything that
@@ -198,8 +247,10 @@ Expected: 30.
 
 | File               | Purpose                                                       |
 | ------------------ | -------------------------------------------------------------- |
-| `lib.ts`           | Shared env loading, management client factory, schema REST helpers, and `ensurePublishedPage` (the one page-write path) |
+| `lib.ts`           | Shared env loading, management client factory, schema REST helpers, media-manifest read/write, and `ensurePublishedPage` (the one page-write path) |
 | `schema.ts`        | Creates/verifies the 30 block content types                    |
+| `upload-media.ts`  | Uploads `public/images/*` to the Atlas media library, writes `media-manifest.json` |
+| `media-manifest.json` | Generated. `public/images/` filename -> `{ id, url, width, height, mime_type, uploaded_as }`. Commit it: it is the only index of which media id is which file |
 | `seed-site.ts`     | `site` page (header/footer chrome)                              |
 | `seed-home.ts`     | `home` page (29 blocks)                                         |
 | `seed-legal.ts`    | 7 `legal-*` pages                                                |

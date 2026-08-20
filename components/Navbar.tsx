@@ -220,7 +220,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
             onClick={() => setOpen(false)}
           >
             <Image
-              src="/images/logo.png"
+              src={site.brand.logo}
               alt={t(site.brand.logoAlt, lang)}
               width={427}
               height={160}

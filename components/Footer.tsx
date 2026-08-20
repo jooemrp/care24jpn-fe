@@ -1,22 +1,32 @@
 import Link from "next/link";
 import Image from "next/image";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import type { Bilingual } from "@/constants/copy";
 import type { SiteContent } from "@/features/cms/site";
-import { getLegalDoc } from "@/features/cms/legal";
 import LangToggle from "./LangToggle";
 
-export default async function Footer({ lang, site }: { lang: Lang; site: SiteContent }) {
-  // Only used to resolve the tokushoho footer link's label — the tokushoho
-  // union member in site.footer.legalLinks carries `key: "tokushoho"`
-  // instead of its own `label`, same as constants/copy.ts#footer.legalLinks.
-  const tokushoho = await getLegalDoc("legal-tokushoho");
-
+/**
+ * `tokushohoHeading` resolves the tokushoho footer link's label — that
+ * union member in `site.footer.legalLinks` carries `key: "tokushoho"`
+ * instead of its own `label`, same as constants/copy.ts#footer.legalLinks,
+ * so the label follows the document's own heading. `AppShell` reads it
+ * (see the note there) and passes it down; this component stays synchronous.
+ */
+export default function Footer({
+  lang,
+  site,
+  tokushohoHeading,
+}: {
+  lang: Lang;
+  site: SiteContent;
+  tokushohoHeading: Bilingual;
+}) {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-6xl px-6 py-14">
         {/* Brand */}
         <Image
-          src="/images/logo.png"
+          src={site.brand.logo}
           alt={t(site.brand.logoAlt, lang)}
           width={320}
           height={120}
@@ -51,7 +61,7 @@ export default async function Footer({ lang, site }: { lang: Lang; site: SiteCon
                 href={localizeHref(link.href, lang)}
                 className="text-xs text-muted transition hover:text-primary"
               >
-                {t("key" in link ? tokushoho.heading : link.label, lang)}
+                {t("key" in link ? tokushohoHeading : link.label, lang)}
               </Link>
             </li>
           ))}
