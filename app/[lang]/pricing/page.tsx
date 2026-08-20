@@ -5,32 +5,35 @@ import CourseRateCard from "@/components/ui/CourseRateCard";
 import JsonLd from "@/components/JsonLd";
 import { getPricingCopy, getCourseRates } from "@/features/cms/rates";
 import { t, isLang } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
+import { buildPricingJsonLd } from "@/features/seo/pricingJsonLd";
 
-// Title/description are short JA strings; the root layout's title.template
-// appends the brand name, so the brand must not be repeated here.
+/**
+ * Card tone, by `course.key` — not by array position. `CourseRateCard.tsx`
+ * documents `tone` as "the brand colour this course carries — matches the
+ * home page", and the home page hardcodes that mapping per section
+ * (`nursingCourse` = accent, `careCourse` = primary; see `app/[lang]/page.tsx`),
+ * never by an array index. Deriving tone from position here instead of key
+ * broke that contract silently: reordering the two `rate-course` blocks in
+ * the dashboard would swap the colours on `/pricing` while the home page's
+ * colours stayed fixed, so "nursing" would carry two different brand colours
+ * across the site depending on unrelated CMS ordering. Any key other than
+ * "nursing" (today just "care") falls back to "primary", matching both the
+ * home page's default and this function's previous index-0 output for the
+ * live two-course order (care, nursing) — so this is a no-op for today's
+ * data and only changes behaviour if the dashboard order ever changes.
+ */
+function courseTone(courseKey: string): "primary" | "accent" {
+  return courseKey === "nursing" ? "accent" : "primary";
+}
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  return {
-    title:
-      lang === "ja"
-        ? "ご利用者様向け料金"
-        : "Pricing for users",
-    description:
-      lang === "ja"
-        ? "介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。"
-        : "Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.",
-    alternates: {
-      canonical: lang === "ja" ? "/pricing" : `/${lang}/pricing`,
-      languages: {
-        ja: "/pricing",
-        en: "/en/pricing",
-      },
-    },
-  };
+  return pageMetadata({ key: "pricing", lang });
 }
 
 export default async function PricingPage({
@@ -43,22 +46,15 @@ export default async function PricingPage({
 
   // PriceSpecification per rate row, built directly from the CMS-sourced
   // `courseRates` (features/cms/rates.ts) so the JSON-LD amounts can never
-  // drift from the rates rendered by CourseRateCard below. Key order and
-  // flatMap order match the original module-level constant exactly, so
-  // JSON.stringify produces a byte-identical string.
-  const pricingJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "OfferCatalog",
-    name: pricingCopy.hero.heading.ja,
-    itemListElement: courseRates.flatMap((course) =>
-      course.rows.map((row) => ({
-        "@type": "Offer",
-        name: row.detail ? `${course.name.ja} ${row.label.ja}（${row.detail.ja}）` : `${course.name.ja} ${row.label.ja}`,
-        priceCurrency: "JPY",
-        price: row.price,
-      })),
-    ),
-  };
+  // drift from the rates rendered by CourseRateCard below. The object
+  // construction itself lives in the pure, unit-tested
+  // features/seo/pricingJsonLd.ts (same shape as organization.ts +
+  // JsonLd.tsx) — this call site only supplies the CMS-sourced arguments.
+  const pricingJsonLd = buildPricingJsonLd({
+    heading: pricingCopy.hero.heading,
+    courses: courseRates,
+    lang,
+  });
 
   return (
     <>
@@ -95,7 +91,7 @@ export default async function PricingPage({
               key={course.key}
               course={course}
               lang={lang}
-              tone={course.key === "nursing" ? "accent" : "primary"}
+              tone={courseTone(course.key)}
             />
           ))}
         </div>
