@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<meta name="robots" content="noindex"/>
+<title>404 | Care 24 Japan</title>
+<meta name="description" content="The page you are looking for does not exist."/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col items-center justify-center bg-bg px-6 py-24 text-center text-body">
+<div hidden="">
+</div>
+<div class="max-w-md">
+<p class="text-sm font-bold tracking-wide text-primary mb-4">404</p>
+<h1 class="text-2xl font-bold text-heading mb-2">お探しのページが見つかりません</h1>
+<p class="text-body mb-8">このページは移動または削除された可能性があります。</p>
+<div lang="en">
+<h2 class="text-2xl font-bold text-heading mb-2">Page not found</h2>
+<p class="text-body mb-10">The page you are looking for may have been moved or removed.</p>
+</div>
+<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/">トップページへ / Back to home</a>
+</div>
+</body>
+</html>

@@ -90,10 +90,12 @@ export default async function RootLayout({
   // cache() again, per request), so neither of these is a second fetch either.
   //
   // Safe to put in a `Promise.all`, which rejects as soon as any input does:
-  // `getLegalHeading` resolves on every failure path it has — `getPageBlocks`
-  // catches network/timeout/shape errors itself and returns null, and the
-  // guards above the constants fallback are pure — so a footer link label
-  // cannot take the whole layout down.
+  // `getLegalHeading` cannot reject. It is wrapped in its own try/catch and
+  // returns the `constants/legal.ts` heading on every path, including an
+  // unexpected throw (see the catch in features/cms/legal.ts, which explains
+  // why the guard is there rather than relying on reasoning about internals).
+  // So a footer link label cannot take this layout — i.e. every route, in
+  // both locales — down.
   const [site] = await Promise.all([getSite(), getLegalHeading("legal-tokushoho")]);
 
   return (

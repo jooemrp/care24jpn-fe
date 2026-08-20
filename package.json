@@ -7,6 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --test features/cms/fields.test.ts features/cms/merge.test.ts && npx tsx features/cms/legal-html.test.ts",
     "atlas:schema": "npx tsx scripts/atlas/schema.ts",
     "atlas:seed": "npx tsx scripts/atlas/seed-all.ts",
     "atlas:verify": "npx tsx scripts/atlas/verify-html-parity.ts",

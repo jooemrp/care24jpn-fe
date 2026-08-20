@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care24Japan キャンセルポリシー | Care 24 Japan</title>
+<meta name="description" content="Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan"/>
+<link rel="canonical" href="https://care24jpn.vercel.app/cancellation-policy"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/cancellation-policy"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/cancellation-policy"/>
+<meta property="og:title" content="Care24Japan キャンセルポリシー | Care 24 Japan"/>
+<meta property="og:description" content="Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="ja_JP"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care24Japan キャンセルポリシー | Care 24 Japan"/>
+<meta name="twitter:description" content="Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="ケア24ジャパン ロゴ" href="/">
+<img alt="ケア24ジャパン ロゴ" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="24時間365日、お気軽にお問い合わせください。 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">24時間365日、お気軽にお問い合わせください。</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="メニュー" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Care24Japan キャンセルポリシー</h1>
+</header>
+<div class="lg:flex lg:gap-12">
+<div class="max-w-[42rem] lg:flex-1">
+<div class="mb-10 animate-fade-up lg:hidden">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="目次">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">目次</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第1条（目的）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第2条（キャンセル料の発生基準および割合）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第3条（予約内容の変更時の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第4条（指名予約および手当の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第5条（実費および交通費の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第6条（当社またはサポーター都合によるキャンセル）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">附則</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+<div class="legal-body animate-fade-up">
+<h2>第1条（目的）</h2>
+<p>本キャンセルポリシーは、メディカルインフォマティクス株式会社（以下「当社」という）が運営する「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）が予約確定した訪問介護・訪問看護・リハビリ等のマッチングサービス（以下「予約業務」という）を変更またはキャンセルする場合の条件およびキャンセル料について定めるものである。</p>
+<h2>第2条（キャンセル料の発生基準および割合）</h2>
+<p>利用者の都合により予約業務をキャンセルまたは変更する場合、予約日時を基準とした以下のタイミングに応じてキャンセル料が発生するものとする。なお、判定基準となる時刻はすべて「15:00」を区切りとする。</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr>
+<th scope="col">キャンセル・変更の申し出タイミング</th>
+<th scope="col">キャンセル料の割合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>予約日の3日前の15:00以降のキャンセル・変更</td>
+<td>予約料金の 50％</td>
+</tr>
+<tr>
+<td>予約日の前々日の15:00以降のキャンセル・変更</td>
+<td>予約料金の 75％</td>
+</tr>
+<tr>
+<td>予約日の前日の15:00以降のキャンセル・変更</td>
+<td>予約料金の 100％（全額負担）</td>
+</tr>
+<tr>
+<td>上記（予約日3日前の15:00）より前のキャンセル・変更</td>
+<td>キャンセル料なし（無料）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>第3条（予約内容の変更時の取り扱い）</h2>
+<ol>
+<li>予約時間の短縮： 確定済みの予約時間を短縮する場合は、短縮された時間分をキャンセルとみなし、第2条の基準に基づき短縮分の料金に対して所定のキャンセル料が発生する。</li>
+<li>予約時間の延長： 確定済みの予約時間を延長する場合は、延長部分を新たなスポット利用申込として取り扱い、延長分の追加料金が発生する。</li>
+<li>日程変更の特例： 利用者または要介護者の都合による日程変更であっても、原則として第2条のキャンセル料が適用される。ただし、当社のシステムおよびケアサポーター（以下「サポーター」という）側が特別に了承した調整である場合はこの限りではない。調整後の日程が時間外や当日予約等の加算事由に該当する場合は、変更後のレートに基づき追加料金が発生する。</li>
+</ol>
+<h2>第4条（指名予約および手当の取り扱い）</h2>
+<p>利用者がサポーターを指名して予約（指名予約）していた案件をキャンセルした場合、指名手数料（1時間あたり330円）についてもキャンセル料の対象となる。第2条に基づき基本料金のキャンセル料が50％または75％となる場合であっても、指名手数料についてはその全額（100％）がキャンセル料に加算される。ただし、キャンセル料が「なし（無料）」の期間内のキャンセルであれば、指名手数料のキャンセル料も発生しない。</p>
+<h2>第5条（実費および交通費の取り扱い）</h2>
+<p>予約業務が事前にキャンセルされた場合、一律990円の交通費およびその他実費等の費用は発生しない。ただし、サポーターが既に訪問を開始しているなど、直前のキャンセルにより損害が発生した場合は実費相当分を請求することがある。</p>
+<h2>第6条（当社またはサポーター都合によるキャンセル）</h2>
+<p>当社またはサポーターの突発的な体調不良、その他の不可抗力および都合により業務提供が不可能となり、予約がキャンセルされた場合は、利用者に対してキャンセル料は一切発生しない。</p>
+<h2>附則</h2>
+<p>本ポリシーは、2026年9月1日より制定・施行する。</p>
+</div>
+</div>
+<aside class="hidden w-72 shrink-0 lg:block">
+<div class="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="目次">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">目次</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第1条（目的）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第2条（キャンセル料の発生基準および割合）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第3条（予約内容の変更時の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第4条（指名予約および手当の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第5条（実費および交通費の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第6条（当社またはサポーター都合によるキャンセル）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">附則</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="ケア24ジャパン ロゴ" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/company">運営会社</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/privacy">プライバシーポリシー</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/tokushoho">特定商取引法に基づく表記</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-users">利用規約（ご利用者様向け）</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-care-supporters">利用規約（ケアサポーター向け）</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

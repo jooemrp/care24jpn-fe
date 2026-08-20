@@ -32,13 +32,31 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..");
 const NEXT_BIN = path.join(REPO_ROOT, "node_modules", ".bin", "next");
 
 // Snapshot pre-migrasi yang jadi "baseline emas" untuk pertanyaan 1-3.
-// Bisa dioverride lewat env kalau baseline dipindah di masa depan.
-const BASELINE_DIR =
-  process.env.PARITY_BASELINE_DIR ??
-  "/Users/ilham/care-24/.claude/.orchestration/runs/2026-08-20-marketing-web-atlas-integration/output/baseline";
+//
+// ADA DI DALAM REPO, dan itu disengaja. Sampai sebelum ini kedua direktori
+// menunjuk ke `.claude/.orchestration/runs/<run>/output/` — state orkestrasi
+// di luar repo, yang boleh dibersihkan kapan saja tanpa memberi tahu siapa
+// pun. Kalau direktori itu hilang, `readdirSync` di bawah menghasilkan daftar
+// kosong, `totalBaselinePages` jadi 0, `contentFailures` tetap 0, dan gerbang
+// ini mencetak "LULUS" dengan NOL halaman yang benar-benar dibandingkan.
+// Kegagalan diam-diam semacam itu justru kebalikan dari alasan gerbang ini
+// ada. Sekarang baseline ikut ter-commit, jadi hidup-matinya sama dengan
+// hidup-matinya skrip yang membacanya, dan `assertBaselineUsable` di bawah
+// menolak berjalan kalau isinya kosong.
+//
+// Override lewat env tetap ada untuk membandingkan terhadap snapshot lain
+// (misalnya baseline baru setelah perubahan konten yang memang disetujui).
+const BASELINE_DIR = process.env.PARITY_BASELINE_DIR ?? path.join(__dirname, "baseline");
 const BASELINE_RAW_DIR =
-  process.env.PARITY_BASELINE_RAW_DIR ??
-  "/Users/ilham/care-24/.claude/.orchestration/runs/2026-08-20-marketing-web-atlas-integration/output/baseline-raw";
+  process.env.PARITY_BASELINE_RAW_DIR ?? path.join(__dirname, "baseline-raw");
+
+/**
+ * Jumlah minimum file baseline yang harus ada sebelum gerbang ini berarti
+ * apa-apa. 29 = 13 rute x {ja,en} + 3 file non-rute (`_global-error`,
+ * `_not-found`, `favicon.ico`) yang ikut ter-snapshot. Dipatok sebagai angka,
+ * bukan sekadar "> 0", supaya salinan yang terpotong separuh juga tertangkap.
+ */
+const MIN_BASELINE_FILES = 29;
 
 const PORT_CMS_ON = 4101;
 const PORT_CMS_OFF = 4102;
@@ -94,6 +112,48 @@ function normalizeHtml(html: string): string {
   s = s.replace(/\s+/g, " ").replace(/> </g, "><").trim();
   s = s.replace(/></g, ">\n<");
   return s;
+}
+
+/**
+ * Menolak berjalan kalau baseline tidak bisa dipakai.
+ *
+ * Dipanggil PALING AWAL di `main()`, sebelum dua `next build` yang makan
+ * waktu bermenit-menit — kalau tidak ada yang bisa dibandingkan, membangun
+ * apa pun cuma membuang waktu dan menghasilkan laporan yang terlihat hijau.
+ *
+ * Kegagalan di sini sengaja dilempar (exit 2, "skrip gagal dijalankan"),
+ * bukan dihitung sebagai kegagalan gerbang (exit 1, "ada perbedaan"). Dua hal
+ * itu berbeda dan tidak boleh dicampur: exit 1 berarti "sudah diukur, ada
+ * beda"; exit 2 berarti "belum terukur sama sekali". CI yang cuma melihat
+ * "bukan 0" tetap merah untuk keduanya, tapi manusia yang membaca log tahu
+ * mana yang harus diperbaiki.
+ */
+function assertBaselineUsable(): void {
+  if (!existsSync(BASELINE_DIR)) {
+    throw new Error(
+      `Direktori baseline tidak ada: ${BASELINE_DIR}\n` +
+        "Tanpa baseline, gerbang ini tidak membandingkan apa pun dan akan " +
+        "melaporkan LULUS secara palsu. Kembalikan direktori tersebut (ia " +
+        "ikut ter-commit di scripts/atlas/baseline), atau arahkan " +
+        "PARITY_BASELINE_DIR ke snapshot lain yang sah.",
+    );
+  }
+  const files = readdirSync(BASELINE_DIR).filter((f) => f.endsWith(".txt"));
+  if (files.length < MIN_BASELINE_FILES) {
+    throw new Error(
+      `Baseline tidak lengkap: ${files.length} file .txt di ${BASELINE_DIR}, ` +
+        `minimal ${MIN_BASELINE_FILES}.\n` +
+        "Salinan yang terpotong membuat halaman yang hilang tidak pernah " +
+        "diuji, tanpa satu baris pun di laporan yang menyebutkannya.",
+    );
+  }
+  if (!existsSync(BASELINE_RAW_DIR)) {
+    throw new Error(
+      `Direktori baseline mentah tidak ada: ${BASELINE_RAW_DIR}\n` +
+        "Dipakai untuk pemeriksaan aria-current verbatim, yang tanpa ini " +
+        "diam-diam membandingkan terhadap 'tidak ada'.",
+    );
+  }
 }
 
 function log(line: string = ""): void {
@@ -267,6 +327,271 @@ function diffLines(a: string, b: string): Hunk[] {
 // — lihat instruksi "JANGAN diam-diam membuang baris agar diff terlihat
 // kosong" di brief st-08.
 
+
+// ===========================================================================
+// KLASIFIKASI PERBEDAAN
+//
+// Sampai sebelum ini skrip mencetak setiap baris beda apa adanya dan seorang
+// manusia (saya) memutuskan mana yang "wajar" dan mana yang regresi, lalu
+// menuliskannya di parity-report.md. Artinya gerbang ini tidak pernah bisa
+// LULUS: selama ada satu baris beda, hasilnya GAGAL, dan pembacanya harus
+// percaya pada penilaian manual yang tidak ikut ter-commit.
+//
+// Sekarang ada dua mekanisme, dan perbedaan di antara keduanya adalah inti
+// dari desain ini:
+//
+//   1. KELAS (`DIFF_CLASSES`) — perbedaan yang bisa DIBUKTIKAN sekadar bentuk,
+//      lewat kanonikalisasi. Sebuah baris yang dihapus dan sebuah baris yang
+//      ditambahkan masuk kelas X kalau keduanya menjadi IDENTIK setelah
+//      fungsi kanonikalisasi X dijalankan. Karena seluruh sisa baris harus
+//      cocok persis, kelas tidak bisa menyembunyikan perubahan lain yang
+//      kebetulan menumpang di baris yang sama: ganti lebar gambar sambil
+//      mengganti URL-nya, dan pasangannya tidak lagi cocok.
+//
+//   2. LEDGER (`ACCEPTED_RESIDUALS`) — perbedaan nyata yang TIDAK bisa
+//      dibuktikan sekadar bentuk, tapi sudah diselidiki dan diterima. Ini
+//      bukan penyaring: setiap entri mematok JUMLAH persisnya. 26 boleh, 27
+//      GAGAL. Jadi entri ledger memberi tahu pembacanya "ini ada, ini sudah
+//      diperiksa, dan ini sebabnya" tanpa pernah membuat kejadian ke-27
+//      lewat diam-diam.
+//
+// Apa pun yang bukan keduanya dicetak verbatim dan menggagalkan gerbang.
+// Aturan lama dari brief st-08 tetap berlaku dan diperkuat, bukan dilonggarkan:
+// JANGAN diam-diam membuang baris agar diff terlihat kosong.
+//
+// Klasifikasi dilakukan per HALAMAN, bukan per hunk. Algoritma diff memecah
+// satu baris yang sekadar berpindah tempat menjadi DUA hunk terpisah (dihapus
+// di sini, ditambahkan di sana), jadi pembandingan per hunk tidak akan pernah
+// bisa mengenali pengurutan ulang.
+// ===========================================================================
+
+type DiffClass = {
+  id: string;
+  /** Dicetak di laporan. Harus menyebutkan juga apa yang TIDAK dibuktikan. */
+  why: string;
+  canonicalize(line: string): string;
+};
+
+/**
+ * URL gambar di dalam `/_next/image?url=...`.
+ *
+ * TIDAK membuktikan gambarnya sama. Dari HTML saja, `/images/hero.webp` dan
+ * `.../media/<uuid>.jpg` tidak punya identitas bersama apa pun — kelas ini
+ * hanya membuktikan bahwa SATU-SATUNYA yang berubah pada baris itu adalah
+ * URL gambarnya, sementara `width`, `height`, `sizes`, `alt`, `class`,
+ * `loading`, `w=` dan `q=` semuanya tetap identik. Itu persis pertanyaan yang
+ * relevan di sini (migrasi memindahkan berkas yang sama ke S3), dan
+ * penggantian gambar dengan gambar LAIN tetap tidak akan tertangkap oleh
+ * gerbang ini — hanya oleh mata.
+ */
+const imageSourceClass: DiffClass = {
+  id: "sumber-gambar",
+  why: "hanya nilai url= di /_next/image yang berbeda (lokal /images/ vs media S3 Atlas); seluruh atribut lain pada baris itu identik. TIDAK membuktikan gambarnya sama.",
+  canonicalize: (line) => line.replace(/url=[^&"\s]+/g, "url=GAMBAR"),
+};
+
+/**
+ * Tautan nav yang sekarang ditandai aktif di HTML server.
+ *
+ * Sengaja SEMPIT: hanya membuang `aria-current="page"` dan dua fragmen kelas
+ * Tailwind yang persis, apa adanya. Perubahan kelas lain apa pun tidak cocok
+ * dan tetap dilaporkan. Kalau markup nav diubah, kelas ini berhenti cocok dan
+ * gerbang berubah merah — yang memang perilaku yang diinginkan: fragmen di
+ * bawah adalah salinan verbatim dari yang dirender hari ini, bukan pola.
+ */
+const NAV_ACTIVE_CLASSES = "bg-primary-light font-medium text-primary";
+const NAV_INACTIVE_CLASSES = "text-body hover:bg-primary-light/60 hover:text-primary";
+const navActiveStateClass: DiffClass = {
+  id: "status-nav-aktif",
+  why: 'tautan nav yang sama (href + teks identik) kini membawa aria-current="page" dan kelas status aktif di HTML server, bukan baru setelah hidrasi. Penyebabnya localizeHref("/","ja") mengembalikan "/" sementara rute internalnya /ja.',
+  canonicalize: (line) =>
+    line
+      .replace(' aria-current="page"', "")
+      .replace(NAV_ACTIVE_CLASSES, "STATUS-NAV")
+      .replace(NAV_INACTIVE_CLASSES, "STATUS-NAV"),
+};
+
+const DIFF_CLASSES: DiffClass[] = [imageSourceClass, navActiveStateClass];
+
+type AcceptedResidual = {
+  id: string;
+  side: "dihapus" | "ditambah";
+  /** Jumlah PERSIS yang diterima. Lebih atau kurang = GAGAL. */
+  count: number;
+  why: string;
+  matches(line: string): boolean;
+};
+
+/**
+ * Satu entri, dan entri itu sendiri adalah temuan.
+ *
+ * Setiap halaman kehilangan tepat satu `<link rel="preload" as="font">`
+ * dibanding baseline. Ini BUKAN pengurutan ulang — tidak ada baris pengganti
+ * di sisi lain; hint preload-nya benar-benar hilang. Bukti yang sudah
+ * dikumpulkan, bukan dugaan:
+ *   - `.next/server/next-font-manifest.json` TETAP memuat berkas font untuk
+ *     `app/[lang]/layout`, jadi ini bukan soal font yang tidak terdaftar.
+ *   - Rute yang masih diprerender statis (`_not-found`) MASIH memancarkan
+ *     preload-nya — 1, sama dengan baseline.
+ *   - Setiap rute yang dirender dinamis memancarkan 0.
+ *   - woff2 yang sama masih dirujuk lewat @font-face di CSS, jadi fontnya
+ *     tetap termuat; yang hilang hanya petunjuk prioritasnya.
+ * Jadi: rendering dinamis menggugurkan preload next/font di versi Next ini.
+ * Rendering dinamis adalah syarat yang diminta (konten CMS tanpa rebuild),
+ * jadi ini biaya dari keputusan itu — dicatat di sini supaya berhenti
+ * menyamar sebagai "pengurutan ulang", yang adalah salah klasifikasi saya
+ * sebelumnya.
+ *
+ * Dampaknya nyata tapi sedang: `display: "swap"`, jadi teks tetap tampil
+ * dengan font cadangan lalu bertukar — preload hanya mempersempit jendela
+ * pertukaran itu. Bukan bug kebenaran, bukan pergeseran tata letak.
+ */
+const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
+  {
+    id: "preload-font-hilang-pada-rute-dinamis",
+    side: "dihapus",
+    count: 26,
+    why: "rendering dinamis (syarat: konten CMS tanpa rebuild) menggugurkan <link rel=preload as=font> dari next/font. Font tetap termuat lewat @font-face; hanya petunjuk prioritas yang hilang. 26 = 13 rute x {ja,en}.",
+    matches: (line) => /rel="preload"[^>]*as="font"/.test(line),
+  },
+];
+
+type Classification = {
+  /** Baris identik yang sekadar berpindah posisi. */
+  reordered: number;
+  /** id kelas -> jumlah PASANGAN baris yang dijelaskannya. */
+  byClass: Map<string, number>;
+  /** id ledger -> jumlah baris yang cocok. */
+  byResidual: Map<string, number>;
+  /** Yang tidak dijelaskan apa pun. Inilah yang menggagalkan gerbang. */
+  unexplainedRemoved: string[];
+  unexplainedAdded: string[];
+};
+
+function emptyClassification(): Classification {
+  return {
+    reordered: 0,
+    byClass: new Map(),
+    byResidual: new Map(),
+    unexplainedRemoved: [],
+    unexplainedAdded: [],
+  };
+}
+
+function bump(map: Map<string, number>, key: string, by = 1): void {
+  map.set(key, (map.get(key) ?? 0) + by);
+}
+
+/** Buang dari `list` sebanyak `budget` menyatakan, dicocokkan lewat `keyOf`. */
+function subtract(list: string[], budget: Map<string, number>, keyOf: (l: string) => string): string[] {
+  const remaining = new Map(budget);
+  const kept: string[] = [];
+  for (const line of list) {
+    const key = keyOf(line);
+    const left = remaining.get(key) ?? 0;
+    if (left > 0) remaining.set(key, left - 1);
+    else kept.push(line);
+  }
+  return kept;
+}
+
+function intersect(a: string[], b: string[], keyOf: (l: string) => string): Map<string, number> {
+  const countA = new Map<string, number>();
+  for (const l of a) bump(countA, keyOf(l));
+  const common = new Map<string, number>();
+  const countB = new Map<string, number>();
+  for (const l of b) bump(countB, keyOf(l));
+  for (const [k, n] of countA) {
+    const m = countB.get(k) ?? 0;
+    if (m > 0) common.set(k, Math.min(n, m));
+  }
+  return common;
+}
+
+/**
+ * Menjelaskan sebanyak mungkin perbedaan satu halaman, dan mengembalikan
+ * sisanya apa adanya.
+ *
+ * Urutannya penting dan sengaja dari yang paling ketat ke paling longgar:
+ * kecocokan verbatim (pengurutan ulang) dulu, baru kelas, baru ledger. Sebuah
+ * baris tidak pernah dihitung dua kali.
+ */
+function classifyPage(removed: string[], added: string[], into: Classification): void {
+  // 1. Baris yang identik persis di kedua sisi = sekadar berpindah posisi.
+  const identity = (l: string) => l;
+  const moved = intersect(removed, added, identity);
+  for (const n of moved.values()) into.reordered += n;
+  let rb = subtract(removed, moved, identity);
+  let ra = subtract(added, moved, identity);
+
+  // 2. Kelas: pasangan yang menjadi identik setelah kanonikalisasi.
+  for (const cls of DIFF_CLASSES) {
+    if (rb.length === 0 || ra.length === 0) break;
+    const common = intersect(rb, ra, cls.canonicalize);
+    let matched = 0;
+    for (const n of common.values()) matched += n;
+    if (matched === 0) continue;
+    bump(into.byClass, cls.id, matched);
+    rb = subtract(rb, common, cls.canonicalize);
+    ra = subtract(ra, common, cls.canonicalize);
+  }
+
+  // 3. Ledger: sisa yang sudah diselidiki dan diterima, dihitung ketat.
+  for (const entry of ACCEPTED_RESIDUALS) {
+    const target = entry.side === "dihapus" ? rb : ra;
+    const hit = target.filter((l) => entry.matches(l));
+    if (hit.length === 0) continue;
+    bump(into.byResidual, entry.id, hit.length);
+    const kept = target.filter((l) => !entry.matches(l));
+    if (entry.side === "dihapus") rb = kept;
+    else ra = kept;
+  }
+
+  into.unexplainedRemoved.push(...rb);
+  into.unexplainedAdded.push(...ra);
+}
+
+/** Cetak hasil klasifikasi, dan kembalikan apakah ia menggagalkan gerbang. */
+function reportClassification(label: string, c: Classification): boolean {
+  log(`\n  --- Klasifikasi: ${label} ---`);
+  if (c.reordered > 0) {
+    log(`  [urut-ulang]  ${c.reordered} baris identik hanya berpindah posisi (isi tidak berubah).`);
+  }
+  for (const cls of DIFF_CLASSES) {
+    const n = c.byClass.get(cls.id);
+    if (!n) continue;
+    log(`  [${cls.id}]  ${n} pasangan baris — ${cls.why}`);
+  }
+
+  let ledgerFailed = false;
+  for (const entry of ACCEPTED_RESIDUALS) {
+    const n = c.byResidual.get(entry.id) ?? 0;
+    if (n === 0) continue;
+    const ok = n === entry.count;
+    if (!ok) ledgerFailed = true;
+    log(
+      `  [ledger:${entry.id}]  ${n} baris ${entry.side}` +
+        (ok
+          ? ` (persis seperti yang tercatat: ${entry.count}) — ${entry.why}`
+          : `  <<< TIDAK COCOK: tercatat ${entry.count}. Jumlah berubah berarti ada yang bergeser; selidiki, jangan ubah angkanya begitu saja.`),
+    );
+  }
+
+  const unexplained = c.unexplainedRemoved.length + c.unexplainedAdded.length;
+  if (unexplained === 0) {
+    log("  [tak-terjelaskan]  tidak ada.");
+  } else {
+    log(`  [tak-terjelaskan]  ${unexplained} baris — INI yang menggagalkan gerbang:`);
+    for (const l of c.unexplainedRemoved.slice(0, 25)) log(`        - ${l}`);
+    if (c.unexplainedRemoved.length > 25)
+      log(`        ... (${c.unexplainedRemoved.length - 25} baris dihapus lainnya)`);
+    for (const l of c.unexplainedAdded.slice(0, 25)) log(`        + ${l}`);
+    if (c.unexplainedAdded.length > 25)
+      log(`        ... (${c.unexplainedAdded.length - 25} baris ditambah lainnya)`);
+  }
+  return ledgerFailed || unexplained > 0;
+}
+
 type PageResult = {
   key: PageKey;
   baselineMissing: boolean;
@@ -277,6 +602,8 @@ type PageResult = {
 };
 
 async function main() {
+  assertBaselineUsable();
+
   const baseEnv = { ...process.env } as NodeJS.ProcessEnv;
 
   // ---------------------------------------------------------------------
@@ -383,6 +710,7 @@ async function main() {
   const results: PageResult[] = [];
   let identicalCount = 0;
   let contentFailures = 0;
+  const baselineClass = emptyClassification();
 
   for (const file of baselineFiles) {
     if (!file.endsWith(".txt")) continue;
@@ -409,6 +737,13 @@ async function main() {
       }
       if (diffs.length > 40) log(`      ... (${diffs.length - 40} hunk beda lainnya dipotong)`);
       contentFailures++;
+      // Klasifikasi memakai SEMUA hunk, bukan 40 pertama yang tercetak —
+      // pemotongan di atas hanya membatasi panjang log, bukan analisis.
+      classifyPage(
+        diffs.flatMap((h) => h.before),
+        diffs.flatMap((h) => h.after),
+        baselineClass,
+      );
     }
 
     results.push({
@@ -431,6 +766,7 @@ async function main() {
 log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########");
   const abFailures: { file: string; diffs: number }[] = [];
   let abIdentical = 0;
+  const abClass = emptyClassification();
   const seenRoutes = new Set(keys.map((k) => k.baselineFile.replace(/^(ja|en)(__)?/, "")));
 
   if (!buildOff.success) {
@@ -459,6 +795,7 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
     if (jaDiffs.length === 0) abIdentical++;
     else {
       abFailures.push({ file: jaFile, diffs: jaDiffs.length });
+      classifyPage(jaDiffs.flatMap((h) => h.before), jaDiffs.flatMap((h) => h.after), abClass);
       for (const h of jaDiffs.slice(0, 10)) {
         log(`      [ja ${routeLabel}] dekat baris ${h.atLine}:`);
         for (const line of h.before) log(`        - ${line}`);
@@ -468,6 +805,7 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
     if (enDiffs.length === 0) abIdentical++;
     else {
       abFailures.push({ file: enFile, diffs: enDiffs.length });
+      classifyPage(enDiffs.flatMap((h) => h.before), enDiffs.flatMap((h) => h.after), abClass);
       for (const h of enDiffs.slice(0, 10)) {
         log(`      [en ${routeLabel}] dekat baris ${h.atLine}:`);
         for (const line of h.before) log(`        - ${line}`);
@@ -496,11 +834,31 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
       .join(", ")}`,
   );
 
-  const gateFailed = contentFailures > 0 || abFailures.length > 0 || !buildOff.success;
+  // Verdict sekarang ditentukan oleh KLASIFIKASI, bukan oleh "ada baris beda
+  // atau tidak". Jumlah mentah di atas tetap dicetak apa adanya — yang berubah
+  // adalah bahwa skrip ini sekarang menyatakan sendiri mana yang terbukti
+  // wajar dan mana yang tidak, alih-alih menyerahkannya ke penilaian manual
+  // yang tidak ikut ter-commit. Perhatikan bahwa ini TIDAK melonggarkan
+  // gerbang: satu baris yang tidak masuk kelas mana pun dan tidak ada di
+  // ledger tetap membuatnya merah, dan jumlah ledger yang bergeser juga.
+  const baselineUnexplained = reportClassification("vs baseline pre-migrasi", baselineClass);
+  const abUnexplained = buildOff.success
+    ? reportClassification("CMS-ON vs CMS-OFF", abClass)
+    : true;
+
+  const gateFailed = baselineUnexplained || abUnexplained || !buildOff.success;
   if (gateFailed) {
-    log("\nHASIL: GAGAL — ada perbedaan yang harus diperlakukan sebagai perubahan konten, bukan diperbaiki di sini.");
+    log(
+      "\nHASIL: GAGAL — ada perbedaan yang TIDAK terjelaskan oleh kelas mana pun " +
+        "dan tidak tercatat di ledger (atau jumlah ledger bergeser, atau build " +
+        "CMS-OFF gagal). Lihat blok [tak-terjelaskan] di atas.",
+    );
   } else {
-    log("\nHASIL: LULUS — tidak ada perbedaan konten terhadap baseline maupun antara jalur CMS-on/CMS-off.");
+    log(
+      "\nHASIL: LULUS — setiap baris beda terjelaskan: pengurutan ulang, kelas " +
+        "yang terbukti lewat kanonikalisasi, atau entri ledger dengan jumlah persis. " +
+        "Tidak ada perbedaan konten yang tak terhitung.",
+    );
   }
 
   process.exitCode = gateFailed ? 1 : 0;

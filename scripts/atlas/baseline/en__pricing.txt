@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Pricing for users | Care 24 Japan</title>
+<meta name="description" content="Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing."/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en/pricing"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/pricing"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/pricing"/>
+<meta property="og:title" content="Pricing for users | Care 24 Japan"/>
+<meta property="og:description" content="Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing."/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Pricing for users | Care 24 Japan"/>
+<meta name="twitter:description" content="Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing."/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a aria-current="page" class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] bg-primary-light font-medium text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Pricing for users</h1>
+</header>
+<p class="max-w-2xl text-lg leading-relaxed text-body">Transparent, all-inclusive pricing. Prices include tax.</p>
+<ul class="mt-7 grid gap-3 sm:grid-cols-2">
+<li class="rounded-xl bg-accent px-6 py-5 text-xl font-bold text-white">No membership or registration fee</li>
+<li class="rounded-xl bg-accent px-6 py-5 text-xl font-bold text-white">Minimum usage time: 2 hours</li>
+</ul>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="grid gap-6 lg:grid-cols-2">
+<section class="overflow-hidden rounded-2xl border-2 bg-surface border-primary">
+<h2 class="px-7 py-5 text-2xl font-bold bg-primary">
+<span class="text-white">Caregiving course</span>
+</h2>
+<div class="p-7">
+<p class="text-lg font-bold text-muted">Basic rate (per hour)</p>
+<div class="mt-3 grid gap-px overflow-hidden rounded-xl bg-border sm:grid-cols-2">
+<div class="bg-surface px-5 py-5">
+<p class="text-lg text-body">9:00 AM – 6:00 PM</p>
+<p class="mt-1 text-4xl font-bold tabular-nums text-primary">¥3,740</p>
+</div>
+<div class="bg-surface px-5 py-5">
+<p class="text-lg text-body">6:00 PM – 9:00 AM</p>
+<p class="mt-1 text-4xl font-bold tabular-nums text-primary">¥4,488</p>
+</div>
+</div>
+<dl class="mt-6 divide-y divide-border border-t border-border">
+<div class="flex items-baseline justify-between gap-4 py-4">
+<dt class="text-lg text-body">Nomination fee (per hour)</dt>
+<dd class="text-lg font-bold tabular-nums text-heading">¥330</dd>
+</div>
+<div class="flex items-baseline justify-between gap-4 py-4">
+<dt class="text-lg text-body">Transportation expenses</dt>
+<dd class="text-lg font-bold tabular-nums text-heading">¥990</dd>
+</div>
+</dl>
+</div>
+</section>
+<section class="overflow-hidden rounded-2xl border-2 bg-surface border-accent">
+<h2 class="px-7 py-5 text-2xl font-bold bg-accent">
+<span class="text-white">Nursing course</span>
+</h2>
+<div class="p-7">
+<p class="text-lg font-bold text-muted">Basic rate (per hour)</p>
+<div class="mt-3 grid gap-px overflow-hidden rounded-xl bg-border sm:grid-cols-2">
+<div class="bg-surface px-5 py-5">
+<p class="text-lg text-body">9:00 AM – 6:00 PM</p>
+<p class="mt-1 text-4xl font-bold tabular-nums text-accent">¥6,600</p>
+</div>
+<div class="bg-surface px-5 py-5">
+<p class="text-lg text-body">6:00 PM – 9:00 AM</p>
+<p class="mt-1 text-4xl font-bold tabular-nums text-accent">¥7,920</p>
+</div>
+</div>
+<dl class="mt-6 divide-y divide-border border-t border-border">
+<div class="flex items-baseline justify-between gap-4 py-4">
+<dt class="text-lg text-body">Nomination fee (per hour)</dt>
+<dd class="text-lg font-bold tabular-nums text-heading">¥330</dd>
+</div>
+<div class="flex items-baseline justify-between gap-4 py-4">
+<dt class="text-lg text-body">Transportation expenses</dt>
+<dd class="text-lg font-bold tabular-nums text-heading">¥990</dd>
+</div>
+</dl>
+</div>
+</section>
+</div>
+<p class="mt-8 text-lg text-muted">All prices include tax and may vary based on care requirements.</p>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

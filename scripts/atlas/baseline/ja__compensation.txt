@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care24Japan ケアサポーター報酬規程 | Care 24 Japan</title>
+<meta name="description" content="Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan"/>
+<link rel="canonical" href="https://care24jpn.vercel.app/compensation"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/compensation"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/compensation"/>
+<meta property="og:title" content="Care24Japan ケアサポーター報酬規程 | Care 24 Japan"/>
+<meta property="og:description" content="Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="ja_JP"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care24Japan ケアサポーター報酬規程 | Care 24 Japan"/>
+<meta name="twitter:description" content="Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="ケア24ジャパン ロゴ" href="/">
+<img alt="ケア24ジャパン ロゴ" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="24時間365日、お気軽にお問い合わせください。 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">24時間365日、お気軽にお問い合わせください。</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="メニュー" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Care24Japan ケアサポーター報酬規程</h1>
+</header>
+<div class="lg:flex lg:gap-12">
+<div class="max-w-[42rem] lg:flex-1">
+<div class="mb-10 animate-fade-up lg:hidden">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="目次">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">目次</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第1条（目的）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第2条（契約関係）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第3条（報酬の基本構成）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第4条（報酬体系・単価一覧）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第5条（共通手当および交通費）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第6条（プラットフォーム手数料および決済代行）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第7条（業務完了報告と報酬の確定）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第8条（報酬の支払方法）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第9条（ケアサポーター都合によるキャンセル時の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第10条（禁止事項およびペナルティに伴う報酬の制限）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">附則</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+<div class="legal-body animate-fade-up">
+<h2>第1条（目的）</h2>
+<p>本規程は、メディカルインフォマティクス株式会社（以下「当社」という）が運営する保険外訪問看護・訪問介護マッチングプラットフォーム「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）と準委任契約（以下「個別契約」という）を締結し、独立した請負人として業務を提供するケアサポーター（以下「サポーター」という）に対する報酬の支払いに関する基本事項を定めることを目的とする。</p>
+<h2>第2条（契約関係）</h2>
+<p>サポーターは、本規程のほか、当社が定めるプラットフォーム利用規約を遵守しなければならない。サポーターと利用者との間に成立する法律関係は準委任契約であり、サポーターは独立した事業者として自己の裁量と責任において業務を遂行するものとし、当社とサポーターとの間に雇用契約その他指揮命令関係は存在しない。</p>
+<h2>第3条（報酬の基本構成）</h2>
+<p>サポーターに支払われる報酬は、個別契約に基づくサービス提供実績に応じて算出される基本報酬、各種手当（時間外手当、当日予約手当、指名手当）、および交通費の合計額から、第6条に定めるプラットフォーム手数料を差し引いた金額とする。報酬の計算は、利用者が承認した実際のサービス提供時間（業務完了報告に基づき確定した時間）を基準として行う。</p>
+<h2>第4条（報酬体系・単価一覧）</h2>
+<p>提供する業務区分（介護、看護、リハビリ）および時間帯等に応じたケアサポーター向け報酬単価は以下の通りとする（金額はすべて税込表示）。</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr>
+<th scope="col">業務区分</th>
+<th scope="col">区分・時間帯等条件</th>
+<th scope="col">お客様 支払い単価</th>
+<th scope="col">サポーター 報酬単価</th>
+<th scope="col">プラットフォーム 手数料</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>介護業務 （初任者研修・実務者研修・介護福祉士・無資格等の適用範囲内業務）</td>
+<td>基本時間帯（9:00～18:00）</td>
+<td>¥3,740 / 時間</td>
+<td>¥2,000 / 時間</td>
+<td>¥1,740 / 時間</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>時間外・夜間時間帯（18:00～9:00）</td>
+<td>¥4,488 / 時間</td>
+<td>¥2,200 / 時間</td>
+<td>¥2,288 / 時間</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>当日予約（緊急募集案件）</td>
+<td>¥4,862 / 時間</td>
+<td>¥2,600 / 時間</td>
+<td>¥2,262 / 時間</td>
+</tr>
+<tr>
+<td>看護業務 （看護師・准看護師等有資格者限定業務）</td>
+<td>基本時間帯（9:00～18:00）</td>
+<td>¥6,600 / 時間</td>
+<td>¥3,300 / 時間</td>
+<td>¥3,300 / 時間</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>時間外・夜間時間帯（18:00～9:00）</td>
+<td>¥7,920 / 時間</td>
+<td>¥3,630 / 時間</td>
+<td>¥4,290 / 時間</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>当日予約（緊急募集案件）</td>
+<td>¥8,580 / 時間</td>
+<td>¥4,290 / 時間</td>
+<td>¥4,290 / 時間</td>
+</tr>
+<tr>
+<td>リハビリ業務 （理学療法士・作業療法士・言語聴覚士限定業務）</td>
+<td>基本時間帯（9:00～18:00）</td>
+<td>¥8,800 / 時間</td>
+<td>¥6,160 / 時間</td>
+<td>¥2,640 / 時間</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>第5条（共通手当および交通費）</h2>
+<p>すべての業務区分において、以下の手当および交通費を共通として支給する。</p>
+<ul>
+<li>指名手当： 利用者から特定のサポーターとして指名を受けて業務を行った場合、1時間あたり ¥330 を支給する。</li>
+<li>交通費： 1回の訪問案件につき、一律 ¥990 を支給する。</li>
+</ul>
+<h2>第6条（プラットフォーム手数料および決済代行）</h2>
+<p>利用者がサポーターに対して支払う個別契約の対価は、当社がプラットフォームとして受領を代行する。当社は、受領した対価から第4条に記載したプラットフォーム手数料を差し引いた上で、その残額をサポーターに対して支払うものとする。</p>
+<h2>第7条（業務完了報告と報酬の確定）</h2>
+<p>サポーターは業務終了後、速やかに本サービスのシステムを通じて「業務完了報告」を行わなければならない。利用者による完了承認またはサービス実施報告が完了した案件について、毎月20日を締切日として支払報酬金額を確定する。確定した支払報酬金額は、当月末日までに支払うものとする。なお、20日以降に完了承認またはサービス実施報告が完了した案件については、翌月20日締めの対象とする。</p>
+<h2>第8条（報酬の支払方法）</h2>
+<p>確定した報酬は、当社指定決済システムを通じ、サポーターがあらかじめ登録した銀行口座へ振り込まれるものとする。その際の振込手数料は当社が負担する。</p>
+<h2>第9条（ケアサポーター都合によるキャンセル時の取り扱い）</h2>
+<ol>
+<li>ケアサポーターは、個別契約成立後、自己の都合により当該業務をキャンセルする場合、速やかに本システムを通じて利用者および当社へ通知しなければならない。</li>
+<li>ケアサポーターの都合によるキャンセルが頻発する場合、または直前のキャンセルを行った場合、当社は以下の措置を講じることができるものとする。</li>
+</ol>
+<ul>
+<li>(1) 当該案件にかかる報酬の全額不支給</li>
+<li>(2) 当社が定める算定基準に基づく違約金の請求または報酬からの差し引き</li>
+<li>(3) 本サービスの利用制限、またはアカウントの停止措置</li>
+</ul>
+<h2>第10条（禁止事項およびペナルティに伴う報酬の制限）</h2>
+<p>サポーターが本サービスの利用規約または個別契約に違反した場合（利用者との直接交渉・中抜き行為、無断欠勤、ハラスメント行為、守秘義務違反等）、当社は該当する案件の報酬支払いを差し止め、またはアカウントの停止措置等を行うことができる。</p>
+<h2>附則</h2>
+<p>本規程は、2026年9月1日より制定・施行する。</p>
+</div>
+</div>
+<aside class="hidden w-72 shrink-0 lg:block">
+<div class="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="目次">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">目次</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第1条（目的）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第2条（契約関係）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第3条（報酬の基本構成）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第4条（報酬体系・単価一覧）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第5条（共通手当および交通費）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第6条（プラットフォーム手数料および決済代行）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第7条（業務完了報告と報酬の確定）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第8条（報酬の支払方法）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第9条（ケアサポーター都合によるキャンセル時の取り扱い）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">第10条（禁止事項およびペナルティに伴う報酬の制限）</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">附則</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="ケア24ジャパン ロゴ" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/company">運営会社</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/privacy">プライバシーポリシー</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/tokushoho">特定商取引法に基づく表記</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-users">利用規約（ご利用者様向け）</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-care-supporters">利用規約（ケアサポーター向け）</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

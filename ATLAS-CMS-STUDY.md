@@ -23,6 +23,21 @@
 >    mengerucut ke satu locale). Konsekuensi: lewat `raw.get`, field `data` datang sebagai
 >    **JSON string**, wajib `JSON.parse` — kalau lupa, field jadi `undefined` diam-diam.
 >
+> 4. **Biaya rendering dinamis yang tidak terduga (ditemukan 2026-08-20, sesudah rilis).**
+>    Rute yang dirender dinamis **tidak memancarkan `<link rel="preload" as="font">`**
+>    milik `next/font`, sementara rute yang masih diprerender statis memancarkannya.
+>    Bukti: `.next/server/next-font-manifest.json` tetap memuat berkas font untuk
+>    `app/[lang]/layout` (jadi bukan soal font tak terdaftar); `_not-found` (statis)
+>    memancarkan 1 preload, persis seperti baseline pra-migrasi; setiap rute `[lang]`
+>    memancarkan 0. Font yang sama tetap termuat lewat `@font-face` di CSS — yang hilang
+>    hanya petunjuk prioritasnya, jadi jendela pertukaran `display: "swap"` melebar pada
+>    kunjungan pertama. Ini biaya dari keputusan nomor 2 di atas, bukan bug tersendiri,
+>    dan sekarang tercatat sebagai entri ledger di
+>    `scripts/atlas/verify-html-parity.ts#ACCEPTED_RESIDUALS` dengan jumlah dipatok 26
+>    (13 rute x {ja,en}) supaya kejadian ke-27 menggagalkan gerbang alih-alih lewat
+>    diam-diam. Laporan sebelumnya menyebut 26 baris ini "pengurutan ulang preload font";
+>    itu salah — tidak ada baris pengganti di sisi lain, ini penghapusan.
+>
 > Arsitektur yang benar-benar ter-implementasi ada di `features/cms/` (client + loader per
 > area) dan `scripts/atlas/` (schema + seed). Entry **tidak** dipakai sama sekali untuk
 > konten bilingual karena jalur publik membuang terjemahan

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care Service Quasi-Mandate Contract | Care 24 Japan</title>
+<meta name="description" content="Care Service Quasi-Mandate Contract — Care 24 Japan"/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en/quasi-mandate"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/quasi-mandate"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/quasi-mandate"/>
+<meta property="og:title" content="Care Service Quasi-Mandate Contract | Care 24 Japan"/>
+<meta property="og:description" content="Care Service Quasi-Mandate Contract — Care 24 Japan"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care Service Quasi-Mandate Contract | Care 24 Japan"/>
+<meta name="twitter:description" content="Care Service Quasi-Mandate Contract — Care 24 Japan"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Care Service Quasi-Mandate Contract</h1>
+</header>
+<div class="lg:flex lg:gap-12">
+<div class="max-w-[42rem] lg:flex-1">
+<div class="mb-10 animate-fade-up lg:hidden">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="Table of Contents">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">Table of Contents</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">1. Contracting Parties</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">2. Nature of Contract and Governing Terms</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">3. Details of Outsourced Work (Reservation)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">4. Special Provisions regarding Visiting Nursing (Medical Practices) (Applicable only to Service Category ②)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">5. Outsourcing Fee (Remuneration) and Payment Method</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">6. Cancellation Policy</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">7. Dispute Resolution and Liability</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+<div class="legal-body animate-fade-up">
+<p>This notice (document) certifies the details of the individual quasi-mandate contract established directly between the following Contractor and Care Supporter, based on the Terms of Use of the &quot;Care24Japan&quot; platform operated by Medical Informatics Inc. (hereinafter referred to as the &quot;Company&quot;).</p>
+<h2>1. Contracting Parties</h2>
+<ul>
+<li>Trustor (Contractor): [User&#x27;s Name] (Address: [User&#x27;s Registered Address])</li>
+<li>Trustee (Care Supporter): [Care Supporter&#x27;s Name] (Qualification: [Nurse / Certified Care Worker, etc.])</li>
+</ul>
+<h2>2. Nature of Contract and Governing Terms</h2>
+<p>This contract is a &quot;Quasi-Mandate Contract&quot; pursuant to Article 656 of the Civil Code, and both parties agree that all provisions of the &quot;Care24Japan Platform Terms of Use (for Contractors and Caregivers)&quot; agreed upon by each party with the Company (including, but not limited to, the prohibition of direct contracting, disclaimers, and confidentiality) shall apply to this contract and form a part of it.</p>
+<h2>3. Details of Outsourced Work (Reservation)</h2>
+<p>The details of the work to be provided by the Trustee to the Trustor based on this contract are as follows:</p>
+<ul>
+<li>Matching Establishment Date and Time: [Month] [Day], 2026, [Hour]:[Minute]</li>
+<li>Work Execution Date and Time: [Month] [Day], 2026, [Hour]:[Minute] to [Hour]:[Minute] (Total: [X] hours)</li>
+<li>Execution Location (Visit Destination): [Destination Address / Facility Name, etc.]</li>
+<li>Target Person (Care/Nursing Recipient): [Target Person&#x27;s Name] (Relationship to Trustor: [Self / Father / Mother, etc.])</li>
+<li>Service Category: [ ① Home Care/In-Home Support Service / ② Visiting Nursing Service ]</li>
+<li>Specific Work Details: [Automatically reflected from the content selected/entered in the system] (e.g., vital checks, IV management, bedsore treatment, oral care, excretion assistance, monitoring, etc.)</li>
+</ul>
+<h2>4. Special Provisions regarding Visiting Nursing (Medical Practices) (Applicable only to Service Category ②)</h2>
+<p>If the work under this contract includes medical practices, the Trustor guarantees that a valid &quot;Visiting Nursing Instruction&quot; issued by the attending physician has been presented in advance, and the Trustee shall perform medical practices only within the scope of said instruction. If the Visiting Nursing Instruction is not presented, or for medical practices exceeding the scope of the instructions, the Trustee shall refuse to perform them even if requested by the Trustor, and in such cases, no reduction in the outsourcing fee shall be made.</p>
+<h2>5. Outsourcing Fee (Remuneration) and Payment Method</h2>
+<ul>
+<li>Basic Fee: [X,XXX] yen (Hourly rate [X,XXX] yen × [X] hours)</li>
+<li>Various Additions/Allowances: [X,XXX] yen (Night addition / Same-day addition / Nomination fee, etc.)</li>
+<li>Transportation Fee: [X,XXX] yen</li>
+<li>Total Outsourcing Fee (Tax Included): [X,XXX] yen</li>
+<li>Payment Method: The Trustor shall pay the total outsourcing fee above through the payment method designated by the Company. The Trustee has granted the Company the authority to collect said fee on their behalf, and the Trustor&#x27;s obligation to pay the fee to the Trustee shall be extinguished at the time the Trustor completes the payment to the Company.</li>
+</ul>
+<h2>6. Cancellation Policy</h2>
+<p>After the matching is established, if this contract is terminated (reservation canceled) due to the convenience of the Trustor or the Trustee, the cancellation policy specified separately in the Company&#x27;s fee schedule shall apply, and a predetermined cancellation fee or penalty will be incurred depending on the timing of the cancellation confirmation.</p>
+<h2>7. Dispute Resolution and Liability</h2>
+<p>If any damage (injury, property damage, etc.) is caused to the Trustor due to the Trustee&#x27;s intent or negligence in the performance of this work, the Trustee shall bear direct liability based on a breach of the duty of care of a good manager under the Civil Code, and the Company, as the platform operating company, shall generally bear no liability. However, if the liability insurance enrolled in by the Company is applicable, compensation shall be provided within that scope.</p>
+<p>This contract is deemed to be validly established at the time the Trustee performs the acceptance operation in response to the Trustor&#x27;s reservation application on the Company&#x27;s system, and the electronic record of the matching completion is recorded on the Company&#x27;s server.</p>
+<p>(Since this notice is automatically delivered from the system, signatures and seals are omitted)</p>
+<p>*Intended to be integrated into the system as an &quot;electronic document automatically issued (emailed or displayed on screen) by the system upon matching establishment.&quot;</p>
+</div>
+</div>
+<aside class="hidden w-72 shrink-0 lg:block">
+<div class="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="Table of Contents">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">Table of Contents</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">1. Contracting Parties</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">2. Nature of Contract and Governing Terms</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">3. Details of Outsourced Work (Reservation)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">4. Special Provisions regarding Visiting Nursing (Medical Practices) (Applicable only to Service Category ②)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">5. Outsourcing Fee (Remuneration) and Payment Method</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">6. Cancellation Policy</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">7. Dispute Resolution and Liability</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

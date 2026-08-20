@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75 3840w" imageSizes="100vw" fetchPriority="high"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care 24 Japan — Premium 24-hour in-home care</title>
+<meta name="description" content="Premium 24-hour in-home care"/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en"/>
+<meta property="og:title" content="Care 24 Japan — Premium 24-hour in-home care"/>
+<meta property="og:description" content="Premium 24-hour in-home care"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care 24 Japan — Premium 24-hour in-home care"/>
+<meta name="twitter:description" content="Premium 24-hour in-home care"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a aria-current="page" class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] bg-primary-light font-medium text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class="relative isolate overflow-hidden">
+<img alt="An elderly woman resting calmly by a window with a care professional" fetchPriority="high" decoding="async" data-nimg="fill" class="-z-20 object-cover object-[center_40%]" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="100vw" srcSet="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75"/>
+<div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-40">
+</div>
+<div aria-hidden="true" class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg">
+</div>
+<div class="relative mx-auto flex min-h-[calc(100dvh-81px)] max-w-6xl flex-col justify-center px-6 py-20 md:min-h-[calc(100dvh-130px)] md:py-24">
+<div class="max-w-xl animate-fade-up">
+<h1 class="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">Care and nursing support services that do not utilize medical insurance or long-term care insurance.</h1>
+<p class="mt-6 text-base leading-relaxed text-body">We&#x27;re transforming the &quot;impossible&quot; aspects of long-term care insurance into &quot;normal&quot; for families.</p>
+<div class="mt-8 flex flex-wrap gap-4">
+<a class="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid" href="/en/service-flow">Apply here</a>
+<a class="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light" href="/en/pricing">Register for free first.</a>
+</div>
+<ul class="mt-10 flex flex-wrap gap-2.5">
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:120ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>24-hour presence</li>
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:200ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>Trained professionals</li>
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:280ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>Family partnership</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h2 class="text-3xl font-bold text-heading mb-1">Are you experiencing any of these problems?</h2>
+</header>
+<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:0ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I live alone and worry about what might happen.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:60ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">Long-term care insurance payments are often delayed.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:120ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I want to go out but can&#x27;t go alone.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:180ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I want someone to talk to.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:240ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I need help with housework and cleaning.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:300ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I&#x27;m worried about my parents who live far away.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:360ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I&#x27;d like someone to watch over them when family is away.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:420ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I need individual care beyond what facilities offer.</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:480ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">I want a professional to handle emergencies.</p>
+</div>
+</div>
+</div>
+</section>
+<div class="flex flex-col items-center bg-surface px-6 pb-12 pt-2 md:pb-16">
+<div class="relative w-full max-w-sm animate-fade-up">
+<svg viewBox="0 0 600 500" class="block h-auto w-full md:hidden" aria-hidden="true">
+<path d="M24 24 H576 L300 476 Z" fill="var(--color-accent)" stroke="var(--color-accent)" stroke-width="36" stroke-linejoin="round">
+</path>
+</svg>
+<svg viewBox="0 0 800 380" class="hidden h-auto w-full md:block" aria-hidden="true">
+<path d="M24 24 H776 L400 356 Z" fill="var(--color-accent)" stroke="var(--color-accent)" stroke-width="36" stroke-linejoin="round">
+</path>
+</svg>
+<div class="absolute inset-0 pt-5 flex flex-col items-center justify-center pb-[18%] px-[10%] text-center text-white">
+<p class="text-xs font-medium tracking-wide text-white/90 md:text-sm">Completely custom-made</p>
+<p class="mt-1.5 max-w-[56%] text-md font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-lg">Resolving your anxieties and problems</p>
+</div>
+</div>
+<p class="mx-auto mt-8 max-w-2xl text-center text-base leading-relaxed text-heading animate-fade-up md:text-lg">We will assist you with everything from housework to personal care, according to your needs.</p>
+</div>
+<section class=" py-12 md:py-20 scroll-mt-36 ">
+<div class="max-w-5xl mx-auto px-6">
+<h2 class="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">For those who require medical care, we can arrange a registered nurse.</h2>
+<div class="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
+<div class="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
+<span class="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">Nursing course</span>
+<p class="mt-6 text-lg font-medium text-body">Daytime base rate (9:00–18:00)</p>
+<p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+<span class="text-5xl font-bold tabular-nums text-heading">¥6,000</span>
+<span class="text-lg text-muted">excl. tax</span>
+<span class="text-lg font-medium text-body">/hour</span>
+</p>
+<p class="mt-1 text-lg text-body">Tax included ¥6,600</p>
+<p class="mt-6 text-lg text-muted">*Please see the price list for details.</p>
+</div>
+<div class="animate-fade-up [animation-delay:120ms]">
+<h3 class="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">This course provides peace of mind, as staff with nursing qualifications will provide care when medical attention is needed and in case of any emergencies.</h3>
+<ul class="mt-6 flex flex-col gap-5">
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20.5C6.5 16.5 3.5 13 3.5 9.5a4.5 4.5 0 018.5-2 4.5 4.5 0 018.5 2c0 3.5-3 7-8.5 11z">
+</path>
+<path d="M6.5 12h3l1.5-3 2 5 1.5-2.5h3">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">Vital checks and health monitoring</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16.5 5.5L6.5 15.5M18.5 7.5L8.5 17.5M16.5 5.5l2 2M6.5 15.5l2 2">
+</path>
+<path d="M7.5 16.5L4 20">
+</path>
+<path d="M17.5 6.5L20 4M18.6 2.6l2.8 2.8">
+</path>
+<path d="M13.5 8.5l1.5 1.5M11 11l1.5 1.5">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">Medical procedures (suctioning, tube feeding)</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="7" y="7.5" width="8" height="13" rx="1.5">
+</rect>
+<path d="M6.5 7.5h9M9 4.5h4v3H9zM9.5 13.5h3M11 12v3">
+</path>
+<circle cx="18.5" cy="16.5" r="0.2">
+</circle>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">Medication management and consultation</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 5.5h10a1.5 1.5 0 011.5 1.5v5a1.5 1.5 0 01-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 012.5 12V7A1.5 1.5 0 014 5.5z">
+</path>
+<path d="M18.5 9.5h1.5A1.5 1.5 0 0121.5 11v4.5a1.5 1.5 0 01-1.5 1.5h-.5v2.5l-3-2.5h-3">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">Recuperation guidance and support</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 12.5c-2.8-2-4.3-3.8-4.3-5.7A2.55 2.55 0 0112 5.4a2.55 2.55 0 014.3 1.4c0 1.9-1.5 3.7-4.3 5.7z">
+</path>
+<path d="M4.5 17c2-1.5 3.5-2 5-2h4a1.25 1.25 0 010 2.5H10">
+</path>
+<path d="M13.5 17.5l4.5-1.5a1.3 1.3 0 011 2.4l-5.5 2.6c-1.5.7-3 .5-4.5-.2l-4.5-2">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">End-of-life and palliative care</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="5.5" width="14" height="15" rx="1">
+</rect>
+<path d="M3.5 20.5h17">
+</path>
+<path d="M12 8.5v4M10 10.5h4">
+</path>
+<path d="M8.5 16h2v4.5h3V16h2">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">Coordination with medical institutions</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<h2 class="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">Top-class caregivers support the nursing and daily-living care that long-term care insurance cannot cover.</h2>
+<p class="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-body animate-fade-up">Staff members holding caregiving qualifications provide personal care, supervision, and accompany residents on outings.This course provides comprehensive support.</p>
+<div class="mt-10 rounded-2xl border border-primary/25 bg-primary-light/50 p-6 animate-fade-up sm:p-8">
+<div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
+<div class="lg:w-[38%] lg:shrink-0">
+<span class="inline-flex w-fit items-center rounded-full bg-primary px-5 py-1.5 text-lg font-bold text-white">Caregiving course</span>
+<p class="mt-5 text-lg font-medium text-body">Daytime base rate (9:00–18:00)</p>
+<p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+<span class="text-5xl font-bold tabular-nums text-heading">¥3,400</span>
+<span class="text-lg text-muted">excl. tax</span>
+<span class="text-lg font-medium text-body">/hour</span>
+</p>
+<p class="mt-1 text-lg text-body">Tax included ¥3,740</p>
+</div>
+<dl class="grid flex-1 auto-rows-fr gap-px overflow-hidden rounded-xl bg-primary/20 sm:grid-cols-3">
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">Minimum usage</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">From 2 hours</dd>
+</div>
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">Nomination fee</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">¥330/hour</dd>
+<dd class="mt-1 text-lg leading-snug text-muted">*Free for regular clients</dd>
+</div>
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">Round-trip transport</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">¥990 separately</dd>
+</div>
+</dl>
+</div>
+</div>
+<div class="mt-10 grid gap-8 md:grid-cols-2">
+<div class="animate-fade-up" style="animation-delay:0ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A caregiver assisting an elderly woman at home" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">In-home caregiving</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Mobility assistance</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Meal assistance</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Bathing and wiping assistance</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Oral care</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Toileting assistance</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Help with dressing</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Medication management</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Coordination with care managers</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:120ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A staff member cleaning a living room at home" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">In-home housework</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Cleaning</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Laundry</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Companionship</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Cooking</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Pet care</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Garden care</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Window cleaning</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:240ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A caregiver assisting an elderly man in a wheelchair at a facility" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">Hospital and facility caregiving</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Daytime in-room care support</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Mobility assistance in and out of the facility</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Overnight supervision</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Companionship</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Bathing support</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Room cleaning</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Shopping on your behalf</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:360ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A caregiver accompanying an elderly woman in a wheelchair on an outing" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">Hospital-visit and outing accompaniment</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Assistance to and from medical appointments</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Noting down consultation details</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Picking up medication</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Walks</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Attending events</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Shopping</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="text-center animate-fade-up">
+<p class="text-lg font-bold text-body">Planning tailored to each customer</p>
+<h2 class="mt-2 text-3xl font-bold text-primary">Examples of use</h2>
+</div>
+<div class="mt-4 flex flex-col">
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:0ms">
+<div class="">
+<p class="text-lg font-bold tracking-wide text-primary">Case 1</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">“I would like you to look after them while I am at work.”</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">Example of use: primarily daytime monitoring</p>
+<p class="mt-7 text-lg font-bold text-muted">Services provided</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Conversation partner</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Neighborhood walks</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">House cleaning</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Shopping assistance</li>
+</ul>
+</div>
+<div class="">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>Schedule</p>
+<p class="text-lg font-bold tabular-nums text-heading">9:00–17:00<span class="ml-2 text-lg font-normal text-muted">8 hours</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">9:00〜10:00</span>
+<span class="text-lg leading-snug text-body">Greetings, conversations, walks around the neighborhood, and rest</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">10:00〜12:00</span>
+<span class="text-lg leading-snug text-body">Meal support</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">12:00〜13:00</span>
+<span class="text-lg leading-snug text-body">Cleaning</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">Shopping escort</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">14:00〜16:00</span>
+<span class="text-lg leading-snug text-body">Conversation</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">16:00〜17:00</span>
+<span class="text-lg leading-snug text-body">Watching over dinner</span>
+</li>
+</ol>
+</div>
+</article>
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:100ms">
+<div class="lg:order-2">
+<p class="text-lg font-bold tracking-wide text-accent">Case 2</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">“Watching over the patient with a gastrostomy tube.”</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">Example of use: medical and nursing care monitoring</p>
+<p class="mt-7 text-lg font-bold text-muted">Services provided</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">Tube feeding</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">Monitoring</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">Diaper changes</li>
+</ul>
+</div>
+<div class="lg:order-1">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>Schedule</p>
+<p class="text-lg font-bold tabular-nums text-heading">9:00–14:00<span class="ml-2 text-lg font-normal text-muted">5 hours</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent bg-accent-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">9:00〜10:00</span>
+<span class="text-lg leading-snug text-body">Diaper change and tube-feeding preparation</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent/50 bg-accent-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">10:00〜12:00</span>
+<span class="text-lg leading-snug text-body">Tube feeding (gastrostomy) and post-meal monitoring</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent bg-accent-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">12:00〜13:00</span>
+<span class="text-lg leading-snug text-body">Diaper changing and supervision</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent/50 bg-accent-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">Condition check, record keeping, and report to family</span>
+</li>
+</ol>
+</div>
+</article>
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:200ms">
+<div class="">
+<p class="text-lg font-bold tracking-wide text-primary">Case 3</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">“I need someone to accompany me to the hospital by bus and to the doctor&#x27;s appointment.”</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">Example of use: accompanying someone on an outing</p>
+<p class="mt-7 text-lg font-bold text-muted">Services provided</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Help with changing clothes</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Walking supervision</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Accompaniment to appointments</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">Toilet assistance</li>
+</ul>
+</div>
+<div class="">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>Schedule</p>
+<p class="text-lg font-bold tabular-nums text-heading">13:00–16:00<span class="ml-2 text-lg font-normal text-muted">3 hours</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">Greetings, changing clothes, toilet assistance</span>
+</li>
+<li style="min-height:94.5px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">14:00〜15:30</span>
+<span class="text-lg leading-snug text-body">Walking supervision, bus boarding, medical examination</span>
+</li>
+<li style="min-height:31.5px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">15:30〜16:00</span>
+<span class="text-lg leading-snug text-body">Arriving home, changing clothes</span>
+</li>
+</ol>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h2 class="text-3xl font-bold text-heading mb-1">How it works</h2>
+</header>
+<ol class="mx-auto max-w-2xl">
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:0ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">01</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">Registration</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">Please enter your information to register as a member in order to use the service.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:100ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">02</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">Confirmation of your reservation</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:200ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">03</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">Service Start</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">A care supporter will visit your home at the scheduled date and time.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:300ms">
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">04</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">Completion Report</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">After the service is completed, the care supporter will send you a report, and the service will be finished.</p>
+</div>
+</li>
+</ol>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
+<a style="animation-delay:0ms" class="group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5 rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15 sm:row-span-2 sm:grid-rows-subgrid animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-3 bg-accent-deep shadow-[0_2px_10px_-4px_rgba(122,32,68,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(122,32,68,0.7)] focus-visible:outline-accent-deep" href="https://portal.care24.jp/register">
+<span class="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">For those who wish to use our service</span>
+<span class="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">Apply here</span>
+<span aria-hidden="true" class="col-start-2 row-start-1 row-span-2 flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none group-hover:text-accent-deep">
+<svg viewBox="0 0 24 24" fill="none" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M5 12h14M13 6l6 6-6 6">
+</path>
+</svg>
+</span>
+</a>
+<a style="animation-delay:100ms" class="group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5 rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15 sm:row-span-2 sm:grid-rows-subgrid animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-3 bg-primary-deep shadow-[0_2px_10px_-4px_rgba(16,66,105,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(16,66,105,0.7)] focus-visible:outline-primary-deep" href="https://portal.care24.jp/caregiver">
+<span class="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">For those seeking employment</span>
+<span class="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">Register here</span>
+<span aria-hidden="true" class="col-start-2 row-start-1 row-span-2 flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none group-hover:text-primary-deep">
+<svg viewBox="0 0 24 24" fill="none" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M5 12h14M13 6l6 6-6 6">
+</path>
+</svg>
+</span>
+</a>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up scroll-mt-36">
+<p class="text-sm font-medium text-primary">＼ Consultations are free of charge. ／</p>
+<h2 class="mt-2 text-2xl md:text-3xl font-bold text-heading">Please feel free to contact us anytime, 24 hours a day, 365 days a year.</h2>
+<div class="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
+<div class="flex flex-col items-center sm:items-start">
+<a href="tel:0120001224" class="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading">
+<svg viewBox="0 0 32 24" fill="none" class="h-7 w-9 text-primary" aria-hidden="true">
+<path d="M6 9c0-2.5 4-4.5 10-4.5S26 6.5 26 9c0 1.4-1 2.2-2.3 2.2-1.2 0-2-.7-2-1.8 0-.6.2-1-.3-1.4-.8-.5-2.3-.8-5.4-.8s-4.6.3-5.4.8c-.5.4-.3.8-.3 1.4 0 1.1-.8 1.8-2 1.8C7 11.2 6 10.4 6 9z" fill="currentColor">
+</path>
+<rect x="4" y="16" width="24" height="3" rx="1.5" fill="currentColor">
+</rect>
+</svg>0120-001-224</a>
+</div>
+<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/en/service-flow">Contact us</a>
+</div>
+<div class="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
+<div class="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
+<img alt="mics — MedicalInformatics Co.,Ltd." loading="lazy" width="401" height="140" decoding="async" data-nimg="1" class="h-auto max-h-12 w-auto" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=828&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=828&amp;q=75"/>
+</div>
+<div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+<img alt="BSI ISMS-AC ISO27001 認証マーク（IS 793656）" loading="lazy" width="257" height="182" decoding="async" data-nimg="1" class="h-auto max-h-full w-auto" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=640&amp;q=75"/>
+</div>
+<p class="text-left text-xs leading-relaxed text-muted">MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

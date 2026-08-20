@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Use cases | Care 24 Japan</title>
+<meta name="description" content="After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps."/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en/use-case"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/use-case"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/use-case"/>
+<meta property="og:title" content="Use cases | Care 24 Japan"/>
+<meta property="og:description" content="After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps."/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Use cases | Care 24 Japan"/>
+<meta name="twitter:description" content="After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps."/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Use cases</h1>
+</header>
+<p class="max-w-2xl text-base leading-relaxed text-body">Care 24 Japan adapts to the moments that matter most.</p>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="flex flex-col gap-16">
+<article class="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up" style="animation-delay:0ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A caregiver assisting an elderly man recovering at home" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75"/>
+</div>
+<div>
+<h2 class="text-2xl font-bold text-heading">After hospital discharge</h2>
+<p class="mt-2 text-sm font-medium text-muted">Nursing and daily-living support during recovery at home.</p>
+<p class="mt-4 text-base leading-relaxed text-body">Leaving hospital can feel daunting. Care 24 Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home.</p>
+<ul class="mt-6 flex flex-col gap-2">
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Available from the day of discharge</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Coordinated nurse and caregiver team</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Medication and wound-care management</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Rehabilitation and mobility support</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Regular updates to family members</li>
+</ul>
+</div>
+</article>
+<article class="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up" style="animation-delay:100ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A care professional looking at a photo album with an elderly woman" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75"/>
+</div>
+<div>
+<h2 class="text-2xl font-bold text-heading">Dementia care</h2>
+<p class="mt-2 text-sm font-medium text-muted">Gentle supervision and companionship for peace of mind.</p>
+<p class="mt-4 text-base leading-relaxed text-body">Our specially trained caregivers provide compassionate, person-centred dementia care at home. We focus on familiar routines, gentle reminders, reminiscence activities, and safe supervision — helping maintain dignity and reduce anxiety. We also keep family members closely informed, so everyone feels supported.</p>
+<ul class="mt-6 flex flex-col gap-2">
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Dementia-trained specialist caregivers</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>24-hour supervision plans available</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Reminiscence and communication support</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Medication and meal management</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Family updates and counselling support</li>
+</ul>
+</div>
+</article>
+<article class="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up" style="animation-delay:200ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A visiting caregiver chatting warmly with an older client" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75"/>
+</div>
+<div>
+<h2 class="text-2xl font-bold text-heading">Respite for families</h2>
+<p class="mt-2 text-sm font-medium text-muted">Temporary cover so family caregivers can rest.</p>
+<p class="mt-4 text-base leading-relaxed text-body">Family caregivers give everything — and they deserve to rest. Care 24 Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind.</p>
+<ul class="mt-6 flex flex-col gap-2">
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Flexible from a few hours to several days</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Seamless continuity of existing care routines</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Rapid response in case of emergency</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Shared care records for smooth handover</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Available as regular or spot bookings</li>
+</ul>
+</div>
+</article>
+<article class="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up" style="animation-delay:300ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="A caregiver holding the hand of an elderly client" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75"/>
+</div>
+<div>
+<h2 class="text-2xl font-bold text-heading">End-of-life home care</h2>
+<p class="mt-2 text-sm font-medium text-muted">Compassionate support to spend final days at home.</p>
+<p class="mt-4 text-base leading-relaxed text-body">When the time comes, most people wish to be at home — surrounded by those they love. Care 24 Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible.</p>
+<ul class="mt-6 flex flex-col gap-2">
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Coordination with palliative care teams</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Pain management and physical comfort care</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Emotional support for client and family</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Round-the-clock presence and response</li>
+<li class="flex items-start gap-2 text-sm text-body">
+<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>Space for family to be present and grieve</li>
+</ul>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="animate-fade-up">
+<a class="inline-flex bg-primary text-white px-8 py-3 rounded-full font-medium transition hover:bg-primary-mid" href="/en/pricing">Book a free consultation</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

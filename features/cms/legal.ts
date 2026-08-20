@@ -85,19 +85,31 @@ async function readLegalFields(
 async function fetchLegalDoc(slug: LegalSlug): Promise<LegalDoc> {
   const fallback = legalDocs[LEGAL_SLUG_TO_KEY[slug]];
 
-  const fields = await readLegalFields(slug, "getLegalDoc");
-  if (!fields) return fallback;
+  try {
+    const fields = await readLegalFields(slug, "getLegalDoc");
+    if (!fields) return fallback;
 
-  const ja = htmlToBlocks(fields.body.ja);
-  const en = htmlToBlocks(fields.body.en);
-  if (ja.length === 0 || en.length === 0) {
-    console.warn(
-      `[cms] getLegalDoc("${slug}"): richtext parsed to 0 blocks, using constants fallback`,
+    const ja = htmlToBlocks(fields.body.ja);
+    const en = htmlToBlocks(fields.body.en);
+    if (ja.length === 0 || en.length === 0) {
+      console.warn(
+        `[cms] getLegalDoc("${slug}"): richtext parsed to 0 blocks, using constants fallback`,
+      );
+      return fallback;
+    }
+
+    return { heading: fields.heading, body: { ja, en } };
+  } catch (error) {
+    // See the note on `fetchLegalHeading`'s catch: this is a blast-radius
+    // guard, not a guard against a throw we know about. `htmlToBlocks` is a
+    // hand-rolled parser fed editor-authored markup — the one input on this
+    // path a developer does not control.
+    console.error(
+      `[cms:fallback:failure] getLegalDoc("${slug}") threw, using constants fallback:`,
+      error,
     );
     return fallback;
   }
-
-  return { heading: fields.heading, body: { ja, en } };
 }
 
 /**
@@ -133,17 +145,39 @@ async function fetchLegalDoc(slug: LegalSlug): Promise<LegalDoc> {
 async function fetchLegalHeading(slug: LegalSlug): Promise<LegalDoc["heading"]> {
   const fallback = legalDocs[LEGAL_SLUG_TO_KEY[slug]].heading;
 
-  const fields = await readLegalFields(slug, "getLegalHeading");
-  if (!fields) return fallback;
+  try {
+    const fields = await readLegalFields(slug, "getLegalHeading");
+    if (!fields) return fallback;
 
-  if (fields.body.ja.trim() === "" || fields.body.en.trim() === "") {
-    console.warn(
-      `[cms] getLegalHeading("${slug}"): empty richtext body, using constants fallback`,
+    if (fields.body.ja.trim() === "" || fields.body.en.trim() === "") {
+      console.warn(
+        `[cms] getLegalHeading("${slug}"): empty richtext body, using constants fallback`,
+      );
+      return fallback;
+    }
+
+    return fields.heading;
+  } catch (error) {
+    // NOT guarding a throw that exists today — `getPageBlocks` catches its
+    // own network/timeout/shape errors and returns `null`, and every guard
+    // above is pure. This catch guards the BLAST RADIUS if that ever stops
+    // being true.
+    //
+    // `app/[lang]/layout.tsx` starts this read inside a `Promise.all`, which
+    // rejects the moment any input does. That layout wraps EVERY route, so a
+    // rejection here would not degrade one footer link — it would 500 the
+    // entire site, in both locales, for a string. The layout currently
+    // documents that it is safe by ARGUING about this function's internals;
+    // an argument holds only until someone edits `pick`, `htmlToBlocks` or
+    // `getPageBlocks` without reading a comment two files away. Costing one
+    // try/catch to convert that argument into a guarantee is obviously worth
+    // it at a ratio of "one label" to "the whole site".
+    console.error(
+      `[cms:fallback:failure] getLegalHeading("${slug}") threw, using constants fallback:`,
+      error,
     );
     return fallback;
   }
-
-  return fields.heading;
 }
 
 /** Deduped per-render: `generateMetadata` and the page component both call

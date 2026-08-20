@@ -28,7 +28,7 @@
  *
  * `detail` is OMITTED entirely (the key itself, not `detail: ""`) from both
  * `data` and `translations.en.data` for nomination/transport rows.
- * features/cms/client.ts#mergeBlockData only iterates keys present in the
+ * features/cms/merge.ts#mergeBlockData only iterates keys present in the
  * base `data` object, so an absent key reads back as `undefined` — never a
  * truthy `{ ja: "", en: "" }` that would move those rows into
  * CourseRateCard.tsx's "timed" grid. This is the #1 risk flagged for this
