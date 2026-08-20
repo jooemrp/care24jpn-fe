@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Section from "@/components/ui/Section";
 import TableOfContents, { type TocItem } from "@/components/TableOfContents";
-import type { LegalBlock, LegalDoc } from "@/constants/legal";
+import type { LegalBlock, LegalDoc, LegalTableCell } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
 /**
@@ -69,6 +69,22 @@ function renderInlineText(text: string, keyPrefix: string, lang: Lang): ReactNod
   return parts;
 }
 
+/** Text content of a table cell, whether it's a plain string or the
+ * `{text, colspan?, rowspan?}` object form (see {@link LegalTableCell}). */
+function cellText(cell: LegalTableCell): string {
+  return typeof cell === "string" ? cell : cell.text;
+}
+
+/** `colSpan`/`rowSpan` React props for a cell — empty for a plain string
+ * cell, so it renders byte-identical to before this ever existed. */
+function cellSpanProps(cell: LegalTableCell): { colSpan?: number; rowSpan?: number } {
+  if (typeof cell === "string") return {};
+  const props: { colSpan?: number; rowSpan?: number } = {};
+  if (cell.colspan !== undefined) props.colSpan = cell.colspan;
+  if (cell.rowspan !== undefined) props.rowSpan = cell.rowspan;
+  return props;
+}
+
 /**
  * Renders the block list, folding consecutive `li` blocks of the same kind
  * into a single <ul>/<ol> and wrapping tables for horizontal overflow.
@@ -110,8 +126,8 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
               <thead>
                 <tr>
                   {headerRow.map((cell, ci) => (
-                    <th key={ci} scope="col">
-                      {renderInlineText(cell, `th-${out.length}-${ci}`, lang)}
+                    <th key={ci} scope="col" {...cellSpanProps(cell)}>
+                      {renderInlineText(cellText(cell), `th-${out.length}-${ci}`, lang)}
                     </th>
                   ))}
                 </tr>
@@ -121,7 +137,9 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
               {bodyRows.map((row, ri) => (
                 <tr key={ri}>
                   {row.map((cell, ci) => (
-                    <td key={ci}>{renderInlineText(cell, `td-${out.length}-${ri}-${ci}`, lang)}</td>
+                    <td key={ci} {...cellSpanProps(cell)}>
+                      {renderInlineText(cellText(cell), `td-${out.length}-${ri}-${ci}`, lang)}
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -147,6 +165,20 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
       );
     } else if (block.type === "h3") {
       out.push(<h3 key={out.length}>{renderInlineText(block.text, `h3-${out.length}`, lang)}</h3>);
+    } else if (block.type === "h1") {
+      // Additive fidelity fix (see legal-html.ts gap 5): no live document
+      // uses `h1` in body content today (the page's own `<h1>` is
+      // `doc.heading`, rendered by `Section` above), so this branch is
+      // exercised only if/when one appears from the CMS. Rendered like h3
+      // — via renderInlineText, no TOC id — for the same reason h3 is: only
+      // h2 feeds TableOfContents.tsx's anchors.
+      out.push(<h1 key={out.length}>{renderInlineText(block.text, `h1-${out.length}`, lang)}</h1>);
+    } else if (block.type === "h4") {
+      out.push(<h4 key={out.length}>{renderInlineText(block.text, `h4-${out.length}`, lang)}</h4>);
+    } else if (block.type === "h5") {
+      out.push(<h5 key={out.length}>{renderInlineText(block.text, `h5-${out.length}`, lang)}</h5>);
+    } else if (block.type === "h6") {
+      out.push(<h6 key={out.length}>{renderInlineText(block.text, `h6-${out.length}`, lang)}</h6>);
     } else {
       out.push(<p key={out.length}>{renderInlineText(block.text, `p-${out.length}`, lang)}</p>);
     }
@@ -165,14 +197,38 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
  *
  * The JA and EN bodies are separate full texts, so the active language picks
  * the whole block list rather than translating block by block.
+ *
+ * `tocLabel` is passed in as a PROP, not fetched here with `getSite()`:
+ * `site_ui_labels.toc_label` (`SiteContent.ui.tocLabel`, `features/cms/site.ts`)
+ * is a `server-only` module, and making this component `async` to call it
+ * directly breaks `features/cms/legal-html.test.ts`'s render-proof, which
+ * server-renders this component synchronously via
+ * `react-dom/server#renderToStaticMarkup` — a renderer that cannot resolve
+ * an async Server Component. Every one of the seven caller pages (privacy,
+ * tokushoho, the two terms-for-... pages, compensation, quasi-mandate,
+ * cancellation-policy) already awaits `getSite()` for its own `brand`
+ * metadata, so each now also resolves `t(site.ui.tocLabel, lang)` and hands
+ * it down here — this component stays a plain sync function, and the CMS
+ * field actually reaches the page. `tocLabel` defaults to the same literal
+ * `constants/copy.ts#ui.tocLabel` carries (kept in sync by hand — this is
+ * the resilience fallback for a caller that omits the prop, e.g. the test
+ * above, not a second source of truth for real pages).
  */
-export default function LegalDocPage({ doc, lang }: { doc: LegalDoc; lang: Lang }) {
+export default function LegalDocPage({
+  doc,
+  lang,
+  tocLabel,
+}: {
+  doc: LegalDoc;
+  lang: Lang;
+  tocLabel?: string;
+}) {
   const blocks = doc.body[lang];
 
   const tocItems: TocItem[] = blocks.flatMap((block, i) =>
     block.type === "h2" ? [{ id: `sec-${i}`, text: block.text }] : [],
   );
-  const tocLabel = lang === "ja" ? "目次" : "Table of Contents";
+  const resolvedTocLabel = tocLabel ?? (lang === "ja" ? "目次" : "Table of Contents");
   const showToc = tocItems.length > 2;
 
   return (
@@ -183,7 +239,7 @@ export default function LegalDocPage({ doc, lang }: { doc: LegalDoc; lang: Lang 
         <div className="max-w-[42rem] lg:flex-1">
           {showToc && (
             <div className="mb-10 animate-fade-up lg:hidden">
-              <TableOfContents items={tocItems} label={tocLabel} />
+              <TableOfContents items={tocItems} label={resolvedTocLabel} />
             </div>
           )}
 
@@ -193,7 +249,7 @@ export default function LegalDocPage({ doc, lang }: { doc: LegalDoc; lang: Lang 
         {showToc && (
           <aside className="hidden w-72 shrink-0 lg:block">
             <div className="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
-              <TableOfContents items={tocItems} label={tocLabel} />
+              <TableOfContents items={tocItems} label={resolvedTocLabel} />
             </div>
           </aside>
         )}

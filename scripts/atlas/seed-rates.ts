@@ -1,14 +1,15 @@
 /**
  * Seeds three Atlas pages, all sourced from `constants/pricing.ts` and
  * `constants/copy.ts` — the same files `features/cms/rates.ts` falls back to
- * when Atlas is unreachable, per architecture-plan.json#st-05:
+ * when Atlas is unreachable:
  *
  * - "rates" (10 blocks: 2 rate_course + 8 rate_row) — the SOLE source of
  *   every yen figure on the site. `customer_price` is read by `/pricing` as
  *   `CourseRateRow.price` and by `/fees` as `SupporterRateRow.customer`; one
  *   field, two projections, so the two tables can never drift apart (this
  *   replaces `CAREGIVING_BASIC_DAY_CUSTOMER_RATE`, constants/pricing.ts:23 —
- *   see plan-notes.md#4). Sourced entirely from `supporterRates`, never
+ *   deleted once this field became the sole source, see the tombstone
+ *   comment at constants/pricing.ts:141). Sourced entirely from `supporterRates`, never
  *   retyped by hand, because `supporterRates[c].rows[r].customer ===
  *   courseRates[c].rows[r].price` for all 8 rows (already verified).
  * - "pricing" (2 blocks: page_hero + pricing_meta) from `copy.ts#pricing`.
@@ -31,8 +32,9 @@
  * features/cms/merge.ts#mergeBlockData only iterates keys present in the
  * base `data` object, so an absent key reads back as `undefined` — never a
  * truthy `{ ja: "", en: "" }` that would move those rows into
- * CourseRateCard.tsx's "timed" grid. This is the #1 risk flagged for this
- * migration (architecture-plan.json#st-05, plan-notes.md#7).
+ * CourseRateCard.tsx's "timed" grid. This is the #1 correctness risk in this
+ * seed script — get it wrong and a nomination/transport row silently jumps
+ * grids on the rendered page.
  *
  * Usage (from marketing-web/):
  *   npx tsx scripts/atlas/seed-rates.ts
@@ -67,8 +69,9 @@ interface PageInput {
 
 // ---------------------------------------------------------------------------
 // Block builders — one function per block type used here, each returning a
-// BlockInput at the given `position`. Field names match
-// architecture-plan.json#block_types exactly.
+// BlockInput at the given `position`. Field names match the `rate_course` /
+// `rate_row` / `page_hero` / `pricing_meta` / `fees_meta` block types
+// declared in scripts/atlas/schema.ts exactly.
 // ---------------------------------------------------------------------------
 
 function rateCourseBlock(
@@ -155,22 +158,29 @@ function pricingMetaBlock(
 function feesMetaBlock(
   blockTypeId: string,
   position: number,
+  columnService: Bilingual,
   columnCustomer: Bilingual,
   columnSupporter: Bilingual,
   note: Bilingual,
+  ctaHref: string,
 ): BlockInput {
   return {
     block_type_id: blockTypeId,
     parent_id: null,
     position,
+    // `cta_href` is non-localizable — it rides in the JA `data` dict only,
+    // same contract as `rate_row.course_key` / `use_case_item.slug`.
     data: {
+      column_service: columnService.ja,
       column_customer: columnCustomer.ja,
       column_supporter: columnSupporter.ja,
       note: note.ja,
+      cta_href: ctaHref,
     },
     translations: {
       en: {
         data: {
+          column_service: columnService.en,
           column_customer: columnCustomer.en,
           column_supporter: columnSupporter.en,
           note: note.en,
@@ -234,7 +244,15 @@ function buildFeesPage(heroId: string, metaId: string): PageInput {
     seo: { title: "ケアサポーターの時給・報酬体系一覧" },
     blocks: [
       pageHeroBlock(heroId, 0, feesCopy.hero.heading, feesCopy.hero.body),
-      feesMetaBlock(metaId, 1, feesCopy.columns.customer, feesCopy.columns.supporter, feesCopy.note),
+      feesMetaBlock(
+        metaId,
+        1,
+        feesCopy.columns.service,
+        feesCopy.columns.customer,
+        feesCopy.columns.supporter,
+        feesCopy.note,
+        feesCopy.ctaHref,
+      ),
     ],
   };
 }

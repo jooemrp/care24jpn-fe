@@ -4,6 +4,7 @@ import { t, type Lang } from "@/features/lang/i18n";
 export type Step = {
   title: Bilingual;
   body: Bilingual;
+  number: string;
 };
 
 type StepFlowProps = {
@@ -38,9 +39,12 @@ export default function StepFlow({ steps, lang }: StepFlowProps) {
               />
             )}
             {/* Just the numeral: the home page's badge stacks a 8px "STEP"
-                label above it, which is under this page's 18px floor. */}
+                label above it, which is under this page's 18px floor.
+                `step.number` — not the loop index — so reordering steps in
+                the dashboard renumbers them instead of silently relabeling
+                by position (see scripts/atlas/schema.ts#service_flow_step). */}
             <span className="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
-              {i + 1}
+              {step.number}
             </span>
             <div className="min-w-0 flex-1">
               <h3 className="pt-3 text-2xl font-bold leading-snug text-heading">

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
 import type { SiteContent } from "@/features/cms/site";
 import LangToggle from "./LangToggle";
+import { LOGO_INTRINSIC_HEIGHT, LOGO_INTRINSIC_WIDTH } from "./Footer";
 
 /** Scroll distance (px) after which the header condenses. */
 const CONDENSE_AT = 72;
@@ -222,8 +223,8 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
             <Image
               src={site.brand.logo}
               alt={t(site.brand.logoAlt, lang)}
-              width={427}
-              height={160}
+              width={LOGO_INTRINSIC_WIDTH}
+              height={LOGO_INTRINSIC_HEIGHT}
               priority
               className={`h-auto w-36 origin-left ${MOTION} ${
                 condensed ? "scale-[0.78]" : "scale-100"
@@ -238,12 +239,24 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               this row as tabs + phone number only. */}
           <div className="hidden md:flex items-center gap-6">
             <PhoneBlock lang={lang} contactPhone={site.contactPhone} condensed={condensed} />
-            <LangToggle lang={lang} className={HIT_AREA} />
+            <LangToggle
+              lang={lang}
+              label={t(site.ui.langToggleLabel, lang)}
+              shortJa={site.ui.langShortJa}
+              shortEn={site.ui.langShortEn}
+              className={HIT_AREA}
+            />
           </div>
 
           {/* Mobile: lang toggle + hamburger */}
           <div className="md:hidden flex items-center gap-3">
-            <LangToggle lang={lang} className={HIT_AREA} />
+            <LangToggle
+              lang={lang}
+              label={t(site.ui.langToggleLabel, lang)}
+              shortJa={site.ui.langShortJa}
+              shortEn={site.ui.langShortEn}
+              className={HIT_AREA}
+            />
             <button
               type="button"
               className="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2"

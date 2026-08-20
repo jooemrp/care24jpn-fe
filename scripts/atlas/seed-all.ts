@@ -32,8 +32,10 @@
  * read in the log than two interleaved ones. The seeds are the stages worth
  * parallelizing — they write to disjoint page slugs (site / home / legal-* /
  * rates+pricing+fees / service-flow+use-case+company) and share no other
- * mutable state — see architecture-plan.json#pages for the slug-to-script
- * mapping this assumes.
+ * mutable state — the slug-to-script mapping this assumes is: site ->
+ * seed-site.ts, home -> seed-home.ts, the 7 legal-* slugs -> seed-legal.ts,
+ * rates/pricing/fees -> seed-rates.ts, use-case/service-flow/company ->
+ * seed-pages.ts.
  *
  * Idempotent end-to-end, with one deliberate exception spelled out below.
  * Every page write in every seed-*.ts goes through the single

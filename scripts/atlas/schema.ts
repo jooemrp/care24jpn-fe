@@ -1,6 +1,8 @@
 /**
  * Creates all 30 CMS block content types (and their fields) on the live
- * Atlas workspace, exactly as specified in architecture-plan.json#block_types.
+ * Atlas workspace. This file IS the specification — every block type and
+ * field below is the single authoritative source the seed-*.ts scripts write
+ * against and the features/cms/*.ts loaders read back.
  *
  * Idempotent: safe to run twice. A second run finds every type and field
  * already there and skips them — it does not error and does not duplicate
@@ -42,6 +44,13 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      // Only read today by the use-case and service-flow pages, for their
+      // closing CTA button's destination (`useCase.hero.ctaHref` /
+      // `serviceFlow.hero.ctaHref` in constants/copy.ts). `page_hero` is
+      // shared with `pricing` and `company`, which do not set or read this
+      // field — an unused field on SOME instances of a shared block type is
+      // not a dead field, since it is genuinely wired for the other two.
+      { name: "cta_href", label: "CTA href", field_type: "text", localizable: false, required: false, sort_order: 2 },
     ],
   },
   {
@@ -82,6 +91,10 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "menu_toggle_label", label: "Menu toggle aria-label", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "tab_switch_label", label: "Tab switch aria-label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "lang_toggle_label", label: "Language toggle aria-label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "toc_label", label: "Legal doc table-of-contents label", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "lang_short_ja", label: "Lang toggle short label (JA option)", field_type: "text", localizable: false, required: false, sort_order: 4 },
+      { name: "lang_short_en", label: "Lang toggle short label (EN option)", field_type: "text", localizable: false, required: false, sort_order: 5 },
     ],
   },
   {
@@ -126,6 +139,8 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "cta_secondary", label: "CTA secondary label", field_type: "text", localizable: true, required: false, sort_order: 6 },
       { name: "image_alt", label: "Hero image alt", field_type: "text", localizable: true, required: false, sort_order: 7 },
       { name: "image", label: "Hero image", field_type: "image", localizable: false, required: false, sort_order: 8 },
+      { name: "cta_primary_href", label: "CTA primary href", field_type: "text", localizable: false, required: false, sort_order: 9 },
+      { name: "cta_secondary_href", label: "CTA secondary href", field_type: "text", localizable: false, required: false, sort_order: 10 },
     ],
   },
   {
@@ -244,6 +259,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     is_block: true,
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "step_label", label: "Step badge label (e.g. \"STEP\")", field_type: "text", localizable: true, required: false, sort_order: 1 },
     ],
   },
   {
@@ -267,6 +283,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "staff_eyebrow", label: "Staff eyebrow", field_type: "text", localizable: true, required: false, sort_order: 2 },
       { name: "staff_label", label: "Staff label", field_type: "text", localizable: true, required: false, sort_order: 3 },
       { name: "staff_href", label: "Staff href", field_type: "text", localizable: false, required: false, sort_order: 4 },
+      { name: "user_href", label: "User href", field_type: "text", localizable: false, required: false, sort_order: 5 },
     ],
   },
   {
@@ -280,6 +297,11 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "isms", label: "ISMS note", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
       { name: "mics_logo", label: "Logo mics", field_type: "image", localizable: false, required: false, sort_order: 4 },
       { name: "iso_logo", label: "Badge ISO 27001 (BSI)", field_type: "image", localizable: false, required: false, sort_order: 5 },
+      { name: "mics_logo_alt", label: "Logo mics alt", field_type: "text", localizable: true, required: false, sort_order: 6 },
+      { name: "iso_logo_alt", label: "Badge ISO alt", field_type: "text", localizable: true, required: false, sort_order: 7 },
+      { name: "contact_cta_href", label: "Contact CTA href", field_type: "text", localizable: false, required: false, sort_order: 8 },
+      { name: "lead_in_ornament_start", label: "Lead-in ornament (start)", field_type: "text", localizable: true, required: false, sort_order: 9 },
+      { name: "lead_in_ornament_end", label: "Lead-in ornament (end)", field_type: "text", localizable: true, required: false, sort_order: 10 },
     ],
   },
   {
@@ -321,6 +343,11 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "column_customer", label: "Kolom: pelanggan", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "column_supporter", label: "Kolom: care supporter", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "note", label: "Note", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "column_service", label: "Kolom: layanan (header kolom pertama)", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      // Closing CTA button's destination (`actionPlan.ctaHref` in
+      // constants/copy.ts) — today the home page's contact block, until the
+      // client's own registration URL exists.
+      { name: "cta_href", label: "CTA href", field_type: "text", localizable: false, required: false, sort_order: 4 },
     ],
   },
   {
@@ -344,6 +371,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "number", label: "Step number", field_type: "text", localizable: false, required: false, sort_order: 2 },
     ],
   },
   {

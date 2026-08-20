@@ -6,29 +6,15 @@ import Section from "@/components/ui/Section";
 import { getUseCase } from "@/features/cms/pages";
 import { getSite } from "@/features/cms/site";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 
-// Title/description are short JA strings; the root layout's title.template
-// appends the brand name, so the brand must not be repeated here.
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  return {
-    title: lang === "ja" ? "ご利用シーン" : "Use cases",
-    description:
-      lang === "ja"
-        ? "退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。"
-        : "After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan's in-home care helps.",
-    alternates: {
-      canonical: lang === "ja" ? "/use-case" : `/${lang}/use-case`,
-      languages: {
-        ja: "/use-case",
-        en: "/en/use-case",
-      },
-    },
-  };
+  return pageMetadata({ key: "use-case", lang });
 }
 
 export default async function UseCasePage({ params }: PageProps<"/[lang]">) {
@@ -94,7 +80,7 @@ export default async function UseCasePage({ params }: PageProps<"/[lang]">) {
       <Section lang={lang}>
         <div className="animate-fade-up">
           <Link
-            href={localizeHref("/pricing", lang)}
+            href={localizeHref(useCase.hero.ctaHref, lang)}
             className="inline-flex bg-primary text-white px-8 py-3 rounded-full font-medium transition hover:bg-primary-mid"
           >
             {t(site.cta.primary, lang)}

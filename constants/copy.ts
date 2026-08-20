@@ -63,49 +63,36 @@ export const cta = {
   contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
 };
 
-/** Labels for non-visible UI chrome (aria-labels) that still need both languages. */
+/**
+ * Labels for non-visible UI chrome (aria-labels) that still need both
+ * languages.
+ *
+ * `langToggleLabel` is DIRECTIONAL, not per-language: it describes the
+ * language you're switching TO, not the language you're currently reading.
+ * `LangToggle.tsx` renders it via `t(ui.langToggleLabel, lang)`, and `t()`
+ * indexes by the CURRENT `lang` — so to reproduce the live site (JA page
+ * shows "Switch to English", EN page shows "日本語に切り替える") the keys
+ * are intentionally swapped: `.ja` holds the English prompt shown on the JA
+ * page, `.en` holds the Japanese prompt shown on the EN page. Do not
+ * "correct" this to same-language values — that would flip both aria-labels.
+ */
 export const ui = {
   menuToggleLabel: { ja: "メニュー", en: "Menu" } satisfies Bilingual,
-  tabSwitchLabel: { ja: "プラン切り替え", en: "Plan tabs" } satisfies Bilingual,
-};
-
-/* ------------------------------------------------------------------ */
-/* Auth modal                                                          */
-/* ------------------------------------------------------------------ */
-
-export const auth = {
-  navButton: { ja: "ログイン / 登録", en: "Login / Register" } satisfies Bilingual,
-  close: { ja: "閉じる", en: "Close" } satisfies Bilingual,
-  tabs: {
-    login: { ja: "ログイン", en: "Login" } satisfies Bilingual,
-    register: { ja: "新規登録", en: "Register" } satisfies Bilingual,
-  },
-  login: {
-    username: { ja: "ユーザー名", en: "Username" } satisfies Bilingual,
-    password: { ja: "パスワード", en: "Password" } satisfies Bilingual,
-    submit: { ja: "ログイン", en: "Sign in" } satisfies Bilingual,
-    submitting: { ja: "確認中…", en: "Signing in…" } satisfies Bilingual,
-    error: {
-      ja: "ユーザー名またはパスワードが正しくありません。",
-      en: "Invalid username or password.",
-    } satisfies Bilingual,
-  },
-  register: {
-    name: { ja: "お名前", en: "Name" } satisfies Bilingual,
-    email: { ja: "メールアドレス", en: "Email" } satisfies Bilingual,
-    password: { ja: "パスワード", en: "Password" } satisfies Bilingual,
-    confirmPassword: { ja: "パスワード（確認）", en: "Confirm password" } satisfies Bilingual,
-    submit: { ja: "登録する", en: "Create account" } satisfies Bilingual,
-    submitting: { ja: "送信中…", en: "Submitting…" } satisfies Bilingual,
-    passwordMismatch: {
-      ja: "パスワードが一致しません。",
-      en: "Passwords do not match.",
-    } satisfies Bilingual,
-    success: {
-      ja: "ご登録ありがとうございます。担当者より追ってご連絡いたします。",
-      en: "Thank you for registering. We'll be in touch shortly.",
-    } satisfies Bilingual,
-  },
+  langToggleLabel: { ja: "Switch to English", en: "日本語に切り替える" } satisfies Bilingual,
+  // LegalDocPage.tsx's table-of-contents heading. Verbatim from the ternary
+  // it used to hold inline (`lang === "ja" ? "目次" : "Table of Contents"`).
+  tocLabel: { ja: "目次", en: "Table of Contents" } satisfies Bilingual,
+  /**
+   * LangToggle.tsx always renders BOTH short labels side by side (one bold,
+   * one muted, depending on the current `lang`) — these are not a message
+   * translated per language, they are the two options' own abbreviations, so
+   * they are plain strings rather than a `Bilingual` pair. `langShortJa` is
+   * deliberately "JP", not "JA" — the audit flagged this as not matching the
+   * `ja` locale code, but changing it would move the rendered HTML; the CMS
+   * field lets the client change it later without a deploy.
+   */
+  langShortJa: "JP",
+  langShortEn: "EN",
 };
 
 /* ------------------------------------------------------------------ */
@@ -147,6 +134,14 @@ export const home = {
       ja: "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
       en: "An elderly woman resting calmly by a window with a care professional",
     } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:98,104 — non-localizable relative
+    // paths, resolved through `localizeHref()` at render time same as before.
+    // The audit flagged the primary CTA's destination as mismatched with its
+    // own label (お申込みはこちら points at the how-it-works page, not a
+    // registration form) — moving it to the CMS is the fix; changing WHERE it
+    // points is a content decision that belongs to the client, not this task.
+    ctaPrimaryHref: "/service-flow",
+    ctaSecondaryHref: "/pricing",
   },
 
   values: {
@@ -486,6 +481,11 @@ export const home = {
 
   flow: {
     heading: { ja: "ご利用の流れ", en: "How it works" } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:465 — the small badge label stacked
+    // above each step number. Same text in both locales today (it renders
+    // unchanged regardless of `lang`), so `en` is intentionally identical to
+    // `ja` rather than a placeholder.
+    stepLabel: { ja: "STEP", en: "STEP" } satisfies Bilingual,
     steps: [
       {
         number: "01",
@@ -533,6 +533,9 @@ export const home = {
         en: "For those who wish to use our service",
       } satisfies Bilingual,
       label: { ja: "お申込みはこちらから", en: "Apply here" } satisfies Bilingual,
+      // Verbatim from app/[lang]/page.tsx:458 — the user-registration portal
+      // this banner already links to.
+      href: "https://portal.care24.jp/register",
     },
     staff: {
       eyebrow: {
@@ -540,19 +543,27 @@ export const home = {
         en: "For those seeking employment",
       } satisfies Bilingual,
       label: { ja: "登録はこちらから", en: "Register here" } satisfies Bilingual,
-      // The client's real staff-registration URL is still pending (the 0727
-      // update sheet gives both banners a label but no destination). Until it
-      // arrives this points at /fees — the care-supporter wage table, which is
-      // what this audience actually wants to see first, and which the client
-      // wants indexed but is otherwise unlinked from anywhere on the site.
-      // Swap this one string for the real URL when it lands; the banner picks
-      // up target="_blank" on its own once the value is absolute.
-      href: "/fees",
+      // Verbatim from app/[lang]/page.tsx:465 — the caregiver-registration
+      // portal this banner already links to. This fallback previously said
+      // "/fees" (the wage table), which was never what the page rendered;
+      // that mismatch is why `staffHrefIsExternal` (page.tsx:25) needs this
+      // value to be the real, absolute portal URL to compute correctly once
+      // this field is wired to the CMS. Swap for a different destination
+      // only if the client's real registration URL changes.
+      href: "https://portal.care24.jp/caregiver",
     },
   },
 
   contact: {
     leadIn: { ja: "ご相談は無料です", en: "Consultations are free of charge." } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:522-523 — the ＼ … ／ ornament wrapped
+    // around `leadIn`, previously hardcoded JA punctuation rendered on the EN
+    // locale too. Fallback `en` is deliberately identical to `ja` so today's
+    // HTML does not move; the client can clear it for `en` later from the
+    // dashboard without a deploy (that is the whole point of the audit's
+    // finding — not a decision to change today's output).
+    leadInOrnamentStart: { ja: "＼", en: "＼" } satisfies Bilingual,
+    leadInOrnamentEnd: { ja: "／", en: "／" } satisfies Bilingual,
     heading: {
       ja: "24時間365日お気軽にご相談ください",
       en: "Please feel free to contact us anytime, 24 hours a day, 365 days a year.",
@@ -566,6 +577,23 @@ export const home = {
       ja: "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
       en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
     } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:511. Already language-neutral (a
+    // company name + Latin abbreviation), so en === ja is not a placeholder.
+    micsLogoAlt: {
+      ja: "mics — MedicalInformatics Co.,Ltd.",
+      en: "mics — MedicalInformatics Co.,Ltd.",
+    } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:520. `en` is deliberately identical
+    // to `ja` for now — writing a real English alt is new copy, which is out
+    // of scope here; this field is what lets the client supply one later
+    // from the dashboard without a deploy.
+    isoLogoAlt: {
+      ja: "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
+      en: "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
+    } satisfies Bilingual,
+    // Verbatim from app/[lang]/page.tsx:541 — non-localizable relative path,
+    // resolved through `localizeHref()` at render time same as before.
+    ctaHref: "/service-flow",
   },
 };
 
@@ -580,6 +608,12 @@ export const useCase = {
       ja: "Care 24 Japan は、さまざまな暮らしの場面に寄り添います。",
       en: "Care 24 Japan adapts to the moments that matter most.",
     } satisfies Bilingual,
+    // Verbatim from app/[lang]/use-case/page.tsx's closing CTA — non-localizable
+    // relative path, resolved through `localizeHref()` at render time same as
+    // before. Not part of the page's actual hero visually (the button sits at
+    // the bottom of the page), but it rides on the `page_hero` block because
+    // that is the one block this page has a schema field to add it to.
+    ctaHref: "/pricing",
   },
   cases: [
     {
@@ -688,9 +722,18 @@ export const serviceFlow = {
       ja: "ご登録からサービス終了まで、4つのステップで進みます。",
       en: "From registration to completion, in four simple steps.",
     } satisfies Bilingual,
+    // Verbatim from app/[lang]/service-flow/page.tsx's closing CTA — same
+    // shape and same reasoning as `useCase.hero.ctaHref` above.
+    ctaHref: "/pricing",
   },
+  // `number` is verbatim from components/ui/StepFlow.tsx's old `{i + 1}` —
+  // plain "1".."4", not the zero-padded "01".."04" `home.flow.steps` uses:
+  // the two lists feed two different renderers (StepFlow's numeral badge vs.
+  // the home page's flow badge) and always rendered differently, so this
+  // fallback reproduces THIS page's own prior output, not the home page's.
   steps: [
     {
+      number: "1",
       title: { ja: "ご登録", en: "Registration" } satisfies Bilingual,
       body: {
         ja: "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
@@ -698,6 +741,7 @@ export const serviceFlow = {
       } satisfies Bilingual,
     },
     {
+      number: "2",
       title: { ja: "ご予約の確定", en: "Confirmation of your reservation" } satisfies Bilingual,
       body: {
         ja: "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
@@ -705,6 +749,7 @@ export const serviceFlow = {
       } satisfies Bilingual,
     },
     {
+      number: "3",
       title: { ja: "サービス開始", en: "Service Start" } satisfies Bilingual,
       body: {
         ja: "ご予約の日時にケアサポーターがご自宅へお伺いします。",
@@ -712,6 +757,7 @@ export const serviceFlow = {
       } satisfies Bilingual,
     },
     {
+      number: "4",
       title: { ja: "終了ご報告", en: "Completion Report" } satisfies Bilingual,
       body: {
         ja: "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
@@ -719,24 +765,6 @@ export const serviceFlow = {
       } satisfies Bilingual,
     },
   ],
-};
-
-/* ------------------------------------------------------------------ */
-/* Staff pricing                                                       */
-/* ------------------------------------------------------------------ */
-
-export const staffPricing = {
-  hero: {
-    heading: { ja: "料金", en: "Pricing" } satisfies Bilingual,
-    body: {
-      ja: "わかりやすい料金体系で、安心してご利用いただけます。すべて税込価格です。",
-      en: "Transparent, all-inclusive pricing. Prices include tax.",
-    } satisfies Bilingual,
-  },
-  note: {
-    ja: "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
-    en: "All prices include tax and may vary based on care requirements.",
-  } satisfies Bilingual,
 };
 
 /* ------------------------------------------------------------------ */
@@ -755,6 +783,11 @@ export const actionPlan = {
     } satisfies Bilingual,
   },
   columns: {
+    // Empty on purpose: app/[lang]/fees/page.tsx:34 renders this as a bare
+    // `<th />` today (the row-label column has no header text). Empty
+    // strings reproduce that exactly while giving the client a field to
+    // fill in from the dashboard without a deploy.
+    service: { ja: "", en: "" } satisfies Bilingual,
     customer: { ja: "お客様", en: "Customer" } satisfies Bilingual,
     supporter: { ja: "ケアサポーター", en: "Care supporter" } satisfies Bilingual,
   },
@@ -762,6 +795,13 @@ export const actionPlan = {
     ja: "※ 表示価格はすべて税込です。登録料は無料です。",
     en: "All prices include tax. Registration is free.",
   } satisfies Bilingual,
+  // Verbatim from app/[lang]/fees/page.tsx's closing CTA. Non-localizable
+  // relative path, resolved through `localizeHref()` at render time same as
+  // before. The client's real registration URL is still pending — this
+  // points at the home page's contact block, same as today — but it is now
+  // editable from the dashboard the moment that URL exists, no deploy
+  // required.
+  ctaHref: "/#contact",
 };
 
 /* ------------------------------------------------------------------ */

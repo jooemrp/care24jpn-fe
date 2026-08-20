@@ -7,6 +7,7 @@ import { formatYen, type SupporterRates } from "@/constants/pricing";
 import { getFeesCopy, getSupporterRates } from "@/features/cms/rates";
 import { getSite } from "@/features/cms/site";
 import { t, isLang, localizeHref, type Lang } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 
 /**
  * Two-column rate table: what the customer pays vs. what the supporter earns.
@@ -19,7 +20,7 @@ function SupporterRateTable({
   lang,
 }: {
   course: SupporterRates;
-  columns: { customer: Bilingual; supporter: Bilingual };
+  columns: { service: Bilingual; customer: Bilingual; supporter: Bilingual };
   lang: Lang;
 }) {
   return (
@@ -31,7 +32,7 @@ function SupporterRateTable({
         <table className="w-full text-lg">
           <thead>
             <tr className="border-b border-border text-left">
-              <th className="py-4 pr-4 font-bold text-heading" />
+              <th className="py-4 pr-4 font-bold text-heading">{t(columns.service, lang)}</th>
               <th className="py-4 pr-4 text-right font-bold text-heading">
                 {t(columns.customer, lang)}
               </th>
@@ -52,10 +53,10 @@ function SupporterRateTable({
                   )}
                 </td>
                 <td className="py-4 pr-4 text-right tabular-nums text-body">
-                  {formatYen(row.customer)}
+                  {formatYen(row.customer, lang)}
                 </td>
                 <td className="py-4 text-right font-bold tabular-nums text-primary">
-                  {formatYen(row.supporter)}
+                  {formatYen(row.supporter, lang)}
                 </td>
               </tr>
             ))}
@@ -66,32 +67,13 @@ function SupporterRateTable({
   );
 }
 
-// SEO title recommended by the client sheet for the /fees URL. The brand
-// suffix is appended once by the root layout's title.template, so it must
-// not be repeated here.
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  return {
-    title:
-      lang === "ja"
-        ? "ケアサポーターの時給・報酬体系一覧"
-        : "Hourly wage/salary system for care supporters",
-    description:
-      lang === "ja"
-        ? "Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。"
-        : "Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.",
-    alternates: {
-      canonical: lang === "ja" ? "/fees" : `/${lang}/fees`,
-      languages: {
-        ja: "/fees",
-        en: "/en/fees",
-      },
-    },
-  };
+  return pageMetadata({ key: "fees", lang });
 }
 
 export default async function FeesPage({
@@ -130,12 +112,14 @@ export default async function FeesPage({
         <p className="mt-8 text-lg text-muted">{t(feesCopy.note, lang)}</p>
 
         {/* A care supporter who has read the rates needs somewhere to go. The
-            client's registration URL is still pending, so this points at the
+            client's registration URL is still pending, so `fees_meta.cta_href`
+            (fallback `actionPlan.ctaHref`, constants/copy.ts) points at the
             home page's contact block — the same channel the recruitment banner
-            used before it was pointed here. */}
+            used before it was pointed here. Editable from the dashboard the
+            moment the real URL exists, no deploy required. */}
         <div className="mt-10 animate-fade-up">
           <Link
-            href={localizeHref("/#contact", lang)}
+            href={localizeHref(feesCopy.ctaHref, lang)}
             className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
             {t(site.cta.contact, lang)}

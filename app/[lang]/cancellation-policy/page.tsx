@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import LegalDocPage from "@/components/LegalDocPage";
 import { getLegalDoc } from "@/features/cms/legal";
 import { getSite } from "@/features/cms/site";
-import { isLang } from "@/features/lang/i18n";
+import { isLang, t } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 
 export async function generateMetadata({
   params,
@@ -15,20 +16,11 @@ export async function generateMetadata({
     getSite(),
   ]);
 
-  return {
-    title: doc.heading[lang],
-    description:
-      lang === "ja"
-        ? `${doc.heading.ja} | ${doc.heading.en} — ${brand.name}`
-        : `${doc.heading.en} — ${brand.name}`,
-    alternates: {
-      canonical: lang === "ja" ? "/cancellation-policy" : `/${lang}/cancellation-policy`,
-      languages: {
-        ja: "/cancellation-policy",
-        en: "/en/cancellation-policy",
-      },
-    },
-  };
+  return pageMetadata({
+    key: "cancellation-policy",
+    lang,
+    legal: { heading: doc.heading, brandName: brand.name },
+  });
 }
 
 export default async function CancellationPolicyPage({
@@ -36,6 +28,6 @@ export default async function CancellationPolicyPage({
 }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
-  const doc = await getLegalDoc("legal-cancellation-policy");
-  return <LegalDocPage doc={doc} lang={lang} />;
+  const [doc, site] = await Promise.all([getLegalDoc("legal-cancellation-policy"), getSite()]);
+  return <LegalDocPage doc={doc} lang={lang} tocLabel={t(site.ui.tocLabel, lang)} />;
 }

@@ -28,18 +28,32 @@ type Card = Home["careCourse"]["cards"][number];
  * this loader returns is the constants shape PLUS one image URL per rendered
  * image, and the card's image is now a property OF THE CARD.
  */
-export type HomeContent = Omit<Home, "hero" | "careCourse" | "contact"> & {
+export type HomeContent = Omit<Home, "hero" | "careCourse" | "contact" | "flow"> & {
   hero: Home["hero"] & { image: string };
   careCourse: Omit<Home["careCourse"], "cards"> & {
     cards: (Card & { image: string })[];
   };
   contact: Home["contact"] & { micsLogo: string; isoLogo: string };
+  // `steps[].icon` is dropped — see the `FlowStep` comment above.
+  flow: Omit<Home["flow"], "steps"> & { steps: FlowStep[] };
 };
 
 type NursingFeature = Home["nursingCourse"]["panel"]["items"][number];
 type ExampleCase = Home["examples"]["cases"][number];
 type ScheduleRow = ExampleCase["schedule"][number];
-type FlowStep = Home["flow"]["steps"][number];
+/**
+ * `icon` is dropped, permanently: it is a `select` field of icon KEYS (see
+ * scripts/atlas/schema.ts, `home_flow_step.icon`), but the flow rail in
+ * app/[lang]/page.tsx renders each step as a numbered node on a dashed
+ * line — the number IS the visual, there is no icon slot to fill. This is
+ * a retired-but-undeletable field (same status as `tab_switch_label`, see
+ * seed-site.ts): scripts/atlas/seed-home.ts now writes it as an explicit
+ * "" rather than a real value, so the dashboard control is inert by
+ * design, not merely unread. The key stays untouched in
+ * `constants/copy.ts` so this file never contends with ST-K1 for that
+ * entry; it is just never read here.
+ */
+type FlowStep = Omit<Home["flow"]["steps"][number], "icon">;
 
 /**
  * The files bundled in `public/images/` — the safety net for when Atlas is
@@ -140,6 +154,8 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     ctaSecondary: pickBi(heroBlock.data, "cta_secondary", F.hero.ctaSecondary),
     imageAlt: pickBi(heroBlock.data, "image_alt", F.hero.imageAlt),
     image: pickImage(heroBlock.data, "image", FALLBACK_IMAGES.hero, "home/hero"),
+    ctaPrimaryHref: pickJa(heroBlock.data, "cta_primary_href", F.hero.ctaPrimaryHref),
+    ctaSecondaryHref: pickJa(heroBlock.data, "cta_secondary_href", F.hero.ctaSecondaryHref),
   };
 
   const valueTitles = pickLines(valuesBlock.data, "item_titles", F.values.items.map((i) => i.title));
@@ -253,13 +269,13 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
 
   const steps: FlowStep[] = stepBlocks.map((block, i) => ({
     number: pickJa(block.data, "number", F.flow.steps[i]?.number ?? ""),
-    icon: pickJa(block.data, "icon", F.flow.steps[i]?.icon ?? ""),
     title: pickBi(block.data, "title", F.flow.steps[i]?.title ?? EMPTY),
     body: pickBi(block.data, "body", F.flow.steps[i]?.body ?? EMPTY),
   }));
 
-  const flow: Home["flow"] = {
+  const flow: HomeContent["flow"] = {
     heading: pickBi(flowBlock.data, "heading", F.flow.heading),
+    stepLabel: pickBi(flowBlock.data, "step_label", F.flow.stepLabel),
     steps,
   };
 
@@ -267,6 +283,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     user: {
       eyebrow: pickBi(applyBlock.data, "user_eyebrow", F.apply.user.eyebrow),
       label: pickBi(applyBlock.data, "user_label", F.apply.user.label),
+      href: pickJa(applyBlock.data, "user_href", F.apply.user.href),
     },
     staff: {
       eyebrow: pickBi(applyBlock.data, "staff_eyebrow", F.apply.staff.eyebrow),
@@ -277,7 +294,8 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
 
   // `home-contact` is mapped by the caller (see fetchHome()) for its
   // non-phone fields — contact.phone comes from getSite(), never from this
-  // block. See architecture-plan.json#pages[slug=home].
+  // block, because the phone number is a site-wide value (also used in the
+  // navbar/footer), not something an editor would set per-page on `home`.
   return {
     rest: { hero, values, problems, nursingCourse, careCourse, examples, flow, apply },
     contactData: contactBlock.data,
@@ -294,6 +312,11 @@ function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact
     isms: pickBi(data, "isms", F.contact.isms),
     micsLogo: pickImage(data, "mics_logo", FALLBACK_IMAGES.micsLogo, "home/contact"),
     isoLogo: pickImage(data, "iso_logo", FALLBACK_IMAGES.isoLogo, "home/contact"),
+    micsLogoAlt: pickBi(data, "mics_logo_alt", F.contact.micsLogoAlt),
+    isoLogoAlt: pickBi(data, "iso_logo_alt", F.contact.isoLogoAlt),
+    ctaHref: pickJa(data, "contact_cta_href", F.contact.ctaHref),
+    leadInOrnamentStart: pickBi(data, "lead_in_ornament_start", F.contact.leadInOrnamentStart),
+    leadInOrnamentEnd: pickBi(data, "lead_in_ornament_end", F.contact.leadInOrnamentEnd),
   };
 }
 

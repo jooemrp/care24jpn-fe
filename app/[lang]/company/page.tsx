@@ -3,29 +3,15 @@ import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
 import { getCompany } from "@/features/cms/pages";
 import { t, isLang } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 
-// Title/description are short JA strings; the root layout's title.template
-// appends the brand name, so the brand must not be repeated here.
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  return {
-    title: lang === "ja" ? "運営会社" : "Operating Company",
-    description:
-      lang === "ja"
-        ? "Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。"
-        : "Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.",
-    alternates: {
-      canonical: lang === "ja" ? "/company" : `/${lang}/company`,
-      languages: {
-        ja: "/company",
-        en: "/en/company",
-      },
-    },
-  };
+  return pageMetadata({ key: "company", lang });
 }
 
 export default async function CompanyPage({ params }: PageProps<"/[lang]">) {
