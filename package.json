@@ -6,14 +6,20 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "atlas:schema": "npx tsx scripts/atlas/schema.ts",
+    "atlas:seed": "npx tsx scripts/atlas/seed-all.ts",
+    "atlas:verify": "npx tsx scripts/atlas/verify-html-parity.ts",
+    "atlas:types": "set -a && . ./.env && set +a && atlas-cms generate --url=\"$ATLAS_BASE_URL\" --api-key=\"$ATLAS_API_KEY\" --output=./features/cms/atlas.types.ts"
   },
   "dependencies": {
+    "@latellu/atlas-sdk": "^0.3.0",
     "next": "^16.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@latellu/atlas-cli": "^0.1.5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -21,6 +27,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

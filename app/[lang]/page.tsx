@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
-import { home, cta } from "@/constants/copy";
+import { getHome } from "@/features/cms/home";
+import { getSite } from "@/features/cms/site";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
 
 /** "9:00" -> 540 (minutes since midnight). */
@@ -20,6 +21,7 @@ function parseTimeRange(range: string): { start: number; end: number } {
 export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const [home, site] = await Promise.all([getHome(), getSite()]);
   const staffHrefIsExternal = /^https?:\/\//.test(home.apply.staff.href);
 
   return (
@@ -490,7 +492,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               href={localizeHref("/service-flow", lang)}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
             >
-              {t(cta.contact, lang)}
+              {t(site.cta.contact, lang)}
             </Link>
           </div>
 

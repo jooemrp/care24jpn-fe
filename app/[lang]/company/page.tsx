@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
-import { company } from "@/constants/copy";
+import { getCompany } from "@/features/cms/pages";
 import { t, isLang } from "@/features/lang/i18n";
 
 // Title/description are short JA strings; the root layout's title.template
@@ -31,6 +31,7 @@ export async function generateMetadata({
 export default async function CompanyPage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const company = await getCompany();
 
   return (
     <Section heading={company.heading} level="h1" lang={lang}>
