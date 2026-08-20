@@ -56,42 +56,57 @@ export const seoRoutes = {
       ja: "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
       en: "Care 24 Japan — Premium 24-hour in-home care",
     },
+    // ST-09: synced to the description approved in
+    // output/meta-descriptions-review.md Bagian 1 #6 and now live on
+    // page.seo.description (Atlas slug "home") — see that doc's own note
+    // that home has no `generateMetadata` today, so this literal (like the
+    // Atlas value it mirrors) is currently inert until a later sub-task
+    // wires one up; kept in sync anyway per this file's "no stale fallback"
+    // rule.
     description: {
-      ja: "ご自宅で、心安らぐ24時間の在宅ケアを",
-      en: "Premium 24-hour in-home care",
+      ja: "医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。",
+      en: "Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.",
     },
   },
   pricing: {
     route: "/pricing",
     atlasSlug: "pricing",
-    // Title/description are short JA strings; the root layout's
-    // title.template appends the brand name, so it must not be repeated
-    // here. NOTE: this description's literal prices (3,740円 / 6,600円) are
-    // known to be able to drift from the CMS-sourced rates rendered on the
-    // page itself — preserved as-is per this file's header rule (verbatim
-    // copy, no silent "fixing" of a known divergence).
+    // Title is a short JA string; the root layout's title.template appends
+    // the brand name, so it must not be repeated here.
     title: { ja: "ご利用者様向け料金", en: "Pricing for users" },
+    // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #1 / now
+    // live on page.seo.description. Replaces the former literal, which
+    // quoted 3,740円/6,600円 that could drift from the CMS-sourced rates
+    // page (see git history) — the approved draft deliberately omits any
+    // price figure for exactly that reason, so this is not just a ¥/JPY
+    // wording fix, it also removes the drift risk.
     description: {
-      ja: "介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。",
-      en: "Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.",
+      ja: "入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。",
+      en: "Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.",
     },
   },
   "service-flow": {
     route: "/service-flow",
     atlasSlug: "service-flow",
     title: { ja: "ご利用の流れ", en: "How it works" },
+    // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #2 / now
+    // live on page.seo.description. Drops the old "four steps" wording on
+    // purpose (see that doc) so this description doesn't go stale if an
+    // editor adds/removes a `service-flow-step` block in Atlas.
     description: {
-      ja: "ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。",
-      en: "From registration to completion, in four simple steps. How to use Care 24 Japan's services.",
+      ja: "ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。",
+      en: "From member registration through your care supporter's home visit to the completion report — how Care 24 Japan's service flow works, step by step.",
     },
   },
   company: {
     route: "/company",
     atlasSlug: "company",
     title: { ja: "運営会社", en: "Operating Company" },
+    // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #3 / now
+    // live on page.seo.description.
     description: {
-      ja: "Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。",
-      en: "Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.",
+      ja: "メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。",
+      en: "Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.",
     },
   },
   fees: {
@@ -107,18 +122,26 @@ export const seoRoutes = {
       ja: "ケアサポーターの時給・報酬体系一覧",
       en: "Hourly wage/salary system for care supporters",
     },
+    // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #4 / now
+    // live on page.seo.description. Also closes the ¥-leaks-to-EN-readers
+    // finding (ST-U1): the old literal used "Care 24 Japan" prose with no
+    // ¥/JPY figure, so there was nothing to convert here — the description
+    // itself changed for the "no stale price" reason above, not a
+    // ¥->JPY substitution.
     description: {
-      ja: "Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。",
-      en: "Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.",
+      ja: "介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。",
+      en: "Care 24 Japan's hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.",
     },
   },
   "use-case": {
     route: "/use-case",
     atlasSlug: "use-case",
     title: { ja: "ご利用シーン", en: "Use cases" },
+    // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #5 / now
+    // live on page.seo.description.
     description: {
-      ja: "退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。",
-      en: "After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan's in-home care helps.",
+      ja: "退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。",
+      en: "After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan's in-home care helps with.",
     },
   },
   privacy: {

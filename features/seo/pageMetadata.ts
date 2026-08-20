@@ -124,6 +124,28 @@ export function withBrandSuffix(title: string, brandName: string): string {
 }
 
 /**
+ * True when `title` already carries `brandName` somewhere in it — matched
+ * loosely (whitespace-insensitive, case-insensitive) because the CMS titles
+ * this guards against spell the brand two different ways in the same
+ * workspace: `site.brand.name` is "Care 24 Japan" (spaced), but 4 legal
+ * pages' Atlas `seo.title` carries "Care24Japan" (no space) as part of the
+ * client's legally-reviewed document name (see `care 24 update.xlsx`:
+ * "Care24Japan ケアサポーター報酬規程_リーガルチェック済"). A plain `===`/
+ * `includes()` check would miss that pairing entirely.
+ *
+ * Used by `buildPageMetadataFields` below to render such a title as
+ * `title.absolute` instead of a plain string — see that function's own
+ * comment for why a plain string is the wrong shape once this is true.
+ * Deliberately NOT a hardcoded route list: any route whose resolved title
+ * (CMS-or-fallback) starts carrying the brand name gets this treatment
+ * automatically, the same way any route that DROPS it stops getting it.
+ */
+export function titleContainsBrand(title: string, brandName: string): boolean {
+  const normalize = (s: string) => s.replace(/\s+/g, "").toLowerCase();
+  return normalize(title).includes(normalize(brandName));
+}
+
+/**
  * The `og:image`/`twitter:image` selection rule `pageMetadata()` applies:
  * the CMS value when present, else the per-locale local fallback card
  * (`constants/seo.ts#fallbackOgImage` — see ST-OG). Pulled out to its own
@@ -197,10 +219,28 @@ export function buildPageMetadataFields({
   // with the brand name, and IT bypasses the template on the `<title>` side
   // too — so `og:title` must stay suffix-free there as well, or the two
   // would newly disagree in the other direction.
-  const ogTitle = route === "/" ? title : withBrandSuffix(title, brandName);
+  //
+  // `brandAlreadyInTitle` is the second exception (CMS audit 0820, finding
+  // N-brand-double / ST-U2 Tugas 2): some non-home routes' resolved title
+  // (CMS `page.seo.title`, which wins over the `constants/seo.ts` literal
+  // per D-3 above) already carries the brand name by itself — verified live
+  // for `terms-for-users`, `terms-for-care-supporters`, `compensation`,
+  // `cancellation-policy` (their Atlas titles are literal legal-document
+  // names starting with "Care24Japan"). Templating those would print the
+  // brand a second time, spelled a second way ("Care24Japan ... | Care 24
+  // Japan"). This is intentionally NOT a hardcoded route check — see
+  // `titleContainsBrand`'s own comment — so it also protects any OTHER
+  // route whose title starts carrying the brand later.
+  const brandAlreadyInTitle = route !== "/" && titleContainsBrand(title, brandName);
+  const ogTitle = route === "/" || brandAlreadyInTitle ? title : withBrandSuffix(title, brandName);
 
   return {
-    title,
+    // Same `title.absolute` shape `app/[lang]/page.tsx` already uses for
+    // home, applied here too when the title itself already contains the
+    // brand — `title.template` (`app/[lang]/layout.tsx`) only reads a plain
+    // string `title`, so returning one for `brandAlreadyInTitle` routes is
+    // exactly what would let the template re-append the brand.
+    title: brandAlreadyInTitle ? { absolute: title } : title,
     description,
     alternates: routeAlternates(route, lang),
     openGraph: {

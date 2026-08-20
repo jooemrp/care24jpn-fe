@@ -63,6 +63,7 @@ async function main() {
     withBrandSuffix,
     resolveOgImage,
     buildPageMetadataFields,
+    titleContainsBrand,
     TITLE_BRAND_SEPARATOR,
   } = (await import(pageMetadataPath)) as typeof PageMetadataModule;
 
@@ -106,6 +107,54 @@ async function main() {
     const renderedTitle = titleTemplate(BRAND).replace("%s", title);
     assert.equal(meta.title, title);
     assert.equal(meta.openGraph?.title, renderedTitle);
+  });
+
+  // ---------------------------------------------------------------------
+  // Brand-already-in-title routes (CMS audit 0820, ST-U2 Tugas 2): 4 legal
+  // pages' Atlas `seo.title` already carries "Care24Japan"/"Care 24 Japan"
+  // (the client's legally-reviewed document name — see `care 24
+  // update.xlsx`), so letting `title.template` append the brand a THIRD
+  // time (it's spelled two different ways already) would render two
+  // spellings of the brand side by side in the browser tab. `titleContainsBrand`
+  // detects this from the resolved title itself — never a hardcoded route
+  // list — and `buildPageMetadataFields` renders those titles as
+  // `title.absolute`, which `generate-metadata.md`'s own "absolute" section
+  // documents as bypassing `title.template` entirely (same mechanism
+  // `app/[lang]/page.tsx` already uses for home, the other title that
+  // starts pre-suffixed).
+  // ---------------------------------------------------------------------
+
+  test("titleContainsBrand: matches regardless of spacing between the brand's words", () => {
+    assert.equal(titleContainsBrand("Care24Japan プラットフォーム利用規約", BRAND), true);
+    assert.equal(titleContainsBrand("Care 24 Japan Cancellation Policy", BRAND), true);
+    assert.equal(titleContainsBrand("Pricing for users", BRAND), false);
+  });
+
+  test("buildPageMetadataFields: a title that already contains the brand renders as title.absolute, not a plain string, so title.template cannot double-append the brand", () => {
+    const title = "Care24Japan プラットフォーム利用規約（ご利用者様向け）";
+    const meta = buildPageMetadataFields({
+      route: "/terms-for-users",
+      lang: "ja",
+      title,
+      description: "desc",
+      ogImage: "/images/og-card.png",
+      brandName: BRAND,
+    });
+    assert.deepEqual(meta.title, { absolute: title });
+  });
+
+  test("buildPageMetadataFields: og:title for a brand-already-in-title route equals the bare title (no second brand suffix)", () => {
+    const title = "Care24Japan Cancellation Policy";
+    const meta = buildPageMetadataFields({
+      route: "/cancellation-policy",
+      lang: "en",
+      title,
+      description: "desc",
+      ogImage: "/images/og-card.png",
+      brandName: BRAND,
+    });
+    assert.equal(meta.openGraph?.title, title);
+    assert.ok(!String(meta.openGraph?.title).includes(TITLE_BRAND_SEPARATOR));
   });
 
   // ---------------------------------------------------------------------
