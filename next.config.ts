@@ -26,6 +26,23 @@ const nextConfig: NextConfig = {
         hostname: "horizoon.s3.ap-southeast-1.amazonaws.com",
         pathname: "/care-24/media/**",
       },
+      // Local development only: a MinIO instance backing an Atlas dev
+      // workspace serves media from http://localhost:9000 (see
+      // `features/cms/fields.test.ts`'s `pickImage` case). Guarded so
+      // production keeps exactly one allowed origin. Host and path prefix
+      // intentionally mirror the S3 entry above rather than being
+      // generalised — narrowing is what stops a wrong/compromised media URL
+      // from being proxied through /_next/image.
+      ...(process.env.NODE_ENV !== "production"
+        ? [
+            {
+              protocol: "http" as const,
+              hostname: "localhost",
+              port: "9000",
+              pathname: "/care-24/media/**",
+            },
+          ]
+        : []),
     ],
   },
   // /terms (Care Supporter doc) is retired but already indexed publicly —
