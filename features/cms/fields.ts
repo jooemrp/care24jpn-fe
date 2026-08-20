@@ -5,7 +5,7 @@
  * Two responsibilities, both previously copy-pasted per loader:
  *
  * 1. **Field pickers** (`pick`/`pickJa`/`pickBi`/`pickLines`/...) —
- *    `client.ts#mergeBlockData` cannot see the workspace schema, so every
+ *    `merge.ts#mergeBlockData` cannot see the workspace schema, so every
  *    string field comes back as `Bilingual | undefined` regardless of whether
  *    it is localizable. These narrow that back to the shape
  *    `constants/*.ts` already declares, with a constants fallback per field.
@@ -149,7 +149,7 @@ export function pickJaLines(data: CmsBlock["data"], key: string, fallback: strin
  * `number` field (`rate_row.customer_price`, `rate_row.supporter_pay`) —
  * every yen figure on the site comes through here.
  *
- * A well-formed block carries a real JS `number` (`client.ts#mergeBlockData`
+ * A well-formed block carries a real JS `number` (`merge.ts#mergeBlockData`
  * passes non-strings through untouched). A numeric STRING (`"3500"`) is also
  * accepted: silently discarding it would show the OLD price from
  * `constants/pricing.ts` on `/pricing` and `/fees` while the dashboard showed
@@ -223,7 +223,7 @@ function isHttpUrl(value: string): boolean {
  * warns.
  *
  * Reads `.ja` like `pickJa`: these fields are non-localizable, so
- * `client.ts#mergeBlockData` wrapped one URL into `{ ja, en }` with both sides
+ * `merge.ts#mergeBlockData` wrapped one URL into `{ ja, en }` with both sides
  * equal.
  */
 export function pickImage(

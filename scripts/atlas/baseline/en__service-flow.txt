@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>How it works | Care 24 Japan</title>
+<meta name="description" content="From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services."/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en/service-flow"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/service-flow"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/service-flow"/>
+<meta property="og:title" content="How it works | Care 24 Japan"/>
+<meta property="og:description" content="From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services."/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How it works | Care 24 Japan"/>
+<meta name="twitter:description" content="From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services."/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a aria-current="page" class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] bg-primary-light font-medium text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">How it works</h1>
+</header>
+<p class="max-w-2xl text-lg leading-relaxed text-body">From registration to completion, in four simple steps.</p>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<ol class="max-w-3xl">
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:0ms">
+<span class="absolute bottom-0 left-7 top-14 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">1</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-2xl font-bold leading-snug text-heading">Registration</h3>
+<p class="mt-2.5 text-lg leading-relaxed text-body">Please enter your information to register as a member in order to use the service.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:100ms">
+<span class="absolute bottom-0 left-7 top-14 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">2</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-2xl font-bold leading-snug text-heading">Confirmation of your reservation</h3>
+<p class="mt-2.5 text-lg leading-relaxed text-body">Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:200ms">
+<span class="absolute bottom-0 left-7 top-14 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">3</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-2xl font-bold leading-snug text-heading">Service Start</h3>
+<p class="mt-2.5 text-lg leading-relaxed text-body">A care supporter will visit your home at the scheduled date and time.</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:300ms">
+<span class="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">4</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-2xl font-bold leading-snug text-heading">Completion Report</h3>
+<p class="mt-2.5 text-lg leading-relaxed text-body">After the service is completed, the care supporter will send you a report, and the service will be finished.</p>
+</div>
+</li>
+</ol>
+<div class="mt-12 animate-fade-up">
+<a class="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid" href="/en/pricing">Book a free consultation</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

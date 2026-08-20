@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care24Japan Cancellation Policy | Care 24 Japan</title>
+<meta name="description" content="Care24Japan Cancellation Policy — Care 24 Japan"/>
+<link rel="canonical" href="https://care24jpn.vercel.app/en/cancellation-policy"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app/cancellation-policy"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en/cancellation-policy"/>
+<meta property="og:title" content="Care24Japan Cancellation Policy | Care 24 Japan"/>
+<meta property="og:description" content="Care24Japan Cancellation Policy — Care 24 Japan"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care24Japan Cancellation Policy | Care 24 Japan"/>
+<meta name="twitter:description" content="Care24Japan Cancellation Policy — Care 24 Japan"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="Care 24 Japan logo" href="/en">
+<img alt="Care 24 Japan logo" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="Contact us 24 hours a day, 365 days a year. 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">Contact us 24 hours a day, 365 days a year.</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="Menu" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h1 class="text-3xl font-bold text-heading mb-1">Care24Japan Cancellation Policy</h1>
+</header>
+<div class="lg:flex lg:gap-12">
+<div class="max-w-[42rem] lg:flex-1">
+<div class="mb-10 animate-fade-up lg:hidden">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="Table of Contents">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">Table of Contents</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 1 (Purpose)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 2 (Cancellation Fee Accrual Standards and Ratios)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 3 (Handling of Changes to Reservation Details)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 4 (Handling of Nomination Reservations and Allowances)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 5 (Handling of Actual Expenses and Transportation Expenses)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 6 (Cancellations due to the Company or Supporter&#x27;s Convenience)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Supplementary Provisions</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+<div class="legal-body animate-fade-up">
+<h2>Article 1 (Purpose)</h2>
+<p>The purpose of this Cancellation Policy is to establish the conditions and cancellation fees when a service user (hereinafter referred to as the &quot;User&quot;) changes or cancels a confirmed matching service reservation for visiting care, visiting nursing, rehabilitation, etc. (hereinafter referred to as the &quot;Reserved Work&quot;) on &quot;Care24Japan&quot; (hereinafter referred to as &quot;this Service&quot;) operated by Medical Informatics Inc. (hereinafter referred to as the &quot;Company&quot;).</p>
+<h2>Article 2 (Cancellation Fee Accrual Standards and Ratios)</h2>
+<p>If the Reserved Work is canceled or changed due to the User&#x27;s convenience, a cancellation fee shall accrue depending on the following timing based on the reservation date and time. Furthermore, the base time for all judgments shall be cut off at &quot;15:00&quot;.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr>
+<th scope="col">Timing of Cancellation/Change Request</th>
+<th scope="col">Ratio of Cancellation Fee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cancellation/change after 15:00 three days prior to the reservation date</td>
+<td>50% of the reservation fee</td>
+</tr>
+<tr>
+<td>Cancellation/change after 15:00 two days prior to the reservation date</td>
+<td>75% of the reservation fee</td>
+</tr>
+<tr>
+<td>Cancellation/change after 15:00 the day before the reservation date</td>
+<td>100% of the reservation fee (full burden)</td>
+</tr>
+<tr>
+<td>Cancellation/change prior to the above (before 15:00 three days prior to the reservation date)</td>
+<td>No cancellation fee (Free)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Article 3 (Handling of Changes to Reservation Details)</h2>
+<ul>
+<li>Shortening of reservation time: If a confirmed reservation time is shortened, the shortened time will be deemed a cancellation, and a predetermined cancellation fee will accrue for the shortened portion&#x27;s fee based on the standards in Article 2.</li>
+<li>Extension of reservation time: If a confirmed reservation time is extended, the extended portion will be treated as a new spot usage application, and an additional fee for the extended portion will accrue.</li>
+<li>Exceptions for schedule changes: Even if a schedule change is due to the convenience of the User or the care recipient, the cancellation fee in Article 2 shall apply in principle. However, this shall not apply if the adjustment is specially approved by our system and the care supporter (hereinafter referred to as the &quot;Supporter&quot;). If the adjusted schedule falls under addition reasons such as overtime or same-day reservation, additional fees will accrue based on the modified rate.</li>
+</ul>
+<h2>Article 4 (Handling of Nomination Reservations and Allowances)</h2>
+<p>If a User cancels a case that was reserved by nominating a Supporter (nomination reservation), the nomination fee (330 yen per hour) shall also be subject to the cancellation fee. Even if the cancellation fee for the basic fee is 50% or 75% based on Article 2, the full amount (100%) of the nomination fee shall be added to the cancellation fee. However, if the cancellation occurs within the &quot;no cancellation fee (free)&quot; period, the cancellation fee for the nomination fee will not accrue.</p>
+<h2>Article 5 (Handling of Actual Expenses and Transportation Expenses)</h2>
+<p>If the Reserved Work is canceled in advance, the flat transportation fee of 990 yen and other actual expenses will not accrue. However, if damages occur due to a last-minute cancellation, such as the Supporter having already begun the visit, an amount equivalent to the actual expenses may be billed.</p>
+<h2>Article 6 (Cancellations due to the Company or Supporter&#x27;s Convenience)</h2>
+<p>If the provision of work becomes impossible due to sudden illness of the Company or the Supporter, or other force majeure and convenience, resulting in the reservation being canceled, no cancellation fee whatsoever shall accrue to the User.</p>
+<h2>Supplementary Provisions</h2>
+<p>This Policy shall be enacted and enforced from September 1, 2026.</p>
+</div>
+</div>
+<aside class="hidden w-72 shrink-0 lg:block">
+<div class="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
+<nav class="w-full overflow-hidden rounded-2xl border border-border/60 bg-white" aria-label="Table of Contents">
+<div class="border-b border-border/50 px-5 py-3.5">
+<p class="text-xs font-bold uppercase tracking-wider text-heading">Table of Contents</p>
+</div>
+<ul class="space-y-0.5 p-3">
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 1 (Purpose)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 2 (Cancellation Fee Accrual Standards and Ratios)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 3 (Handling of Changes to Reservation Details)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 4 (Handling of Nomination Reservations and Allowances)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 5 (Handling of Actual Expenses and Transportation Expenses)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Article 6 (Cancellations due to the Company or Supporter&#x27;s Convenience)</span>
+</button>
+</li>
+<li>
+<button type="button" class="group relative flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 text-heading/50 hover:text-heading">
+<span class="absolute left-0 top-1/2 h-0 w-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 opacity-0">
+</span>
+<span class="text-[13px] leading-snug transition-colors duration-200 font-normal">Supplementary Provisions</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="Care 24 Japan logo" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Premium 24-hour in-home elderly care across Japan.</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en">Home</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en#service-details">Service Details</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/service-flow">How to Use Our Services</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/en/pricing">Usage Fees</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/company">Operating Company</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/privacy">Privacy Policy</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/tokushoho">Notation based on the Act on Specified Commercial Transactions</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-users">Terms &amp; Conditions (For Users)</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/en/terms-for-care-supporters">Terms &amp; Conditions (For Care Supporters)</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="日本語に切り替える">
+<span class="font-bold text-primary">EN</span>
+<span class="text-border">/</span>
+<span class="text-muted">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>

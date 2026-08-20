@@ -19,7 +19,28 @@ npm run dev      # start the dev server (webpack)
 npm run build    # production build (webpack)
 npm run start    # start the production server
 npm run lint     # run ESLint
+npm test         # unit tests (Node's built-in runner; no bundler, no network)
 ```
+
+### Atlas CMS
+
+```bash
+npm run atlas:schema   # push content types + fields to the workspace (hard-fails on drift)
+npm run atlas:seed     # write/publish page content
+npm run atlas:types    # regenerate features/cms/atlas.types.ts from the live schema
+npm run atlas:verify   # HTML parity gate (see below)
+```
+
+`npm run atlas:verify` builds the site twice — once against the live CMS and once with
+Atlas deliberately unconfigured — then compares 29 pre-migration baseline snapshots
+(committed under `scripts/atlas/baseline/`) and all 26 CMS-on/CMS-off URL pairs.
+
+Every differing line must be accounted for or the gate fails. It is accounted for in one
+of three ways, and the distinction matters: an identical line that merely moved position;
+a *class*, which proves two lines differ **only** in the named respect by canonicalizing
+that respect away and requiring the rest to match exactly; or an *accepted residual* — a
+real difference that was investigated and accepted, pinned to an exact count, so the
+next occurrence still fails. Nothing is silently dropped to make the diff look clean.
 
 ## Internationalization
 

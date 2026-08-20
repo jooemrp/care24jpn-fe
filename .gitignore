@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local agent tooling (machine-specific permissions + dev-server config;
+# nothing here is needed to build, run or test this project)
+.claude/

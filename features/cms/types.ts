@@ -79,13 +79,44 @@ export interface RawSeoTranslation {
   seo: string;
 }
 
-/** Full response body of `GET /pages/<slug>` (no `?locale=`). */
-export interface RawPageResponse {
+/**
+ * The page RECORD, as it appears under `data.page` — verified against the
+ * live response, whose `data.page` keys are exactly `id, workspace_id, slug,
+ * status, position, seo, published_at, created_by, updated_by, created_at,
+ * updated_at`.
+ *
+ * `seo` is a real OBJECT here, not a JSON string — unlike block `data`, which
+ * the same response does send stringified. Do not `JSON.parse` it.
+ */
+export interface RawPageRecord {
   id: string;
   slug: string;
   status: string;
-  /** JSON-encoded AtlasPageSEO-shaped object, base locale (ja). */
-  seo?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string | null;
+    og_image?: string;
+    canonical?: string;
+  };
+}
+
+/**
+ * The `data` payload of `GET /pages/<slug>` (no `?locale=`), i.e. what
+ * `atlas.raw.get()` returns as its `data` after unwrapping the
+ * `{ success, message, data }` envelope.
+ *
+ * NOTE THE NESTING, which an earlier version of this type got wrong: the
+ * page's own scalar fields live under `page`, while `blocks`,
+ * `seo_translations` and `block_translations` are SIBLINGS of it at the top
+ * level — not children. The old shape declared `id`/`slug`/`status`/`seo` at
+ * the top level, so `response.seo` type-checked and was always `undefined` at
+ * runtime. Only `blocks`/`block_translations` were ever read, so nothing
+ * broke; the corrected shape is here so the first reader of the SEO object
+ * fails at `tsc` instead of silently rendering nothing.
+ */
+export interface RawPageResponse {
+  page?: RawPageRecord;
   blocks: RawBlock[];
   seo_translations?: RawSeoTranslation[];
   block_translations?: RawBlockTranslation[];
@@ -150,7 +181,7 @@ export interface CmsBlock {
 // Per cli-typegen.md's field-type mapping, a localizable field generates as
 // its base-locale type with a `// localizable` comment only — there is no
 // per-locale map in the generated output, and the comment is not readable at
-// the type level. `client.ts#mergeBlockData` is the actual source of the
+// the type level. `merge.ts#mergeBlockData` is the actual source of the
 // bilingual shape: it wraps EVERY string field (localizable or not) as
 // `Bilingual | undefined`, because it cannot tell the two apart from the wire
 // either — for non-localizable strings ja === en, which is harmless. The
@@ -173,7 +204,7 @@ export type CmsBlockTypeId = keyof AtlasContentTypes;
  * Maps a generated Atlas content-type interface (e.g. `HomeHero`) to the
  * shape `getPageBlocks()` actually returns at runtime: every string field
  * becomes `Bilingual | undefined`, every non-string field (number, boolean,
- * ...) passes through unchanged. Mirrors `client.ts#mergeBlockData` exactly.
+ * ...) passes through unchanged. Mirrors `merge.ts#mergeBlockData` exactly.
  */
 export type MergedBlockData<T> = {
   [K in keyof T]: T[K] extends string | undefined ? Bilingual | undefined : T[K];

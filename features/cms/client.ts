@@ -2,15 +2,8 @@ import "server-only";
 
 import { createClient, type AtlasClient } from "@latellu/atlas-sdk";
 import { cache } from "react";
-import type {
-  Bilingual,
-  CmsBlock,
-  CmsBlockTypeId,
-  MergedBlockDataFor,
-  ParsedBlockData,
-  RawBlockTranslation,
-  RawPageResponse,
-} from "./types";
+import { shapePageBlocks } from "./merge";
+import type { CmsBlock, RawPageResponse } from "./types";
 
 /**
  * Every render hits this, so a hang here is a hang for every visitor —
@@ -122,89 +115,6 @@ function getAtlasClient(): AtlasClient<Record<string, unknown>> | null {
 }
 
 /**
- * Safely `JSON.parse`s a block/translation `data` string. `raw.get` hands us
- * these as JSON-encoded strings, not objects — the SDK's own locale-merging
- * resources (`pages.get`, `entries().get`) do the same parse internally and
- * default to `{}` on malformed JSON rather than throwing. We mirror that so
- * one corrupt block never takes down a whole page.
- */
-function parseData(raw: string | undefined | null): Record<string, unknown> {
-  if (!raw) return {};
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
-      ? (parsed as Record<string, unknown>)
-      : {};
-  } catch {
-    return {};
-  }
-}
-
-/**
- * Merges one block's base (ja) data with its EN translation, field by field.
- *
- * Contract (client.ts cannot see the workspace schema, so it cannot tell a
- * localizable field from a non-localizable one on its own):
- * - Every STRING field becomes `Bilingual | undefined`. For genuinely
- *   localizable fields (heading, body, label, ...) `en` is the real EN copy.
- *   For non-localizable string fields (href, course_key, icon, tone, slug,
- *   tel, ...) there is only ever one value, so `ja === en` — callers that
- *   know a field is single-language (per architecture-plan.json#block_types)
- *   just read `.ja`.
- * - Every NON-STRING field (number, boolean, null, array, nested object)
- *   passes through unchanged. Atlas never puts non-localizable-by-type
- *   values through translation, and wrapping e.g. `rate_row.customer_price`
- *   in `{ ja, en }` would break `formatYen()`'s `toLocaleString`.
- * - **A field empty in BOTH locales becomes `undefined`, never
- *   `{ ja: "", en: "" }`.** An empty object is truthy — three call sites
- *   (`careCourse.fees[].note`, `rate_row.detail`, `hero.body`) render
- *   conditionally on a field's presence, so a stray empty object silently
- *   changes layout. This is the #1 risk flagged for this migration.
- */
-function mergeBlockData(
-  baseData: Record<string, unknown>,
-  enData: Record<string, unknown>,
-): ParsedBlockData {
-  const merged: ParsedBlockData = {};
-
-  for (const key of Object.keys(baseData)) {
-    const jaRaw = baseData[key];
-
-    if (typeof jaRaw !== "string") {
-      // Non-string field: number/boolean/etc. never carry per-locale text.
-      merged[key] = jaRaw;
-      continue;
-    }
-
-    const enRaw = enData[key];
-    const ja = jaRaw;
-    const en = typeof enRaw === "string" ? enRaw : ja;
-
-    merged[key] = ja === "" && en === "" ? undefined : ({ ja, en } satisfies Bilingual);
-  }
-
-  // Fields present only in the EN translation (no base value at all) still
-  // need a slot — treat the missing ja side as empty rather than dropping
-  // the field, so a translation-only value doesn't silently vanish.
-  for (const key of Object.keys(enData)) {
-    if (key in baseData) continue;
-    const enRaw = enData[key];
-    if (typeof enRaw !== "string") continue;
-    merged[key] = enRaw === "" ? undefined : ({ ja: "", en: enRaw } satisfies Bilingual);
-  }
-
-  return merged;
-}
-
-function findEnTranslationData(
-  blockId: string,
-  translations: RawBlockTranslation[] | undefined,
-): Record<string, unknown> {
-  const match = translations?.find((t) => t.block_id === blockId && t.locale === "en");
-  return parseData(match?.data);
-}
-
-/**
  * Fetches a page's blocks in both locales, merged and ready for a
  * `features/cms/*.ts` loader to shape into its page's constants-compatible
  * type. Returns `null` on ANY failure (network error, non-2xx, malformed
@@ -217,32 +127,9 @@ async function fetchPageBlocks(slug: string): Promise<CmsBlock[] | null> {
 
   try {
     const { data: page } = await atlas.raw.get<RawPageResponse>(`/pages/${slug}`);
-    if (!page || !Array.isArray(page.blocks)) return null;
-
-    const blocks = page.blocks
-      .map((block) => {
-        const baseData = parseData(block.data);
-        const enData = findEnTranslationData(block.id, page.block_translations);
-        return {
-          id: block.id,
-          // Both identifiers are forwarded on purpose. `type` is the
-          // hyphenated content-type SLUG ("nav-item") and is what loaders
-          // match on; `blockTypeId` is the same type's UUID and is kept
-          // because it is the only stable identifier if a slug is ever
-          // renamed on the workspace. `?? ""` rather than a throw: a block
-          // with no slug simply matches no declared type, so it is ignored
-          // (or, if a page's required type is the missing one, the page
-          // falls back with a log) instead of taking the whole render down.
-          type: block.type ?? "",
-          blockTypeId: block.block_type_id,
-          parentId: block.parent_id,
-          position: block.position,
-          data: mergeBlockData(baseData, enData),
-        } satisfies CmsBlock;
-      })
-      .sort((a, b) => a.position - b.position);
-
-    return blocks;
+    // Everything from here on is pure and lives in ./merge so it can be
+    // tested without a bundler — see the header comment there.
+    return shapePageBlocks(page);
   } catch (error) {
     // Atlas down / key misconfigured / timed out (see NO_STORE_FETCH_TIMEOUT_MS)
     // / page not yet created — never throw out of a loader; callers fall back
@@ -299,20 +186,4 @@ export function reportUnexpectedContent(slug: string, detail: string): void {
   console.warn(
     `[cms:fallback:unexpected-content] getPageBlocks("${slug}") succeeded but its content was not used (${detail}) — falling back to constants/*.ts for "${slug}" only. Atlas is reachable; the response shape didn't match what the loader expected (e.g. a block was added/removed/reordered in the dashboard). This warning only prints once per slug per process.`,
   );
-}
-
-/**
- * Type-only narrowing helper for a loader that knows which content type a
- * block's `blockTypeId` refers to (per architecture-plan.json#block_types),
- * e.g. `asBlockData<"home-hero">(block.data)`. Purely a compile-time
- * assertion — it does not re-validate anything at runtime, matching how
- * loaders already narrow `ParsedBlockData` themselves; using it just swaps
- * that ad-hoc narrowing for one checked against `atlas.types.ts`, so a
- * renamed/removed field fails `tsc` instead of failing silently. Existing
- * loaders that don't call this are unaffected.
- */
-export function asBlockData<K extends CmsBlockTypeId>(
-  data: ParsedBlockData,
-): MergedBlockDataFor<K> {
-  return data as MergedBlockDataFor<K>;
 }

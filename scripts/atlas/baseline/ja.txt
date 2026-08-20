@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja" class="__variable_266483 h-full antialiased">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/HASH" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x"/>
+<link rel="preload" as="image" imageSrcSet="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75 3840w" imageSizes="100vw" fetchPriority="high"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="stylesheet" href="/_next/static/HASH" data-precedence="next"/>
+<link rel="preload" as="script" fetchPriority="low" href="/_next/static/HASH"/>
+<title>Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを</title>
+<meta name="description" content="ご自宅で、心安らぐ24時間の在宅ケアを"/>
+<link rel="canonical" href="https://care24jpn.vercel.app"/>
+<link rel="alternate" hrefLang="ja" href="https://care24jpn.vercel.app"/>
+<link rel="alternate" hrefLang="en" href="https://care24jpn.vercel.app/en"/>
+<meta property="og:title" content="Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを"/>
+<meta property="og:description" content="ご自宅で、心安らぐ24時間の在宅ケアを"/>
+<meta property="og:site_name" content="Care 24 Japan"/>
+<meta property="og:locale" content="ja_JP"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを"/>
+<meta name="twitter:description" content="ご自宅で、心安らぐ24時間の在宅ケアを"/>
+<link rel="icon" href="/care24jpn.ico"/>
+<meta name="next-size-adjust" content=""/>
+</head>
+<body class="min-h-full flex flex-col bg-bg text-body">
+<div hidden="">
+</div>
+<div aria-hidden="true" class="relative h-0">
+<div class="pointer-events-none absolute left-0 top-0 w-px" style="height:72px">
+</div>
+</div>
+<header class="pointer-events-none sticky top-0 z-50 shrink-0 h-[81px] md:h-[130px]">
+<div class="pointer-events-auto border-b border-border backdrop-blur-md motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out bg-surface/45 shadow-none">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-20">
+<a class="flex items-center shrink-0" aria-label="ケア24ジャパン ロゴ" href="/">
+<img alt="ケア24ジャパン ロゴ" width="427" height="160" decoding="async" data-nimg="1" class="h-auto w-36 origin-left motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out scale-100" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=1080&amp;q=75"/>
+</a>
+<div class="hidden md:flex items-center gap-6">
+<a href="tel:0120001224" aria-label="24時間365日、お気軽にお問い合わせください。 0120-001-224" class="group flex min-h-11 w-72 flex-col justify-center leading-tight motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out pt-1 items-end text-right">
+<span class="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">0120-001-224</span>
+<span class="block overflow-hidden motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out max-h-5 py-1 opacity-100">
+<span class="block whitespace-nowrap text-xs leading-none text-body">24時間365日、お気軽にお問い合わせください。</span>
+</span>
+</a>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+<div class="md:hidden flex items-center gap-3">
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;]" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+<button type="button" class="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2" aria-label="メニュー" aria-expanded="false">
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+<span class="block h-0.5 w-6 bg-heading">
+</span>
+</button>
+</div>
+</div>
+<div class="hidden md:block border-t border-border/70">
+<nav>
+<ul class="max-w-6xl mx-auto px-6 flex items-center gap-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out h-12">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm transition relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[&#x27;&#x27;] text-body hover:bg-primary-light/60 hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class="relative isolate overflow-hidden">
+<img alt="窓辺で介護スタッフと穏やかに過ごす高齢の女性" fetchPriority="high" decoding="async" data-nimg="fill" class="-z-20 object-cover object-[center_40%]" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="100vw" srcSet="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fhero.webp&amp;w=3840&amp;q=75"/>
+<div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-40">
+</div>
+<div aria-hidden="true" class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg">
+</div>
+<div class="relative mx-auto flex min-h-[calc(100dvh-81px)] max-w-6xl flex-col justify-center px-6 py-20 md:min-h-[calc(100dvh-130px)] md:py-24">
+<div class="max-w-xl animate-fade-up">
+<h1 class="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">医療保険や介護保険を利用しない、介護・看護のご支援サービス</h1>
+<p class="mt-6 text-base leading-relaxed text-body">介護保険の「できない」を、家族の「当たり前」に変えていく。</p>
+<div class="mt-8 flex flex-wrap gap-4">
+<a class="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid" href="/service-flow">お申込みはこちら</a>
+<a class="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light" href="/pricing">まずは無料登録</a>
+</div>
+<ul class="mt-10 flex flex-wrap gap-2.5">
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:120ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>24時間の安心</li>
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:200ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>専門スタッフ</li>
+<li class="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up" style="animation-delay:280ms">
+<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-2.5 w-2.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>ご家族との連携</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h2 class="text-3xl font-bold text-heading mb-1">このようなお困りごとはありませんか？</h2>
+</header>
+<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:0ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">一人で生活しているため何かあったら不安</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:60ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">介護保険がなかなかおりない</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:120ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">ショッピングや映画に外出をしたいが一人では行けないので誰か一緒に行ってほしい</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:180ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">話し相手がほしい</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:240ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">家事や掃除など手伝ってほしい</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:300ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">離れて暮らす親の様子が心配だが、仕事があって休み以外は見に行けない</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:360ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">家族が不在の時に見守りをしてほしい</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:420ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">施設や病院では対応できないことを個別に対応してほしい</p>
+</div>
+<div class="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up" style="animation-delay:480ms">
+<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5" aria-hidden="true">
+<path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</span>
+<p class="text-xl leading-relaxed text-body">もしもの時の対応をプロにお願いしたい</p>
+</div>
+</div>
+</div>
+</section>
+<div class="flex flex-col items-center bg-surface px-6 pb-12 pt-2 md:pb-16">
+<div class="relative w-full max-w-sm animate-fade-up">
+<svg viewBox="0 0 600 500" class="block h-auto w-full md:hidden" aria-hidden="true">
+<path d="M24 24 H576 L300 476 Z" fill="var(--color-accent)" stroke="var(--color-accent)" stroke-width="36" stroke-linejoin="round">
+</path>
+</svg>
+<svg viewBox="0 0 800 380" class="hidden h-auto w-full md:block" aria-hidden="true">
+<path d="M24 24 H776 L400 356 Z" fill="var(--color-accent)" stroke="var(--color-accent)" stroke-width="36" stroke-linejoin="round">
+</path>
+</svg>
+<div class="absolute inset-0 pt-5 flex flex-col items-center justify-center pb-[18%] px-[10%] text-center text-white">
+<p class="text-xs font-medium tracking-wide text-white/90 md:text-sm">完全オーダーメイドで</p>
+<p class="mt-1.5 max-w-[56%] text-md font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-lg">不安やお困りごとを解消</p>
+</div>
+</div>
+<p class="mx-auto mt-8 max-w-2xl text-center text-base leading-relaxed text-heading animate-fade-up md:text-lg">ご希望に合わせて、家事から身の回りのお世話までお手伝いします</p>
+</div>
+<section class=" py-12 md:py-20 scroll-mt-36 ">
+<div class="max-w-5xl mx-auto px-6">
+<h2 class="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">医療行為が必要な方に対しては、 看護師の手配が可能です</h2>
+<div class="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
+<div class="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
+<span class="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">看護コース</span>
+<p class="mt-6 text-lg font-medium text-body">日中基本料金（9:00〜18:00）</p>
+<p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+<span class="text-5xl font-bold tabular-nums text-heading">6,000円</span>
+<span class="text-lg text-muted">税抜</span>
+<span class="text-lg font-medium text-body">/時間</span>
+</p>
+<p class="mt-1 text-lg text-body">税込価格 6,600円</p>
+<p class="mt-6 text-lg text-muted">※詳しくは料金表をご覧ください。</p>
+</div>
+<div class="animate-fade-up [animation-delay:120ms]">
+<h3 class="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや なにかあったときに安心のコースです。</h3>
+<ul class="mt-6 flex flex-col gap-5">
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20.5C6.5 16.5 3.5 13 3.5 9.5a4.5 4.5 0 018.5-2 4.5 4.5 0 018.5 2c0 3.5-3 7-8.5 11z">
+</path>
+<path d="M6.5 12h3l1.5-3 2 5 1.5-2.5h3">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">バイタル測定・健康状態の管理</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16.5 5.5L6.5 15.5M18.5 7.5L8.5 17.5M16.5 5.5l2 2M6.5 15.5l2 2">
+</path>
+<path d="M7.5 16.5L4 20">
+</path>
+<path d="M17.5 6.5L20 4M18.6 2.6l2.8 2.8">
+</path>
+<path d="M13.5 8.5l1.5 1.5M11 11l1.5 1.5">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">医療処置（たん吸引や経管栄養）</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="7" y="7.5" width="8" height="13" rx="1.5">
+</rect>
+<path d="M6.5 7.5h9M9 4.5h4v3H9zM9.5 13.5h3M11 12v3">
+</path>
+<circle cx="18.5" cy="16.5" r="0.2">
+</circle>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">お薬の管理・相談</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 5.5h10a1.5 1.5 0 011.5 1.5v5a1.5 1.5 0 01-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 012.5 12V7A1.5 1.5 0 014 5.5z">
+</path>
+<path d="M18.5 9.5h1.5A1.5 1.5 0 0121.5 11v4.5a1.5 1.5 0 01-1.5 1.5h-.5v2.5l-3-2.5h-3">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">療養生活の相談・支援</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 12.5c-2.8-2-4.3-3.8-4.3-5.7A2.55 2.55 0 0112 5.4a2.55 2.55 0 014.3 1.4c0 1.9-1.5 3.7-4.3 5.7z">
+</path>
+<path d="M4.5 17c2-1.5 3.5-2 5-2h4a1.25 1.25 0 010 2.5H10">
+</path>
+<path d="M13.5 17.5l4.5-1.5a1.3 1.3 0 011 2.4l-5.5 2.6c-1.5.7-3 .5-4.5-.2l-4.5-2">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">終末期ケア・緩和ケア</span>
+</li>
+<li class="flex items-center gap-3.5">
+<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+<svg viewBox="0 0 24 24" fill="none" class="h-5.5 w-5.5" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="5.5" width="14" height="15" rx="1">
+</rect>
+<path d="M3.5 20.5h17">
+</path>
+<path d="M12 8.5v4M10 10.5h4">
+</path>
+<path d="M8.5 16h2v4.5h3V16h2">
+</path>
+</svg>
+</span>
+<span class="text-lg leading-snug text-body">医療機関との連携</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<h2 class="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">介護保険では対応できない 介護・生活支援を一流の介護士がサポート</h2>
+<p class="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-body animate-fade-up">介護士資格を保有したスタッフが身の回りのケアや見守り、外出の付き添いなど幅広くサポートするコースです。</p>
+<div class="mt-10 rounded-2xl border border-primary/25 bg-primary-light/50 p-6 animate-fade-up sm:p-8">
+<div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
+<div class="lg:w-[38%] lg:shrink-0">
+<span class="inline-flex w-fit items-center rounded-full bg-primary px-5 py-1.5 text-lg font-bold text-white">介護コース</span>
+<p class="mt-5 text-lg font-medium text-body">日中基本料金（9:00〜18:00）</p>
+<p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+<span class="text-5xl font-bold tabular-nums text-heading">3,400円</span>
+<span class="text-lg text-muted">税抜</span>
+<span class="text-lg font-medium text-body">/時間</span>
+</p>
+<p class="mt-1 text-lg text-body">税込価格 3,740円</p>
+</div>
+<dl class="grid flex-1 auto-rows-fr gap-px overflow-hidden rounded-xl bg-primary/20 sm:grid-cols-3">
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">最低利用時間</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">2時間から</dd>
+</div>
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">指名料</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">330円/時間</dd>
+<dd class="mt-1 text-lg leading-snug text-muted">※定期の方は指名無料</dd>
+</div>
+<div class="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center">
+<dt class="text-lg text-muted">往復交通費</dt>
+<dd class="mt-1.5 text-lg font-bold text-heading">別途990円</dd>
+</div>
+</dl>
+</div>
+</div>
+<div class="mt-10 grid gap-8 md:grid-cols-2">
+<div class="animate-fade-up" style="animation-delay:0ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="ご自宅で高齢女性に寄り添う介護スタッフ" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-1.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">ご自宅内の介護</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>移動介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>食事介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>入浴・清拭介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>口腔ケア</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>排泄介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>着替えのお手伝い</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>服薬の管理</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>ケアマネジャーとの連携</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:120ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="ご自宅でリビングを掃除するスタッフ" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-2.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">ご自宅内の家事</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>掃除</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>洗濯</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>話し相手</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>調理</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>ペットの世話</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>庭の手入れ</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>窓拭き</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:240ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="施設で車椅子の高齢男性に寄り添う介護スタッフ" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-3.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">病院・施設内の介護</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>日中の居室介護支援</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>施設内外の移動介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>夜間の見守り</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>話し相手</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>入浴サポート</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>居室のお掃除</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>買い物代行</li>
+</ul>
+</div>
+<div class="animate-fade-up" style="animation-delay:360ms">
+<div class="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+<img alt="車椅子の高齢女性の外出に付き添う介護スタッフ" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 768px) 100vw, 50vw" srcSet="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fimages%2Fuse-case-4.webp&amp;w=3840&amp;q=75"/>
+</div>
+<h3 class="mt-5 text-xl font-bold text-heading">通院・外出の付き添い</h3>
+<ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>通院の行き帰りの介助</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>診察内容の聞き取り</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>薬の受け取り</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>お散歩</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>イベントへの出席</li>
+<li class="flex items-start gap-2 text-lg leading-snug text-body">
+<span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true">
+</span>買い物</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class=" py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="text-center animate-fade-up">
+<p class="text-lg font-bold text-body">お客様に合わせたプランニングが可能</p>
+<h2 class="mt-2 text-3xl font-bold text-primary">ご利用事例</h2>
+</div>
+<div class="mt-4 flex flex-col">
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:0ms">
+<div class="">
+<p class="text-lg font-bold tracking-wide text-primary">ケース1</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">「仕事に行っている間、見守りをお願いしたい」</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">日中の見守り中心のご利用例</p>
+<p class="mt-7 text-lg font-bold text-muted">ご利用内容</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">話し相手</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">近隣の散歩</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">自宅の掃除</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">買い物付き添い</li>
+</ul>
+</div>
+<div class="">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>1日の流れ</p>
+<p class="text-lg font-bold tabular-nums text-heading">9:00–17:00<span class="ml-2 text-lg font-normal text-muted">8時間</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">9:00〜10:00</span>
+<span class="text-lg leading-snug text-body">ご挨拶、お話、近隣のお散歩、休憩</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">10:00〜12:00</span>
+<span class="text-lg leading-snug text-body">お食事サポート</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">12:00〜13:00</span>
+<span class="text-lg leading-snug text-body">お掃除</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">買い物付き添い</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">14:00〜16:00</span>
+<span class="text-lg leading-snug text-body">お話</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">16:00〜17:00</span>
+<span class="text-lg leading-snug text-body">夕飯見守り</span>
+</li>
+</ol>
+</div>
+</article>
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:100ms">
+<div class="lg:order-2">
+<p class="text-lg font-bold tracking-wide text-accent">ケース2</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">「胃瘻の主人の見守り」</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">医療＋介護の見守りでのご利用例</p>
+<p class="mt-7 text-lg font-bold text-muted">ご利用内容</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">経管栄養</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">見守り</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-accent-light">おむつ交換</li>
+</ul>
+</div>
+<div class="lg:order-1">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>1日の流れ</p>
+<p class="text-lg font-bold tabular-nums text-heading">9:00–14:00<span class="ml-2 text-lg font-normal text-muted">5時間</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent bg-accent-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">9:00〜10:00</span>
+<span class="text-lg leading-snug text-body">おむつ交換・経管栄養の準備</span>
+</li>
+<li style="min-height:126px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent/50 bg-accent-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">10:00〜12:00</span>
+<span class="text-lg leading-snug text-body">経管栄養（胃ろう）の実施と食後の見守り</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent bg-accent-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">12:00〜13:00</span>
+<span class="text-lg leading-snug text-body">おむつ交換と見守り</span>
+</li>
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-accent/50 bg-accent-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-accent">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">状態確認・記録作成とご家族への報告</span>
+</li>
+</ol>
+</div>
+</article>
+<article class="grid animate-fade-up items-center gap-10 border-t border-border py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" style="animation-delay:200ms">
+<div class="">
+<p class="text-lg font-bold tracking-wide text-primary">ケース3</p>
+<h3 class="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">「病院の付き添いでバスで移動・診察の同行をしてほしい」</h3>
+<p class="mt-4 text-lg leading-relaxed text-body">外出同行でのご利用例</p>
+<p class="mt-7 text-lg font-bold text-muted">ご利用内容</p>
+<ul class="mt-3 flex flex-wrap gap-2">
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">着替え介助</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">歩行見守り</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">通院付き添い</li>
+<li class="rounded-full px-4 py-1.5 text-lg text-heading bg-primary-light">トイレ介助</li>
+</ul>
+</div>
+<div class="">
+<div class="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+<p class="flex items-center gap-2 text-lg font-bold text-muted">
+<svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-muted" aria-hidden="true">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5">
+</circle>
+<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>1日の流れ</p>
+<p class="text-lg font-bold tabular-nums text-heading">13:00–16:00<span class="ml-2 text-lg font-normal text-muted">3時間</span>
+</p>
+</div>
+<ol class="mt-3 flex flex-col gap-1.5">
+<li style="min-height:63px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">13:00〜14:00</span>
+<span class="text-lg leading-snug text-body">ご挨拶、お着換え、トイレ介助</span>
+</li>
+<li style="min-height:94.5px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary/50 bg-primary-light/50">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">14:00〜15:30</span>
+<span class="text-lg leading-snug text-body">歩行見守り、バス乗車、診察</span>
+</li>
+<li style="min-height:31.5px" class="flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 border-primary bg-primary-light">
+<span class="w-[7.5rem] shrink-0 text-lg font-bold tabular-nums text-primary">15:30〜16:00</span>
+<span class="text-lg leading-snug text-body">ご自宅到着、お着替え</span>
+</li>
+</ol>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<header class="mb-10 animate-fade-up">
+<h2 class="text-3xl font-bold text-heading mb-1">ご利用の流れ</h2>
+</header>
+<ol class="mx-auto max-w-2xl">
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:0ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">01</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">ご登録</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:100ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">02</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">ご予約の確定</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:200ms">
+<span class="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25" aria-hidden="true">
+</span>
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">03</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">サービス開始</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">ご予約の日時にケアサポーターがご自宅へお伺いします。</p>
+</div>
+</li>
+<li class="relative flex gap-6 pb-12 last:pb-0 animate-fade-up" style="animation-delay:300ms">
+<span class="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
+<span class="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">STEP</span>
+<span class="mt-0.5 text-base font-bold leading-none tabular-nums">04</span>
+</span>
+<div class="min-w-0 flex-1">
+<h3 class="pt-3 text-lg font-bold leading-snug text-heading">終了ご報告</h3>
+<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。</p>
+</div>
+</li>
+</ol>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
+<a style="animation-delay:0ms" class="group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5 rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15 sm:row-span-2 sm:grid-rows-subgrid animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-3 bg-accent-deep shadow-[0_2px_10px_-4px_rgba(122,32,68,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(122,32,68,0.7)] focus-visible:outline-accent-deep" href="https://portal.care24.jp/register">
+<span class="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">サービスをご利用されたい方</span>
+<span class="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">お申込みはこちらから</span>
+<span aria-hidden="true" class="col-start-2 row-start-1 row-span-2 flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none group-hover:text-accent-deep">
+<svg viewBox="0 0 24 24" fill="none" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M5 12h14M13 6l6 6-6 6">
+</path>
+</svg>
+</span>
+</a>
+<a style="animation-delay:100ms" class="group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5 rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15 sm:row-span-2 sm:grid-rows-subgrid animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-3 bg-primary-deep shadow-[0_2px_10px_-4px_rgba(16,66,105,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(16,66,105,0.7)] focus-visible:outline-primary-deep" href="https://portal.care24.jp/caregiver">
+<span class="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">お仕事を希望される方</span>
+<span class="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">登録はこちらから</span>
+<span aria-hidden="true" class="col-start-2 row-start-1 row-span-2 flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none group-hover:text-primary-deep">
+<svg viewBox="0 0 24 24" fill="none" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M5 12h14M13 6l6 6-6 6">
+</path>
+</svg>
+</span>
+</a>
+</div>
+</div>
+</section>
+<section class="bg-surface py-12 md:py-20 ">
+<div class="max-w-5xl mx-auto px-6">
+<div class="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up scroll-mt-36">
+<p class="text-sm font-medium text-primary">＼ ご相談は無料です ／</p>
+<h2 class="mt-2 text-2xl md:text-3xl font-bold text-heading">24時間365日お気軽にご相談ください</h2>
+<div class="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
+<div class="flex flex-col items-center sm:items-start">
+<a href="tel:0120001224" class="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading">
+<svg viewBox="0 0 32 24" fill="none" class="h-7 w-9 text-primary" aria-hidden="true">
+<path d="M6 9c0-2.5 4-4.5 10-4.5S26 6.5 26 9c0 1.4-1 2.2-2.3 2.2-1.2 0-2-.7-2-1.8 0-.6.2-1-.3-1.4-.8-.5-2.3-.8-5.4-.8s-4.6.3-5.4.8c-.5.4-.3.8-.3 1.4 0 1.1-.8 1.8-2 1.8C7 11.2 6 10.4 6 9z" fill="currentColor">
+</path>
+<rect x="4" y="16" width="24" height="3" rx="1.5" fill="currentColor">
+</rect>
+</svg>0120-001-224</a>
+</div>
+<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/service-flow">お問い合わせ</a>
+</div>
+<div class="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
+<div class="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
+<img alt="mics — MedicalInformatics Co.,Ltd." loading="lazy" width="401" height="140" decoding="async" data-nimg="1" class="h-auto max-h-12 w-auto" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=640&amp;q=75 1x, /_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=828&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Fmics-logo.png&amp;w=828&amp;q=75"/>
+</div>
+<div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+<img alt="BSI ISMS-AC ISO27001 認証マーク（IS 793656）" loading="lazy" width="257" height="182" decoding="async" data-nimg="1" class="h-auto max-h-full w-auto" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Fiso27001-bsi.png&amp;w=640&amp;q=75"/>
+</div>
+<p class="text-left text-xs leading-relaxed text-muted">メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-border bg-surface">
+<div class="mx-auto max-w-6xl px-6 py-14">
+<img alt="ケア24ジャパン ロゴ" loading="lazy" width="320" height="120" decoding="async" data-nimg="1" class="h-auto w-32" style="color:transparent" srcSet="/_next/image?url=%2Fimages%2Flogo.png&amp;w=384&amp;q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75 2x" src="/_next/image?url=%2Fimages%2Flogo.png&amp;w=640&amp;q=75"/>
+<p class="mt-4 max-w-xl text-sm leading-relaxed text-body">Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。</p>
+<nav class="mt-8">
+<ul class="-ml-4 flex flex-wrap items-center gap-2">
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/">ホーム</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/#service-details">サービス内容</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/service-flow">ご利用の流れ</a>
+</li>
+<li>
+<a class="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary" href="/pricing">ご利用料金</a>
+</li>
+</ul>
+</nav>
+<ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/company">運営会社</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/privacy">プライバシーポリシー</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/tokushoho">特定商取引法に基づく表記</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-users">利用規約（ご利用者様向け）</a>
+</li>
+<li>
+<a class="text-xs text-muted transition hover:text-primary" href="/terms-for-care-supporters">利用規約（ケアサポーター向け）</a>
+</li>
+</ul>
+</div>
+<div class="border-t border-border">
+<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+<p class="text-xs text-muted">© 2026 Care 24 Japan. All rights reserved.</p>
+<button type="button" class="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary" aria-label="Switch to English">
+<span class="text-muted">EN</span>
+<span class="text-border">/</span>
+<span class="font-bold text-primary">JP</span>
+</button>
+</div>
+</div>
+</footer>
+</body>
+</html>
