@@ -2,8 +2,8 @@ import "server-only";
 
 import { createClient, type AtlasClient } from "@latellu/atlas-sdk";
 import { cache } from "react";
-import { shapePageBlocks } from "./merge";
-import type { CmsBlock, RawPageResponse } from "./types";
+import { shapePageBlocks, shapePageMeta } from "./merge";
+import type { CmsBlock, PageMeta, RawPageResponse } from "./types";
 
 /**
  * Every render hits this, so a hang here is a hang for every visitor —
@@ -48,8 +48,12 @@ const NO_STORE_FETCH_TIMEOUT_MS = 8_000;
 /**
  * Delivery client. `cache: "no-store"` on purpose — this is NOT SSG. Content
  * editors publish through the Atlas dashboard and expect the site to reflect
- * it without a rebuild/redeploy. (See architecture-plan.json#cache_policy for
- * the discarded ISR alternative and why it was rejected for this project.)
+ * it without a rebuild/redeploy. ISR (`revalidate: N`) was considered and
+ * rejected: it would still serve a stale page for up to N seconds after a
+ * publish, and Atlas has no publish webhook wired up here to drive
+ * on-demand revalidation instead — `no-store` is the only policy that
+ * guarantees "reflects the CMS immediately" with the infrastructure this
+ * project actually has.
  *
  * Also attaches the timeout above. The SDK's `raw.get` already passes its own
  * `AbortSignal.timeout(...)` in via `init.signal` (see NO_STORE_FETCH_TIMEOUT_MS
@@ -115,36 +119,66 @@ function getAtlasClient(): AtlasClient<Record<string, unknown>> | null {
 }
 
 /**
- * Fetches a page's blocks in both locales, merged and ready for a
- * `features/cms/*.ts` loader to shape into its page's constants-compatible
- * type. Returns `null` on ANY failure (network error, non-2xx, malformed
- * page, page not found) — never throws — so the caller can fall back to
- * `constants/*.ts` unconditionally.
+ * Fetches the raw `GET /pages/<slug>` body ONCE, shared by both
+ * `getPageBlocks` and `getPageMeta` below. Returns `null` on ANY failure
+ * (network error, non-2xx, malformed page, page not found) — never throws —
+ * so both callers fall back to `constants/*.ts` unconditionally via the same
+ * signal.
  */
-async function fetchPageBlocks(slug: string): Promise<CmsBlock[] | null> {
+async function fetchRawPage(slug: string): Promise<RawPageResponse | null> {
   const atlas = getAtlasClient();
   if (!atlas) return null;
 
   try {
     const { data: page } = await atlas.raw.get<RawPageResponse>(`/pages/${slug}`);
-    // Everything from here on is pure and lives in ./merge so it can be
-    // tested without a bundler — see the header comment there.
-    return shapePageBlocks(page);
+    return page;
   } catch (error) {
     // Atlas down / key misconfigured / timed out (see NO_STORE_FETCH_TIMEOUT_MS)
     // / page not yet created — never throw out of a loader; callers fall back
     // to constants/*.ts. Tagged "failure" (not "unexpected-content" — see
     // reportUnexpectedContent below) because the fetch itself didn't succeed.
-    console.error(`[cms:fallback:failure] getPageBlocks("${slug}") failed, falling back:`, error);
+    console.error(`[cms:fallback:failure] getRawPage("${slug}") failed, falling back:`, error);
     return null;
   }
 }
 
 /**
- * Deduped per-render: several components on the same page can call
- * `getPageBlocks("home")` and only trigger one fetch.
+ * Deduped per-render: `getPageBlocks` and `getPageMeta` for the same slug in
+ * one render share this single cached fetch, so two calls (e.g. a layout
+ * reading metadata and a page reading blocks) issue exactly one HTTP
+ * request — mirroring the dedupe pattern documented at
+ * app/[lang]/layout.tsx:77-99.
+ */
+const getRawPage = cache(fetchRawPage);
+
+async function fetchPageBlocks(slug: string): Promise<CmsBlock[] | null> {
+  // Everything from here on is pure and lives in ./merge so it can be
+  // tested without a bundler — see the header comment there.
+  return shapePageBlocks(await getRawPage(slug));
+}
+
+async function fetchPageMeta(slug: string): Promise<PageMeta | null> {
+  return shapePageMeta(await getRawPage(slug));
+}
+
+/**
+ * Fetches a page's blocks in both locales, merged and ready for a
+ * `features/cms/*.ts` loader to shape into its page's constants-compatible
+ * type. Returns `null` on ANY failure — see `fetchRawPage` above.
  */
 export const getPageBlocks = cache(fetchPageBlocks);
+
+/**
+ * Fetches a page's SEO metadata in both locales, merged and ready for
+ * `features/seo/pageMetadata.ts` to shape into a route's `Metadata`. Parallel
+ * to `getPageBlocks` above, sharing the same underlying fetch via
+ * `getRawPage`. A second loader (ST-03) rather than a change to
+ * `getPageBlocks`'s return shape: widening that shape to also carry `seo`
+ * would have rippled into every caller of `getPageBlocks` even though most
+ * of them never touch `seo`. Returns `null` on ANY failure — see
+ * `fetchRawPage` above.
+ */
+export const getPageMeta = cache(fetchPageMeta);
 
 /**
  * One process-lifetime warning per slug — see reportUnexpectedContent below.
