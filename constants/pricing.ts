@@ -12,20 +12,22 @@ import type { Bilingual } from "./copy";
 import type { Lang } from "@/features/lang/i18n";
 
 /**
- * Format an integer amount of yen as e.g. `¥3,500`.
+ * Format an integer amount of yen for display — `¥3,500` on `ja`, `JPY 3,500`
+ * on `en` (client decision, Aug 2026: the EN site reads by English currency
+ * convention, not by mirroring the JA symbol).
  *
- * Locale-aware in its plumbing only: for every amount this site renders,
- * `ja-JP` and `en-US` group digits identically (no amount here reaches the
- * thousand-separator edge cases where the two locales diverge), so the
- * OUTPUT DOES NOT MOVE by making this function take `lang`. Do NOT switch to
+ * The digit grouping itself is locale-aware in its plumbing only: for every
+ * amount this site renders, `ja-JP` and `en-US` group digits identically (no
+ * amount here reaches the thousand-separator edge cases where the two
+ * locales diverge), so only the currency marker moves between the two
+ * branches, never the digits. Do NOT switch the `ja` branch to
  * `Intl.NumberFormat(..., { style: "currency", currency: "JPY" })` —
- * `ja-JP` emits the full-width ￥ (U+FFE5) and would change every price on
- * every JA page. Whether the EN site should read `JPY 3,740` instead of
- * `¥3,740` is a content decision, not an engineering one — see ST-G2's
- * completion report.
+ * `ja-JP` emits the full-width ￥ (U+FFE5), not the halfwidth ¥ this site has
+ * always used, and would change every price on every JA page.
  */
 export function formatYen(amount: number, lang: Lang): string {
-  return `¥${amount.toLocaleString(lang === "ja" ? "ja-JP" : "en-US")}`;
+  const grouped = amount.toLocaleString(lang === "ja" ? "ja-JP" : "en-US");
+  return lang === "ja" ? `¥${grouped}` : `JPY ${grouped}`;
 }
 
 /**

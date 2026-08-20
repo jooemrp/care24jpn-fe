@@ -203,13 +203,18 @@ export const home = {
       ja: "幅広くサポートするコースです。",
       en: "This course provides comprehensive support.",
     } satisfies Bilingual,
+    // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en" —
+    // matches `formatYen`'s EN output on the rates table, ST-U1). Synced
+    // with the same 2 fields' Atlas values (home page, home-care-course
+    // block, en.price_amount / en.price_tax_included). JA amounts are
+    // untouched — this is an EN-reader-facing decision only.
     price: {
       label: { ja: "日中基本料金", en: "Daytime base rate" } satisfies Bilingual,
       hours: { ja: "（9:00〜18:00）", en: " (9:00–18:00)" } satisfies Bilingual,
-      amount: { ja: "3,400円", en: "¥3,400" } satisfies Bilingual,
+      amount: { ja: "3,400円", en: "JPY 3,400" } satisfies Bilingual,
       unit: { ja: "/時間", en: "/hour" } satisfies Bilingual,
       taxNote: { ja: "税抜", en: "excl. tax" } satisfies Bilingual,
-      taxIncluded: { ja: "税込価格 3,740円", en: "Tax included ¥3,740" } satisfies Bilingual,
+      taxIncluded: { ja: "税込価格 3,740円", en: "Tax included JPY 3,740" } satisfies Bilingual,
     },
     fees: [
       {
@@ -218,12 +223,15 @@ export const home = {
       },
       {
         label: { ja: "指名料", en: "Nomination fee" } satisfies Bilingual,
-        value: { ja: "330円/時間", en: "¥330/hour" } satisfies Bilingual,
+        // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en"),
+        // synced with the same field's Atlas value (home page,
+        // home-care-course-fee block, en.value).
+        value: { ja: "330円/時間", en: "JPY 330/hour" } satisfies Bilingual,
         note: { ja: "※定期の方は指名無料", en: "*Free for regular clients" } satisfies Bilingual,
       },
       {
         label: { ja: "往復交通費", en: "Round-trip transport" } satisfies Bilingual,
-        value: { ja: "別途990円", en: "¥990 separately" } satisfies Bilingual,
+        value: { ja: "別途990円", en: "JPY 990 separately" } satisfies Bilingual,
       },
     ],
     cards: [
@@ -300,15 +308,18 @@ export const home = {
       en: "For those who require medical care, we can arrange a registered nurse.",
     } satisfies Bilingual,
     badge: { ja: "看護コース", en: "Nursing course" } satisfies Bilingual,
+    // ST-U2 Tugas 3: ¥ -> JPY for EN readers (same decision as
+    // careCourse.price above). Synced with Atlas (home page,
+    // home-nursing-course block, en.price_amount / en.price_tax_included).
     price: {
       label: { ja: "日中基本料金", en: "Daytime base rate" } satisfies Bilingual,
       // Rendered inline after the label. JA needs no space (the bracket is
       // full-width); EN carries its own leading space.
       hours: { ja: "（9:00〜18:00）", en: " (9:00–18:00)" } satisfies Bilingual,
-      amount: { ja: "6,000円", en: "¥6,000" } satisfies Bilingual,
+      amount: { ja: "6,000円", en: "JPY 6,000" } satisfies Bilingual,
       unit: { ja: "/時間", en: "/hour" } satisfies Bilingual,
       taxNote: { ja: "税抜", en: "excl. tax" } satisfies Bilingual,
-      taxIncluded: { ja: "税込価格 6,600円", en: "Tax included ¥6,600" } satisfies Bilingual,
+      taxIncluded: { ja: "税込価格 6,600円", en: "Tax included JPY 6,600" } satisfies Bilingual,
     },
     note: {
       ja: "※詳しくは料金表をご覧ください。",
@@ -917,7 +928,9 @@ export const company = {
     },
     {
       label: { ja: "資本金", en: "Capital" } satisfies Bilingual,
-      value: { ja: "1億円", en: "¥100 million" } satisfies Bilingual,
+      // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en").
+      // Synced with Atlas (company page, company-row block, en.value).
+      value: { ja: "1億円", en: "JPY 100 million" } satisfies Bilingual,
     },
     {
       label: { ja: "代表者", en: "Representative" } satisfies Bilingual,
