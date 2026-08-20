@@ -1,10 +1,39 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
 import { getHome } from "@/features/cms/home";
 import { getSite } from "@/features/cms/site";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
+
+// Only route under app/[lang]/** without its own generateMetadata before
+// this — it inherited app/[lang]/layout.tsx's `title.default` (brand name +
+// tagline only), so it never carried a per-page description or the
+// og:image/og:url/og:locale:alternate every other route gets from
+// `pageMetadata()` (audit finding #15). `constants/seo.ts#home`'s
+// title/description are copied VERBATIM from what the layout renders today
+// (`${brand.name} — ${brand.tagline[lang]}` / `brand.tagline[lang]`), so
+// this call is additive: it fills in alternates/openGraph without moving
+// the rendered title or description.
+//
+// `title.absolute` is required here, not a plain string: the root layout
+// sets `title.template = "%s | ${brand.name}"`, and `home.title` already
+// ends with the brand name ("Care 24 Japan — …"), so a templated title would
+// double-append it ("… | Care 24 Japan | Care 24 Japan"). `absolute`
+// bypasses the parent template entirely (see node_modules/next/dist/docs/
+// 01-app/03-api-reference/04-functions/generate-metadata.md:291-344), which
+// is exactly "ignore the template, use this string as-is" — the same
+// contract the layout's own `title.default` already relies on.
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLang(lang)) notFound();
+  const meta = await pageMetadata({ key: "home", lang });
+  return { ...meta, title: { absolute: meta.title as string } };
+}
 
 /** "9:00" -> 540 (minutes since midnight). */
 function toMinutes(clock: string): number {
@@ -22,6 +51,13 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const [home, site] = await Promise.all([getHome(), getSite()]);
+  // Computed against the raw, CMS-editable href — localizeHref() is called
+  // separately below, at the ApplyBanner call sites. That's safe: localizeHref()
+  // is a no-op on anything with a scheme (see its own doc comment), so this
+  // externality check gives the same answer whether it runs before or after
+  // localization. Checking the raw value here just keeps this line next to
+  // the CMS field it's actually describing.
+  const userHrefIsExternal = /^https?:\/\//.test(home.apply.user.href);
   const staffHrefIsExternal = /^https?:\/\//.test(home.apply.staff.href);
 
   return (
@@ -65,13 +101,13 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
-                href={localizeHref("/service-flow", lang)}
+                href={localizeHref(home.hero.ctaPrimaryHref, lang)}
                 className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
               >
                 {t(home.hero.ctaPrimary, lang)}
               </Link>
               <Link
-                href={localizeHref("/pricing", lang)}
+                href={localizeHref(home.hero.ctaSecondaryHref, lang)}
                 className="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light"
               >
                 {t(home.hero.ctaSecondary, lang)}
@@ -79,25 +115,31 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             </div>
 
             {/* Trust strip — the three reasons families choose us */}
-            <ul className="mt-10 flex flex-wrap gap-2.5">
+            <p className="mt-10 text-sm font-semibold text-body animate-fade-up">
+              {t(home.values.heading, lang)}
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2.5">
               {home.values.items.map((item, i) => (
                 <li
                   key={i}
-                  className="flex items-center gap-2 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up"
+                  className="flex flex-col gap-0.5 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up"
                   style={{ animationDelay: `${120 + i * 80}ms` }}
                 >
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
-                    <svg viewBox="0 0 16 16" fill="none" className="h-2.5 w-2.5" aria-hidden="true">
-                      <path
-                        d="M3 8l3.5 3.5L13 4.5"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                  <span className="flex items-center gap-2">
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
+                      <svg viewBox="0 0 16 16" fill="none" className="h-2.5 w-2.5" aria-hidden="true">
+                        <path
+                          d="M3 8l3.5 3.5L13 4.5"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    {t(item.title, lang)}
                   </span>
-                  {t(item.title, lang)}
+                  <span className="pl-6 text-xs font-normal text-body">{t(item.body, lang)}</span>
                 </li>
               ))}
             </ul>
@@ -356,6 +398,9 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
                       {t(home.examples.scheduleLabel, lang)}
                     </p>
                     <p className="text-lg font-bold tabular-nums text-heading">
+                      <span className="mr-1 text-lg font-normal text-muted">
+                        {t(home.examples.hoursLabel, lang)}
+                      </span>
                       {dayStart}–{dayEnd}
                       <span className="ml-2 text-lg font-normal text-muted">
                         {t(c.hours, lang)}
@@ -403,7 +448,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
       {/* Service flow — vertical timeline: numbered nodes on a dashed rail so
           the sequence reads top-to-bottom in one glance; title sits beside the
-          node, description underneath, line-art icon floats at the right. */}
+          node, description underneath. No per-step icon — `icon` is a CMS
+          select field with no icon set in this repo to render it against. */}
       <Section surface heading={home.flow.heading} lang={lang}>
         <ol className="mx-auto max-w-2xl">
           {home.flow.steps.map((step, i) => {
@@ -423,7 +469,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
                 )}
                 <span className="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
                   <span className="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">
-                    STEP
+                    {t(home.flow.stepLabel, lang)}
                   </span>
                   <span className="mt-0.5 text-base font-bold leading-none tabular-nums">
                     {step.number}
@@ -448,6 +494,17 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           because the client's real registration URL is still pending and may
           end up pointing off-site.
 
+          `href` is passed through `localizeHref()` here, at the call site —
+          same as every other Link on this page — rather than inside
+          `ApplyBanner` itself. `ApplyBanner` decides its own external-vs-
+          internal rendering from the SAME href value it receives (external
+          checked above from the raw CMS field; `#anchor` checked inside
+          `ApplyBanner` itself), and `localizeHref()` is a no-op on both of
+          those shapes (scheme'd URLs and pure fragments), so localizing
+          before or after those checks is equivalent. Localizing here keeps
+          `ApplyBanner` a plain presentational component that takes whatever
+          href string it's given, instead of also needing a `lang` prop.
+
           The two explicit rows are load-bearing, not decoration: each card
           spans them via `grid-rows-subgrid`, which is what keeps the audience
           lines and the action lines aligned across the pair. Removing them
@@ -455,14 +512,15 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       <Section surface lang={lang}>
         <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
           <ApplyBanner
-            href="https://portal.care24.jp/register"
+            href={localizeHref(home.apply.user.href, lang)}
             eyebrow={t(home.apply.user.eyebrow, lang)}
             label={t(home.apply.user.label, lang)}
             tone="accent"
+            external={userHrefIsExternal}
             delay={0}
           />
           <ApplyBanner
-            href="https://portal.care24.jp/caregiver"
+            href={localizeHref(home.apply.staff.href, lang)}
             eyebrow={t(home.apply.staff.eyebrow, lang)}
             label={t(home.apply.staff.label, lang)}
             tone="primary"
@@ -479,7 +537,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           className="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up scroll-mt-36"
         >
           <p className="text-sm font-medium text-primary">
-            ＼ {t(home.contact.leadIn, lang)} ／
+            {t(home.contact.leadInOrnamentStart, lang)} {t(home.contact.leadIn, lang)} {t(home.contact.leadInOrnamentEnd, lang)}
           </p>
           <h2 className="mt-2 text-2xl md:text-3xl font-bold text-heading">
             {t(home.contact.heading, lang)}
@@ -494,9 +552,10 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
                 <PhoneIcon />
                 {home.contact.phone}
               </a>
+              <p className="mt-1 text-sm text-muted">{t(home.contact.hours, lang)}</p>
             </div>
             <Link
-              href={localizeHref("/service-flow", lang)}
+              href={localizeHref(home.contact.ctaHref, lang)}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
             >
               {t(site.cta.contact, lang)}
@@ -508,7 +567,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
               <Image
                 src={home.contact.micsLogo}
-                alt="mics — MedicalInformatics Co.,Ltd."
+                alt={t(home.contact.micsLogoAlt, lang)}
                 width={401}
                 height={140}
                 className="h-auto max-h-12 w-auto"
@@ -517,7 +576,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
               <Image
                 src={home.contact.isoLogo}
-                alt="BSI ISMS-AC ISO27001 認証マーク（IS 793656）"
+                alt={t(home.contact.isoLogoAlt, lang)}
                 width={257}
                 height={182}
                 className="h-auto max-h-full w-auto"
