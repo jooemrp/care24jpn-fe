@@ -241,6 +241,120 @@ async function main(): Promise<void> {
     ]);
   });
 
+  // --- ST-L1: six fidelity gaps between htmlToBlocks/blocksToHtml and -----
+  // --- real Tiptap-authored HTML. Each fixture below was run against the --
+  // --- pre-fix parser and confirmed RED (assertion failure) before the ----
+  // --- parser fix landed — these are regression tests, not new coverage --
+  // --- for behaviour that already worked. -----------------------------
+
+  test("gap 1: <th> inside <tbody> with no <thead> is recovered as the header row, not lost", () => {
+    const html =
+      '<table><tbody><tr><th colspan="1" rowspan="1" colwidth="83">H1</th>' +
+      '<th colspan="1" rowspan="1">H2</th></tr><tr><td>a</td><td>b</td></tr></tbody></table>';
+    assert.deepEqual(htmlToBlocks(html), [{ type: "table", rows: [["H1", "H2"], ["a", "b"]] }]);
+  });
+
+  test("gap 2: nested <ul>/<ol> inside <li> flattens to one li block per <li>, using the PARENT's list kind, no leaked markup", () => {
+    const html =
+      "<ul><li><p>Parent</p><ol><li><p>Child 1</p></li><li><p>Child 2</p></li></ol></li>" +
+      "<li><p>Second top item</p></li></ul>";
+    const blocks = htmlToBlocks(html);
+    assert.deepEqual(blocks, [
+      { type: "li", list: "ul", text: "Parent" },
+      { type: "li", list: "ul", text: "Child 1" },
+      { type: "li", list: "ul", text: "Child 2" },
+      { type: "li", list: "ul", text: "Second top item" },
+    ]);
+    for (const block of blocks) {
+      assert.doesNotMatch(
+        (block as { text: string }).text,
+        /[<>]/,
+        "no raw markup may leak into a flattened li's text",
+      );
+    }
+  });
+
+  test("gap 3: &nbsp;/&mdash;/numeric entities decode; &amp;lt; decodes to the literal &lt;, not <", () => {
+    assert.deepEqual(
+      htmlToBlocks("<p>Rp&nbsp;1.000 &mdash; ok &amp;lt; &#65; &#x42;</p>"),
+      [{ type: "p", text: "Rp 1.000 — ok &lt; A B" }],
+    );
+  });
+
+  test("gap 4: colspan/rowspan >= 2 become object cells; colspan=\"1\"/colwidth stay a plain string cell", () => {
+    const withSpan =
+      '<table><thead><tr><th colspan="2">Merged Header</th></tr></thead>' +
+      '<tbody><tr><td rowspan="2">A</td><td>B</td></tr><tr><td>C</td></tr></tbody></table>';
+    assert.deepEqual(htmlToBlocks(withSpan), [
+      {
+        type: "table",
+        rows: [
+          [{ text: "Merged Header", colspan: 2 }],
+          [{ text: "A", rowspan: 2 }, "B"],
+          ["C"],
+        ],
+      },
+    ]);
+
+    const noOpSpan =
+      '<table><tbody><tr><td colspan="1" rowspan="1" colwidth="120">plain</td></tr></tbody></table>';
+    assert.deepEqual(htmlToBlocks(noOpSpan), [{ type: "table", rows: [["plain"]] }]);
+  });
+
+  test("gap 4b: an object table cell round-trips through blocksToHtml with its colspan/rowspan attribute", () => {
+    const sample: LegalBlock[] = [
+      {
+        type: "table",
+        rows: [
+          [{ text: "Merged", colspan: 2 }],
+          [{ text: "A", rowspan: 2 }, "B"],
+          ["C"],
+        ],
+      },
+    ];
+    const html = blocksToHtml(sample);
+    assert.match(html, /<th colspan="2">Merged<\/th>/);
+    assert.match(html, /<td rowspan="2">A<\/td>/);
+    assert.deepEqual(htmlToBlocks(html), sample);
+  });
+
+  test("gap 5: <h1> and <h4>-<h6> are recognized as their own heading type, not degraded to <p>", () => {
+    assert.deepEqual(
+      htmlToBlocks("<h1>Top Title</h1><p>intro</p><h4>Sub</h4><h5>SubSub</h5><h6>Deepest</h6>"),
+      [
+        { type: "h1", text: "Top Title" },
+        { type: "p", text: "intro" },
+        { type: "h4", text: "Sub" },
+        { type: "h5", text: "SubSub" },
+        { type: "h6", text: "Deepest" },
+      ],
+    );
+  });
+
+  test("gap 5b: h1/h4/h5/h6 blocks round-trip through blocksToHtml", () => {
+    const sample: LegalBlock[] = [
+      { type: "h1", text: "Title" },
+      { type: "h4", text: "Four" },
+      { type: "h5", text: "Five" },
+      { type: "h6", text: "Six" },
+    ];
+    assert.deepEqual(htmlToBlocks(blocksToHtml(sample)), sample);
+  });
+
+  test("gap 6: blocksToHtml serializes [label](href) markdown link syntax to a real <a href> element", () => {
+    const html = blocksToHtml([{ type: "p", text: "Lihat [halaman harga](/pricing) kami." }]);
+    assert.match(html, /<p>Lihat <a href="\/pricing">halaman harga<\/a> kami\.<\/p>/);
+    assert.deepEqual(htmlToBlocks(html), [
+      { type: "p", text: "Lihat [halaman harga](/pricing) kami." },
+    ]);
+  });
+
+  test("gap 6b: an unsafe href inside [label](href) serializes as plain label text, never a link", () => {
+    const html = blocksToHtml([{ type: "p", text: "Klik [ini](data:text/html,evil) sekarang." }]);
+    assert.doesNotMatch(html, /<a /);
+    assert.match(html, /Klik ini sekarang\./);
+  });
+
   // --- Render proof: LegalDocPage.tsx, not just the parser -----------------
   //
   // Everything above proves legal-html.ts's string transform. These tests

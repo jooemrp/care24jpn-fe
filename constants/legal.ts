@@ -42,10 +42,31 @@
 
 import type { Bilingual } from "./copy";
 
+/**
+ * A table cell: either a plain string (every cell in every table literal
+ * below, forever) or `{ text, colspan?, rowspan? }` for a cell read back
+ * from a Tiptap-authored table that carries a real colspan/rowspan
+ * attribute (see `features/cms/legal-html.ts#htmlToBlocks`).
+ *
+ * This is a UNION, not a replacement — do not convert any table literal in
+ * this file to the object form. `compensation.ja` (below) emulates a
+ * vertical merge across rows with four empty-string cells in column 0,
+ * while `compensation.en` emulates the SAME real-world table by repeating
+ * the category label on every row instead. Converting either encoding to a
+ * real colspan/rowspan would REMOVE `<td>` elements from the ja table and
+ * REMOVE repeated label text from the en table — i.e. it would change what
+ * a reader actually sees on screen, which the parity gate covers for every
+ * legal page. The object form exists only for content that arrives from
+ * Tiptap already carrying a real colspan/rowspan attribute; it is never
+ * produced by hand-authoring a literal here. Do not "finish the job" by
+ * migrating the string cells below to this shape.
+ */
+export type LegalTableCell = string | { text: string; colspan?: number; rowspan?: number };
+
 export type LegalBlock =
-  | { type: "h2" | "h3" | "p"; text: string }
+  | { type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"; text: string }
   | { type: "li"; list: "ul" | "ol"; text: string }
-  | { type: "table"; rows: string[][] };
+  | { type: "table"; rows: LegalTableCell[][] };
 
 export type LegalDoc = {
   heading: Bilingual;
