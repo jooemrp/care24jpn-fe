@@ -1,0 +1,1867 @@
+{
+  "generatedAt": "2026-08-20T17:34:27.805Z",
+  "pages": [
+    {
+      "slug": "site",
+      "seo": {
+        "title": "サイト共通（ヘッダー・フッター）",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Site chrome (header & footer)",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "footer-legal-link",
+          "data": {
+            "href": {
+              "ja": "/company",
+              "en": "/company"
+            },
+            "label": {
+              "ja": "運営会社",
+              "en": "Operating Company"
+            }
+          }
+        },
+        {
+          "type": "footer-legal-link",
+          "data": {
+            "href": {
+              "ja": "/privacy",
+              "en": "/privacy"
+            },
+            "label": {
+              "ja": "プライバシーポリシー",
+              "en": "Privacy Policy"
+            }
+          }
+        },
+        {
+          "type": "footer-legal-link",
+          "data": {
+            "href": {
+              "ja": "/tokushoho",
+              "en": "/tokushoho"
+            },
+            "use_legal_heading": {
+              "ja": "tokushoho",
+              "en": "tokushoho"
+            }
+          }
+        },
+        {
+          "type": "footer-legal-link",
+          "data": {
+            "href": {
+              "ja": "/terms-for-users",
+              "en": "/terms-for-users"
+            },
+            "label": {
+              "ja": "利用規約（ご利用者様向け）",
+              "en": "Terms & Conditions (For Users)"
+            }
+          }
+        },
+        {
+          "type": "footer-legal-link",
+          "data": {
+            "href": {
+              "ja": "/terms-for-care-supporters",
+              "en": "/terms-for-care-supporters"
+            },
+            "label": {
+              "ja": "利用規約（ケアサポーター向け）",
+              "en": "Terms & Conditions (For Care Supporters)"
+            }
+          }
+        },
+        {
+          "type": "nav-item",
+          "data": {
+            "href": {
+              "ja": "/",
+              "en": "/"
+            },
+            "label": {
+              "ja": "ホーム",
+              "en": "Home"
+            }
+          }
+        },
+        {
+          "type": "nav-item",
+          "data": {
+            "href": {
+              "ja": "/#service-details",
+              "en": "/#service-details"
+            },
+            "label": {
+              "ja": "サービス内容",
+              "en": "Service Details"
+            }
+          }
+        },
+        {
+          "type": "nav-item",
+          "data": {
+            "href": {
+              "ja": "/service-flow",
+              "en": "/service-flow"
+            },
+            "label": {
+              "ja": "ご利用の流れ",
+              "en": "How to Use Our Services"
+            }
+          }
+        },
+        {
+          "type": "nav-item",
+          "data": {
+            "href": {
+              "ja": "/pricing",
+              "en": "/pricing"
+            },
+            "label": {
+              "ja": "ご利用料金",
+              "en": "Usage Fees"
+            }
+          }
+        },
+        {
+          "type": "site-brand",
+          "data": {
+            "logo": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6bfe-7dc8-925d-9e5d986a4ffe-logo.png",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6bfe-7dc8-925d-9e5d986a4ffe-logo.png"
+            },
+            "logo_alt": {
+              "ja": "ケア24ジャパン ロゴ",
+              "en": "Care 24 Japan logo"
+            },
+            "name": {
+              "ja": "Care 24 Japan",
+              "en": "Care 24 Japan"
+            },
+            "tagline": {
+              "ja": "ご自宅で、心安らぐ24時間の在宅ケアを",
+              "en": "Premium 24-hour in-home care"
+            }
+          }
+        },
+        {
+          "type": "site-contact-phone",
+          "data": {
+            "tel": {
+              "ja": "0120001224",
+              "en": "0120001224"
+            },
+            "note": {
+              "ja": "24時間365日、お気軽にお問い合わせください。",
+              "en": "Contact us 24 hours a day, 365 days a year."
+            },
+            "display": {
+              "ja": "0120-001-224",
+              "en": "0120-001-224"
+            }
+          }
+        },
+        {
+          "type": "site-cta",
+          "data": {
+            "contact": {
+              "ja": "お問い合わせ",
+              "en": "Contact us"
+            },
+            "primary": {
+              "ja": "無料相談を予約する",
+              "en": "Book a free consultation"
+            },
+            "secondary": {
+              "ja": "料金を見る",
+              "en": "View pricing"
+            }
+          }
+        },
+        {
+          "type": "site-footer",
+          "data": {
+            "legal": {
+              "ja": "© 2026 Care 24 Japan. All rights reserved.",
+              "en": "© 2026 Care 24 Japan. All rights reserved."
+            },
+            "description": {
+              "ja": "Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。",
+              "en": "Premium 24-hour in-home elderly care across Japan."
+            }
+          }
+        },
+        {
+          "type": "site-ui-labels",
+          "data": {
+            "toc_label": {
+              "ja": "目次",
+              "en": "Table of Contents"
+            },
+            "lang_short_en": {
+              "ja": "EN",
+              "en": "EN"
+            },
+            "lang_short_ja": {
+              "ja": "JP",
+              "en": "JP"
+            },
+            "lang_toggle_label": {
+              "ja": "Switch to English",
+              "en": "日本語に切り替える"
+            },
+            "menu_toggle_label": {
+              "ja": "メニュー",
+              "en": "Menu"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "home",
+      "seo": {
+        "title": "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care 24 Japan — Premium 24-hour in-home care",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "home-apply",
+          "data": {
+            "user_href": {
+              "ja": "https://portal.care24.jp/register",
+              "en": "https://portal.care24.jp/register"
+            },
+            "staff_href": {
+              "ja": "https://portal.care24.jp/caregiver",
+              "en": "https://portal.care24.jp/caregiver"
+            },
+            "user_label": {
+              "ja": "お申込みはこちらから",
+              "en": "Apply here"
+            },
+            "staff_label": {
+              "ja": "登録はこちらから",
+              "en": "Register here"
+            },
+            "user_eyebrow": {
+              "ja": "サービスをご利用されたい方",
+              "en": "For those who wish to use our service"
+            },
+            "staff_eyebrow": {
+              "ja": "お仕事を希望される方",
+              "en": "For those seeking employment"
+            }
+          }
+        },
+        {
+          "type": "home-care-course",
+          "data": {
+            "badge": {
+              "ja": "介護コース",
+              "en": "Caregiving course"
+            },
+            "lead_in": {
+              "ja": "介護保険では対応できない\n介護・生活支援を一流の介護士がサポート",
+              "en": "Top-class caregivers support the nursing and daily-living care that long-term care insurance cannot cover."
+            },
+            "tagline": {
+              "ja": "介護士資格を保有したスタッフが身の回りのケアや見守り、外出の付き添いなど",
+              "en": "Staff members holding caregiving qualifications provide personal care, supervision, and accompany residents on outings."
+            },
+            "price_unit": {
+              "ja": "/時間",
+              "en": "/hour"
+            },
+            "price_hours": {
+              "ja": "（9:00〜18:00）",
+              "en": " (9:00–18:00)"
+            },
+            "price_label": {
+              "ja": "日中基本料金",
+              "en": "Daytime base rate"
+            },
+            "tagline_sub": {
+              "ja": "幅広くサポートするコースです。",
+              "en": "This course provides comprehensive support."
+            },
+            "price_amount": {
+              "ja": "3,400円",
+              "en": "¥3,400"
+            },
+            "price_tax_note": {
+              "ja": "税抜",
+              "en": "excl. tax"
+            },
+            "price_tax_included": {
+              "ja": "税込価格 3,740円",
+              "en": "Tax included ¥3,740"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-card",
+          "data": {
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg"
+            },
+            "image_alt": {
+              "ja": "ご自宅で高齢女性に寄り添う介護スタッフ",
+              "en": "A caregiver assisting an elderly woman at home"
+            },
+            "items": {
+              "ja": "移動介助\n食事介助\n入浴・清拭介助\n口腔ケア\n排泄介助\n着替えのお手伝い\n服薬の管理\nケアマネジャーとの連携",
+              "en": "Mobility assistance\nMeal assistance\nBathing and wiping assistance\nOral care\nToileting assistance\nHelp with dressing\nMedication management\nCoordination with care managers"
+            },
+            "title": {
+              "ja": "ご自宅内の介護",
+              "en": "In-home caregiving"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-card",
+          "data": {
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg"
+            },
+            "image_alt": {
+              "ja": "ご自宅でリビングを掃除するスタッフ",
+              "en": "A staff member cleaning a living room at home"
+            },
+            "items": {
+              "ja": "掃除\n洗濯\n話し相手\n調理\nペットの世話\n庭の手入れ\n窓拭き",
+              "en": "Cleaning\nLaundry\nCompanionship\nCooking\nPet care\nGarden care\nWindow cleaning"
+            },
+            "title": {
+              "ja": "ご自宅内の家事",
+              "en": "In-home housework"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-card",
+          "data": {
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg"
+            },
+            "image_alt": {
+              "ja": "施設で車椅子の高齢男性に寄り添う介護スタッフ",
+              "en": "A caregiver assisting an elderly man in a wheelchair at a facility"
+            },
+            "items": {
+              "ja": "日中の居室介護支援\n施設内外の移動介助\n夜間の見守り\n話し相手\n入浴サポート\n居室のお掃除\n買い物代行",
+              "en": "Daytime in-room care support\nMobility assistance in and out of the facility\nOvernight supervision\nCompanionship\nBathing support\nRoom cleaning\nShopping on your behalf"
+            },
+            "title": {
+              "ja": "病院・施設内の介護",
+              "en": "Hospital and facility caregiving"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-card",
+          "data": {
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg"
+            },
+            "image_alt": {
+              "ja": "車椅子の高齢女性の外出に付き添う介護スタッフ",
+              "en": "A caregiver accompanying an elderly woman in a wheelchair on an outing"
+            },
+            "items": {
+              "ja": "通院の行き帰りの介助\n診察内容の聞き取り\n薬の受け取り\nお散歩\nイベントへの出席\n買い物",
+              "en": "Assistance to and from medical appointments\nNoting down consultation details\nPicking up medication\nWalks\nAttending events\nShopping"
+            },
+            "title": {
+              "ja": "通院・外出の付き添い",
+              "en": "Hospital-visit and outing accompaniment"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-fee",
+          "data": {
+            "label": {
+              "ja": "最低利用時間",
+              "en": "Minimum usage"
+            },
+            "value": {
+              "ja": "2時間から",
+              "en": "From 2 hours"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-fee",
+          "data": {
+            "note": {
+              "ja": "※定期の方は指名無料",
+              "en": "*Free for regular clients"
+            },
+            "label": {
+              "ja": "指名料",
+              "en": "Nomination fee"
+            },
+            "value": {
+              "ja": "330円/時間",
+              "en": "¥330/hour"
+            }
+          }
+        },
+        {
+          "type": "home-care-course-fee",
+          "data": {
+            "label": {
+              "ja": "往復交通費",
+              "en": "Round-trip transport"
+            },
+            "value": {
+              "ja": "別途990円",
+              "en": "¥990 separately"
+            }
+          }
+        },
+        {
+          "type": "home-contact",
+          "data": {
+            "contact_cta_href": {
+              "ja": "/service-flow",
+              "en": "/service-flow"
+            },
+            "heading": {
+              "ja": "24時間365日お気軽にご相談ください",
+              "en": "Please feel free to contact us anytime, 24 hours a day, 365 days a year."
+            },
+            "hours": {
+              "ja": "【受付時間】平日 9:00〜18:00",
+              "en": "[Reception Hours] Weekdays 9:00 AM – 6:00 PM"
+            },
+            "isms": {
+              "ja": "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+              "en": "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS)."
+            },
+            "iso_logo": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6d36-7bcf-b507-256d246f0735-iso27001-bsi.png",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6d36-7bcf-b507-256d246f0735-iso27001-bsi.png"
+            },
+            "iso_logo_alt": {
+              "ja": "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
+              "en": "BSI ISMS-AC ISO27001 認証マーク（IS 793656）"
+            },
+            "lead_in": {
+              "ja": "ご相談は無料です",
+              "en": "Consultations are free of charge."
+            },
+            "lead_in_ornament_end": {
+              "ja": "／",
+              "en": "／"
+            },
+            "lead_in_ornament_start": {
+              "ja": "＼",
+              "en": "＼"
+            },
+            "mics_logo": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png"
+            },
+            "mics_logo_alt": {
+              "ja": "mics — MedicalInformatics Co.,Ltd.",
+              "en": "mics — MedicalInformatics Co.,Ltd."
+            }
+          }
+        },
+        {
+          "type": "home-example-case",
+          "data": {
+            "tone": {
+              "ja": "primary",
+              "en": "primary"
+            },
+            "hours": {
+              "ja": "8時間",
+              "en": "8 hours"
+            },
+            "label": {
+              "ja": "ケース1",
+              "en": "Case 1"
+            },
+            "title": {
+              "ja": "日中の見守り中心のご利用例",
+              "en": "Example of use: primarily daytime monitoring"
+            },
+            "request": {
+              "ja": "「仕事に行っている間、見守りをお願いしたい」",
+              "en": "“I would like you to look after them while I am at work.”"
+            },
+            "services": {
+              "ja": "話し相手\n近隣の散歩\n自宅の掃除\n買い物付き添い",
+              "en": "Conversation partner\nNeighborhood walks\nHouse cleaning\nShopping assistance"
+            },
+            "schedule_times": {
+              "ja": "9:00〜10:00\n10:00〜12:00\n12:00〜13:00\n13:00〜14:00\n14:00〜16:00\n16:00〜17:00",
+              "en": "9:00〜10:00\n10:00〜12:00\n12:00〜13:00\n13:00〜14:00\n14:00〜16:00\n16:00〜17:00"
+            },
+            "schedule_activities": {
+              "ja": "ご挨拶、お話、近隣のお散歩、休憩\nお食事サポート\nお掃除\n買い物付き添い\nお話\n夕飯見守り",
+              "en": "Greetings, conversations, walks around the neighborhood, and rest\nMeal support\nCleaning\nShopping escort\nConversation\nWatching over dinner"
+            }
+          }
+        },
+        {
+          "type": "home-example-case",
+          "data": {
+            "tone": {
+              "ja": "accent",
+              "en": "accent"
+            },
+            "hours": {
+              "ja": "5時間",
+              "en": "5 hours"
+            },
+            "label": {
+              "ja": "ケース2",
+              "en": "Case 2"
+            },
+            "title": {
+              "ja": "医療＋介護の見守りでのご利用例",
+              "en": "Example of use: medical and nursing care monitoring"
+            },
+            "request": {
+              "ja": "「胃瘻の主人の見守り」",
+              "en": "“Watching over the patient with a gastrostomy tube.”"
+            },
+            "services": {
+              "ja": "経管栄養\n見守り\nおむつ交換",
+              "en": "Tube feeding\nMonitoring\nDiaper changes"
+            },
+            "schedule_times": {
+              "ja": "9:00〜10:00\n10:00〜12:00\n12:00〜13:00\n13:00〜14:00",
+              "en": "9:00〜10:00\n10:00〜12:00\n12:00〜13:00\n13:00〜14:00"
+            },
+            "schedule_activities": {
+              "ja": "おむつ交換・経管栄養の準備\n経管栄養（胃ろう）の実施と食後の見守り\nおむつ交換と見守り\n状態確認・記録作成とご家族への報告",
+              "en": "Diaper change and tube-feeding preparation\nTube feeding (gastrostomy) and post-meal monitoring\nDiaper changing and supervision\nCondition check, record keeping, and report to family"
+            }
+          }
+        },
+        {
+          "type": "home-example-case",
+          "data": {
+            "tone": {
+              "ja": "primary",
+              "en": "primary"
+            },
+            "hours": {
+              "ja": "3時間",
+              "en": "3 hours"
+            },
+            "label": {
+              "ja": "ケース3",
+              "en": "Case 3"
+            },
+            "title": {
+              "ja": "外出同行でのご利用例",
+              "en": "Example of use: accompanying someone on an outing"
+            },
+            "request": {
+              "ja": "「病院の付き添いでバスで移動・診察の同行をしてほしい」",
+              "en": "“I need someone to accompany me to the hospital by bus and to the doctor's appointment.”"
+            },
+            "services": {
+              "ja": "着替え介助\n歩行見守り\n通院付き添い\nトイレ介助",
+              "en": "Help with changing clothes\nWalking supervision\nAccompaniment to appointments\nToilet assistance"
+            },
+            "schedule_times": {
+              "ja": "13:00〜14:00\n14:00〜15:30\n15:30〜16:00",
+              "en": "13:00〜14:00\n14:00〜15:30\n15:30〜16:00"
+            },
+            "schedule_activities": {
+              "ja": "ご挨拶、お着換え、トイレ介助\n歩行見守り、バス乗車、診察\nご自宅到着、お着替え",
+              "en": "Greetings, changing clothes, toilet assistance\nWalking supervision, bus boarding, medical examination\nArriving home, changing clothes"
+            }
+          }
+        },
+        {
+          "type": "home-examples",
+          "data": {
+            "heading": {
+              "ja": "ご利用事例",
+              "en": "Examples of use"
+            },
+            "lead_in": {
+              "ja": "お客様に合わせたプランニングが可能",
+              "en": "Planning tailored to each customer"
+            },
+            "hours_label": {
+              "ja": "ご利用時間",
+              "en": "Usage time"
+            },
+            "schedule_label": {
+              "ja": "1日の流れ",
+              "en": "Schedule"
+            },
+            "services_label": {
+              "ja": "ご利用内容",
+              "en": "Services provided"
+            }
+          }
+        },
+        {
+          "type": "home-flow",
+          "data": {
+            "heading": {
+              "ja": "ご利用の流れ",
+              "en": "How it works"
+            },
+            "step_label": {
+              "ja": "STEP",
+              "en": "STEP"
+            }
+          }
+        },
+        {
+          "type": "home-flow-step",
+          "data": {
+            "body": {
+              "ja": "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
+              "en": "Please enter your information to register as a member in order to use the service."
+            },
+            "title": {
+              "ja": "ご登録",
+              "en": "Registration"
+            },
+            "number": {
+              "ja": "01",
+              "en": "01"
+            }
+          }
+        },
+        {
+          "type": "home-flow-step",
+          "data": {
+            "body": {
+              "ja": "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
+              "en": "Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc."
+            },
+            "title": {
+              "ja": "ご予約の確定",
+              "en": "Confirmation of your reservation"
+            },
+            "number": {
+              "ja": "02",
+              "en": "02"
+            }
+          }
+        },
+        {
+          "type": "home-flow-step",
+          "data": {
+            "body": {
+              "ja": "ご予約の日時にケアサポーターがご自宅へお伺いします。",
+              "en": "A care supporter will visit your home at the scheduled date and time."
+            },
+            "title": {
+              "ja": "サービス開始",
+              "en": "Service Start"
+            },
+            "number": {
+              "ja": "03",
+              "en": "03"
+            }
+          }
+        },
+        {
+          "type": "home-flow-step",
+          "data": {
+            "body": {
+              "ja": "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
+              "en": "After the service is completed, the care supporter will send you a report, and the service will be finished."
+            },
+            "title": {
+              "ja": "終了ご報告",
+              "en": "Completion Report"
+            },
+            "number": {
+              "ja": "04",
+              "en": "04"
+            }
+          }
+        },
+        {
+          "type": "home-hero",
+          "data": {
+            "assist": {
+              "ja": "ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
+              "en": "We will assist you with everything from housework to personal care, according to your needs."
+            },
+            "badge": {
+              "ja": "完全オーダーメイドで",
+              "en": "Completely custom-made"
+            },
+            "body": {
+              "ja": "介護保険の「できない」を、家族の「当たり前」に変えていく。",
+              "en": "We're transforming the \"impossible\" aspects of long-term care insurance into \"normal\" for families."
+            },
+            "cta_primary": {
+              "ja": "お申込みはこちら",
+              "en": "Apply here"
+            },
+            "cta_primary_href": {
+              "ja": "/service-flow",
+              "en": "/service-flow"
+            },
+            "cta_secondary": {
+              "ja": "まずは無料登録",
+              "en": "Register for free first."
+            },
+            "cta_secondary_href": {
+              "ja": "/pricing",
+              "en": "/pricing"
+            },
+            "heading": {
+              "ja": "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
+              "en": "Care and nursing support services that do not utilize medical insurance or long-term care insurance."
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg"
+            },
+            "image_alt": {
+              "ja": "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
+              "en": "An elderly woman resting calmly by a window with a care professional"
+            },
+            "resolve": {
+              "ja": "不安やお困りごとを解消",
+              "en": "Resolving your anxieties and problems"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-course",
+          "data": {
+            "note": {
+              "ja": "※詳しくは料金表をご覧ください。",
+              "en": "*Please see the price list for details."
+            },
+            "badge": {
+              "ja": "看護コース",
+              "en": "Nursing course"
+            },
+            "lead_in": {
+              "ja": "医療行為が必要な方に対しては、\n看護師の手配が可能です",
+              "en": "For those who require medical care, we can arrange a registered nurse."
+            },
+            "price_unit": {
+              "ja": "/時間",
+              "en": "/hour"
+            },
+            "price_hours": {
+              "ja": "（9:00〜18:00）",
+              "en": " (9:00–18:00)"
+            },
+            "price_label": {
+              "ja": "日中基本料金",
+              "en": "Daytime base rate"
+            },
+            "price_amount": {
+              "ja": "6,000円",
+              "en": "¥6,000"
+            },
+            "panel_heading": {
+              "ja": "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\nなにかあったときに安心のコースです。",
+              "en": "This course provides peace of mind, as staff with nursing qualifications will provide care when medical attention is needed and in case of any emergencies."
+            },
+            "price_tax_note": {
+              "ja": "税抜",
+              "en": "excl. tax"
+            },
+            "price_tax_included": {
+              "ja": "税込価格 6,600円",
+              "en": "Tax included ¥6,600"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "vitals",
+              "en": "vitals"
+            },
+            "label": {
+              "ja": "バイタル測定・健康状態の管理",
+              "en": "Vital checks and health monitoring"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "procedure",
+              "en": "procedure"
+            },
+            "label": {
+              "ja": "医療処置（たん吸引や経管栄養）",
+              "en": "Medical procedures (suctioning, tube feeding)"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "medication",
+              "en": "medication"
+            },
+            "label": {
+              "ja": "お薬の管理・相談",
+              "en": "Medication management and consultation"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "consult",
+              "en": "consult"
+            },
+            "label": {
+              "ja": "療養生活の相談・支援",
+              "en": "Recuperation guidance and support"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "palliative",
+              "en": "palliative"
+            },
+            "label": {
+              "ja": "終末期ケア・緩和ケア",
+              "en": "End-of-life and palliative care"
+            }
+          }
+        },
+        {
+          "type": "home-nursing-feature",
+          "data": {
+            "icon": {
+              "ja": "hospital",
+              "en": "hospital"
+            },
+            "label": {
+              "ja": "医療機関との連携",
+              "en": "Coordination with medical institutions"
+            }
+          }
+        },
+        {
+          "type": "home-problems",
+          "data": {
+            "items": {
+              "ja": "一人で生活しているため何かあったら不安\n介護保険がなかなかおりない\nショッピングや映画に外出をしたいが一人では行けないので誰か一緒に行ってほしい\n話し相手がほしい\n家事や掃除など手伝ってほしい\n離れて暮らす親の様子が心配だが、仕事があって休み以外は見に行けない\n家族が不在の時に見守りをしてほしい\n施設や病院では対応できないことを個別に対応してほしい\nもしもの時の対応をプロにお願いしたい",
+              "en": "I live alone and worry about what might happen.\nLong-term care insurance payments are often delayed.\nI want to go out but can't go alone.\nI want someone to talk to.\nI need help with housework and cleaning.\nI'm worried about my parents who live far away.\nI'd like someone to watch over them when family is away.\nI need individual care beyond what facilities offer.\nI want a professional to handle emergencies."
+            },
+            "heading": {
+              "ja": "このようなお困りごとはありませんか？",
+              "en": "Are you experiencing any of these problems?"
+            }
+          }
+        },
+        {
+          "type": "home-values",
+          "data": {
+            "heading": {
+              "ja": "選ばれる理由",
+              "en": "Why families choose us"
+            },
+            "item_bodies": {
+              "ja": "昼夜を問わず、必要なときにすぐ対応できる体制を整えています。\n国家資格を持つ介護福祉士・看護師が、お一人おひとりに合わせてケアします。\nケアの記録を共有し、ご家族と一緒に最適な暮らしを考えます。",
+              "en": "Care available day and night, whenever it is needed.\nCertified caregivers and nurses tailored to each individual.\nShared care records and close communication with your family."
+            },
+            "item_titles": {
+              "ja": "24時間の安心\n専門スタッフ\nご家族との連携",
+              "en": "24-hour presence\nTrained professionals\nFamily partnership"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "rates",
+      "seo": {
+        "title": "料金表（内部データ）",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {},
+      "blocks": [
+        {
+          "type": "rate-course",
+          "data": {
+            "name": {
+              "ja": "介護コース",
+              "en": "Caregiving course"
+            },
+            "course_key": {
+              "ja": "care",
+              "en": "care"
+            }
+          }
+        },
+        {
+          "type": "rate-course",
+          "data": {
+            "name": {
+              "ja": "看護コース",
+              "en": "Nursing course"
+            },
+            "course_key": {
+              "ja": "nursing",
+              "en": "nursing"
+            }
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "基本料金（1時間あたり）",
+              "en": "Basic rate (per hour)"
+            },
+            "detail": {
+              "ja": "9時～18時",
+              "en": "9:00 AM – 6:00 PM"
+            },
+            "row_key": {
+              "ja": "basic-day",
+              "en": "basic-day"
+            },
+            "course_key": {
+              "ja": "care",
+              "en": "care"
+            },
+            "supporter_pay": 2000,
+            "customer_price": 3740
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "基本料金（1時間あたり）",
+              "en": "Basic rate (per hour)"
+            },
+            "detail": {
+              "ja": "18時～9時",
+              "en": "6:00 PM – 9:00 AM"
+            },
+            "row_key": {
+              "ja": "basic-night",
+              "en": "basic-night"
+            },
+            "course_key": {
+              "ja": "care",
+              "en": "care"
+            },
+            "supporter_pay": 2200,
+            "customer_price": 4488
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "指名料（1時間あたり）",
+              "en": "Nomination fee (per hour)"
+            },
+            "row_key": {
+              "ja": "nomination",
+              "en": "nomination"
+            },
+            "course_key": {
+              "ja": "care",
+              "en": "care"
+            },
+            "supporter_pay": 330,
+            "customer_price": 330
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "交通費",
+              "en": "Transportation expenses"
+            },
+            "row_key": {
+              "ja": "transport",
+              "en": "transport"
+            },
+            "course_key": {
+              "ja": "care",
+              "en": "care"
+            },
+            "supporter_pay": 990,
+            "customer_price": 990
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "基本料金（1時間あたり）",
+              "en": "Basic rate (per hour)"
+            },
+            "detail": {
+              "ja": "9時～18時",
+              "en": "9:00 AM – 6:00 PM"
+            },
+            "row_key": {
+              "ja": "basic-day",
+              "en": "basic-day"
+            },
+            "course_key": {
+              "ja": "nursing",
+              "en": "nursing"
+            },
+            "supporter_pay": 3300,
+            "customer_price": 6600
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "基本料金（1時間あたり）",
+              "en": "Basic rate (per hour)"
+            },
+            "detail": {
+              "ja": "18時～9時",
+              "en": "6:00 PM – 9:00 AM"
+            },
+            "row_key": {
+              "ja": "basic-night",
+              "en": "basic-night"
+            },
+            "course_key": {
+              "ja": "nursing",
+              "en": "nursing"
+            },
+            "supporter_pay": 3630,
+            "customer_price": 7920
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "指名料（1時間あたり）",
+              "en": "Nomination fee (per hour)"
+            },
+            "row_key": {
+              "ja": "nomination",
+              "en": "nomination"
+            },
+            "course_key": {
+              "ja": "nursing",
+              "en": "nursing"
+            },
+            "supporter_pay": 330,
+            "customer_price": 330
+          }
+        },
+        {
+          "type": "rate-row",
+          "data": {
+            "label": {
+              "ja": "交通費",
+              "en": "Transportation expenses"
+            },
+            "row_key": {
+              "ja": "transport",
+              "en": "transport"
+            },
+            "course_key": {
+              "ja": "nursing",
+              "en": "nursing"
+            },
+            "supporter_pay": 990,
+            "customer_price": 990
+          }
+        }
+      ]
+    },
+    {
+      "slug": "pricing",
+      "seo": {
+        "title": "ご利用者様向け料金",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {},
+      "blocks": [
+        {
+          "type": "page-hero",
+          "data": {
+            "body": {
+              "ja": "わかりやすい料金体系で、安心してご利用いただけます。すべて税込価格です。",
+              "en": "Transparent, all-inclusive pricing. Prices include tax."
+            },
+            "heading": {
+              "ja": "ご利用者様向け料金",
+              "en": "Pricing for users"
+            }
+          }
+        },
+        {
+          "type": "pricing-meta",
+          "data": {
+            "note": {
+              "ja": "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
+              "en": "All prices include tax and may vary based on care requirements."
+            },
+            "highlights": {
+              "ja": "入会金・登録料無料\n最低利用2時間から",
+              "en": "No membership or registration fee\nMinimum usage time: 2 hours"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "fees",
+      "seo": {
+        "title": "ケアサポーターの時給・報酬体系一覧",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {},
+      "blocks": [
+        {
+          "type": "fees-meta",
+          "data": {
+            "note": {
+              "ja": "※ 表示価格はすべて税込です。登録料は無料です。",
+              "en": "All prices include tax. Registration is free."
+            },
+            "cta_href": {
+              "ja": "/#contact",
+              "en": "/#contact"
+            },
+            "column_customer": {
+              "ja": "お客様",
+              "en": "Customer"
+            },
+            "column_supporter": {
+              "ja": "ケアサポーター",
+              "en": "Care supporter"
+            }
+          }
+        },
+        {
+          "type": "page-hero",
+          "data": {
+            "body": {
+              "ja": "1時間単価・税込み表記です。",
+              "en": "Hourly rates, tax included."
+            },
+            "heading": {
+              "ja": "ケアサポーターの時給・給与体系",
+              "en": "Hourly wage/salary system for care supporters"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "use-case",
+      "seo": {
+        "title": "ご利用シーン",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Use cases",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "page-hero",
+          "data": {
+            "body": {
+              "ja": "Care 24 Japan は、さまざまな暮らしの場面に寄り添います。",
+              "en": "Care 24 Japan adapts to the moments that matter most."
+            },
+            "heading": {
+              "ja": "ご利用シーン",
+              "en": "Use cases"
+            },
+            "cta_href": {
+              "ja": "/pricing",
+              "en": "/pricing"
+            }
+          }
+        },
+        {
+          "type": "use-case-item",
+          "data": {
+            "body": {
+              "ja": "入院後のご自宅での生活を、看護と介護の両面で支えます。",
+              "en": "Nursing and daily-living support during recovery at home."
+            },
+            "detail": {
+              "ja": "入院中は医療スタッフに囲まれた環境で過ごされますが、退院後はご自宅でのリハビリや生活支援が重要になります。Care 24 Japan では、退院直後から看護師と介護福祉士が連携し、服薬管理・創傷ケア・食事・入浴・移動など、回復期に必要なあらゆるサポートをご提供します。ご家族の不安を和らげながら、安心して在宅療養できる環境を整えます。",
+              "en": "Leaving hospital can feel daunting. Care 24 Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home."
+            },
+            "highlights": {
+              "ja": "退院当日からの対応が可能\n看護師・介護福祉士の連携チーム\n服薬・処置管理のサポート\nリハビリ支援・歩行練習の同行\nご家族への定期的な状況報告",
+              "en": "Available from the day of discharge\nCoordinated nurse and caregiver team\nMedication and wound-care management\nRehabilitation and mobility support\nRegular updates to family members"
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg"
+            },
+            "image_alt": {
+              "ja": "退院後にご自宅で休む高齢男性に付き添うスタッフ",
+              "en": "A caregiver assisting an elderly man recovering at home"
+            },
+            "slug": {
+              "ja": "after-hospital-discharge",
+              "en": "after-hospital-discharge"
+            },
+            "title": {
+              "ja": "退院後のサポート",
+              "en": "After hospital discharge"
+            }
+          }
+        },
+        {
+          "type": "use-case-item",
+          "data": {
+            "body": {
+              "ja": "見守りと声かけを大切に、穏やかな日常をお守りします。",
+              "en": "Gentle supervision and companionship for peace of mind."
+            },
+            "detail": {
+              "ja": "認知症のご本人が住み慣れた環境で穏やかに過ごせるよう、専門トレーニングを受けたスタッフが寄り添います。徘徊防止の見守り、日常的な声かけ・回想法の実践、服薬・食事のサポートなど、ご本人の尊厳を第一に考えたケアをご提供します。ご家族の精神的な負担を軽減することも、私たちの大切な役割です。",
+              "en": "Our specially trained caregivers provide compassionate, person-centred dementia care at home. We focus on familiar routines, gentle reminders, reminiscence activities, and safe supervision — helping maintain dignity and reduce anxiety. We also keep family members closely informed, so everyone feels supported."
+            },
+            "highlights": {
+              "ja": "認知症ケア専門スタッフが対応\n24時間見守りプランあり\n回想法・コミュニケーション支援\n服薬・食事管理のサポート\nご家族への定期報告と相談対応",
+              "en": "Dementia-trained specialist caregivers\n24-hour supervision plans available\nReminiscence and communication support\nMedication and meal management\nFamily updates and counselling support"
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg"
+            },
+            "image_alt": {
+              "ja": "高齢女性と一緒にアルバムを眺める介護スタッフ",
+              "en": "A care professional looking at a photo album with an elderly woman"
+            },
+            "slug": {
+              "ja": "dementia-care",
+              "en": "dementia-care"
+            },
+            "title": {
+              "ja": "認知症のケア",
+              "en": "Dementia care"
+            }
+          }
+        },
+        {
+          "type": "use-case-item",
+          "data": {
+            "body": {
+              "ja": "介護をされるご家族が休息できるよう、一時的にケアを引き継ぎます。",
+              "en": "Temporary cover so family caregivers can rest."
+            },
+            "detail": {
+              "ja": "日々介護を担うご家族は、心身ともに大きな負担を抱えています。Care 24 Japan のレスパイトケアでは、数時間から数日間、ご家族に代わって専門スタッフがご自宅でのケアを引き受けます。ご家族がリフレッシュし、自分自身の時間を持てるよう、安心してお任せいただける体制を整えています。",
+              "en": "Family caregivers give everything — and they deserve to rest. Care 24 Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind."
+            },
+            "highlights": {
+              "ja": "数時間から数日間まで柔軟に対応\n普段と変わらないケアの継続\n緊急時の迅速対応体制\nケア記録の共有で安心の引き継ぎ\n定期・スポット両プランに対応",
+              "en": "Flexible from a few hours to several days\nSeamless continuity of existing care routines\nRapid response in case of emergency\nShared care records for smooth handover\nAvailable as regular or spot bookings"
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg"
+            },
+            "image_alt": {
+              "ja": "笑顔で会話する高齢者と訪問スタッフ",
+              "en": "A visiting caregiver chatting warmly with an older client"
+            },
+            "slug": {
+              "ja": "respite-care",
+              "en": "respite-care"
+            },
+            "title": {
+              "ja": "ご家族の休息（レスパイト）",
+              "en": "Respite for families"
+            }
+          }
+        },
+        {
+          "type": "use-case-item",
+          "data": {
+            "body": {
+              "ja": "ご本人とご家族の希望に寄り添い、住み慣れた場所での時間を支えます。",
+              "en": "Compassionate support to spend final days at home."
+            },
+            "detail": {
+              "ja": "人生の最終段階を、住み慣れたご自宅で穏やかに過ごしたいというご本人・ご家族の願いに、Care 24 Japan は全力で寄り添います。痛みや不快感を最小限にする身体ケア、精神的なサポート、そしてご家族が大切な時間を共に過ごせる環境づくりをお手伝いします。医療機関とも連携し、安心できる看取りの場を整えます。",
+              "en": "When the time comes, most people wish to be at home — surrounded by those they love. Care 24 Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible."
+            },
+            "highlights": {
+              "ja": "緩和ケアチームとの医療連携\n苦痛の緩和と身体ケアの提供\nご本人・ご家族の精神的サポート\n24時間体制での見守りと対応\nご家族が寄り添える環境づくり",
+              "en": "Coordination with palliative care teams\nPain management and physical comfort care\nEmotional support for client and family\nRound-the-clock presence and response\nSpace for family to be present and grieve"
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg"
+            },
+            "image_alt": {
+              "ja": "手を取り合う高齢者と介護スタッフ",
+              "en": "A caregiver holding the hand of an elderly client"
+            },
+            "slug": {
+              "ja": "end-of-life-care",
+              "en": "end-of-life-care"
+            },
+            "title": {
+              "ja": "終末期の在宅ケア",
+              "en": "End-of-life home care"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "service-flow",
+      "seo": {
+        "title": "ご利用の流れ",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "How it works",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "page-hero",
+          "data": {
+            "body": {
+              "ja": "ご登録からサービス終了まで、4つのステップで進みます。",
+              "en": "From registration to completion, in four simple steps."
+            },
+            "heading": {
+              "ja": "ご利用の流れ",
+              "en": "How it works"
+            },
+            "cta_href": {
+              "ja": "/pricing",
+              "en": "/pricing"
+            }
+          }
+        },
+        {
+          "type": "service-flow-step",
+          "data": {
+            "body": {
+              "ja": "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
+              "en": "Please enter your information to register as a member in order to use the service."
+            },
+            "title": {
+              "ja": "ご登録",
+              "en": "Registration"
+            },
+            "number": {
+              "ja": "1",
+              "en": "1"
+            }
+          }
+        },
+        {
+          "type": "service-flow-step",
+          "data": {
+            "body": {
+              "ja": "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
+              "en": "Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc."
+            },
+            "title": {
+              "ja": "ご予約の確定",
+              "en": "Confirmation of your reservation"
+            },
+            "number": {
+              "ja": "2",
+              "en": "2"
+            }
+          }
+        },
+        {
+          "type": "service-flow-step",
+          "data": {
+            "body": {
+              "ja": "ご予約の日時にケアサポーターがご自宅へお伺いします。",
+              "en": "A care supporter will visit your home at the scheduled date and time."
+            },
+            "title": {
+              "ja": "サービス開始",
+              "en": "Service Start"
+            },
+            "number": {
+              "ja": "3",
+              "en": "3"
+            }
+          }
+        },
+        {
+          "type": "service-flow-step",
+          "data": {
+            "body": {
+              "ja": "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
+              "en": "After the service is completed, the care supporter will send you a report, and the service will be finished."
+            },
+            "title": {
+              "ja": "終了ご報告",
+              "en": "Completion Report"
+            },
+            "number": {
+              "ja": "4",
+              "en": "4"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "company",
+      "seo": {
+        "title": "運営会社",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Operating Company",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "商号",
+              "en": "Trade name"
+            },
+            "value": {
+              "ja": "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
+              "en": "MedicalInformatics Co.,Ltd."
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "本社",
+              "en": "Head office"
+            },
+            "value": {
+              "ja": "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
+              "en": "Meiji Seimei Building 4F, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "Tel",
+              "en": "Tel"
+            },
+            "value": {
+              "ja": "03-5733-6600",
+              "en": "03-5733-6600"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "設立",
+              "en": "Established"
+            },
+            "value": {
+              "ja": "2002年10月18日",
+              "en": "October 18, 2002"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "資本金",
+              "en": "Capital"
+            },
+            "value": {
+              "ja": "1億円",
+              "en": "¥100 million"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "代表者",
+              "en": "Representative"
+            },
+            "value": {
+              "ja": "代表取締役 佐々木 美樹",
+              "en": "Representative Director: Miki Sasaki"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "株主構成",
+              "en": "Shareholders"
+            },
+            "value": {
+              "ja": "Social Impact Solutions株式会社 100％",
+              "en": "Social Impact Solutions Inc. 100%"
+            }
+          }
+        },
+        {
+          "type": "company-row",
+          "data": {
+            "label": {
+              "ja": "グループ企業",
+              "en": "Group companies"
+            },
+            "value": {
+              "ja": "Aegis Care Advisors Pvt.ltd (Care24)、PT. SIPS Edutech Indonesia、EvoCare Japan株式会社",
+              "en": "Aegis Care Advisors Pvt. Ltd. (Care24), PT. SIPS Edutech Indonesia, EvoCare Japan Co., Ltd."
+            }
+          }
+        },
+        {
+          "type": "page-hero",
+          "data": {
+            "heading": {
+              "ja": "運営会社",
+              "en": "Operating Company"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-privacy",
+      "seo": {
+        "title": "プライバシーポリシー",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Privacy Policy",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<p>メディカルインフォマティクス株式会社（以下「当社」といいます。）は、ステークホルダーの皆様から取得した個人情報の重要性を認識し、保護することを当社の事業活動の基本であると共に経営上の最重要な課題の一つと考えています。 皆様へ安心・安全・信頼のサービスを提供していくため、以下のような基本方針を定め全社員に周知徹底を図り、これを遵守しています。</p>\n<h2>1. 基本方針</h2>\n<p>当社は、個人情報保護法及び関連するその他の法令・規範を遵守します。また、個人情報保護に関する社内規程（以下「当社規程」といいます。）を定め、これを実施し、維持すると共に、継続的な改善に努めます。 当社は、個人情報保護に関する管理体制を確立するとともに、当社規程を役員及び従業員に周知し、その遵守徹底に努めます。 当社は、個人情報をお客様に明示した利用目的の範囲内で取り扱います。また、当社は、お客様からご提供頂いた個人情報を、お客様の同意がある場合又は正当な理由がある場合を除き、第三者に開示若しくは提供しません。 当社は、個人情報を正確かつ最新の状態に保つとともに、個人情報への不正アクセス、個人情報の漏えい、滅失、き損等の予防に努め、情報セキュリティの向上、是正を継続的に実施します。 当社は、お客様からの個人情報に関するお問い合わせ、開示等のご請求に誠実かつ迅速に対応します。</p>\n<p>【事業者情報】</p>\n<ul><li>会社名：メディカルインフォマティクス株式会社</li><li>住所：東京都千代田区丸の内二丁目1番1号 明治生命館4階</li><li>代表者：代表取締役 佐々木 美樹</li></ul>\n<h2>2. 個人情報の利用目的</h2>\n<p>当社は、お客様から個人情報をご提供頂く場合、予め個人情報の利用目的を明示し、その利用目的の範囲内で利用します。 予め明示した利用目的の範囲を超えて、お客様の個人情報を利用する必要が生じた場合は、お客様にその旨をご連絡し、お客様の同意を頂いた上で利用します。 当社が保有する個人情報の利用目的は下記の通りです。</p>\n<h3>⑴ お取引先様に関する個人情報</h3>\n<ul><li>医療機関向けコンサルティング、電子カルテシステムの開発・販売・保守、医療機関向けBPOサービス、及び医師紹介サービスの提供</li><li>お客様との商談、お打ち合わせ、及び契約の履行</li><li>当社が提供するサービスに関連するご案内、資料、メールマガジンの送付</li><li>各種会員制サービス、製品の導入支援及びカスタマーサポートの提供</li><li>お問い合わせ、ご相談への対応</li></ul>\n<h3>⑵ Care24Japanの利用者に関する個人情報</h3>\n<ul><li>本サービスにおけるマッチング、本人確認、及びサービスの提供</li><li>ご利用料金の請求、決済、及びそれに伴う事務手続き</li><li>本サービスに関するカスタマーサポート、メンテナンスの提供、及びお問い合わせ・ご相談への対応</li><li>本サービスに関するご案内、広告及び資料の送付</li><li>規約変更等、本サービスに関する重要なお知らせの通知</li></ul>\n<h3>⑶ Care24Japanのケアサポーター（登録ワーカー）に関する個人情報</h3>\n<ul><li>登録審査、スキル・資格の確認、及び本人確認</li><li>プラットフォーム上でのマッチング、及び利用者へのプロフィール等の情報開示</li><li>報酬の支払い、お振込み事務、及びそれに伴う事務手続き</li><li>業務連絡、問い合わせ対応、及びサポート提供</li><li>サービス開発、アンケート調査実施、モニター等の実施</li></ul>\n<h3>⑷ 取材対象者・その他の皆様に関する個人情報</h3>\n<ul><li>記事コンテンツ作成の為の取材対象者の募集及び連絡</li><li>お問い合わせ・ご相談への対応</li></ul>\n<h3>⑸ 採用応募者に関する個人情報</h3>\n<ul><li>採用応募者（インターンシップを含む）への採用情報等の提供・連絡</li><li>当社での採用選考、合否判定及び採用業務管理</li></ul>\n<h2>3. 個人情報の適正な取得</h2>\n<p>当社では、個人情報の取得は、適法かつ公正な手段で行います。なお、当社への個人情報の提供は任意ですが、必要な情報をご提供いただけない場合、各サービスの全部又は一部をご利用いただけない場合があります。</p>\n<h2>4. 個人情報の提供</h2>\n<p>当社は、次の場合を除き、お客様の個人情報を第三者に開示または提供しません。</p>\n<ol><li>お客様の同意がある場合（マッチング成立に伴い、利用者と登録ワーカー間で相互に相手方の必要情報を開示する場合を含みます。）</li><li>法令に基づく場合</li><li>人の生命、身体又は財産の保護のために必要であって、お客様の同意を取ることが困難な場合</li><li>利用目的の達成に必要な範囲で、個人情報の取扱いを委託する場合</li><li>合併、会社分割、営業譲渡その他の事由によって事業の承継が行われる場合</li></ol>\n<h2>5. 個人情報の委託について</h2>\n<p>前条にかかわらず、当社は、利用目的の達成に必要な範囲内において個人情報の取扱いの全部又は一部を委託する場合があります。 なお、個人情報の取扱いを委託する場合は、適切な委託先を選定し、個人情報が安全に管理されるよう適切に監督いたします。</p>\n<h2>6. 安全管理措置について</h2>\n<p>当社は、個人情報への不正アクセス、個人情報の漏えい、滅失、き損等の予防及び安全管理のため、以下の措置を継続的に実施します。</p>\n<ul><li>組織体制の整備： 個人情報の取扱いに関する責任者を設置し、報告連絡体制を整備しています。</li><li>従業員の教育： 役員及び従業員に対し、個人情報の取扱いに関する定期的な教育・研修を実施しています。</li><li>物理的・技術的対策： 個人情報を取り扱う区域のアクセス制限、機器の盗難防止措置、及び外部からの不正アクセスを防ぐセキュリティ対策を導入しています。</li></ul>\n<h2>7. 個人情報に関するお問い合わせ及び開示手続き</h2>\n<p>お客様の個人情報の開示・訂正・削除、利用停止等（第三者提供記録の開示を含みます）に関するお問い合わせやご請求は、お問い合わせフォームよりご連絡ください。ご本人であることを確認させていただいたうえで、誠実かつ迅速に対応します。 なお、保有個人データの利用目的の通知及び開示請求につきましては、1件あたり1,000円（税抜）の手数料を申し受ける場合があります。</p>\n<h2>8. その他の事項</h2>\n<h3>⑴ アクセス情報及びクッキーについて</h3>\n<p>当サイトでは、より良いサービスをご提供させて頂くために、アクセスログ情報やクッキー（Cookie）を取得・使用する場合がございます。これらは単独では特定の個人を識別することができないため、個人情報とは考えておりません。なお、クッキー情報については、ブラウザの設定で拒否することが可能です。</p>\n<h3>⑵ 外部送信情報について</h3>\n<p>当社は、ユーザーの行動分析やサービスの改善、広告効果測定等のため、クッキー等の識別子を利用して以下の外部ツールへ情報を送信しています。</p>\n<table><thead><tr><th>ツール名</th><th>当社の利用目的</th><th>情報の内容</th><th>送信先及び送信先の利用目的</th></tr></thead><tbody><tr><td>AWS</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>Amazon Web Services, Inc.</td></tr><tr><td>Google Analytics</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴</td><td>Google LLC.</td></tr><tr><td>Google</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>Google Inc.</td></tr><tr><td>Meta</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>Meta Platforms, Inc.</td></tr><tr><td>LINE</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>LINEヤフー株式会社</td></tr><tr><td>Yahoo</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>LINEヤフー株式会社</td></tr><tr><td>X</td><td>ユーザーの利用状況の把握、本サービスの運営管理及び改善</td><td>広告識別子、端末やアプリの情報、ネットワークの情報、アクセス履歴、電話番号</td><td>X Corp</td></tr></tbody></table>\n<h3>⑶ 統計データ・アンケート調査結果の利用について</h3>\n<ul><li>統計データについて： 当社は提供を受けたお客様の個人情報をもとに、お客様個人を特定できないよう加工した統計データを作成することがあります。お客様個人を特定できない統計データについては、当社は、何ら制限なく利用することができるものとします。</li><li>アンケート調査結果について： 会員・登録ワーカーを対象に実施するアンケート調査の回答に含まれる、アンケート回答者本人以外の医療従事者の氏名、勤務先施設名及び勤務先都道府県を、事前に第三者提供について同意を得ている個人情報に付加して、当社サービスを利用する国内外の医療関係事業者に参考情報として提供いたします。</li><li>提供方法について： ID、パスワードを入力することよりアクセスが可能なWebページ上での表示、パスワードを設定したファイルを電子メール等に添付して送信し、若しくはこれを記録した記録媒体を授受すること、又はアクセスを制限したサーバー上でファイルを授受することによります。当社の会員情報と、取得した情報により作成したデータベースについて、既存情報と整合を確認し、データベースの更新を行っております。また、第三者から個人データの提供を受ける場合には、当該第三者の取得の経緯を確認し、適切な方法により取得いたします。</li></ul>\n<h3>⑷ 個人関連情報の取得および利用について</h3>\n<p>当社は、当社の提携事業者（当社の広告代理店、広告媒体その他の提携先をいいます、）より、当社の広告のクリック日時、広告媒体に関する情報（ID、サイト名等）、その他の個人関連情報（個人情報保護法に定めるものをいい、特定の個人を識別することができる情報は含みません。）の提供を受け、当該個人関連情報を、当社の保有する個人情報と紐付けて個人データとして取得及び利用する場合があります。当該情報は、広告の成果確認・効果測定のために利用されます。</p>\n<h3>⑸ 個人情報関連の共同利用について</h3>\n<p>当社は、取得した個人情報を、当社のビジネスパートナー、業務提携会社その他当社が必要と認める第三者との間で共同利用させていただくことがあります。 当該共同利用にあたっては、共同利用者の範囲等の必要事項を定め、当社のウェブサイトに掲載することにより、当該必要事項を会員等の皆様が容易に知りうる状態におくこととします。</p>\n<ul><li>①共同利用される個人データの項目： 当社が取得した会員に関する個人情報のうち、下記項目を共同利用することがあります。 氏名、メールアドレス、電話番号、職種、所属先、セミナー参加情報、アンケート調査回答等、これらとウェブサイトの閲覧履歴を紐づけた情報の分析結果等</li><li>②共同して利用する者の範囲： 株式会社ワンダーラボラトリー（http://www.w-lab.jp/privacy/）</li><li>③共同して利用する者の利用目的： 本項第3号に記載した利用目的に同じ</li><li>④管理について責任を有するもの： メディカルインフォマティクス株式会社（代表者及び住所は第1項に記載の通り）</li></ul>\n<p>2026年7月10日 改定</p>",
+              "en": "<p>Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\") recognizes the importance of personal information obtained from stakeholders and considers its protection to be fundamental to our business activities and one of our most important management issues. In order to provide safe, secure, and reliable services to everyone, we have established the following basic policy, ensure that it is fully understood by all employees, and strictly comply with it.</p>\n<h2>1. Basic Policy</h2>\n<ul><li>The Company complies with the Personal Information Protection Law and other related laws, regulations, and norms. In addition, we have established internal regulations regarding personal information protection (hereinafter referred to as \"Company Regulations\"), which we implement, maintain, and continuously strive to improve.</li><li>The Company will establish a management system for personal information protection, inform executives and employees of the Company Regulations, and strive for strict compliance.</li><li>The Company handles personal information within the scope of the purpose of use explicitly stated to the customer. Moreover, the Company will not disclose or provide personal information provided by customers to third parties, except when there is customer consent or a legitimate reason.</li><li>The Company maintains personal information in an accurate and up-to-date state, strives to prevent unauthorized access to personal information, and the leakage, loss, or damage of personal information, and continuously implements and corrects information security measures.</li><li>The Company responds sincerely and promptly to inquiries and requests for disclosure, etc., regarding personal information from customers.</li></ul>\n<p>[Business Operator Information]</p>\n<ul><li>Company Name: Medical Informatics Co., Ltd.</li><li>Address: 4F Meiji Seimei Kan, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo</li><li>Representative: Miki Sasaki, Representative Director</li></ul>\n<h2>2. Purpose of Use of Personal Information</h2>\n<p>When the Company asks customers to provide personal information, we will specify the purpose of use in advance and use it within the scope of that purpose. If it becomes necessary to use a customer's personal information beyond the scope of the purpose of use specified in advance, we will notify the customer to that effect and obtain their consent before using it. The purposes of use of personal information held by the Company are as follows:</p>\n<h3>(1) Personal information regarding business partners</h3>\n<ul><li>Provision of consulting for medical institutions, development, sales, and maintenance of electronic medical record systems, BPO services for medical institutions, and physician referral services</li><li>Business negotiations, meetings with customers, and fulfillment of contracts</li><li>Sending information, materials, and email newsletters related to services provided by the Company</li><li>Provision of various membership services, product implementation support, and customer support</li><li>Responding to inquiries and consultations</li></ul>\n<h3>(2) Personal information regarding users of Care24Japan</h3>\n<ul><li>Matching, identity verification, and provision of services in this service</li><li>Billing and settlement of usage fees, and related administrative procedures</li><li>Providing customer support and maintenance for this service, and responding to inquiries and consultations</li><li>Sending information, advertisements, and materials regarding this service</li><li>Notification of important notices related to this service, such as changes to the terms of service</li></ul>\n<h3>(3) Personal information regarding care supporters (registered workers) of Care24Japan</h3>\n<ul><li>Registration screening, confirmation of skills/qualifications, and identity verification</li><li>Matching on the platform and disclosure of information such as profiles to users</li><li>Payment of remuneration, bank transfer administration, and related administrative procedures</li><li>Business communication, responding to inquiries, and providing support</li><li>Service development, implementation of questionnaire surveys, monitoring, etc.</li></ul>\n<h3>(4) Personal information regarding interviewees and others</h3>\n<ul><li>Recruitment and communication with interviewees for the creation of article content</li><li>Responding to inquiries and consultations</li></ul>\n<h3>(5) Personal information regarding employment applicants</h3>\n<ul><li>Providing employment information and communicating with employment applicants (including internships)</li><li>Recruitment selection, pass/fail determination, and recruitment business management at the Company</li></ul>\n<h2>3. Proper Acquisition of Personal Information</h2>\n<p>The Company acquires personal information by lawful and fair means. The provision of personal information to the Company is voluntary, but if you do not provide the necessary information, you may not be able to use all or part of our respective services.</p>\n<h2>4. Provision of Personal Information</h2>\n<p>The Company will not disclose or provide your personal information to third parties except in the following cases:</p>\n<ul><li>With the customer's consent (including cases where the necessary information of the other party is mutually disclosed between the user and the registered worker upon successful matching).</li><li>When based on laws and regulations.</li><li>When it is necessary for the protection of human life, body, or property, and it is difficult to obtain the customer's consent.</li><li>When entrusting the handling of personal information within the scope necessary to achieve the purpose of use.</li><li>When business is succeeded due to a merger, company split, business transfer, or other reasons.</li></ul>\n<h2>5. Outsourcing of Personal Information</h2>\n<p>Notwithstanding the preceding article, the Company may outsource all or part of the handling of personal information within the scope necessary to achieve the purpose of use. When entrusting the handling of personal information, we will select an appropriate contractor and supervise them appropriately to ensure that personal information is securely managed.</p>\n<h2>6. Security Control Measures</h2>\n<p>The Company continuously implements the following measures to prevent unauthorized access to personal information, leakage, loss, or damage of personal information, and for security management.</p>\n<ul><li>Improvement of organizational system: We have appointed a person responsible for the handling of personal information and have established a reporting and communication system.</li><li>Employee training: We conduct regular education and training for executives and employees on the handling of personal information.</li><li>Physical/technical measures: We have introduced access restrictions to areas where personal information is handled, measures to prevent theft of equipment, and security measures to prevent unauthorized access from the outside.</li></ul>\n<h2>7. Inquiries and Disclosure Procedures Regarding Personal Information</h2>\n<p>For inquiries and requests regarding the disclosure, correction, deletion, suspension of use, etc., of your personal information (including disclosure of third-party provision records), please contact us via the inquiry form. We will respond sincerely and promptly after verifying your identity. Note that a fee of 1,000 yen (excluding tax) per request may be charged for the notification of the purpose of use and disclosure requests of retained personal data.</p>\n<h2>8. Other Matters</h2>\n<h3>(1) Access Information and Cookies</h3>\n<p>On this site, we may acquire and use access log information and cookies in order to provide better services. Since these alone cannot identify a specific individual, we do not consider them to be personal information. You can reject cookie information via your browser settings.</p>\n<h3>(2) External Transmission of Information</h3>\n<p>To analyze user behavior, improve services, and measure advertising effectiveness, the Company transmits information to the following external tools using identifiers such as cookies.</p>\n<ul><li>AWS | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | Amazon Web Services, Inc.</li><li>Google Analytics | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history | Google LLC.</li><li>Google | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | Google Inc.</li><li>Meta | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | Meta Platforms, Inc.</li><li>LINE | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | LY Corporation</li><li>Yahoo | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | LY Corporation</li><li>X | Grasping user usage status, operation management and improvement of this service | Advertising identifier, device/app info, network info, access history, phone number | X Corp</li></ul>\n<h3>(3) Use of Statistical Data and Questionnaire Survey Results</h3>\n<ul><li>Regarding statistical data: The Company may create statistical data processed so that individual customers cannot be identified, based on the personal information provided. The Company may use statistical data that cannot identify an individual without any restrictions.</li><li>Regarding questionnaire survey results: The names, affiliated facility names, and affiliated prefectures of medical professionals other than the survey respondents themselves, included in the responses to questionnaire surveys conducted for members/registered workers, will be added to personal information for which consent for third-party provision has been obtained in advance, and provided as reference information to domestic and overseas medical business operators who use our services.</li><li>Regarding the method of provision: This is done by displaying on a web page accessible by entering an ID and password, sending a password-protected file attached to an email, etc., exchanging a recording medium recording this, or exchanging files on a server with restricted access. Regarding our member information and databases created from acquired information, we verify consistency with existing information and update the database. Furthermore, when receiving personal data from a third party, we will confirm the circumstances of acquisition by the third party and acquire it by an appropriate method.</li></ul>\n<h3>(4) Acquisition and Use of Personal Related Information</h3>\n<p>The Company may receive from our business partners (meaning our advertising agencies, advertising media, and other partners) the date and time of clicks on our advertisements, information regarding advertising media (ID, site name, etc.), and other personal-related information (as defined in the Personal Information Protection Law, excluding information that can identify a specific individual). The Company may acquire and use this personal-related information as personal data by linking it with personal information held by the Company. Such information will be used for confirming the results and measuring the effectiveness of advertisements.</p>\n<h3>(5) Joint Use of Personal Information</h3>\n<p>The Company may jointly use acquired personal information with our business partners, business tie-up companies, and other third parties deemed necessary by the Company. In such joint use, necessary matters such as the scope of joint users will be determined and posted on our website to ensure that members, etc., can easily become aware of such necessary matters.</p>\n<ol><li>Items of personal data to be jointly used: Among the personal information regarding members acquired by the Company, the following items may be jointly used. Name, email address, phone number, occupation, affiliation, seminar participation information, questionnaire survey responses, etc., and analysis results of information linking these with website browsing history.</li><li>Scope of joint users: Wonder Laboratory Co., Ltd. (http://www.w-lab.jp/privacy/)</li><li>Purpose of use by joint users: Same as the purpose of use stated in item 3 of this section.</li><li>Party responsible for management: Medical Informatics Co., Ltd. (Representative and address are as stated in paragraph 1)</li></ol>\n<p>Revised on July 10, 2026</p>"
+            },
+            "heading": {
+              "ja": "プライバシーポリシー",
+              "en": "Privacy Policy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-tokushoho",
+      "seo": {
+        "title": "特定商取引法に基づく表記",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Notation based on the Act on Specified Commercial Transactions",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<h2>提供事業者の名称</h2>\n<p>メディカルインフォマティクス株式会社</p>\n<h2>住所</h2>\n<p>〒100-0005 東京都千代田区丸の内二丁目1番1号 明治生命館4階</p>\n<h2>代表者</h2>\n<p>代表取締役 佐々木 美樹</p>\n<h2>問い合わせ先</h2>\n<p>【問い合わせ専用メールアドレス】 からお問い合わせください。 ※上記宛にお問い合わせいただければ、連絡先電話番号についても遅滞なく開示いたします。 （※公開用電話番号を設定した場合は、「電話番号03-XXXX-XXXX」と直接記載）</p>\n<h2>利用料金</h2>\n<p>ご利用料金については、[こちらの料金ページ](/pricing)をご確認ください。</p>\n<h2>利用料金の支払い方法</h2>\n<p>クレジットカード決済、または口座振込のうち、お客様の選択した方法によりお支払いいただきます。</p>\n<h2>利用料金以外に必要となる費用</h2>\n<ul><li>サービス提供にかかる事務手数料、交通費、指名料、当日ケアサポーターによって立替え払いされた実費等が発生する場合があります。これらの費用については、上記料金表等に記載がありますのでご確認ください。</li><li>銀行振込（口座振込）のご利用時には、振込手数料がお客様のご負担となります。</li></ul>\n<h2>利用料金の支払い時期</h2>\n<ul><li>クレジットカード決済の場合 予約成立時に決済が行われます。お引き落とし時期については、ご利用のクレジットカード会社にお問い合わせください。</li><li>口座振込の場合 ご利用お申し込み（予約リクエスト）後、当社指定の期日までにお振込みいただきます。（※入金確認をもって予約が成立します）</li></ul>\n<h2>サービスのご利用が可能となる時期</h2>\n<p>当社サービスに登録後、成立した予約に記載された日程にてご利用いただけます。</p>\n<h2>返品、キャンセルに関する事項</h2>\n<p>本サービスの予約をキャンセルする場合には、当社の別途定める方法によりキャンセルの手続きを行うものとします。ただし、キャンセルを行う時期によってはキャンセル料が発生いたしますので、詳細は[キャンセルポリシー](/cancellation-policy)をご確認ください。</p>",
+              "en": "<h2>Name of Business Operator</h2>\n<p>Medical Informatics Co., Ltd.</p>\n<h2>Address</h2>\n<p>4F Meiji Seimei Kan, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005</p>\n<h2>Representative</h2>\n<p>Miki Sasaki, Representative Director</p>\n<h2>Contact Information</h2>\n<p>Please contact us via [Dedicated Inquiry Email Address].</p>\n<p>*If you contact us at the address above, we will disclose our contact phone number without delay.</p>\n<p>(*If a public phone number is set, state it directly as \"Phone Number: 03-XXXX-XXXX\")</p>\n<h2>Usage Fees</h2>\n<p>Regarding usage fees, please check [our pricing page](/pricing).</p>\n<h2>Payment Method for Usage Fees</h2>\n<p>Payment must be made by the method chosen by the customer, either by credit card or bank transfer.</p>\n<h2>Costs Required Other Than Usage Fees</h2>\n<p>Administrative fees, transportation expenses, nomination fees, and actual expenses paid in advance by the care supporter on the day of service may be incurred for the provision of services. Please check the fee schedule mentioned above, as these costs are outlined there.</p>\n<p>When using a bank transfer, the transfer fee will be borne by the customer.</p>\n<h2>Timing of Payment for Usage Fees</h2>\n<ul><li>For Credit Card Payment: Payment is processed when the reservation is confirmed. Please contact your credit card company regarding the exact billing timing.</li><li>For Bank Transfer: After applying for use (reservation request), please transfer the funds by the date specified by the Company. (*The reservation is confirmed upon confirmation of payment.)</li></ul>\n<h2>Timing When Services Can Be Used</h2>\n<p>After registering for our service, you can use the service on the dates specified in the confirmed reservation.</p>\n<h2>Matters Regarding Returns and Cancellations</h2>\n<p>If you wish to cancel a reservation for this service, you must complete the cancellation procedures in accordance with the methods separately determined by the Company. However, please note that a cancellation fee may be incurred depending on the timing of the cancellation, so please check our [cancellation policy](/cancellation-policy) for details.</p>"
+            },
+            "heading": {
+              "ja": "特定商取引法に基づく表記",
+              "en": "Notation based on the Act on Specified Commercial Transactions"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-terms-for-care-supporters",
+      "seo": {
+        "title": "Care24Japan プラットフォーム利用規約（ケアサポーター向け）",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care24Japan Platform Terms & Conditions (For Care Supporters)",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<p>本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスに登録する看護師・介護士等のワーカー（以下「ケアサポーター」といいます。）は、本規約に同意の上、本サービスを利用するものとします。</p>\n<h2>第1条（目的および当社の立ち位置）</h2>\n<ol><li>本サービスは、訪問介護・在宅支援サービスおよび訪問看護サービス（以下総称して「ケアサービス」といいます。）の提供を希望する利用者（以下「契約者」といいます。）と、所定の資格を有するケアサポーターをマッチングするプラットフォームです。</li><li>当社は、契約者とケアサポーターとの間のマッチングおよび個別契約締結の場、ならびに本システムを通じた決済手段（集金代行窓口）を提供すると共に、契約者とケアサポーターに対するサポート・フォロー等を行う役割を担うものであり、契約者に対するケアサービスそのものの提供主体ではなく、またケアサポーターの雇用主でもありません。</li><li>ケアサービスに関する契約（以下「個別契約」といいます。）は、本システムを通じてマッチングが成立した時点で、契約者とケアサポーターとの間で直接の「準委任契約」として成立するものとします。</li></ol>\n<h2>第2条（ケアサービスの区分および業務の裁量）</h2>\n<ol><li>ケアサポーターが本システムを通じて受託できるケアサービスは、以下の2つの区分に分かれ、ケアサポーターは自身が保有する資格に応じた区分を選択・受託するものとします。 (1) 訪問介護・在宅支援サービス：身体介助（入浴、排泄、食事介助等）、生活支援（調理、掃除、買い物等）、見守り、通院・外出の付き添い等 (2) 訪問看護サービス：健康状態の観察、療養上の世話、医師の指示に基づく医療処置（点滴、インスリン注射、褥瘡処置、カテーテル管理等）等</li><li>ケアサポーターは、独立した個人事業主（受託者）として、民法上の準委任契約に基づく「善良なる管理者の注意（善管注意義務）」をもって、自己裁量と責任において本件業務を遂行するものとします。当社とケアサポーターとの間に、指揮命令関係、雇用契約、労働契約またはこれらに類する関係は一切成立しません。</li></ol>\n<h2>第3条（個別契約の成立および業務の辞退）</h2>\n<ol><li>ケアサポーターが、本システム上で契約者からの利用予約に対して受託の意思表示を行い、マッチングが完了した時点で、契約者とケアサポーターとの間の個別契約（準委任契約）が自動的に成立します。</li><li>個別契約における日時、場所、具体的な業務内容、および報酬額等の条件は、本システム上の確定画面および自動送信される電磁的記録の定めに従うものとします。</li><li>マッチング成立後、ケアサポーターの都合により当該業務を辞退（キャンセル）する場合、当社が別途定める報酬規程に基づき、所定のペナルティ（違約金の発生、またはマッチング率の低下措置等）が科される場合があり、ケアサポーターはこれを予め了承するものとします。</li></ol>\n<h2>第4条（訪問看護サービスにおける医療行為の特則）</h2>\n<ol><li>ケアサポーターが第2条第1項第2号に定める「訪問看護サービス」に該当する業務を行う場合、看護師、准看護師等の有効な国家資格を保有していることを、事前に当社が定める方法で証明しなければなりません。</li><li>ケアサポーターは、契約者に対し医療行為を提供する場合は、契約者の主治医が発行した有効な「訪問看護指示書」の記載内容および指示の範囲内に限ってこれを行うものとします。</li><li>ケアサポーターは、有効な訪問看護指示書が提示されない場合、または指示の範囲を超える医療行為については、契約者から強い要求があった場合であっても、法律（保健師助産師看護師法）に基づき、一切これを行ってはなりません。</li></ol>\n<h2>第5条（業務報酬、システム手数料および支払い方法）</h2>\n<ol><li>当社は、個別契約に基づきケアサポーターが業務を適切に完了し、かつ本システムを通じて所定の業務完了報告を行ったことを条件として、契約者から回収した利用料金から、当社所定の「プラットフォーム利用料（システム手数料）」を差し引いた金額（以下「業務報酬」といいます。）をケアサポーターに支払います。</li><li>業務報酬の計算（時間単価、各種加算、指名手当、交通費実費等）は、当社が別途本システム上または報酬規程で提示する料金表に従うものとします。</li><li>当社は、ケアサポーターから契約者に対する業務報酬（準委任の対価）の債権について、集金代行権限を授与されているものとします。</li><li>業務報酬の締め日、支払日、振込口座への送金フローについては、当社が別途定める報酬規程の定めに従うものとします。なお、振込手数料の負担は報酬規程に従います。</li></ol>\n<h2>第6条（直接契約および引き抜きの禁止）</h2>\n<ol><li>ケアサポーターは、本サービスの利用期間中および本サービス退会後2年間、本システムを通じて知り合った契約者（利用者）に対し、本システムを介さずに直接ケアサービス（介護・看護業務等を含むがこれらに限られない）を提供し、または個別に雇用契約、業務委託契約、準委任契約その他の契約を締結してはなりません。</li><li>ケアサポーターが前項に違反した場合、ケアサポーターは当社に対し、違約金として金50万円、または当該直接契約によって当社が被った損害額（本来得られるはずであったプラットフォーム利用料相当額の3倍の金額を含む）のいずれか高い方の金額を直ちに支払うものとします。</li></ol>\n<h2>第7条（禁止事項）</h2>\n<p>ケアサポーターは、本サービスの利用および業務の遂行にあたり、以下の行為を行ってはなりません。</p>\n<ol><li>受託した業務の全部または一部を、当社の事前の書面による承諾なしに、他の第三者に再委託し、または代行させる行為（業務は必ずケアサポーター本人が直接遂行しなければなりません）。</li><li>契約者および被介護者・被看護者の人権と尊厳を傷つける行為、暴言、暴力、威嚇、ハラスメント行為、または名誉・信用を毀損する行為。</li><li>契約者の自宅等において、事前の明確な合意やシステム上の記録なしに、現金や貴金属などの高価な物品の管理・売買等を引き受ける行為。</li><li>本システムへの登録において、保有資格、実務経験、健康状態等について虚偽の情報を登録する行為。</li><li>その他、当社がプラットフォームの運営上不適切と判断する一切の行為。</li></ol>\n<h2>第8条（秘密保持および個人情報の保護）</h2>\n<ol><li>ケアサポーターは、本サービスを通じて知り得た当社の営業秘密・システム情報、ならびに契約者および被介護者・被看護者の個人情報（病歴、家族構成、住所、身体状況、バイタルデータ等を含むがこれらに限られない）を、厳重に管理し、第三者に開示または漏洩してはなりません。</li><li>ケアサポーターは、前項の秘密情報および個人情報を、個別契約に基づく業務遂行以外の目的（SNS等への投稿、他用途への流用等を含む）に一切使用してはなりません。本条の規定は、本サービス退会後も永続的に有効に存続するものとする。</li></ol>\n<h2>第9条（免責および損害賠償）</h2>\n<ol><li>ケアサービスは契約者とケアサポーターとの間の直接の準委任契約に基づき提供されるものであるため、業務遂行に伴い発生した契約者または被介護者・被看護者の怪我、病状の悪化、死亡、または器物破損、盗難等のトラブルについて、ケアサポーターが民法上の善管注意義務違反（過失）の有無に応じて直接責任を負うものとし、当社は原則として一切の責任を負わないものとします。</li><li>前項の場合において、当社が加入する本システム向けの賠償責任保険が適用できる場合は、当該保険金の支払額を上限として損害の補填（カスタマーサポートを通じた対応）を行うことができるものとします。ただし、これによりケアサポーターの法的責任が全面的に免除されるものではありません。</li><li>ケアサポーターが本規約に違反し、または業務遂行において当社に損害を与えた場合、ケアサポーターはその損害（合理的な弁護士費用を含む）を賠償する責任を負います。</li></ol>\n<h2>第10条（規約の変更および利用停止）</h2>\n<ol><li>当社は、必要と判断した場合には、ケアサポーターに事前に通知（本システム上での掲示、または登録されたメールアドレスへの送信）することにより、本規約および料金表、ガイドライン等の関連規程をいつでも変更することができるものとします。変更後にケアサポーターが本サービスを利用した場合、変更後の規約に同意したものとみなします。</li><li>ケアサポーターが本規約に違反した場合、または登録ワーカーとして不適当と当社が判断した場合、当社は何らの通知・催告を要せず、直ちに本システムの利用停止、マッチングの取消、または登録抹消（強制退会）の措置を講じることができるものとします。</li></ol>\n<h2>第11条（準拠法および管轄裁判所）</h2>\n<ol><li>本規約の解釈および適用にあたっては、日本法を準拠法とします。</li><li>本サービスまたは個別契約に関して、ケアサポーターと当社の間で紛争が生じた場合には、当社の本店所在地を管轄する地方裁判所を第一審の専属的合意管轄裁判所とします。</li></ol>\n<p>2026年［〇］月［〇］日 制定</p>",
+              "en": "<p>These Terms of Use stipulate the conditions for using the out-of-pocket home care support matching platform \"Care24Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Workers such as nurses and caregivers who register for this Service (hereinafter referred to as \"Care Supporters\") shall use this Service after agreeing to these Terms.</p>\n<h2>Article 1 (Purpose and the Company's Position)</h2>\n<ul><li>This Service is a platform that matches users (hereinafter referred to as \"Contractors\") who wish to receive home visiting care/home support services and visiting nursing services (hereinafter collectively referred to as \"Care Services\") with Care Supporters who possess prescribed qualifications.</li><li>The Company plays the role of providing a place for matching and concluding individual contracts between Contractors and Care Supporters, as well as providing a payment method (payment collection agency window) through this system, and providing support and follow-up for Contractors and Care Supporters. The Company is not the entity providing the Care Service itself to the Contractor, nor is it the employer of the Care Supporter.</li><li>The contract regarding the Care Service (hereinafter referred to as the \"Individual Contract\") shall be established directly between the Contractor and the Care Supporter as a \"quasi-mandate contract\" at the time the matching is established through this system.</li></ul>\n<h2>Article 2 (Classification of Care Services and Discretion in Business)</h2>\n<ul><li>The Care Services that Care Supporters can accept through this system are divided into the following two classifications, and Care Supporters shall select and accept the classification corresponding to their qualifications. (1) Home visiting care/home support services: Physical assistance (bathing, excretion, meal assistance, etc.), daily life support (cooking, cleaning, shopping, etc.), watching over, accompanying to hospitals/outings, etc. (2) Visiting nursing services: Observation of health condition, care for recuperation, medical treatment based on a doctor's instructions (intravenous drip, insulin injection, bedsore treatment, catheter management, etc.), etc.</li><li>Care Supporters shall perform this business at their own discretion and responsibility as independent individual business owners (contractors) with the \"duty of care of a good manager\" based on a quasi-mandate contract under the Civil Code. No chain of command, employment contract, labor contract, or similar relationship is established between the Company and the Care Supporter.</li></ul>\n<h2>Article 3 (Establishment of Individual Contracts and Decline of Business)</h2>\n<ul><li>When a Care Supporter expresses their intention to accept a usage reservation from a Contractor on this system and the matching is completed, an Individual Contract (quasi-mandate contract) between the Contractor and the Care Supporter is automatically established.</li><li>Conditions such as the date and time, location, specific business content, and remuneration amount in the Individual Contract shall be in accordance with the provisions of the confirmation screen on this system and automatically transmitted electromagnetic records.</li><li>If a Care Supporter declines (cancels) the relevant business for their own reasons after matching is established, a prescribed penalty (such as the occurrence of a cancellation fee or a measure to lower the matching rate) may be imposed based on the remuneration regulations separately determined by the Company, and the Care Supporter shall consent to this in advance.</li></ul>\n<h2>Article 4 (Special Rules for Medical Practices in Visiting Nursing Services)</h2>\n<ul><li>When a Care Supporter performs business that falls under \"Visiting nursing services\" stipulated in Article 2, Paragraph 1, Item 2, they must prove in advance that they hold a valid national qualification such as a registered nurse or a licensed practical nurse by the method determined by the Company.</li><li>When a Care Supporter provides medical practices to a Contractor, they shall do so only within the scope of the instructions and descriptions of a valid \"Visiting Nursing Instruction Document\" issued by the Contractor's attending physician.</li><li>Care Supporters must not perform any medical practices that exceed the scope of instructions or when a valid visiting nursing instruction document is not presented, even if there is a strong request from the Contractor, based on the law (Act on Public Health Nurses, Midwives, and Nurses).</li></ul>\n<h2>Article 5 (Business Remuneration, System Usage Fee, and Payment Method)</h2>\n<ul><li>On the condition that the Care Supporter properly completes the business based on the Individual Contract and reports the completion of the prescribed business through this system, the Company will pay the Care Supporter the amount remaining after deducting the \"platform usage fee (system fee)\" prescribed by the Company from the usage fee collected from the Contractor (hereinafter referred to as \"Business Remuneration\").</li><li>The calculation of Business Remuneration (hourly unit price, various additions, nomination allowance, actual transportation expenses, etc.) shall be in accordance with the fee schedule separately presented by the Company on this system or in the remuneration regulations.</li><li>The Company is granted the authority to collect the claim for Business Remuneration (consideration for quasi-mandate) from the Contractor on behalf of the Care Supporter.</li><li>The closing date, payment date, and remittance flow to the transfer account for Business Remuneration shall be in accordance with the provisions of the remuneration regulations separately determined by the Company. Note that the burden of the transfer fee follows the remuneration regulations.</li></ul>\n<h2>Article 6 (Prohibition of Direct Contracts and Poaching)</h2>\n<ul><li>Care Supporters must not provide care services (including but not limited to nursing care and nursing business) directly without using this system, or individually conclude employment contracts, business entrustment contracts, quasi-mandate contracts, or other contracts, with Contractors (users) they met through this system, during the usage period of this Service and for two years after withdrawing from this Service.</li><li>If a Care Supporter violates the preceding paragraph, the Care Supporter shall immediately pay the Company 500,000 yen as a penalty, or the amount of damage suffered by the Company due to the direct contract (including an amount equivalent to three times the platform usage fee that should have originally been obtained), whichever is higher.</li></ul>\n<h2>Article 7 (Prohibited Matters)</h2>\n<p>Care Supporters must not engage in the following acts when using this Service and performing business:</p>\n<ul><li>The act of subcontracting or having a third party act on behalf of all or part of the entrusted business without the Company's prior written consent (the business must always be directly executed by the Care Supporter themselves).</li><li>Acts that damage the human rights and dignity of Contractors and care receivers/nursing receivers, abusive language, violence, intimidation, harassment acts, or acts that defame or damage trust.</li><li>The act of undertaking the management, buying and selling, etc. of expensive items such as cash and precious metals at the Contractor's home, etc., without prior clear agreement and records on the system.</li><li>The act of registering false information regarding qualifications held, practical experience, health condition, etc. when registering on this system.</li><li>Other acts that the Company determines to be inappropriate for the operation of the platform.</li></ul>\n<h2>Article 8 (Confidentiality and Protection of Personal Information)</h2>\n<ul><li>Care Supporters must strictly manage the Company's trade secrets and system information learned through this Service, as well as the personal information of Contractors and care receivers/nursing receivers (including but not limited to medical history, family structure, address, physical condition, vital data, etc.), and must not disclose or leak them to third parties.</li><li>Care Supporters must not use the confidential information and personal information of the preceding paragraph for any purpose other than the execution of business based on the Individual Contract (including posting on SNS, diverting to other uses, etc.). The provisions of this article shall survive effectively in perpetuity even after withdrawing from this Service.</li></ul>\n<h2>Article 9 (Disclaimer and Compensation for Damages)</h2>\n<ul><li>Since Care Services are provided based on a direct quasi-mandate contract between the Contractor and the Care Supporter, the Care Supporter shall bear direct responsibility for troubles such as injuries, deterioration of medical conditions, death, or property damage and theft of Contractors or care receivers/nursing receivers that occur in conjunction with the execution of business, depending on the presence or absence of a breach of the duty of care of a good manager (negligence) under the Civil Code, and the Company shall in principle bear no responsibility whatsoever.</li><li>In the case of the preceding paragraph, if the liability insurance for this system enrolled in by the Company can be applied, it shall be possible to compensate for damages (handling through customer support) up to the payment amount of the relevant insurance money. However, this does not completely exempt the Care Supporter's legal responsibility.</li><li>If a Care Supporter violates these Terms or causes damage to the Company in the execution of business, the Care Supporter shall be liable to compensate for the damage (including reasonable attorney's fees).</li></ul>\n<h2>Article 10 (Changes to Terms and Suspension of Use)</h2>\n<ul><li>The Company may change these Terms and related regulations such as the fee schedule and guidelines at any time by notifying Care Supporters in advance (posting on this system or sending to the registered email address) when it determines it to be necessary. If a Care Supporter uses this Service after the change, they are deemed to have agreed to the changed Terms.</li><li>If a Care Supporter violates these Terms or if the Company determines that they are inappropriate as a registered worker, the Company may take measures such as immediately suspending the use of this system, canceling matching, or erasing registration (forced withdrawal) without requiring any notification or warning.</li></ul>\n<h2>Article 11 (Governing Law and Jurisdiction)</h2>\n<ul><li>The interpretation and application of these Terms shall be governed by Japanese law.</li><li>If a dispute arises between a Care Supporter and the Company regarding this Service or an Individual Contract, the district court having jurisdiction over the location of the Company's head office shall be the exclusive agreement jurisdictional court of the first instance.</li></ul>\n<p>Established on [Month] [Day], 2026</p>"
+            },
+            "heading": {
+              "ja": "Care24Japan プラットフォーム利用規約（ケアサポーター向け）",
+              "en": "Care24Japan Platform Terms & Conditions (For Care Supporters)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-terms-for-users",
+      "seo": {
+        "title": "Care24Japan プラットフォーム利用規約（ご利用者様向け）",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care24Japan Platform Terms of Service (For Users)",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<p>本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外サービスマッチングプラットフォーム「Care24Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスの利用者（以下「契約者」といいます。）は、本規約に同意の上、本サービスを利用するものとします。</p>\n<h2>第1条（目的および当社の立ち位置）</h2>\n<ol><li>本サービスは、訪問介護・在宅支援サービスおよび訪問看護サービス（以下総称して「ケアサービス」といいます。）の提供を希望する契約者（被介護者・被看護者を含みます。）と、所定の資格を有する看護師または介護士（以下「ケアサポーター」といいます。）をマッチングするプラットフォームです。</li><li>当社は、契約者とケアサポーターとの間のマッチングおよび契約締結の場、ならびに本システムを通じた決済手段を提供すると共に、契約者とケアサポーターに対するサポート・フォロー等を行う役割を担うものであり、契約者に対するケアサービスそのものの提供主体ではありません。</li><li>ケアサービスに関する契約（以下「個別契約」といいます。）は、本システムを通じてマッチングが成立した時点で、契約者とケアサポーターとの間で直接成立するものとします。</li></ol>\n<h2>第2条（ケアサービスの区分および内容）</h2>\n<p>本サービスにおいて提供されるケアサービスは、以下の2つの区分に分かれます。契約者は、自身の目的および必要とする資格に応じて選択するものとします。</p>\n<table><thead><tr><th>区分</th><th>① 訪問介護・在宅支援サービス</th><th>② 訪問看護サービス</th></tr></thead><tbody><tr><td>担当サポーター</td><td>介護士、初任者研修修了者、実務者研修修了者、介護福祉士等</td><td>看護師、准看護師等の医療有資格者</td></tr><tr><td>業務内容</td><td>身体介助（入浴、排泄、食事介助等）、生活支援（調理、掃除、買い物等）、見守り、通院・外出の付き添い等</td><td>健康状態の観察、療養上の世話、医師の指示に基づく医療処置（点滴、インスリン注射、褥瘡処置、カテーテル管理等）等</td></tr><tr><td>医療行為</td><td>不可（法律上認められた一部の軽微な行為を除く）</td><td>可能（医師の「訪問看護指示書」がある場合に限る）</td></tr></tbody></table>\n<h2>第3条（訪問看護サービスにおける医療行為の特則）</h2>\n<ol><li>契約者は、本サービスを利用するにあたり、既に介護保険サービス等を利用している場合は、担当のケアマネジャー等に対して本サービスの利用について事前に共有・相談するものとします。</li><li>契約者が第2条に定める「訪問看護サービス」を利用し、ケアサポーターに対して医療行為の提供を希望する場合、主治医が発行した有効な「訪問看護指示書」を事前に取得し、本システムを通じて当社および担当ケアサポーターに提示しなければなりません。</li><li>訪問看護指示書が提示されない場合、または指示書の有効期限が切れている場合、ケアサポーターは一切の医療行為を行うことはできません。この場合、ケアサポーターは健康状態の観察や療養上の世話などの範囲内でのみサービスを提供します。</li><li>契約者が訪問看護指示書を提示しなかったことにより、希望する医療行為が提供できなかった場合であっても、予約された時間に対応する利用料金は全額発生するものとし、当社およびケアサポーターは一切の減額または返金義務を負いません。</li><li>提示された訪問看護指示書に、特定の施設基準や高度な専門研修を要する医療処置が含まれている場合、当社のプラットフォームに登録されているケアサポーターの資格・スキル等の状況によっては、マッチングが成立しない、または該当する医療行為を提供できない場合があります。</li></ol>\n<h2>第4条（個別契約の成立および予約）</h2>\n<ol><li>契約者は、本システムより希望する日時、具体的な業務内容、ケアサポーターへの要望等の条件を指定して利用予約を申し込むものとします。</li><li>当社が当該申込みに対し、本システム上でマッチングが成立し、契約者とケアサポーターとでオンライン面談を行った後、契約者とケアサポーターとの間の個別契約が確定し、成立するものとします。</li><li>本サービスは、介護保険および医療保険の適用外（全額自己負担）のプライベートサービスです。契約者は、当社が別途定める料金表に基づき、算出された利用料金の全額を支払う義務を負います。</li></ol>\n<h2>第5条（利用料金および支払い方法）</h2>\n<ol><li>契約者は、本サービス利用の対価として、基本料金、時間外加算（夜間・早朝・年末年始等）、当日予約加算、ケアサポーター指名料、およびケアサポーターの交通費等の合計額（以下「利用料金」といいます。）を支払うものとします。料金体系の詳細は別途料金表に定めます。</li><li>利用料金の支払いは、当社が指定する決済手段により行うものとします。</li><li>当社は、ケアサポーターから契約者に対する利用料金の債権について、集金代行権限を授与されているものとします。契約者が当社に対して決済を完了した時点で、契約者のケアサポーターに対する利用料金債務は消滅します。</li><li>個別契約の成立後、契約者の都合により予約をキャンセルまたは変更する場合、当社が別途定めるキャンセルポリシーに基づき、所定のキャンセル料が発生します。</li></ol>\n<h2>第6条（直接契約および引き抜きの禁止）</h2>\n<ol><li>契約者は、本サービス（過去の利用を含みます。）を通じて知ったケアサポーターに対し、本サービスを介さずに直接ケアサービスの提供を依頼し、または個別に雇用契約、業務委託契約その他の契約を締結してはなりません。本サービスの利用終了後またはアカウント削除後［2］年間も同様の制限が適用されるものとします。</li><li>契約者が前項に違反した場合、契約者は当社に対し、違約金として［金50万円］、または当該ケアサポーターへの直接発注（直接契約）によって免れたプラットフォーム利用料相当額の［3］倍の金額のいずれか高い方の金額を直ちに支払うものとします。</li></ol>\n<h2>第7条（禁止事項と利用停止）</h2>\n<p>契約者は、本サービスの利用にあたり、自らまたは被介護者・被看護者をして、以下の行為を行ってはなりません。</p>\n<ol><li>ケアサポーターに対し、事前に本システム上で合意した業務範囲を超えた危険な作業（重量物の運搬、高所での作業等）や、法令に違反する行為を現場で直接要求・指示すること。</li><li>ケアサポーターに対するハラスメント行為（セクシャルハラスメント、パワーハラスメント等）、暴言、暴力、威嚇、または名誉・信用を毀損する行為。</li><li>本システムへの登録において、被介護者・被看護者の病状、認知症の症状、感染症の有無、その他身体状況について虚偽の情報を登録する行為。</li><li>ケアサポーターに対し、現金、貴金属、その他高価な物品の管理や買い物を、適切な合意や記録なしに依頼する行為。</li><li>その他、当社がプラットフォームの運営上不適切と判断する一切の行為。</li></ol>\n<p>利用者が本規約に違反した場合、または利用者として不適当と当社が判断した場合、当社は何らの通知・催告を要せず、直ちに本システムの利用停止、マッチングの取消、または登録抹消（強制退会）の措置を講じることができるものとします。</p>\n<h2>第8条（免責および責任制限）</h2>\n<ol><li>ケアサービスは契約者とケアサポーターとの間の直接の契約に基づき提供されるものであり、ケアサービスの実施に伴い発生した契約者または被介護者・被看護者の怪我、病状の悪化、死亡、または器物破損、盗難等のトラブルについて、当社は原則として一切の責任を負わないものとし、該当するケアサポーターが直接責任を負うものとします。</li><li>前項の規定にかかわらず、当社はプラットフォームの信頼性維持のため、カスタマーサポートによる相談受付や、当社が加入する損害賠償責任保険の適用範囲内での救済措置を行う場合があります。ただし、これにより当社が個別契約の当事者としての責任を引き受けるものではありません。</li><li>何らかの理由により当社が契約者に対して法的責任を負う場合であっても、当社の賠償責任は、損害事由が発生した当該個別契約において契約者が実際に支払った利用料金の総額を上限とします。ただし、当社に故意または重大な過失がある場合はこの限りではありません。</li></ol>\n<h2>第9条（契約者によるキャンセル）</h2>\n<p>契約者は、個別契約成立後であっても、本システム所定の手続きに従い、予約をキャンセルすることができます。ただし、キャンセル時期に応じて、当社が別途定める料金表に基づき、所定のキャンセル料が発生する場合があります。</p>\n<h2>第10条（ケアサポーターによるキャンセル・欠勤）</h2>\n<p>ケアサポーターの都合によるキャンセルや当日欠勤によりサービスが提供されなかった場合、契約者は当該サービスの利用料金の返金を受けるものとします。当社は代替のケアサポーターの紹介に努めますが、代替者の手配を保証するものではありません。</p>\n<h2>第11条（規約の変更）</h2>\n<ol><li>当社は、必要と判断した場合には、契約者に事前に通知（本システム上での掲示、または登録されたメールアドレスへの送信）することにより、本規約および料金表等の関連規程をいつでも変更することができるものとします。</li><li>変更の通知後、契約者が本サービス利用をした場合、または当社の定める相当の期間内に退会手続きを行わなかった場合、契約者は変更後の規約に同意したものとみなします。</li></ol>\n<h2>第12条（準拠法および管轄裁判所）</h2>\n<ol><li>本規約の解釈および適用にあたっては、日本法を準拠法とします。</li><li>本サービスまたは個別契約に関して、契約者と当社の間で紛争が生じた場合には、当社の本店所在地を管轄する地方裁判所を第一審の専属的合意管轄裁判所とします。</li></ol>\n<p>2026年8月3日 制定</p>",
+              "en": "<p>These Terms of Service (hereinafter referred to as the \"Terms\") stipulate the terms and conditions for using the non-insurance care service matching platform \"Care24Japan\" (hereinafter referred to as the \"Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Users of the Service (hereinafter referred to as \"Contractors\") shall use the Service upon agreeing to these Terms.</p>\n<h2>Article 1 (Purpose and Our Position)</h2>\n<ul><li>The Service is a platform that matches Contractors (including care receivers and nursing care receivers) who wish to be provided with visiting care/in-home support services and visiting nursing services (hereinafter collectively referred to as \"Care Services\") with nurses or caregivers possessing prescribed qualifications (hereinafter referred to as \"Care Supporters\").</li><li>The Company assumes the role of providing a venue for matching and contract conclusion between the Contractor and the Care Supporter, providing a payment method through this system, and providing support and follow-up for the Contractor and the Care Supporter. The Company is not the direct provider of the Care Services to the Contractor.</li><li>A contract regarding Care Services (hereinafter referred to as an \"Individual Contract\") shall be directly concluded between the Contractor and the Care Supporter at the time matching is established through this system.</li></ul>\n<h2>Article 2 (Classification and Content of Care Services)</h2>\n<p>The Care Services provided in this Service are divided into the following two classifications. The Contractor shall select the appropriate service according to their purpose and required qualifications.</p>\n<table><thead><tr><th>Classification</th><th>1. Visiting Care / In-home Support Services</th><th>2. Visiting Nursing Services</th></tr></thead><tbody><tr><td>Assigned Supporter</td><td>Caregivers, those who have completed initial training, those who have completed practical training, certified care workers, etc.</td><td>Medical professionals such as registered nurses and assistant nurses.</td></tr><tr><td>Work Description</td><td>Physical care (bathing, excretion, eating assistance, etc.), daily life support (cooking, cleaning, shopping, etc.), monitoring, accompanying to hospitals/outings, etc.</td><td>Observation of health conditions, medical care for recuperation, medical treatments based on doctor's instructions (IV drips, insulin injections, bedsore treatments, catheter management, etc.), etc.</td></tr><tr><td>Medical Acts</td><td>Prohibited (except for some minor acts permitted by law)</td><td>Permitted (Limited to cases where there is a \"Visiting Nursing Instruction\" from a doctor)</td></tr></tbody></table>\n<h2>Article 3 (Special Provisions on Medical Acts in Visiting Nursing Services)</h2>\n<ul><li>When using the Service, if the Contractor is already using nursing care insurance services, etc., they shall share and consult with their assigned care manager, etc. in advance regarding the use of the Service.</li><li>If the Contractor uses the \"Visiting Nursing Services\" stipulated in Article 2 and wishes for the Care Supporter to provide medical acts, the Contractor must obtain a valid \"Visiting Nursing Instruction\" issued by the attending physician in advance and present it to the Company and the assigned Care Supporter through this system.</li><li>If the Visiting Nursing Instruction is not presented, or if the instruction has expired, the Care Supporter cannot perform any medical acts. In this case, the Care Supporter will only provide services within the scope of observing health conditions and providing care for recuperation.</li><li>Even if the desired medical acts could not be provided because the Contractor failed to present the Visiting Nursing Instruction, the full usage fee corresponding to the reserved time shall be incurred, and the Company and the Care Supporter shall not bear any obligation to reduce or refund the fee.</li><li>If the presented Visiting Nursing Instruction includes medical treatments requiring specific facility standards or advanced specialized training, matching may not be established or the relevant medical acts may not be provided depending on the qualifications and skills of the Care Supporters registered on the Company's platform.</li></ul>\n<h2>Article 4 (Establishment of Individual Contracts and Reservations)</h2>\n<ul><li>The Contractor shall apply for a reservation by specifying the desired date and time, specific work description, requests to the Care Supporter, and other conditions through this system.</li><li>In response to the application, matching is established on this system, and after an online interview between the Contractor and the Care Supporter, the Individual Contract between the Contractor and the Care Supporter is confirmed and established.</li><li>The Service is a private service not covered by nursing care insurance and medical insurance (fully self-funded). The Contractor is obligated to pay the full amount of the calculated usage fee based on the fee schedule separately determined by the Company.</li></ul>\n<h2>Article 5 (Usage Fees and Payment Methods)</h2>\n<ul><li>As consideration for using the Service, the Contractor shall pay the total amount of the basic fee, overtime surcharges (nighttime, early morning, year-end and New Year holidays, etc.), same-day reservation surcharges, Care Supporter nomination fees, and transportation expenses for the Care Supporter (hereinafter referred to as the \"Usage Fee\"). Details of the fee structure are specified in a separate fee schedule.</li><li>Payment of the Usage Fee shall be made through a payment method designated by the Company.</li><li>The Company shall be granted the authority to act as a collection agent for the Usage Fee claims held by the Care Supporter against the Contractor. At the time the Contractor completes the payment to the Company, the Contractor's obligation to pay the Usage Fee to the Care Supporter shall be extinguished.</li><li>If a reservation is canceled or changed for the Contractor's convenience after the Individual Contract is established, a prescribed cancellation fee shall be incurred based on the cancellation policy separately determined by the Company.</li></ul>\n<h2>Article 6 (Prohibition of Direct Contracting and Poaching)</h2>\n<ul><li>The Contractor shall not request the provision of Care Services directly from a Care Supporter they came to know through the Service (including past use) without going through the Service, nor shall they individually conclude an employment contract, outsourcing contract, or any other contract. The same restriction shall apply for two (2) years after the termination of the use of the Service or the deletion of the account.</li><li>If the Contractor violates the preceding paragraph, the Contractor shall immediately pay the Company a penalty of 500,000 yen, or an amount equal to three (3) times the platform usage fee evaded by direct ordering (direct contracting) to the Care Supporter, whichever is higher.</li></ul>\n<h2>Article 7 (Prohibited Acts and Suspension of Use)</h2>\n<p>In using the Service, the Contractor must not, either personally or through the care receiver/nursing care receiver, engage in the following acts:</p>\n<ul><li>Directly requesting or instructing the Care Supporter on site to perform dangerous work (carrying heavy objects, working in high places, etc.) that exceeds the scope of work previously agreed upon on this system, or acts that violate laws and regulations.</li><li>Harassment (sexual harassment, power harassment, etc.), abusive language, violence, intimidation, or acts that defame or damage the credibility of the Care Supporter.</li><li>Registering false information regarding the care receiver/nursing care receiver's medical condition, dementia symptoms, presence of infectious diseases, or other physical conditions when registering on this system.</li><li>Requesting the Care Supporter to manage cash, precious metals, or other valuable items, or to go shopping, without appropriate agreement and recording.</li><li>Any other acts that the Company deems inappropriate for the operation of the platform.</li></ul>\n<p>If a user violates these Terms, or if the Company determines that the user is inappropriate, the Company may, without requiring any notice or demand, immediately take measures to suspend the use of this system, cancel the matching, or erase the registration (forced withdrawal).</p>\n<h2>Article 8 (Disclaimer and Limitation of Liability)</h2>\n<ul><li>Care Services are provided based on a direct contract between the Contractor and the Care Supporter, and as a general rule, the Company shall not be held liable for any injuries, worsening of medical conditions, death of the Contractor or care receiver/nursing care receiver, or troubles such as property damage or theft that occur in connection with the implementation of Care Services. The corresponding Care Supporter shall bear direct responsibility.</li><li>Notwithstanding the provisions of the preceding paragraph, in order to maintain the reliability of the platform, the Company may accept consultations through customer support or take remedial measures within the scope of the liability insurance subscribed to by the Company. However, this does not mean that the Company assumes responsibility as a party to the Individual Contract.</li><li>Even if the Company assumes legal liability to the Contractor for any reason, the Company's liability for damages shall be capped at the total amount of Usage Fees actually paid by the Contractor under the relevant Individual Contract in which the cause of damages occurred. However, this shall not apply if there is willful misconduct or gross negligence on the part of the Company.</li></ul>\n<h2>Article 9 (Cancellation by the Contractor)</h2>\n<p>Even after the establishment of an Individual Contract, the Contractor may cancel the reservation in accordance with the procedures prescribed by this system. However, depending on the timing of the cancellation, a prescribed cancellation fee may be incurred based on the fee schedule separately determined by the Company.</p>\n<h2>Article 10 (Cancellation/Absence by Care Supporter)</h2>\n<p>If the service is not provided due to cancellation or same-day absence for the Care Supporter's convenience, the Contractor shall receive a refund of the Usage Fee for the relevant service. The Company will make efforts to introduce a substitute Care Supporter, but does not guarantee the arrangement of a substitute.</p>\n<h2>Article 11 (Modification of Terms)</h2>\n<ul><li>If the Company deems it necessary, it may modify these Terms and related regulations such as the fee schedule at any time by notifying the Contractor in advance (by posting on this system or sending to the registered email address).</li><li>If the Contractor uses the Service after the notice of modification, or fails to complete the withdrawal procedure within a reasonable period specified by the Company, the Contractor shall be deemed to have agreed to the modified Terms.</li></ul>\n<h2>Article 12 (Governing Law and Jurisdiction)</h2>\n<ul><li>The interpretation and application of these Terms shall be governed by Japanese law.</li><li>If any dispute arises between the Contractor and the Company regarding the Service or an Individual Contract, the district court having jurisdiction over the location of the Company's head office shall be the exclusive agreement jurisdictional court of first instance.</li></ul>\n<p>Established on August 3, 2026</p>"
+            },
+            "heading": {
+              "ja": "Care24Japan プラットフォーム利用規約（ご利用者様向け）",
+              "en": "Care24Japan Platform Terms of Service (For Users)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-cancellation-policy",
+      "seo": {
+        "title": "Care24Japan キャンセルポリシー",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care24Japan Cancellation Policy",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<h2>第1条（目的）</h2>\n<p>本キャンセルポリシーは、メディカルインフォマティクス株式会社（以下「当社」という）が運営する「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）が予約確定した訪問介護・訪問看護・リハビリ等のマッチングサービス（以下「予約業務」という）を変更またはキャンセルする場合の条件およびキャンセル料について定めるものである。</p>\n<h2>第2条（キャンセル料の発生基準および割合）</h2>\n<p>利用者の都合により予約業務をキャンセルまたは変更する場合、予約日時を基準とした以下のタイミングに応じてキャンセル料が発生するものとする。なお、判定基準となる時刻はすべて「15:00」を区切りとする。</p>\n<table><thead><tr><th>キャンセル・変更の申し出タイミング</th><th>キャンセル料の割合</th></tr></thead><tbody><tr><td>予約日の3日前の15:00以降のキャンセル・変更</td><td>予約料金の 50％</td></tr><tr><td>予約日の前々日の15:00以降のキャンセル・変更</td><td>予約料金の 75％</td></tr><tr><td>予約日の前日の15:00以降のキャンセル・変更</td><td>予約料金の 100％（全額負担）</td></tr><tr><td>上記（予約日3日前の15:00）より前のキャンセル・変更</td><td>キャンセル料なし（無料）</td></tr></tbody></table>\n<h2>第3条（予約内容の変更時の取り扱い）</h2>\n<ol><li>予約時間の短縮： 確定済みの予約時間を短縮する場合は、短縮された時間分をキャンセルとみなし、第2条の基準に基づき短縮分の料金に対して所定のキャンセル料が発生する。</li><li>予約時間の延長： 確定済みの予約時間を延長する場合は、延長部分を新たなスポット利用申込として取り扱い、延長分の追加料金が発生する。</li><li>日程変更の特例： 利用者または要介護者の都合による日程変更であっても、原則として第2条のキャンセル料が適用される。ただし、当社のシステムおよびケアサポーター（以下「サポーター」という）側が特別に了承した調整である場合はこの限りではない。調整後の日程が時間外や当日予約等の加算事由に該当する場合は、変更後のレートに基づき追加料金が発生する。</li></ol>\n<h2>第4条（指名予約および手当の取り扱い）</h2>\n<p>利用者がサポーターを指名して予約（指名予約）していた案件をキャンセルした場合、指名手数料（1時間あたり330円）についてもキャンセル料の対象となる。第2条に基づき基本料金のキャンセル料が50％または75％となる場合であっても、指名手数料についてはその全額（100％）がキャンセル料に加算される。ただし、キャンセル料が「なし（無料）」の期間内のキャンセルであれば、指名手数料のキャンセル料も発生しない。</p>\n<h2>第5条（実費および交通費の取り扱い）</h2>\n<p>予約業務が事前にキャンセルされた場合、一律990円の交通費およびその他実費等の費用は発生しない。ただし、サポーターが既に訪問を開始しているなど、直前のキャンセルにより損害が発生した場合は実費相当分を請求することがある。</p>\n<h2>第6条（当社またはサポーター都合によるキャンセル）</h2>\n<p>当社またはサポーターの突発的な体調不良、その他の不可抗力および都合により業務提供が不可能となり、予約がキャンセルされた場合は、利用者に対してキャンセル料は一切発生しない。</p>\n<h2>附則</h2>\n<p>本ポリシーは、2026年9月1日より制定・施行する。</p>",
+              "en": "<h2>Article 1 (Purpose)</h2>\n<p>The purpose of this Cancellation Policy is to establish the conditions and cancellation fees when a service user (hereinafter referred to as the \"User\") changes or cancels a confirmed matching service reservation for visiting care, visiting nursing, rehabilitation, etc. (hereinafter referred to as the \"Reserved Work\") on \"Care24Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\").</p>\n<h2>Article 2 (Cancellation Fee Accrual Standards and Ratios)</h2>\n<p>If the Reserved Work is canceled or changed due to the User's convenience, a cancellation fee shall accrue depending on the following timing based on the reservation date and time. Furthermore, the base time for all judgments shall be cut off at \"15:00\".</p>\n<table><thead><tr><th>Timing of Cancellation/Change Request</th><th>Ratio of Cancellation Fee</th></tr></thead><tbody><tr><td>Cancellation/change after 15:00 three days prior to the reservation date</td><td>50% of the reservation fee</td></tr><tr><td>Cancellation/change after 15:00 two days prior to the reservation date</td><td>75% of the reservation fee</td></tr><tr><td>Cancellation/change after 15:00 the day before the reservation date</td><td>100% of the reservation fee (full burden)</td></tr><tr><td>Cancellation/change prior to the above (before 15:00 three days prior to the reservation date)</td><td>No cancellation fee (Free)</td></tr></tbody></table>\n<h2>Article 3 (Handling of Changes to Reservation Details)</h2>\n<ul><li>Shortening of reservation time: If a confirmed reservation time is shortened, the shortened time will be deemed a cancellation, and a predetermined cancellation fee will accrue for the shortened portion's fee based on the standards in Article 2.</li><li>Extension of reservation time: If a confirmed reservation time is extended, the extended portion will be treated as a new spot usage application, and an additional fee for the extended portion will accrue.</li><li>Exceptions for schedule changes: Even if a schedule change is due to the convenience of the User or the care recipient, the cancellation fee in Article 2 shall apply in principle. However, this shall not apply if the adjustment is specially approved by our system and the care supporter (hereinafter referred to as the \"Supporter\"). If the adjusted schedule falls under addition reasons such as overtime or same-day reservation, additional fees will accrue based on the modified rate.</li></ul>\n<h2>Article 4 (Handling of Nomination Reservations and Allowances)</h2>\n<p>If a User cancels a case that was reserved by nominating a Supporter (nomination reservation), the nomination fee (330 yen per hour) shall also be subject to the cancellation fee. Even if the cancellation fee for the basic fee is 50% or 75% based on Article 2, the full amount (100%) of the nomination fee shall be added to the cancellation fee. However, if the cancellation occurs within the \"no cancellation fee (free)\" period, the cancellation fee for the nomination fee will not accrue.</p>\n<h2>Article 5 (Handling of Actual Expenses and Transportation Expenses)</h2>\n<p>If the Reserved Work is canceled in advance, the flat transportation fee of 990 yen and other actual expenses will not accrue. However, if damages occur due to a last-minute cancellation, such as the Supporter having already begun the visit, an amount equivalent to the actual expenses may be billed.</p>\n<h2>Article 6 (Cancellations due to the Company or Supporter's Convenience)</h2>\n<p>If the provision of work becomes impossible due to sudden illness of the Company or the Supporter, or other force majeure and convenience, resulting in the reservation being canceled, no cancellation fee whatsoever shall accrue to the User.</p>\n<h2>Supplementary Provisions</h2>\n<p>This Policy shall be enacted and enforced from September 1, 2026.</p>"
+            },
+            "heading": {
+              "ja": "Care24Japan キャンセルポリシー",
+              "en": "Care24Japan Cancellation Policy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-compensation",
+      "seo": {
+        "title": "Care24Japan ケアサポーター報酬規程",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care24Japan Care Supporter Remuneration Regulations",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<h2>第1条（目的）</h2>\n<p>本規程は、メディカルインフォマティクス株式会社（以下「当社」という）が運営する保険外訪問看護・訪問介護マッチングプラットフォーム「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）と準委任契約（以下「個別契約」という）を締結し、独立した請負人として業務を提供するケアサポーター（以下「サポーター」という）に対する報酬の支払いに関する基本事項を定めることを目的とする。</p>\n<h2>第2条（契約関係）</h2>\n<p>サポーターは、本規程のほか、当社が定めるプラットフォーム利用規約を遵守しなければならない。サポーターと利用者との間に成立する法律関係は準委任契約であり、サポーターは独立した事業者として自己の裁量と責任において業務を遂行するものとし、当社とサポーターとの間に雇用契約その他指揮命令関係は存在しない。</p>\n<h2>第3条（報酬の基本構成）</h2>\n<p>サポーターに支払われる報酬は、個別契約に基づくサービス提供実績に応じて算出される基本報酬、各種手当（時間外手当、当日予約手当、指名手当）、および交通費の合計額から、第6条に定めるプラットフォーム手数料を差し引いた金額とする。報酬の計算は、利用者が承認した実際のサービス提供時間（業務完了報告に基づき確定した時間）を基準として行う。</p>\n<h2>第4条（報酬体系・単価一覧）</h2>\n<p>提供する業務区分（介護、看護、リハビリ）および時間帯等に応じたケアサポーター向け報酬単価は以下の通りとする（金額はすべて税込表示）。</p>\n<table><thead><tr><th>業務区分</th><th>区分・時間帯等条件</th><th>お客様 支払い単価</th><th>サポーター 報酬単価</th><th>プラットフォーム 手数料</th></tr></thead><tbody><tr><td>介護業務 （初任者研修・実務者研修・介護福祉士・無資格等の適用範囲内業務）</td><td>基本時間帯（9:00～18:00）</td><td>¥3,740 / 時間</td><td>¥2,000 / 時間</td><td>¥1,740 / 時間</td></tr><tr><td></td><td>時間外・夜間時間帯（18:00～9:00）</td><td>¥4,488 / 時間</td><td>¥2,200 / 時間</td><td>¥2,288 / 時間</td></tr><tr><td></td><td>当日予約（緊急募集案件）</td><td>¥4,862 / 時間</td><td>¥2,600 / 時間</td><td>¥2,262 / 時間</td></tr><tr><td>看護業務 （看護師・准看護師等有資格者限定業務）</td><td>基本時間帯（9:00～18:00）</td><td>¥6,600 / 時間</td><td>¥3,300 / 時間</td><td>¥3,300 / 時間</td></tr><tr><td></td><td>時間外・夜間時間帯（18:00～9:00）</td><td>¥7,920 / 時間</td><td>¥3,630 / 時間</td><td>¥4,290 / 時間</td></tr><tr><td></td><td>当日予約（緊急募集案件）</td><td>¥8,580 / 時間</td><td>¥4,290 / 時間</td><td>¥4,290 / 時間</td></tr><tr><td>リハビリ業務 （理学療法士・作業療法士・言語聴覚士限定業務）</td><td>基本時間帯（9:00～18:00）</td><td>¥8,800 / 時間</td><td>¥6,160 / 時間</td><td>¥2,640 / 時間</td></tr></tbody></table>\n<h2>第5条（共通手当および交通費）</h2>\n<p>すべての業務区分において、以下の手当および交通費を共通として支給する。</p>\n<ul><li>指名手当： 利用者から特定のサポーターとして指名を受けて業務を行った場合、1時間あたり ¥330 を支給する。</li><li>交通費： 1回の訪問案件につき、一律 ¥990 を支給する。</li></ul>\n<h2>第6条（プラットフォーム手数料および決済代行）</h2>\n<p>利用者がサポーターに対して支払う個別契約の対価は、当社がプラットフォームとして受領を代行する。当社は、受領した対価から第4条に記載したプラットフォーム手数料を差し引いた上で、その残額をサポーターに対して支払うものとする。</p>\n<h2>第7条（業務完了報告と報酬の確定）</h2>\n<p>サポーターは業務終了後、速やかに本サービスのシステムを通じて「業務完了報告」を行わなければならない。利用者による完了承認またはサービス実施報告が完了した案件について、毎月20日を締切日として支払報酬金額を確定する。確定した支払報酬金額は、当月末日までに支払うものとする。なお、20日以降に完了承認またはサービス実施報告が完了した案件については、翌月20日締めの対象とする。</p>\n<h2>第8条（報酬の支払方法）</h2>\n<p>確定した報酬は、当社指定決済システムを通じ、サポーターがあらかじめ登録した銀行口座へ振り込まれるものとする。その際の振込手数料は当社が負担する。</p>\n<h2>第9条（ケアサポーター都合によるキャンセル時の取り扱い）</h2>\n<ol><li>ケアサポーターは、個別契約成立後、自己の都合により当該業務をキャンセルする場合、速やかに本システムを通じて利用者および当社へ通知しなければならない。</li><li>ケアサポーターの都合によるキャンセルが頻発する場合、または直前のキャンセルを行った場合、当社は以下の措置を講じることができるものとする。</li></ol>\n<ul><li>(1) 当該案件にかかる報酬の全額不支給</li><li>(2) 当社が定める算定基準に基づく違約金の請求または報酬からの差し引き</li><li>(3) 本サービスの利用制限、またはアカウントの停止措置</li></ul>\n<h2>第10条（禁止事項およびペナルティに伴う報酬の制限）</h2>\n<p>サポーターが本サービスの利用規約または個別契約に違反した場合（利用者との直接交渉・中抜き行為、無断欠勤、ハラスメント行為、守秘義務違反等）、当社は該当する案件の報酬支払いを差し止め、またはアカウントの停止措置等を行うことができる。</p>\n<h2>附則</h2>\n<p>本規程は、2026年9月1日より制定・施行する。</p>",
+              "en": "<h2>Article 1 (Purpose)</h2>\n<p>The purpose of these Regulations is to establish the basic matters regarding the payment of remuneration to care supporters (hereinafter referred to as \"Supporters\") who conclude a quasi-mandate contract (hereinafter referred to as \"Individual Contract\") with service users (hereinafter referred to as \"Users\") and provide services as independent contractors on the non-insurance visiting nursing and home care matching platform \"Care24Japan\" (hereinafter referred to as \"the Service\") operated by Medical Informatics Inc. (hereinafter referred to as \"the Company\").</p>\n<h2>Article 2 (Contractual Relationship)</h2>\n<p>Supporters must comply with the platform terms of use established by the Company in addition to these Regulations. The legal relationship established between a Supporter and a User is a quasi-mandate contract, and the Supporter shall execute the work at their own discretion and responsibility as an independent business operator, and no employment contract or other direct-and-order relationship exists between the Company and the Supporter.</p>\n<h2>Article 3 (Basic Structure of Remuneration)</h2>\n<p>The remuneration paid to the Supporter shall be the total amount of the basic remuneration calculated according to the actual service provision based on the Individual Contract, various allowances (overtime allowance, same-day reservation allowance, nomination allowance), and transportation expenses, minus the platform fee specified in Article 6. The calculation of remuneration shall be based on the actual service provision time approved by the User (the time confirmed based on the work completion report).</p>\n<h2>Article 4 (Remuneration Structure / Unit Price List)</h2>\n<p>The remuneration unit prices for care supporters according to the service category provided (caregiving, nursing, rehabilitation) and time zone, etc., are as follows (all amounts include tax).</p>\n<table><thead><tr><th>Service Category</th><th>Category / Time Zone Conditions</th><th>Customer Payment Unit Price</th><th>Supporter Remuneration Unit Price</th><th>Platform Fee</th></tr></thead><tbody><tr><td>Caregiving Work  (Within the scope of applied work for Beginner's Training, Practical Training, Certified Care Worker, Unqualified, etc.)</td><td>Basic Time Zone  (9:00 - 18:00)</td><td>¥3,740 / Hour</td><td>¥2,000 / Hour</td><td>¥1,740 / Hour</td></tr><tr><td>Caregiving Work  (Within the scope of applied work for Beginner's Training, Practical Training, Certified Care Worker, Unqualified, etc.)</td><td>Overtime / Night Time Zone  (18:00 - 9:00)</td><td>¥4,488 / Hour</td><td>¥2,200 / Hour</td><td>¥2,288 / Hour</td></tr><tr><td>Caregiving Work  (Within the scope of applied work for Beginner's Training, Practical Training, Certified Care Worker, Unqualified, etc.)</td><td>Same-day Reservation  (Urgent Recruitment Cases)</td><td>¥4,862 / Hour</td><td>¥2,600 / Hour</td><td>¥2,262 / Hour</td></tr><tr><td>Nursing Work  (Work limited to qualified persons such as Nurses and Assistant Nurses)</td><td>Basic Time Zone  (9:00 - 18:00)</td><td>¥6,600 / Hour</td><td>¥3,300 / Hour</td><td>¥3,300 / Hour</td></tr><tr><td>Nursing Work  (Work limited to qualified persons such as Nurses and Assistant Nurses)</td><td>Overtime / Night Time Zone  (18:00 - 9:00)</td><td>¥7,920 / Hour</td><td>¥3,630 / Hour</td><td>¥4,290 / Hour</td></tr><tr><td>Nursing Work  (Work limited to qualified persons such as Nurses and Assistant Nurses)</td><td>Same-day Reservation  (Urgent Recruitment Cases)</td><td>¥8,580 / Hour</td><td>¥4,290 / Hour</td><td>¥4,290 / Hour</td></tr><tr><td>Rehabilitation Work  (Work limited to Physical Therapists, Occupational Therapists, and Speech-Language-Hearing Therapists)</td><td>Basic Time Zone  (9:00 - 18:00)</td><td>¥8,800 / Hour</td><td>¥6,160 / Hour</td><td>¥2,640 / Hour</td></tr></tbody></table>\n<h2>Article 5 (Common Allowances and Transportation Expenses)</h2>\n<p>Across all service categories, the following allowances and transportation expenses shall be provided commonly:</p>\n<ul><li>Nomination Allowance: If the work is performed after being nominated as a specific Supporter by the User, ¥330 per hour will be paid.</li><li>Transportation Expenses: A flat rate of ¥990 will be paid per visit case.</li></ul>\n<h2>Article 6 (Platform Fee and Payment Agency)</h2>\n<p>The Company shall act as a platform to receive the consideration for the Individual Contract paid by the User to the Supporter on their behalf. The Company shall deduct the platform fee described in Article 4 from the received consideration, and pay the remaining balance to the Supporter.</p>\n<h2>Article 7 (Work Completion Report and Confirmation of Remuneration)</h2>\n<p>After the completion of the work, the Supporter must promptly submit a \"Work Completion Report\" through the system of this Service. The payment remuneration amount will be confirmed with the 20th of each month as the cutoff date for cases where the completion approval or service execution report by the User has been completed. The confirmed payment remuneration amount shall be paid by the last day of the current month. Furthermore, cases where the completion approval or service execution report is completed after the 20th shall be subject to the cutoff on the 20th of the following month.</p>\n<h2>Article 8 (Payment Method of Remuneration)</h2>\n<p>The confirmed remuneration shall be transferred to the bank account registered in advance by the Supporter through the payment system designated by the Company. The transfer fee at that time shall be borne by the Company.</p>\n<h2>Article 9 (Handling of Cancellations due to Care Supporter's Convenience)</h2>\n<p>If a Care Supporter cancels the work for their own reasons after the Individual Contract has been established, they must promptly notify the User and the Company through this system. If cancellations due to the Care Supporter's convenience occur frequently, or if a last-minute cancellation is made, the Company may take the following measures:</p>\n<ol><li>Total non-payment of remuneration for the relevant case</li><li>Claiming of a penalty based on the calculation standards established by the Company or deduction from the remuneration</li><li>Restriction on the use of this Service, or account suspension measures</li></ol>\n<h2>Article 10 (Prohibitions and Restriction of Remuneration due to Penalties)</h2>\n<p>If a Supporter violates the terms of use of this Service or an Individual Contract (direct negotiation with a User/bypassing the platform, unauthorized absence, harassment behavior, breach of confidentiality obligation, etc.), the Company may suspend the payment of remuneration for the relevant case, or take measures such as account suspension.</p>\n<h2>Supplementary Provisions</h2>\n<p>These Regulations shall be enacted and enforced from September 1, 2026.</p>"
+            },
+            "heading": {
+              "ja": "Care24Japan ケアサポーター報酬規程",
+              "en": "Care24Japan Care Supporter Remuneration Regulations"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "legal-quasi-mandate",
+      "seo": {
+        "title": "ケアサービス準委任契約書",
+        "description": "",
+        "keywords": null,
+        "og_image": "",
+        "canonical": ""
+      },
+      "seoTranslations": {
+        "en": {
+          "title": "Care Service Quasi-Mandate Contract",
+          "description": "",
+          "keywords": null,
+          "og_image": "",
+          "canonical": ""
+        }
+      },
+      "blocks": [
+        {
+          "type": "legal-doc",
+          "data": {
+            "body": {
+              "ja": "<p>本通知（書面）は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する「Care24Japan」プラットフォーム利用規約に基づき、以下の契約者とケアサポーターとの間で直接成立した個別準委任契約の内容を証明するものです。</p>\n<h2>1. 契約当事者</h2>\n<ul><li>委託者（契約者）： ［利用者の氏名］（住所：［利用者の登録住所］）</li><li>受託者（ケアサポーター）： ［ケアサポーターの氏名］（資格：［看護師 / 介護福祉士 等］）</li></ul>\n<h2>2. 契約の性質および準拠規約</h2>\n<p>本契約は、民法第656条に基づく「準委任契約」であり、両当事者は、それぞれが当社に対して同意した「Care24Japan プラットフォーム利用規約（契約者向けおよびケアギバー向け）」のすべての条項（直接契約の禁止、免責事項、秘密保持等を含みますが、これらに限られません）が本契約に適用され、本契約の一部を構成することに合意します。</p>\n<h2>3. 委託業務（予約）内容</h2>\n<p>本契約に基づき、受託者が委託者に対して提供する業務の詳細は以下の通りです。</p>\n<ul><li>マッチング成立日時： 2026年［〇］月［〇］日 ［〇］時［〇］分</li><li>業務実施日時： 2026年［〇］月［〇］日 ［〇］時［〇］分 ～ ［〇］時［〇］分（計［〇］時間）</li><li>実施場所（訪問先）： ［訪問先住所・施設名等］</li><li>対象者（被介護・被看護者）： ［対象者の氏名］（委託者との関係：［本人 / 父 / 母 等］）</li><li>サービス区分： ［ ① 訪問介護・在宅支援サービス ／ ② 訪問看護サービス ］</li><li>具体的な業務内容： ［システムで選択・入力された内容を自動反映］ （例：バイタルチェック、点滴管理、褥瘡処置、口腔ケア、排泄介助、見守り 等）</li></ul>\n<h2>4. 訪問看護（医療行為）に関する特則（※サービス区分②の場合のみ適用）</h2>\n<ol><li>本契約に基づく業務に医療行為が含まれる場合、委託者は主治医が発行した有効な「訪問看護指示書」を事前に提示していることを保証するものとし、受託者は当該指示書の範囲内に限って医療行為を行うものとします。</li><li>訪問看護指示書が提示されない場合、または指示の範囲を超える医療行為については、委託者から要求があった場合であっても、受託者はこれを拒否するものとし、その場合も委託料金の減額等は行われません。</li></ol>\n<h2>5. 委託料金（報酬）および支払い方法</h2>\n<ul><li>基本料金： ［〇,〇〇〇］円（時間単価 ［〇,〇〇〇］円 × ［〇］時間）</li><li>各種加算・手当： ［〇,〇〇〇］円（夜間加算 / 当日加算 / 指名料 等）</li><li>交通費： ［〇,〇〇〇］円</li><li>合計委託料金（税込）： ［〇,〇〇〇］円</li><li>支払い方法： 委託者は、当社が指定する決済方法を通じて、上記の合計委託料金を支払うものとします。受託者は、当社に対して当該料金の集金代行権限を授与しており、委託者が当社への決済を完了した時点で、委託者の受託者に対する料金支払い債務は消滅します。</li></ul>\n<h2>6. キャンセルポリシー</h2>\n<p>マッチング成立後、委託者または受託者の都合により本契約を解約（予約キャンセル）する場合は、当社が別途料金表に定めるキャンセルポリシーが適用され、キャンセル確定のタイミングに応じた所定のキャンセル料またはペナルティが発生します。</p>\n<h2>7. 紛争解決および責任の所在</h2>\n<p>本業務の遂行に伴い、受託者の故意または過失によって委託者に損害（怪我、器物破損等）が発生した場合、受託者は民法上の善管注意義務違反に基づく責任を直接負うものとし、プラットフォーム運営会社である当社は原則として責任を負いません。ただし、当社が加入する賠償責任保険が適用可能な場合は、その範囲内で補填が行われるものとします。</p>\n<p>本契約は、当社システム上において、委託者の予約申込みに対して受託者が受諾の操作を行い、マッチング完了の電磁的記録が当社のサーバーに記録された時点をもって、有効に成立したものとみなします。</p>\n<p>（本通知はシステムより自動配信されているため、署名・捺印は省略されます）</p>\n<p>※「マッチング成立時にシステムから自動発行（メール送信または画面表示）される電子書面」としてシステムに組み込む想定</p>",
+              "en": "<p>This notice (document) certifies the details of the individual quasi-mandate contract established directly between the following Contractor and Care Supporter, based on the Terms of Use of the \"Care24Japan\" platform operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\").</p>\n<h2>1. Contracting Parties</h2>\n<ul><li>Trustor (Contractor): [User's Name] (Address: [User's Registered Address])</li><li>Trustee (Care Supporter): [Care Supporter's Name] (Qualification: [Nurse / Certified Care Worker, etc.])</li></ul>\n<h2>2. Nature of Contract and Governing Terms</h2>\n<p>This contract is a \"Quasi-Mandate Contract\" pursuant to Article 656 of the Civil Code, and both parties agree that all provisions of the \"Care24Japan Platform Terms of Use (for Contractors and Caregivers)\" agreed upon by each party with the Company (including, but not limited to, the prohibition of direct contracting, disclaimers, and confidentiality) shall apply to this contract and form a part of it.</p>\n<h2>3. Details of Outsourced Work (Reservation)</h2>\n<p>The details of the work to be provided by the Trustee to the Trustor based on this contract are as follows:</p>\n<ul><li>Matching Establishment Date and Time: [Month] [Day], 2026, [Hour]:[Minute]</li><li>Work Execution Date and Time: [Month] [Day], 2026, [Hour]:[Minute] to [Hour]:[Minute] (Total: [X] hours)</li><li>Execution Location (Visit Destination): [Destination Address / Facility Name, etc.]</li><li>Target Person (Care/Nursing Recipient): [Target Person's Name] (Relationship to Trustor: [Self / Father / Mother, etc.])</li><li>Service Category: [ ① Home Care/In-Home Support Service / ② Visiting Nursing Service ]</li><li>Specific Work Details: [Automatically reflected from the content selected/entered in the system] (e.g., vital checks, IV management, bedsore treatment, oral care, excretion assistance, monitoring, etc.)</li></ul>\n<h2>4. Special Provisions regarding Visiting Nursing (Medical Practices) (Applicable only to Service Category ②)</h2>\n<p>If the work under this contract includes medical practices, the Trustor guarantees that a valid \"Visiting Nursing Instruction\" issued by the attending physician has been presented in advance, and the Trustee shall perform medical practices only within the scope of said instruction. If the Visiting Nursing Instruction is not presented, or for medical practices exceeding the scope of the instructions, the Trustee shall refuse to perform them even if requested by the Trustor, and in such cases, no reduction in the outsourcing fee shall be made.</p>\n<h2>5. Outsourcing Fee (Remuneration) and Payment Method</h2>\n<ul><li>Basic Fee: [X,XXX] yen (Hourly rate [X,XXX] yen × [X] hours)</li><li>Various Additions/Allowances: [X,XXX] yen (Night addition / Same-day addition / Nomination fee, etc.)</li><li>Transportation Fee: [X,XXX] yen</li><li>Total Outsourcing Fee (Tax Included): [X,XXX] yen</li><li>Payment Method: The Trustor shall pay the total outsourcing fee above through the payment method designated by the Company. The Trustee has granted the Company the authority to collect said fee on their behalf, and the Trustor's obligation to pay the fee to the Trustee shall be extinguished at the time the Trustor completes the payment to the Company.</li></ul>\n<h2>6. Cancellation Policy</h2>\n<p>After the matching is established, if this contract is terminated (reservation canceled) due to the convenience of the Trustor or the Trustee, the cancellation policy specified separately in the Company's fee schedule shall apply, and a predetermined cancellation fee or penalty will be incurred depending on the timing of the cancellation confirmation.</p>\n<h2>7. Dispute Resolution and Liability</h2>\n<p>If any damage (injury, property damage, etc.) is caused to the Trustor due to the Trustee's intent or negligence in the performance of this work, the Trustee shall bear direct liability based on a breach of the duty of care of a good manager under the Civil Code, and the Company, as the platform operating company, shall generally bear no liability. However, if the liability insurance enrolled in by the Company is applicable, compensation shall be provided within that scope.</p>\n<p>This contract is deemed to be validly established at the time the Trustee performs the acceptance operation in response to the Trustor's reservation application on the Company's system, and the electronic record of the matching completion is recorded on the Company's server.</p>\n<p>(Since this notice is automatically delivered from the system, signatures and seals are omitted)</p>\n<p>*Intended to be integrated into the system as an \"electronic document automatically issued (emailed or displayed on screen) by the system upon matching establishment.\"</p>"
+            },
+            "heading": {
+              "ja": "ケアサービス準委任契約書",
+              "en": "Care Service Quasi-Mandate Contract"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -115,6 +115,46 @@ function normalizeHtml(html: string): string {
 }
 
 /**
+ * Titik buta JSON-LD (K-1): `normalizeHtml` di atas MEMBUANG seluruh
+ * `<script>` (baris 106) sebelum pembandingan lulus/gagal, jadi isi
+ * `<script type="application/ld+json">` — termasuk salah bahasa, field
+ * hilang, atau typo struktur data — tidak pernah bisa membuat gerbang ini
+ * merah, benar atau salah isinya. Blok ini TIDAK mengubah itu (mengubah
+ * `normalizeHtml` akan membatalkan seluruh 27 baseline yang terukur
+ * sekaligus). Ia hanya membaca `rawOn`/`rawOff` — SEBELUM normalisasi — lalu
+ * mencetak diff key-set JSON-LD sebagai informasi, murni untuk mata manusia.
+ * Tidak pernah memengaruhi `gateFailed`.
+ */
+function collectJsonLdKeys(value: unknown, prefix: string, out: Set<string>): void {
+  if (Array.isArray(value)) {
+    for (const item of value) collectJsonLdKeys(item, prefix, out);
+    return;
+  }
+  if (value !== null && typeof value === "object") {
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      const keyPath = prefix ? `${prefix}.${k}` : k;
+      out.add(keyPath);
+      collectJsonLdKeys(v, keyPath, out);
+    }
+  }
+}
+
+function extractJsonLdKeySet(rawHtml: string): Set<string> {
+  const keys = new Set<string>();
+  const scriptRe = /<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = scriptRe.exec(rawHtml))) {
+    try {
+      collectJsonLdKeys(JSON.parse(m[1]), "", keys);
+    } catch {
+      // JSON-LD malformed — bukan urusan blok informasional ini untuk
+      // memperbaikinya, hanya lewati diam-diam untuk skrip itu saja.
+    }
+  }
+  return keys;
+}
+
+/**
  * Menolak berjalan kalau baseline tidak bisa dipakai.
  *
  * Dipanggil PALING AWAL di `main()`, sebelum dua `next build` yang makan
@@ -322,20 +362,20 @@ function diffLines(a: string, b: string): Hunk[] {
 
 // CATATAN: skrip ini SENGAJA tidak membuang/menyaring baris beda apa pun di
 // luar apa yang `normalizeHtml` sudah lakukan (yang identik dengan
-// normalizer resmi baseline). Setiap baris beda yang lolos normalisasi
-// dicetak apa adanya dan diklasifikasikan secara manual di parity-report.md
-// — lihat instruksi "JANGAN diam-diam membuang baris agar diff terlihat
-// kosong" di brief st-08.
+// normalizer resmi baseline). Aturannya: JANGAN diam-diam membuang baris
+// agar diff terlihat kosong. Setiap baris beda yang lolos normalisasi harus
+// tetap dicetak apa adanya dan diklasifikasikan lewat mekanisme DIFF_CLASSES
+// / ACCEPTED_RESIDUALS di bawah, bukan disaring diam-diam di sini.
 
 
 // ===========================================================================
 // KLASIFIKASI PERBEDAAN
 //
 // Sampai sebelum ini skrip mencetak setiap baris beda apa adanya dan seorang
-// manusia (saya) memutuskan mana yang "wajar" dan mana yang regresi, lalu
-// menuliskannya di parity-report.md. Artinya gerbang ini tidak pernah bisa
-// LULUS: selama ada satu baris beda, hasilnya GAGAL, dan pembacanya harus
-// percaya pada penilaian manual yang tidak ikut ter-commit.
+// manusia (saya) memutuskan mana yang "wajar" dan mana yang regresi lewat
+// penilaian ad-hoc yang tidak ikut ter-commit ke mana pun. Artinya gerbang
+// ini tidak pernah bisa LULUS: selama ada satu baris beda, hasilnya GAGAL,
+// dan pembacanya harus percaya begitu saja pada penilaian manual itu.
 //
 // Sekarang ada dua mekanisme, dan perbedaan di antara keduanya adalah inti
 // dari desain ini:
@@ -356,8 +396,8 @@ function diffLines(a: string, b: string): Hunk[] {
 //      lewat diam-diam.
 //
 // Apa pun yang bukan keduanya dicetak verbatim dan menggagalkan gerbang.
-// Aturan lama dari brief st-08 tetap berlaku dan diperkuat, bukan dilonggarkan:
-// JANGAN diam-diam membuang baris agar diff terlihat kosong.
+// Aturan asal gerbang ini (ST-08) tetap berlaku dan diperkuat, bukan
+// dilonggarkan: JANGAN diam-diam membuang baris agar diff terlihat kosong.
 //
 // Klasifikasi dilakukan per HALAMAN, bukan per hunk. Algoritma diff memecah
 // satu baris yang sekadar berpindah tempat menjadi DUA hunk terpisah (dihapus
@@ -411,7 +451,221 @@ const navActiveStateClass: DiffClass = {
       .replace(NAV_INACTIVE_CLASSES, "STATUS-NAV"),
 };
 
-const DIFF_CLASSES: DiffClass[] = [imageSourceClass, navActiveStateClass];
+/**
+ * ST-GATE, area A (ST-05). `<meta property="og:title">` dan
+ * `<meta name="twitter:title">` (twitter:title dicerminkan dari og:title oleh
+ * Next sendiri — lihat `postProcessMetadata` di
+ * node_modules/next/dist/lib/metadata/resolve-metadata.js:619-655) kini
+ * TIDAK LAGI membawa akhiran " | Care 24 Japan" yang masih dipertahankan
+ * `<title>`. TIDAK ADA sub-task yang memprediksi ini — ditemukan lewat
+ * investigasi gerbang ini sendiri, bukan dari laporan mana pun.
+ *
+ * Akar penyebab, dibuktikan lewat sumber Next (bukan dugaan):
+ * `features/seo/pageMetadata.ts` sekarang menyetel `openGraph.title` secara
+ * EKSPLISIT ke string polos `title` (tanpa brand). Sebelumnya `openGraph`
+ * sama sekali tidak menyetel `title`, sehingga `inheritFromMetadata`
+ * (resolve-metadata.js:603-612, dipanggil dari postProcessMetadata:658)
+ * menyalin `metadata.title` — yang SUDAH melalui `title.template` layout
+ * (jadi membawa brand) — ke `openGraph.title`. Begitu `openGraph.title`
+ * diisi eksplisit, `inheritFromMetadata` tidak lagi menimpanya
+ * (`!hasTitle(target)` sudah false), dan `resolveTitle(title,
+ * titleTemplates.openGraph)` (resolve-opengraph.js:150) memakai
+ * `titleTemplates.openGraph` — kolam template TERPISAH dari
+ * `titleTemplates.title` (resolve-metadata.js:747-805) — yang tidak pernah
+ * diisi ulang oleh objek `openGraph` polos ini, sehingga tidak ada template
+ * yang diterapkan sama sekali.
+ *
+ * Kelas ini HANYA membuktikan bahwa baris yang dihapus dan baris yang
+ * ditambah menjadi identik setelah membuang akhiran " | Care 24 Japan" itu
+ * — dan HANYA pada baris og:title/twitter:title. Ini SENGAJA tidak
+ * dipasang sebagai kelas yang mengkanonikalisasi og:title/twitter:title
+ * secara umum: kalau sisa isinya (judul itu sendiri) berbeda, kelas ini
+ * TIDAK cocok dan baris itu tetap tak-terjelaskan — lihat
+ * `og-en-mengambil-judul-ja-tanpa-terjemahan` di bawah, yang justru
+ * TIDAK tertangkap kelas ini karena isinya bukan cuma beda akhiran.
+ *
+ * INI BUKAN PERSETUJUAN BAHWA PERILAKU INI BENAR — apakah og:title/
+ * twitter:title SEHARUSNYA tetap membawa brand (mis. karena og:site_name
+ * dianggap tidak cukup oleh sebagian crawler) adalah keputusan produk yang
+ * di luar wewenang gerbang ini untuk mengambil. Dicatat di laporan ST-GATE
+ * secara menonjol, bukan dikubur di sini.
+ *
+ * STATUS SETELAH ST-FIX1: DORMAN, sengaja TIDAK dihapus. ST-FIX1
+ * (features/seo/pageMetadata.ts) membangun ulang og:title/twitter:title agar
+ * identik dengan <title> (menambahkan " | Care 24 Japan" secara eksplisit,
+ * home dikecualikan), jadi kelas ini sekarang cocok 0 pasangan — og:title
+ * sudah byte-identik dengan baseline lagi, tidak pernah masuk ke `diffLines`
+ * sama sekali. Dibiarkan di sini sebagai jaring pengaman struktural: kalau
+ * regresi yang PERSIS sama (openGraph.title eksplisit lolos tanpa sufiks
+ * brand) muncul lagi di masa depan, kelas ini akan langsung menangkapnya
+ * lagi tanpa perlu ditulis ulang.
+ */
+const OG_TWITTER_TITLE_TAGS = /(property="og:title"|name="twitter:title")/;
+const ogTwitterTitleBrandSuffixClass: DiffClass = {
+  id: "og-twitter-title-kehilangan-akhiran-brand",
+  why: 'og:title/twitter:title kini di-set eksplisit ke title.template layout tanpa turut menerapkan template-nya (lihat komentar definisi di atas: inheritFromMetadata vs titleTemplates.openGraph terpisah, dibuktikan lewat node_modules/next/dist/lib/metadata/{resolve-metadata,resolve-opengraph,resolve-title}.js) — kehilangan akhiran " | Care 24 Japan" yang <title> sendiri tetap punya. TIDAK diprediksi sub-task manapun. Ini keputusan konten/brand yang belum diputuskan, bukan sesuatu yang terbukti benar — lihat laporan ST-GATE.',
+  canonicalize: (line) =>
+    OG_TWITTER_TITLE_TAGS.test(line) ? line.replace(/ \| Care 24 Japan"/, '"') : line,
+};
+
+/**
+ * ST-GATE, area A (ST-05). Begitu `openGraph.images` terisi,
+ * `postProcessMetadata` (resolve-metadata.js:621-654) mengisi `twitter.card`
+ * bawaan dari "summary" (tanpa gambar) menjadi "summary_large_image" (ada
+ * gambar) — efek samping otomatis dari Next, bukan sesuatu yang
+ * `pageMetadata()` set langsung. Sempit: hanya menyamakan nilai `content=`
+ * pada baris `name="twitter:card"`, tidak menyentuh atribut lain di baris
+ * itu (tidak ada yang lain di baris ini).
+ */
+const twitterCardUpgradeClass: DiffClass = {
+  id: "twitter-card-summary-ke-large-image",
+  why: 'twitter:card naik dari "summary" ke "summary_large_image" begitu og:image ada — perilaku bawaan Next (postProcessMetadata, resolve-metadata.js:621-654), bukan nilai yang di-set langsung oleh pageMetadata().',
+  canonicalize: (line) =>
+    /name="twitter:card"/.test(line) ? line.replace(/content="[^"]*"/, 'content="CARD"') : line,
+};
+
+/**
+ * ST-GATE, area F (ST-HOME). Kedua tautan banner ajakan (`register` untuk
+ * pengguna, `caregiver` untuk staf) kini membawa `target="_blank"
+ * rel="noopener noreferrer"` yang baseline pre-migrasi TIDAK punya sama
+ * sekali pada KEDUANYA (dicek langsung: `grep portal.care24.jp
+ * scripts/atlas/baseline/en.txt` — tidak ada `target=` di baris manapun).
+ * Ini BEDA dari prediksi awal ST-HOME (yang menyebut hanya banner
+ * "user" sebagai baru, karena saat itu ST-HOME membandingkan kodenya
+ * sendiri sebelum-dan-sesudah, bukan terhadap baseline pre-migrasi ini).
+ * ST-GATE menginvestigasi selisihnya dan mengonfirmasi: KEDUA banner sudah
+ * tidak punya `target=` sama sekali di baseline, jadi keduanya sah masuk
+ * kelas diff yang sama di bawah ini.
+ *
+ * Sempit lewat GUARD (href persis ke portal.care24.jp/register atau
+ * /caregiver) sebelum membongkar atributnya sama sekali — bukan pola bebas
+ * yang bisa menyamarkan tautan lain. `target`/`rel` dibuang lalu SISA
+ * atributnya diurutkan alfabetis sebelum dibandingkan, karena `href` juga
+ * pindah posisi (dari akhir ke awal atribut) bersamaan dengan penambahan
+ * target/rel — dibuktikan sebagai perubahan URUTAN atribut semata (nilai
+ * setiap atribut tetap sama), bukan konten baru yang menumpang di baris
+ * yang sama.
+ */
+const BANNER_HREF_GUARD = /href="https:\/\/portal\.care24\.jp\/(register|caregiver)"/;
+const bannerTargetBlankClass: DiffClass = {
+  id: "banner-target-blank-rel-noopener",
+  why: 'kedua tautan ApplyBanner (register, caregiver) kini membawa target="_blank" rel="noopener noreferrer", dan href pindah ke awal daftar atribut (bukan lagi akhir) — perbaikan aksesibilitas/keamanan yang disengaja (ST-HOME), sebab kelima di luar 4 prediksi ST-HOME. TIDAK ADA di baseline pre-migrasi pada kedua banner. Dibandingkan lewat set atribut terurut (order-independent) karena hanya urutan + kehadiran target/rel yang beda, bukan nilai atribut lain.',
+  canonicalize: (line) => {
+    if (!BANNER_HREF_GUARD.test(line)) return line;
+    const inner = line.replace(/^<a\s+/, "").replace(/>\s*$/, "");
+    const attrs = (inner.match(/[a-zA-Z-]+="[^"]*"/g) ?? []).filter(
+      (a) => !a.startsWith('target="') && !a.startsWith('rel="'),
+    );
+    attrs.sort();
+    return `<a ${attrs.join(" ")}>`;
+  },
+};
+
+/**
+ * ST-GATE, area B (ST-HOME hero "why choose us" list -> mt-3/mt-10 wrapper).
+ * Sempit: hanya mengganti `mt-10` dengan `mt-3` pada baris `<ul ...
+ * flex flex-wrap gap-2.5">` — satu-satunya beda pada baris itu.
+ */
+const trustListWrapperClass: DiffClass = {
+  id: "home-trust-list-wrapper-mt",
+  why: 'wrapper <ul> daftar kepercayaan (ST-HOME) berubah margin-top dari mt-10 ke mt-3 karena <p> label baru (values.heading) kini ditempatkan di atasnya. Hanya nilai margin yang beda pada baris ini.',
+  canonicalize: (line) =>
+    /class="mt-(10|3) flex flex-wrap gap-2\.5"/.test(line)
+      ? line.replace('class="mt-10 flex flex-wrap gap-2.5"', 'class="mt-X flex flex-wrap gap-2.5"').replace('class="mt-3 flex flex-wrap gap-2.5"', 'class="mt-X flex flex-wrap gap-2.5"')
+      : line,
+};
+
+/**
+ * ST-GATE, area B (ST-HOME hero "why choose us" list). Sempit: hanya
+ * mengganti dua kelas Tailwind literal pada pembuka `<li>` daftar
+ * kepercayaan — satu-satunya beda pada baris ini (item lain di baris yang
+ * sama, mis. `style="animation-delay:..."`, tetap identik).
+ */
+const TRUST_ITEM_GUARD =
+  'rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up';
+const trustItemOpenTagClass: DiffClass = {
+  id: "home-trust-item-li-buka",
+  why: `pembuka <li> daftar kepercayaan (ST-HOME) berganti dari class="flex items-center gap-2 ${TRUST_ITEM_GUARD}" menjadi class="flex flex-col gap-0.5 ${TRUST_ITEM_GUARD}" — item dipecah jadi dua baris (judul + body). Hanya dua kata kelas layout yang beda.`,
+  canonicalize: (line) =>
+    line.includes(TRUST_ITEM_GUARD)
+      ? line.replace("flex items-center gap-2 " + TRUST_ITEM_GUARD, "TRUST-ITEM-LAYOUT " + TRUST_ITEM_GUARD).replace(
+          "flex flex-col gap-0.5 " + TRUST_ITEM_GUARD,
+          "TRUST-ITEM-LAYOUT " + TRUST_ITEM_GUARD,
+        )
+      : line,
+};
+
+/**
+ * ST-GATE, area B (ST-HOME). Baris penutup judul item kepercayaan: dulu
+ * `</span>TEKS</li>` (item ditutup langsung setelah judul), sekarang
+ * `</span>TEKS</span>` (judul jadi baris tersendiri, `</li>` pindah ke
+ * baris barunya sendiri — lihat `home-trust-item-li-tutup-baru` di
+ * ACCEPTED_RESIDUALS). Sempit: HANYA baris yang diawali `</span>`, dan
+ * hanya menyamakan tag PENUTUP paling akhir (`</li>` atau `</span>`) —
+ * teks di antaranya (judul kepercayaan itu sendiri) harus identik persis
+ * di kedua sisi, kalau tidak baris tetap tak-terjelaskan.
+ */
+const trustItemTitleCloseClass: DiffClass = {
+  id: "home-trust-item-judul-tutup",
+  why: '</span>JUDUL</li> (lama) menjadi </span>JUDUL</span> (baru) — judul kepercayaan dipindah jadi baris sendiri, </li> pindah ke baris baru terpisah. Teks JUDUL di antara harus identik, hanya tag penutup akhir yang beda.',
+  canonicalize: (line) => {
+    if (!line.startsWith("</span>")) return line;
+    if (line.endsWith("</li>")) return line.slice(0, -"</li>".length) + "CLOSE";
+    if (line.endsWith("</span>")) return line.slice(0, -"</span>".length) + "CLOSE";
+    return line;
+  },
+};
+
+/**
+ * ST-GATE2 (ST-FIX7). Logo `<Image>` di Navbar dan Footer, plus baris
+ * `<link rel="preload" as="image" imageSrcSet=...>` yang Next memancarkan
+ * untuk logo Navbar (`priority`). Tiga lini per URL: 1 preload link + 1
+ * `<img>` Navbar + 1 `<img>` Footer.
+ *
+ * Dua hal berubah SEKALIGUS pada baris yang sama, dan keduanya disengaja
+ * (ST-FIX7): (1) dimensi intrinsik diseragamkan ke `560x210`
+ * (dulu Navbar `427x160`, Footer `320x120`), yang ikut menggeser kandidat
+ * `w=` di `srcSet`/`imageSrcSet` Next (mis. `w=1080`->`w=1200` untuk
+ * Navbar `2x`); (2) `url=` gambar berpindah dari `/images/logo.png` lokal
+ * ke media S3 Atlas — migrasi konten yang sama dengan `imageSourceClass`
+ * di atas, bukan bagian dari perubahan ST-FIX7 itu sendiri.
+ *
+ * Sempit lewat GUARD: `url=...logo.png` (cocok untuk `/images/logo.png`
+ * lokal maupun jalur S3 yang berakhiran `-logo.png`) HARUS ada di baris
+ * mentah sebelum kanonikalisasi apa pun dijalankan — baris apa pun di
+ * luar itu (apple-touch-icon, og:image, dst.) tidak tersentuh. Hanya
+ * `url=`, `width=`, `height=`, dan angka `w=` pada query yang
+ * dikanonikalisasi; `alt`, `class`, `style`, `loading`, `decoding` harus
+ * tetap identik verbatim di kedua sisi, kalau tidak baris tetap
+ * tak-terjelaskan. Karena `class` Navbar (`w-36 origin-left ...`) dan
+ * Footer (`w-32`) tidak disentuh, kelas ini tidak bisa memasangkan baris
+ * Navbar dengan baris Footer secara keliru.
+ */
+const LOGO_URL_GUARD = /url=[^&"']*logo\.png/i;
+const logoUnifiedDimensionsClass: DiffClass = {
+  id: "logo-dimensi-560x210-dan-sumber-atlas",
+  why: 'ST-FIX7: dimensi intrinsik <Image> logo diseragamkan ke 560x210 (dulu Navbar 427x160, Footer 320x120), yang ikut mengubah kandidat w= di srcSet/imageSrcSet Next; url= gambar juga berpindah dari /images/logo.png lokal ke media S3 Atlas (migrasi konten, sama seperti imageSourceClass, bukan bagian dari ST-FIX7). Sempit lewat GUARD url=...logo.png; hanya url=, width=, height=, dan angka w= yang dikanonikalisasi — atribut lain (alt, class, style, loading, decoding) harus tetap identik.',
+  canonicalize: (line) => {
+    if (!LOGO_URL_GUARD.test(line)) return line;
+    return line
+      .replace(/url=[^&"']+/g, "url=GAMBAR")
+      .replace(/w=\d+/g, "w=N")
+      .replace(/width="\d+"/g, 'width="N"')
+      .replace(/height="\d+"/g, 'height="N"');
+  },
+};
+
+const DIFF_CLASSES: DiffClass[] = [
+  imageSourceClass,
+  navActiveStateClass,
+  ogTwitterTitleBrandSuffixClass,
+  twitterCardUpgradeClass,
+  bannerTargetBlankClass,
+  trustListWrapperClass,
+  trustItemOpenTagClass,
+  trustItemTitleCloseClass,
+  logoUnifiedDimensionsClass,
+];
 
 type AcceptedResidual = {
   id: string;
@@ -446,6 +700,20 @@ type AcceptedResidual = {
  * dengan font cadangan lalu bertukar — preload hanya mempersempit jendela
  * pertukaran itu. Bukan bug kebenaran, bukan pergeseran tata letak.
  */
+/** Empat baris literal baru di app/[lang]/not-found.tsx (ST-F1): tautan
+ * home dwibahasa (localizeHref ke '/' untuk ja dan en, dibungkus satu
+ * <div>) menggantikan satu tautan campur-bahasa lama yang tidak
+ * locale-aware. `_not-found.txt` adalah satu-satunya baseline "spesial"
+ * yang benar-benar bisa dipicu lewat HTTP sungguhan dan diukur gerbang
+ * ini — lihat komentar di fetchRaw("/__st08_parity_probe_nonexistent__")
+ * lebih bawah, dan bagian "ST-F1 (area F)" di ACCEPTED_RESIDUALS. */
+const NOT_FOUND_NEW_HOME_LINKS = new Set<string>([
+  '<div class="flex flex-wrap items-center justify-center gap-3">',
+  '<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/">トップページへ</a>',
+  '<a lang="en" class="inline-flex items-center gap-2 rounded-full border border-primary px-8 py-3 font-medium text-primary transition hover:bg-primary/10" href="/en">Back to home</a>',
+  "</div>",
+]);
+
 const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
   {
     id: "preload-font-hilang-pada-rute-dinamis",
@@ -453,6 +721,170 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     count: 26,
     why: "rendering dinamis (syarat: konten CMS tanpa rebuild) menggugurkan <link rel=preload as=font> dari next/font. Font tetap termuat lewat @font-face; hanya petunjuk prioritas yang hilang. 26 = 13 rute x {ja,en}.",
     matches: (line) => /rel="preload"[^>]*as="font"/.test(line),
+  },
+  // --- ST-05 (area A): metadata CMS-driven baru, murni aditif ---------
+  {
+    id: "seo-hreflang-x-default",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item hreflang x-default: routeAlternates() kini menyetel languages['x-default'], baris <link rel=alternate hrefLang=x-default> baru di 13 rute x {ja,en}.",
+    matches: (line) => /hrefLang="x-default"/.test(line),
+  },
+  {
+    id: "seo-og-url",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:url: pageMetadata() kini menyetel openGraph.url pada 13 rute x {ja,en} (termasuk home, ditutup lewat pageMetadata({key:'home',...}) di app/[lang]/page.tsx).",
+    matches: (line) => /property="og:url"/.test(line),
+  },
+  {
+    id: "seo-og-locale-alternate",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:locale:alternate: openGraph.alternateLocale baru pada 13 rute x {ja,en}.",
+    matches: (line) => /property="og:locale:alternate"/.test(line),
+  },
+  {
+    id: "seo-og-image",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:image: openGraph.images baru (CMS og_image kosong di 15/15 halaman -> constants/seo.ts#fallbackOgImage) pada 13 rute x {ja,en}.",
+    matches: (line) => /property="og:image"/.test(line),
+  },
+  {
+    id: "seo-twitter-image",
+    side: "ditambah",
+    count: 26,
+    why: "Efek samping Next dari og:image baru: postProcessMetadata (resolve-metadata.js:621-654) mengisi twitter:image dari openGraph.images begitu ada, pada 13 rute x {ja,en}.",
+    matches: (line) => /name="twitter:image"/.test(line),
+  },
+  // --- ST-HOME (area D): 4 field baru + 1 sebab kelima (banner) -------
+  {
+    id: "home-values-heading",
+    side: "ditambah",
+    count: 2,
+    why: "ST-HOME / audit item values.heading: label baru di atas trust-strip, 1x ja + 1x en.",
+    matches: (line) => /<p class="mt-10 text-sm font-semibold text-body animate-fade-up">/.test(line),
+  },
+  {
+    id: "home-values-item-body",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME / audit item values.items[].body: baris kedua baru per pill (3 item x {ja,en} = 6). Prediksi awal menyebut 18 baris untuk restrukturisasi ini, tapi entri ini sendiri hanya menyumbang 6 — selisihnya bukan salah hitung, melainkan baris LAIN dari restrukturisasi yang sama ditangani oleh entri terpisah: home-trust-item-li-buka, home-trust-item-judul-tutup, home-trust-item-icon-wrap, home-trust-item-li-tutup-baru, home-trust-list-wrapper-mt.",
+    matches: (line) => /<span class="pl-6 text-xs font-normal text-body">/.test(line),
+  },
+  {
+    id: "home-trust-item-icon-wrap",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: ikon+judul trust-strip kini dibungkus <span class=\"flex items-center gap-2\"> tersendiri (bagian dari restrukturisasi values.items[].body, 3 item x {ja,en}) — baris baru murni, tidak ada padanan lama untuk dipasangkan.",
+    matches: (line) => line.trim() === '<span class="flex items-center gap-2">',
+  },
+  {
+    id: "home-trust-item-li-tutup-baru",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: </li> pindah jadi baris tersendiri setelah body <span> baru (pasangan dari home-trust-item-judul-tutup di DIFF_CLASSES, 3 item x {ja,en}).",
+    matches: (line) => line.trim() === "</li>",
+  },
+  {
+    id: "home-examples-hours-label",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME / audit item examples.hoursLabel: label baru sebelum rentang jam pada 3 kasus x {ja,en}.",
+    matches: (line) => /<span class="mr-1 text-lg font-normal text-muted">/.test(line),
+  },
+  {
+    id: "home-hours-p-buka-baru",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: <p> pembungkus rentang jam kini berdiri sendiri (isinya pindah ke baris hours-label baru) — pasangan dari home-hours-p-gabungan-lama, 3 kasus x {ja,en}.",
+    matches: (line) => line.trim() === '<p class="text-lg font-bold tabular-nums text-heading">',
+  },
+  {
+    id: "home-hours-p-gabungan-lama",
+    side: "dihapus",
+    count: 6,
+    why: "ST-HOME: baris <p> lama yang menggabungkan rentang jam + durasi dalam satu baris, digantikan oleh home-hours-p-buka-baru + home-examples-hours-label, 3 kasus x {ja,en}.",
+    matches: (line) =>
+      /^<p class="text-lg font-bold tabular-nums text-heading">\d{1,2}:\d{2}/.test(line),
+  },
+  {
+    id: "home-contact-hours",
+    side: "ditambah",
+    count: 2,
+    why: "ST-HOME / audit item contact.hours: jam operasional sungguhan kini dirender di bawah nomor telepon, 1x ja + 1x en.",
+    matches: (line) => /<p class="mt-1 text-sm text-muted">/.test(line),
+  },
+  // --- ST-F1 (area F): satu-satunya baseline spesial yang terukur -----
+  {
+    id: "st-f1-not-found-description",
+    side: "dihapus",
+    count: 1,
+    why: 'ST-F1 / audit item deskripsi global-not-found: deskripsi lama English-only dibuang, diganti versi dwibahasa (lihat st-f1-not-found-description-baru untuk sisi ditambah).',
+    matches: (line) =>
+      line === '<meta name="description" content="The page you are looking for does not exist."/>',
+  },
+  {
+    id: "st-f1-not-found-description-baru",
+    side: "ditambah",
+    count: 1,
+    why: "ST-F1 / audit item deskripsi global-not-found: deskripsi dwibahasa baru (JA lalu EN) menggantikan versi English-only.",
+    matches: (line) =>
+      line ===
+      '<meta name="description" content="お探しのページが見つかりません。 / The page you are looking for does not exist."/>',
+  },
+  {
+    id: "st-f1-not-found-home-link-lama",
+    side: "dihapus",
+    count: 1,
+    why: "ST-F1 / audit item tautan home global-not-found: satu tautan campur-bahasa lama (href=/, teks JA+EN dicampur) dibuang, diganti dua tautan locale-correct (lihat st-f1-not-found-home-links-baru).",
+    matches: (line) =>
+      line ===
+      '<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/">トップページへ / Back to home</a>',
+  },
+  {
+    id: "st-f1-not-found-home-links-baru",
+    side: "ditambah",
+    count: 4,
+    why: "ST-F1 / audit item tautan home global-not-found: global-not-found.tsx berada di luar app/[lang]/ sehingga tidak tahu bahasa pengunjung, karena itu localizeHref('/','ja') dan localizeHref('/','en') dirender sebagai dua tautan terpisah dibungkus <div> — 1 <div> buka + 2 <a> + 1 </div> tutup.",
+    matches: (line) => NOT_FOUND_NEW_HOME_LINKS.has(line),
+  },
+  // --- ST-FIX3 (icons + manifest + robots/theme-color): 5 tag baru, murni aditif ---
+  {
+    id: "seo-theme-color",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: export const viewport baru menyetel themeColor="#2b7ec1" (--color-primary), dirender sebagai <meta name="theme-color"> pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="theme-color" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-robots",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: metadata.robots baru (index, follow) di app/[lang]/layout.tsx, dirender sebagai <meta name="robots"> pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="robots" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-googlebot",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: efek turunan Next dari metadata.robots.googleBot — <meta name="googlebot"> dipancarkan otomatis begitu robots.googleBot diisi, pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="googlebot" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-apple-touch-icon",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: icons.apple baru di app/[lang]/layout.tsx (public/apple-touch-icon.png, dibuat dari public/images/logo.png lewat scripts/atlas/make-icons.ts), dirender sebagai <link rel="apple-touch-icon"> pada 13 rute x {ja,en}. Dibatasi [lang]/layout.tsx, tidak mencapai global-not-found.tsx.',
+    matches: (line) => /<link rel="apple-touch-icon" href="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-manifest-link",
+    side: "ditambah",
+    count: 27,
+    why: 'ST-FIX3: app/manifest.ts baru (file convention Next, di luar app/[lang]/, jadi site-wide) — Next otomatis menyuntikkan <link rel="manifest"> pada 13 rute x {ja,en} = 26, PLUS 1 di halaman _not-found (global-not-found.tsx tidak mewarisi layout [lang] tapi tetap kena karena file convention ini berlaku seluruh situs).',
+    matches: (line) => /<link rel="manifest" href="[^"]*"\/>/.test(line),
   },
 ];
 
@@ -633,9 +1065,10 @@ async function main() {
     }
     // _not-found — satu-satunya "halaman spesial" yang benar-benar bisa
     // dipicu lewat HTTP sungguhan (path tak terdaftar). `_global-error` dan
-    // `favicon.ico` di baseline-raw TIDAK bisa dipicu lewat HTTP normal
-    // (lihat catatan di parity-report.md) — sengaja dilewati di sini, bukan
-    // dibuang diam-diam.
+    // `favicon.ico` di baseline-raw TIDAK punya rute HTTP yang memicunya
+    // secara normal (`_global-error` hanya terpicu oleh error render yang
+    // tak tertangani, `favicon.ico` disajikan sebagai file statis tanpa
+    // lewat App Router) — sengaja dilewati di sini, bukan dibuang diam-diam.
     const notFoundRaw = await fetchRaw(baseUrlOn, "/__st08_parity_probe_nonexistent__");
     rawOn.set("_not-found.txt", notFoundRaw);
     normalizedOn.set("_not-found.txt", normalizeHtml(notFoundRaw));
@@ -654,6 +1087,7 @@ async function main() {
   const baseUrlOff = `http://localhost:${PORT_CMS_OFF}`;
 
   const normalizedOff = new Map<string, string>();
+  const rawOff = new Map<string, string>();
 
   if (buildOff.success) {
     const serverOff = startServer(envOff, PORT_CMS_OFF, "CMS-OFF");
@@ -661,6 +1095,7 @@ async function main() {
       await waitForServer(`${baseUrlOff}/`);
       for (const k of keys) {
         const raw = await fetchRaw(baseUrlOff, k.urlPath);
+        rawOff.set(k.baselineFile, raw);
         normalizedOff.set(k.baselineFile, normalizeHtml(raw));
       }
     } finally {
@@ -816,6 +1251,35 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
   log(
     `\n  Ringkasan CMS-on vs CMS-off: ${abIdentical}/${seenRoutes.size * 2} URL byte-identik setelah normalisasi.`,
   );
+  }
+
+  // ---------------------------------------------------------------------
+  // Pertanyaan 5 (INFORMASIONAL, tidak memengaruhi lulus/gagal): diff
+  // key-set JSON-LD CMS-ON vs CMS-OFF, dibaca dari HTML MENTAH sebelum
+  // normalizeHtml membuang <script>. Lihat komentar di extractJsonLdKeySet.
+  // ---------------------------------------------------------------------
+  log(
+    "\n########## 5. JSON-LD key-set: CMS-ON vs CMS-OFF (INFORMASIONAL — tidak memengaruhi lulus/gagal) ##########",
+  );
+  if (buildOff.success) {
+    let anyDiff = false;
+    for (const k of keys) {
+      const onKeys = extractJsonLdKeySet(rawOn.get(k.baselineFile) ?? "");
+      const offKeys = extractJsonLdKeySet(rawOff.get(k.baselineFile) ?? "");
+      const onlyOn = [...onKeys].filter((x) => !offKeys.has(x)).sort();
+      const onlyOff = [...offKeys].filter((x) => !onKeys.has(x)).sort();
+      if (onlyOn.length === 0 && onlyOff.length === 0) continue;
+      anyDiff = true;
+      log(`  ${k.urlPath.padEnd(28)} JSON-LD key-set beda:`);
+      for (const key of onlyOn) log(`      + hanya di CMS-ON: ${key}`);
+      for (const key of onlyOff) log(`      - hanya di CMS-OFF: ${key}`);
+    }
+    if (!anyDiff) log("  tidak ada beda key-set JSON-LD di 26 URL manapun.");
+    log(
+      "  (murni informasional — normalizeHtml membuang <script> sebelum perbandingan lulus/gagal di atas, jadi isi JSON-LD TIDAK PERNAH memengaruhi HASIL LULUS/GAGAL, benar atau salah isinya.)",
+    );
+  } else {
+    log("  dilewati — build CMS-OFF gagal, tidak ada rawOff untuk dibandingkan.");
   }
 
   // ---------------------------------------------------------------------
