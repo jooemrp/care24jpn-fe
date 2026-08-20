@@ -7,6 +7,7 @@ import {
   mapBlocksByType,
   pickBi,
   pickBiOptional,
+  pickImage,
   pickJa,
   pickJaLines,
   pickLines,
@@ -18,10 +19,52 @@ import { home as fallbackHome } from "@/constants/copy";
 type Home = typeof fallbackHome;
 type Fee = Home["careCourse"]["fees"][number];
 type Card = Home["careCourse"]["cards"][number];
+
+/**
+ * `constants/copy.ts` carries no image paths — every `<Image src>` on this
+ * page used to be a literal in JSX, and the care-course cards derived theirs
+ * from the LOOP INDEX (`/images/use-case-${i + 1}.webp`), which meant a 5th
+ * card added in the dashboard rendered a guaranteed 404. So the home content
+ * this loader returns is the constants shape PLUS one image URL per rendered
+ * image, and the card's image is now a property OF THE CARD.
+ */
+export type HomeContent = Omit<Home, "hero" | "careCourse" | "contact"> & {
+  hero: Home["hero"] & { image: string };
+  careCourse: Omit<Home["careCourse"], "cards"> & {
+    cards: (Card & { image: string })[];
+  };
+  contact: Home["contact"] & { micsLogo: string; isoLogo: string };
+};
+
 type NursingFeature = Home["nursingCourse"]["panel"]["items"][number];
 type ExampleCase = Home["examples"]["cases"][number];
 type ScheduleRow = ExampleCase["schedule"][number];
 type FlowStep = Home["flow"]["steps"][number];
+
+/**
+ * The files bundled in `public/images/` — the safety net for when Atlas is
+ * down, or answered without expanding a media id into a URL. They are NOT
+ * deleted from the repo; `pickImage` falls back to them per field.
+ */
+const FALLBACK_IMAGES = {
+  hero: "/images/hero.webp",
+  micsLogo: "/images/mics-logo.png",
+  isoLogo: "/images/iso27001-bsi.png",
+  /**
+   * One per card in `constants/copy.ts#home.careCourse.cards`, in that order
+   * — the exact files the old index-derived `src` produced, so the CMS-OFF
+   * render is unchanged. A card BEYOND this list has no bundled counterpart
+   * and falls back to `""`, which `page.tsx` renders as a card with no image
+   * rather than as a broken one. That case can only arise from a dashboard
+   * card whose `image` field was also left empty.
+   */
+  cards: [
+    "/images/use-case-1.webp",
+    "/images/use-case-2.webp",
+    "/images/use-case-3.webp",
+    "/images/use-case-4.webp",
+  ],
+} as const;
 
 // ---------------------------------------------------------------------------
 // Assembly — the content types scripts/atlas/seed-home.ts writes. 10 section
@@ -56,7 +99,7 @@ const HOME_TYPES = [
  * so the grouped blocks are handed back alongside the mapped content instead
  * of re-deriving them with a second index lookup. */
 interface MappedHome {
-  rest: Omit<Home, "contact">;
+  rest: Omit<HomeContent, "contact">;
   contactData: CmsBlock["data"];
 }
 
@@ -87,7 +130,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   // is no constants entry at that index to fall back to.
   const EMPTY: Bilingual = { ja: "", en: "" };
 
-  const hero: Home["hero"] = {
+  const hero: HomeContent["hero"] = {
     badge: pickBi(heroBlock.data, "badge", F.hero.badge),
     resolve: pickBi(heroBlock.data, "resolve", F.hero.resolve),
     assist: pickBi(heroBlock.data, "assist", F.hero.assist),
@@ -96,6 +139,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     ctaPrimary: pickBi(heroBlock.data, "cta_primary", F.hero.ctaPrimary),
     ctaSecondary: pickBi(heroBlock.data, "cta_secondary", F.hero.ctaSecondary),
     imageAlt: pickBi(heroBlock.data, "image_alt", F.hero.imageAlt),
+    image: pickImage(heroBlock.data, "image", FALLBACK_IMAGES.hero, "home/hero"),
   };
 
   const valueTitles = pickLines(valuesBlock.data, "item_titles", F.values.items.map((i) => i.title));
@@ -142,13 +186,17 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     note: pickBiOptional(block.data, "note"),
   }));
 
-  const cards: Card[] = cardBlocks.map((block, i) => ({
+  const cards: HomeContent["careCourse"]["cards"] = cardBlocks.map((block, i) => ({
     title: pickBi(block.data, "title", F.careCourse.cards[i]?.title ?? EMPTY),
     imageAlt: pickBi(block.data, "image_alt", F.careCourse.cards[i]?.imageAlt ?? EMPTY),
     items: pickLines(block.data, "items", F.careCourse.cards[i]?.items ?? []),
+    // The card's own image — no longer `/images/use-case-${i + 1}.webp`. The
+    // index survives only in the FALLBACK, where it addresses the four files
+    // that ship with the repo.
+    image: pickImage(block.data, "image", FALLBACK_IMAGES.cards[i] ?? "", `home/care-course-card[${i}]`),
   }));
 
-  const careCourse: Home["careCourse"] = {
+  const careCourse: HomeContent["careCourse"] = {
     leadIn: pickBi(careCourseBlock.data, "lead_in", F.careCourse.leadIn),
     badge: pickBi(careCourseBlock.data, "badge", F.careCourse.badge),
     tagline: pickBi(careCourseBlock.data, "tagline", F.careCourse.tagline),
@@ -236,7 +284,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   };
 }
 
-function mapContact(data: CmsBlock["data"], phone: string): Home["contact"] {
+function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact"] {
   const F = fallbackHome;
   return {
     leadIn: pickBi(data, "lead_in", F.contact.leadIn),
@@ -244,15 +292,37 @@ function mapContact(data: CmsBlock["data"], phone: string): Home["contact"] {
     phone,
     hours: pickBi(data, "hours", F.contact.hours),
     isms: pickBi(data, "isms", F.contact.isms),
+    micsLogo: pickImage(data, "mics_logo", FALLBACK_IMAGES.micsLogo, "home/contact"),
+    isoLogo: pickImage(data, "iso_logo", FALLBACK_IMAGES.isoLogo, "home/contact"),
   };
 }
 
-async function fetchHome(): Promise<Home> {
+/** `constants/copy.ts#home` plus the bundled image paths — what every fallback
+ * path in this file returns, so a CMS-less render is byte-identical to the
+ * pre-CMS page. */
+const FALLBACK_HOME: HomeContent = {
+  ...fallbackHome,
+  hero: { ...fallbackHome.hero, image: FALLBACK_IMAGES.hero },
+  careCourse: {
+    ...fallbackHome.careCourse,
+    cards: fallbackHome.careCourse.cards.map((card, i) => ({
+      ...card,
+      image: FALLBACK_IMAGES.cards[i] ?? "",
+    })),
+  },
+  contact: {
+    ...fallbackHome.contact,
+    micsLogo: FALLBACK_IMAGES.micsLogo,
+    isoLogo: FALLBACK_IMAGES.isoLogo,
+  },
+};
+
+async function fetchHome(): Promise<HomeContent> {
   const blocks = await getPageBlocks("home");
-  if (!blocks) return fallbackHome;
+  if (!blocks) return FALLBACK_HOME;
 
   const mapped = mapHome(blocks);
-  if (!mapped) return fallbackHome;
+  if (!mapped) return FALLBACK_HOME;
 
   // contact.phone is deliberately NOT a field on home_contact — it comes from
   // the shared site chrome, exactly like constants/copy.ts:560

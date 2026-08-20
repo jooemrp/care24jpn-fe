@@ -2,7 +2,14 @@ import "server-only";
 
 import { cache } from "react";
 import { getPageBlocks, reportUnexpectedContent } from "./client";
-import { mapBlocksByType, pickBi, pickJa, pickLines, type BlockTypeList } from "./fields";
+import {
+  mapBlocksByType,
+  pickBi,
+  pickImage,
+  pickJa,
+  pickLines,
+  type BlockTypeList,
+} from "./fields";
 import type { Bilingual, CmsBlock } from "./types";
 import {
   useCase as fallbackUseCase,
@@ -23,9 +30,36 @@ type CompanyRow = Company["rows"][number];
 
 const EMPTY: Bilingual = { ja: "", en: "" };
 
+/**
+ * `constants/copy.ts` carries no image paths — the case images used to be
+ * derived from the LOOP INDEX in JSX (`/images/use-case-${i + 1}.webp`), so a
+ * 5th case added in the dashboard rendered a guaranteed 404. The image is now
+ * a property of the case itself; the index survives only in the fallback list
+ * below, which addresses the four files that ship with the repo.
+ */
+export type UseCaseContent = Omit<UseCase, "cases"> & {
+  cases: (UseCaseItem & { image: string })[];
+};
+
+/** Bundled files, in `constants/copy.ts#useCase.cases` order — the safety net
+ * for when Atlas is down or answered without expanding a media id into a URL.
+ * A case BEYOND this list falls back to `""`, which `use-case/page.tsx`
+ * renders as a case with no image rather than as a broken one. */
+const FALLBACK_CASE_IMAGES = [
+  "/images/use-case-1.webp",
+  "/images/use-case-2.webp",
+  "/images/use-case-3.webp",
+  "/images/use-case-4.webp",
+];
+
+const FALLBACK_USE_CASE: UseCaseContent = {
+  ...fallbackUseCase,
+  cases: fallbackUseCase.cases.map((c, i) => ({ ...c, image: FALLBACK_CASE_IMAGES[i] ?? "" })),
+};
+
 const USE_CASE_TYPES = ["page-hero", "use-case-item"] as const satisfies BlockTypeList;
 
-function mapUseCase(blocks: CmsBlock[]): UseCase | null {
+function mapUseCase(blocks: CmsBlock[]): UseCaseContent | null {
   const groups = mapBlocksByType("use-case", blocks, USE_CASE_TYPES, reportUnexpectedContent);
   if (!groups) return null;
 
@@ -40,22 +74,23 @@ function mapUseCase(blocks: CmsBlock[]): UseCase | null {
 
   // `F.cases[i]` is indexed defensively: a 5th case added in the dashboard now
   // renders instead of reverting the page, and has no constants counterpart.
-  const cases: UseCaseItem[] = itemBlocks.map((block, i) => ({
+  const cases: UseCaseContent["cases"] = itemBlocks.map((block, i) => ({
     slug: pickJa(block.data, "slug", F.cases[i]?.slug ?? ""),
     title: pickBi(block.data, "title", F.cases[i]?.title ?? EMPTY),
     body: pickBi(block.data, "body", F.cases[i]?.body ?? EMPTY),
     detail: pickBi(block.data, "detail", F.cases[i]?.detail ?? EMPTY),
     highlights: pickLines(block.data, "highlights", F.cases[i]?.highlights ?? []),
     imageAlt: pickBi(block.data, "image_alt", F.cases[i]?.imageAlt ?? EMPTY),
+    image: pickImage(block.data, "image", FALLBACK_CASE_IMAGES[i] ?? "", `use-case/item[${i}]`),
   }));
 
   return { hero, cases };
 }
 
-async function fetchUseCase(): Promise<UseCase> {
+async function fetchUseCase(): Promise<UseCaseContent> {
   const blocks = await getPageBlocks("use-case");
-  if (!blocks) return fallbackUseCase;
-  return mapUseCase(blocks) ?? fallbackUseCase;
+  if (!blocks) return FALLBACK_USE_CASE;
+  return mapUseCase(blocks) ?? FALLBACK_USE_CASE;
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls

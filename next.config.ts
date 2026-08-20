@@ -5,6 +5,29 @@ const nextConfig: NextConfig = {
   experimental: {
     globalNotFound: true,
   },
+  images: {
+    // Every image on the site now comes from an Atlas `image` field, and Atlas
+    // hands back the media's public S3 URL (its delivery API expands the media
+    // id before responding). Without this allow-list `next/image` answers 400
+    // for those URLs and the page renders with no images at all.
+    //
+    // Host and path are not guessed — they are the bucket and key prefix of
+    // media actually uploaded to this workspace
+    // (`<prefix>/media/<YYYY>/<MM>/<uuidv7>-<name><ext>`, prefix `care-24`).
+    // The month is part of the key, so the pattern must NOT pin `2026/08`:
+    // media uploaded next month lands under a new folder.
+    //
+    // Anything that is not an http(s) URL never reaches this config at all —
+    // `features/cms/fields.ts#pickImage` rejects it and serves the file
+    // bundled in `public/images/` instead.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "horizoon.s3.ap-southeast-1.amazonaws.com",
+        pathname: "/care-24/media/**",
+      },
+    ],
+  },
   // /terms (Care Supporter doc) is retired but already indexed publicly —
   // send both locales to their new home instead of 404ing. `redirects()`
   // runs before proxy.ts's i18n rewrite (see docs), so this fires first and

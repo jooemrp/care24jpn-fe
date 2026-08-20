@@ -8,7 +8,7 @@
  * directly) from the `marketing-web/` directory, so `.env` resolves relative
  * to the package root.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 // Type-only import: erased at compile time, so it never touches Node's
 // module resolution. The runtime binding is loaded via dynamic `import()`
@@ -110,6 +110,105 @@ export async function createScriptManagementClient(): Promise<
   const { baseUrl, mgmtKey } = requireAtlasEnv();
   const { createManagementClient } = await import("@latellu/atlas-sdk/management");
   return createManagementClient({ url: baseUrl, token: mgmtKey });
+}
+
+// ---------------------------------------------------------------------------
+// Media manifest — the handoff between scripts/atlas/upload-media.ts and the
+// seed-*.ts scripts that write media ids into block data.
+//
+// Why a file on disk rather than a lookup at seed time: this backend exposes
+// NO way to list media with either key this repo holds. `GET /api/v1/media`
+// (the only list endpoint, media/module.go#SetupRoutes) sits behind
+// `SessionAuth` + `RequireActiveAccount` — a dashboard login, verified live:
+// calling it with `X-API-Key: atlas_mgmt_...` returns
+// `401 {"code":"UNAUTHORIZED","message":"missing authorization header"}`.
+// The management plane (media/module.go#RegisterManagementRoutes) exposes
+// only `POST /media/upload`, `PUT /media/:id`, `DELETE /media/:id`, and the
+// delivery plane only `GET /api/v1/public/media/:id` — both are id-first, and
+// nothing anywhere resolves a filename back to an id. So the id->file mapping
+// has to be remembered by us; that is exactly what this manifest is, and it is
+// what makes re-running `upload-media.ts` a no-op instead of a second upload.
+// ---------------------------------------------------------------------------
+
+/** Atlas media folder every asset this repo owns is uploaded into. Purely
+ * organizational on the backend (`normalizeFolder` in
+ * media/usecase/upload_media.go), but it keeps the client's media library
+ * legible in the dashboard and scopes any future manual cleanup. */
+export const MEDIA_FOLDER = "/marketing-web/";
+
+export const MEDIA_MANIFEST_PATH = resolve(__dirname, "media-manifest.json");
+
+export interface MediaManifestEntry {
+  /** Atlas media id — this, not the URL, is what goes into an `image` field
+   * (the dashboard's image renderer stores ids; see upload-media.ts). */
+  id: string;
+  /** Public S3 URL, for `next.config.ts#images.remotePatterns` and for eyeballing. */
+  url: string;
+  width: number | null;
+  height: number | null;
+  mime_type: string;
+  /** Filename Atlas stored as `original_name`. Differs from the manifest key
+   * for `.webp` sources, which are converted before upload — see
+   * upload-media.ts. */
+  uploaded_as: string;
+}
+
+export interface MediaManifest {
+  generated_at: string;
+  folder: string;
+  /** Keyed by the file's name under `public/images/`. */
+  assets: Record<string, MediaManifestEntry>;
+}
+
+function isMediaManifest(value: unknown): value is MediaManifest {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<MediaManifest>;
+  return typeof candidate.assets === "object" && candidate.assets !== null;
+}
+
+/** Reads the manifest, or `null` when it doesn't exist yet / is unreadable.
+ * Used by `upload-media.ts` itself, which must cope with both. */
+export function readMediaManifest(): MediaManifest | null {
+  if (!existsSync(MEDIA_MANIFEST_PATH)) return null;
+  try {
+    const parsed: unknown = JSON.parse(readFileSync(MEDIA_MANIFEST_PATH, "utf8"));
+    return isMediaManifest(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function writeMediaManifest(manifest: MediaManifest): void {
+  writeFileSync(MEDIA_MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+}
+
+/** Manifest-or-throw, for the seed scripts. They cannot invent a media id, so
+ * a missing manifest has to stop the seed rather than write a page with an
+ * empty `image` field over one that had a good id. */
+export function requireMediaManifest(): MediaManifest {
+  const manifest = readMediaManifest();
+  if (!manifest) {
+    throw new Error(
+      `Media manifest not found at ${MEDIA_MANIFEST_PATH}. ` +
+        'Run "npx tsx scripts/atlas/upload-media.ts" first — it uploads public/images/* to Atlas ' +
+        "and records the media ids the seed scripts write into `image` fields.",
+    );
+  }
+  return manifest;
+}
+
+/** Looks up one asset's media id by its `public/images/` filename. Throws
+ * rather than returning `undefined`: an `image` field silently seeded as
+ * `undefined` renders as a missing image with no error anywhere. */
+export function mediaId(manifest: MediaManifest, fileName: string): string {
+  const entry = manifest.assets[fileName];
+  if (!entry?.id) {
+    throw new Error(
+      `Media "${fileName}" is not in ${MEDIA_MANIFEST_PATH}. ` +
+        'Re-run "npx tsx scripts/atlas/upload-media.ts" (it is idempotent) to upload it.',
+    );
+  }
+  return entry.id;
 }
 
 // ---------------------------------------------------------------------------

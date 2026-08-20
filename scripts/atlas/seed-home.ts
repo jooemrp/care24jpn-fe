@@ -27,6 +27,8 @@ import {
   createScriptManagementClient,
   getContentType,
   ensurePublishedPage,
+  requireMediaManifest,
+  mediaId,
 } from "./lib";
 
 // ---------------------------------------------------------------------------
@@ -96,6 +98,29 @@ function makeBlock(
 // Block type slugs this page needs (fetched once, mapped to their UUIDs).
 // ---------------------------------------------------------------------------
 
+/**
+ * Which `public/images/` file each Care Course service card ships with, by
+ * card index — the seeded default for the four cards that exist in
+ * `constants/copy.ts` today.
+ *
+ * This list is what replaces `src={`/images/use-case-${i + 1}.webp`}` in
+ * app/[lang]/page.tsx. The template literal made the picture a function of
+ * the loop index, so a fifth card added from the dashboard resolved to
+ * `/images/use-case-5.webp`, which does not exist — a guaranteed 404 with
+ * nothing in the dashboard warning the editor. After this migration the
+ * picture is a field on the block, so a new card simply carries whichever
+ * media the editor picks. The list below only supplies the initial value for
+ * the four cards this repo already knows about; the length check under it
+ * exists so a fifth card added to `constants/copy.ts` (not the dashboard)
+ * stops the seed loudly instead of silently seeding a card with no image.
+ */
+const CARE_COURSE_CARD_IMAGES = [
+  "use-case-1.webp",
+  "use-case-2.webp",
+  "use-case-3.webp",
+  "use-case-4.webp",
+] as const;
+
 const BLOCK_TYPE_SLUGS = [
   "home_hero",
   "home_values",
@@ -116,6 +141,7 @@ const BLOCK_TYPE_SLUGS = [
 async function main(): Promise<void> {
   const env = requireAtlasEnv();
   const client = await createScriptManagementClient();
+  const media = requireMediaManifest();
 
   const typeIds: Record<string, string> = {};
   for (const slug of BLOCK_TYPE_SLUGS) {
@@ -142,7 +168,13 @@ async function main(): Promise<void> {
       cta_secondary: home.hero.ctaSecondary,
       image_alt: home.hero.imageAlt,
     });
-    blocks.push(makeBlock(typeIds, "home_hero", next(), split.ja, split.en));
+    // `image` carries the Atlas MEDIA ID (not a URL, not a path): the
+    // dashboard's image field renderer stores ids, so seeding anything else
+    // would be overwritten with an id the first time an editor swaps the
+    // picture. Non-localizable — one file for both locales, only the alt text
+    // is translated — so it goes into the JA `data` dict and never into `en`.
+    const ja = { ...split.ja, image: mediaId(media, "hero.webp") };
+    blocks.push(makeBlock(typeIds, "home_hero", next(), ja, split.en));
   }
 
   // 1: home_values (3 items)
@@ -213,12 +245,21 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_care_course_fee", next(), split.ja, split.en));
   }
 
-  // 14-17: home_care_course_card (4 cards, 8/7/7/6 items)
-  for (const card of home.careCourse.cards) {
+  // 14-17: home_care_course_card (4 cards, 8/7/7/6 items) — `image` is the
+  // media id, non-localizable, so it rides in the JA data dict only.
+  if (home.careCourse.cards.length !== CARE_COURSE_CARD_IMAGES.length) {
+    throw new Error(
+      `constants/copy.ts#home.careCourse.cards has ${home.careCourse.cards.length} cards but ` +
+        `CARE_COURSE_CARD_IMAGES lists ${CARE_COURSE_CARD_IMAGES.length} images. Add the new card's ` +
+        "image to public/images/, to scripts/atlas/upload-media.ts#ASSETS and to that list.",
+    );
+  }
+  home.careCourse.cards.forEach((card, i) => {
     const items = biJoin(card.items);
     const split = splitBilingual({ title: card.title, image_alt: card.imageAlt, items });
-    blocks.push(makeBlock(typeIds, "home_care_course_card", next(), split.ja, split.en));
-  }
+    const ja = { ...split.ja, image: mediaId(media, CARE_COURSE_CARD_IMAGES[i]) };
+    blocks.push(makeBlock(typeIds, "home_care_course_card", next(), ja, split.en));
+  });
 
   // 18: home_examples
   {
@@ -285,7 +326,16 @@ async function main(): Promise<void> {
       hours: home.contact.hours,
       isms: home.contact.isms,
     });
-    blocks.push(makeBlock(typeIds, "home_contact", next(), split.ja, split.en));
+    // The two certification marks rendered next to the ISMS note. Their alt
+    // text is still hardcoded in app/[lang]/page.tsx — it has never lived in
+    // constants/copy.ts, and inventing CMS copy for it is outside this
+    // change; only the picture moves to Atlas here.
+    const ja = {
+      ...split.ja,
+      mics_logo: mediaId(media, "mics-logo.png"),
+      iso_logo: mediaId(media, "iso27001-bsi.png"),
+    };
+    blocks.push(makeBlock(typeIds, "home_contact", next(), ja, split.en));
   }
 
   if (blocks.length !== 29) {

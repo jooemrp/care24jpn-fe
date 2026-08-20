@@ -31,6 +31,9 @@ import {
   createScriptManagementClient,
   getContentType,
   ensurePublishedPage,
+  requireMediaManifest,
+  mediaId,
+  type MediaManifest,
 } from "./lib";
 
 const PAGE_SLUG = "site";
@@ -63,10 +66,26 @@ function en(data: Record<string, unknown>): { en: { data: Record<string, unknown
   return { en: { data } };
 }
 
-function buildBlocks(blockTypeIds: Record<BlockTypeSlug, string>): BlockInput[] {
+function buildBlocks(
+  blockTypeIds: Record<BlockTypeSlug, string>,
+  media: MediaManifest,
+): BlockInput[] {
   const blocks: BlockInput[] = [];
 
-  // position 0 — site_brand: name / logoAlt / tagline
+  // position 0 — site_brand: name / logoAlt / tagline / logo
+  //
+  // `logo` holds the Atlas MEDIA ID of public/images/logo.png, not a URL and
+  // not a path: the dashboard's image field renderer stores ids (its
+  // <MediaPicker> has no `valueType`, which defaults to "id"), so a URL here
+  // would be silently replaced by an id the first time an editor changes the
+  // picture. Non-localizable — one file serves both locales, only `logo_alt`
+  // is translated — so it appears in `data` only, never in `translations.en`.
+  //
+  // The logo lives on this block rather than on a footer- or navbar-specific
+  // one because BOTH chrome components render the same file (Navbar.tsx and
+  // Footer.tsx), and `site_brand` already owns its alt text (`logo_alt`).
+  // Splitting it in two would let the two copies drift apart in the dashboard
+  // with nothing to flag it.
   blocks.push({
     block_type_id: blockTypeIds.site_brand,
     parent_id: null,
@@ -75,6 +94,7 @@ function buildBlocks(blockTypeIds: Record<BlockTypeSlug, string>): BlockInput[] 
       name: brand.name,
       logo_alt: brand.logoAlt.ja,
       tagline: brand.tagline.ja,
+      logo: mediaId(media, "logo.png"),
     },
     translations: en({ logo_alt: brand.logoAlt.en, tagline: brand.tagline.en }),
   });
@@ -185,7 +205,8 @@ async function main(): Promise<void> {
     blockTypeIds[slug] = contentType.id;
   }
 
-  const blocks = buildBlocks(blockTypeIds);
+  const media = requireMediaManifest();
+  const blocks = buildBlocks(blockTypeIds, media);
 
   const pageInput = {
     slug: PAGE_SLUG,

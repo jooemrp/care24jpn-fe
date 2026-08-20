@@ -7,6 +7,7 @@ import JsonLd, { organizationJsonLd } from "@/components/JsonLd";
 import { SITE_URL } from "@/constants/site";
 import { isLang } from "@/features/lang/i18n";
 import { getSite } from "@/features/cms/site";
+import { getLegalHeading } from "@/features/cms/legal";
 
 // Dashboard edits must appear immediately, with no rebuild — see
 // `features/cms/client.ts`'s `cache: "no-store"` on the delivery fetch.
@@ -73,9 +74,27 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  // Deduped with the `getSite()` call in generateMetadata above (React
-  // cache()) — dedup happens per request, so this is not a second fetch.
-  const site = await getSite();
+  // Both reads are issued in the SAME tick, then awaited together.
+  //
+  // `AppShell` needs the tokushoho heading for the footer link label and asks
+  // for it with its own `Promise.all` — but it is only rendered once this
+  // function has returned, so by then `getSite()` has already resolved and
+  // that `Promise.all` had nothing left to overlap (measured: the legal fetch
+  // started 4ms AFTER the site fetch ended). Starting the heading read here
+  // puts it in the first wave alongside `site`; because `getLegalHeading` is
+  // React-`cache()`-ed, `AppShell` then picks up this very promise instead of
+  // issuing a second request. Its value is deliberately dropped here — this
+  // call exists to start the work, not to consume it.
+  //
+  // `getSite()` is deduped with the call in generateMetadata above (React
+  // cache() again, per request), so neither of these is a second fetch either.
+  //
+  // Safe to put in a `Promise.all`, which rejects as soon as any input does:
+  // `getLegalHeading` resolves on every failure path it has — `getPageBlocks`
+  // catches network/timeout/shape errors itself and returns null, and the
+  // guards above the constants fallback are pure — so a footer link label
+  // cannot take the whole layout down.
+  const [site] = await Promise.all([getSite(), getLegalHeading("legal-tokushoho")]);
 
   return (
     <html

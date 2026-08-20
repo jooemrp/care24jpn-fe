@@ -53,15 +53,22 @@ export default async function UseCasePage({ params }: PageProps<"/[lang]">) {
               className="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up"
               style={{ animationDelay: `${i * 100}ms` }}
             >
-              <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
-                <Image
-                  src={`/images/use-case-${i + 1}.webp`}
-                  alt={t(c.imageAlt, lang)}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
+              {/* The case's OWN image — not `/images/use-case-${i + 1}.webp`.
+                  A 5th case added in the dashboard used to render a 404; now
+                  it renders the media the editor picked. `c.image` is only
+                  empty for a case that has neither a CMS image nor a bundled
+                  counterpart, and an empty `src` throws in `next/image`. */}
+              {c.image && (
+                <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+                  <Image
+                    src={c.image}
+                    alt={t(c.imageAlt, lang)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
 
               <div>
                 <h2 className="text-2xl font-bold text-heading">{t(c.title, lang)}</h2>

@@ -30,7 +30,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       <section className="relative isolate overflow-hidden">
         {/* Key visual: spans the full viewport width behind the copy */}
         <Image
-          src="/images/hero.webp"
+          src={home.hero.image}
           alt={t(home.hero.imageAlt, lang)}
           fill
           priority
@@ -262,15 +262,22 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         <div className="mt-10 grid gap-8 md:grid-cols-2">
           {home.careCourse.cards.map((card, i) => (
             <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 120}ms` }}>
-              <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
-                <Image
-                  src={`/images/use-case-${i + 1}.webp`}
-                  alt={t(card.imageAlt, lang)}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
+              {/* The card's OWN image — not `/images/use-case-${i + 1}.webp`.
+                  A 5th card added in the dashboard used to render a 404; now
+                  it renders the media the editor picked. `card.image` is only
+                  empty for a card that has neither a CMS image nor a bundled
+                  counterpart, and an empty `src` throws in `next/image`. */}
+              {card.image && (
+                <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
+                  <Image
+                    src={card.image}
+                    alt={t(card.imageAlt, lang)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
               <h3 className="mt-5 text-xl font-bold text-heading">{t(card.title, lang)}</h3>
               <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
                 {card.items.map((item, j) => (
@@ -500,7 +507,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
             <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
               <Image
-                src="/images/mics-logo.png"
+                src={home.contact.micsLogo}
                 alt="mics — MedicalInformatics Co.,Ltd."
                 width={401}
                 height={140}
@@ -509,7 +516,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             </div>
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
               <Image
-                src="/images/iso27001-bsi.png"
+                src={home.contact.isoLogo}
                 alt="BSI ISMS-AC ISO27001 認証マーク（IS 793656）"
                 width={257}
                 height={182}

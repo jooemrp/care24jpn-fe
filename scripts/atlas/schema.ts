@@ -52,6 +52,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "name", label: "Brand name", field_type: "text", localizable: false, required: false, sort_order: 0 },
       { name: "logo_alt", label: "Logo alt", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "tagline", label: "Tagline", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "logo", label: "Logo", field_type: "image", localizable: false, required: false, sort_order: 3 },
     ],
   },
   {
@@ -124,6 +125,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "cta_primary", label: "CTA primary label", field_type: "text", localizable: true, required: false, sort_order: 5 },
       { name: "cta_secondary", label: "CTA secondary label", field_type: "text", localizable: true, required: false, sort_order: 6 },
       { name: "image_alt", label: "Hero image alt", field_type: "text", localizable: true, required: false, sort_order: 7 },
+      { name: "image", label: "Hero image", field_type: "image", localizable: false, required: false, sort_order: 8 },
     ],
   },
   {
@@ -180,6 +182,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "title", label: "Card title", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "image_alt", label: "Image alt", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "items", label: "Items (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "image", label: "Image", field_type: "image", localizable: false, required: false, sort_order: 3 },
     ],
   },
   {
@@ -275,6 +278,8 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "heading", label: "Heading", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
       { name: "hours", label: "Reception hours", field_type: "text", localizable: true, required: false, sort_order: 2 },
       { name: "isms", label: "ISMS note", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "mics_logo", label: "Logo mics", field_type: "image", localizable: false, required: false, sort_order: 4 },
+      { name: "iso_logo", label: "Badge ISO 27001 (BSI)", field_type: "image", localizable: false, required: false, sort_order: 5 },
     ],
   },
   {
@@ -329,6 +334,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "detail", label: "Detail (paragraf panjang)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
       { name: "highlights", label: "Highlights (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 4 },
       { name: "image_alt", label: "Image alt", field_type: "text", localizable: true, required: false, sort_order: 5 },
+      { name: "image", label: "Image", field_type: "image", localizable: false, required: false, sort_order: 6 },
     ],
   },
   {

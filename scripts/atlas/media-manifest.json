@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-08-20T08:57:42.138Z",
+  "folder": "/marketing-web/",
+  "assets": {
+    "hero.webp": {
+      "id": "01a01e63-687a-79bd-a631-c689d4d63355",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
+      "width": 800,
+      "height": 764,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "hero.jpg"
+    },
+    "logo.png": {
+      "id": "01a01e63-6c74-7a16-94a3-605591de1c0f",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6bfe-7dc8-925d-9e5d986a4ffe-logo.png",
+      "width": 5600,
+      "height": 2101,
+      "mime_type": "image/png",
+      "uploaded_as": "logo.png"
+    },
+    "mics-logo.png": {
+      "id": "01a01e63-6cf3-774a-b7e4-71c413ff3899",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png",
+      "width": 401,
+      "height": 140,
+      "mime_type": "image/png",
+      "uploaded_as": "mics-logo.png"
+    },
+    "iso27001-bsi.png": {
+      "id": "01a01e63-6d63-7716-98cb-57ee304b203b",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6d36-7bcf-b507-256d246f0735-iso27001-bsi.png",
+      "width": 257,
+      "height": 182,
+      "mime_type": "image/png",
+      "uploaded_as": "iso27001-bsi.png"
+    },
+    "use-case-1.webp": {
+      "id": "01a01e63-6e48-7d4e-bb94-6d8c99483f88",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg",
+      "width": 1000,
+      "height": 667,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "use-case-1.jpg"
+    },
+    "use-case-2.webp": {
+      "id": "01a01e63-6f62-7760-8f1a-0935e6585fb3",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg",
+      "width": 1000,
+      "height": 667,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "use-case-2.jpg"
+    },
+    "use-case-3.webp": {
+      "id": "01a01e63-707c-72c9-8a36-a568b6786e70",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg",
+      "width": 1000,
+      "height": 667,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "use-case-3.jpg"
+    },
+    "use-case-4.webp": {
+      "id": "01a01e63-71dd-7502-bd21-0655f0c467c6",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg",
+      "width": 1000,
+      "height": 667,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "use-case-4.jpg"
+    }
+  }
+}

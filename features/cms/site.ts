@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getPageBlocks, reportUnexpectedContent } from "./client";
-import { mapBlocksByType, pickBi, pickJa, type BlockTypeList } from "./fields";
+import { mapBlocksByType, pickBi, pickImage, pickJa, type BlockTypeList } from "./fields";
 import type { CmsBlock } from "./types";
 import {
   brand as fallbackBrand,
@@ -23,7 +23,7 @@ import {
  * already render against.
  */
 export type SiteContent = {
-  brand: typeof fallbackBrand;
+  brand: typeof fallbackBrand & { logo: string };
   nav: typeof fallbackNav;
   contactPhone: typeof fallbackContactPhone;
   cta: typeof fallbackCta;
@@ -31,8 +31,19 @@ export type SiteContent = {
   footer: typeof fallbackFooter;
 };
 
+/**
+ * The logo file bundled in `public/images/`. `constants/copy.ts` holds no
+ * image paths at all — until now every `<Image src>` was a literal in JSX —
+ * so the literal lives here, next to the CMS field it backs up, and stays the
+ * safety net when Atlas is down or its media expansion failed.
+ *
+ * Navbar and Footer render the SAME file, from the SAME field
+ * (`site_brand.logo`), so they cannot drift apart.
+ */
+const FALLBACK_LOGO = "/images/logo.png";
+
 const FALLBACK: SiteContent = {
-  brand: fallbackBrand,
+  brand: { ...fallbackBrand, logo: FALLBACK_LOGO },
   nav: fallbackNav,
   contactPhone: fallbackContactPhone,
   cta: fallbackCta,
@@ -85,6 +96,7 @@ function mapSite(blocks: CmsBlock[]): SiteContent | null {
 
   const brand: SiteContent["brand"] = {
     name: pickJa(brandBlock.data, "name", FALLBACK.brand.name),
+    logo: pickImage(brandBlock.data, "logo", FALLBACK_LOGO, "site/brand"),
     logoAlt: pickBi(brandBlock.data, "logo_alt", FALLBACK.brand.logoAlt),
     tagline: pickBi(brandBlock.data, "tagline", FALLBACK.brand.tagline),
   };

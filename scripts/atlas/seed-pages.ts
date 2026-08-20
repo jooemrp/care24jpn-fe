@@ -35,6 +35,8 @@ import {
   createScriptManagementClient,
   getContentType,
   ensurePublishedPage,
+  requireMediaManifest,
+  mediaId,
 } from "./lib";
 
 // ---------------------------------------------------------------------------
@@ -129,11 +131,32 @@ async function upsertPage(
 // Block type slugs these pages need (fetched once, mapped to their UUIDs).
 // ---------------------------------------------------------------------------
 
+/**
+ * Which `public/images/` file each use case ships with, by index — the seeded
+ * default for the four cases in `constants/copy.ts` today.
+ *
+ * This is what replaces `src={`/images/use-case-${i + 1}.webp`}` in
+ * app/[lang]/use-case/page.tsx, where the picture was derived from the loop
+ * index: a fifth case added from the dashboard pointed at
+ * `/images/use-case-5.webp`, a file that does not exist, and 404'd with no
+ * warning anywhere. With the picture stored on the block, a new case carries
+ * whichever media the editor picks instead. The check below keeps the *seed*
+ * honest — a fifth case added to `constants/copy.ts` stops the run rather
+ * than seeding a case with no image.
+ */
+const USE_CASE_IMAGES = [
+  "use-case-1.webp",
+  "use-case-2.webp",
+  "use-case-3.webp",
+  "use-case-4.webp",
+] as const;
+
 const BLOCK_TYPE_SLUGS = ["page_hero", "use_case_item", "service_flow_step", "company_row"] as const;
 
 async function main(): Promise<void> {
   const env = requireAtlasEnv();
   const client = await createScriptManagementClient();
+  const media = requireMediaManifest();
 
   const typeIds: Record<string, string> = {};
   for (const slug of BLOCK_TYPE_SLUGS) {
@@ -157,7 +180,20 @@ async function main(): Promise<void> {
       blocks.push(makeBlock(typeIds, "page_hero", next(), split.ja, split.en));
     }
 
-    for (const c of useCase.cases) {
+    if (useCase.cases.length !== USE_CASE_IMAGES.length) {
+      throw new Error(
+        `constants/copy.ts#useCase.cases has ${useCase.cases.length} cases but USE_CASE_IMAGES lists ` +
+          `${USE_CASE_IMAGES.length} images. Add the new case's image to public/images/, to ` +
+          "scripts/atlas/upload-media.ts#ASSETS and to that list.",
+      );
+    }
+
+    // `image` holds the Atlas MEDIA ID (not a URL, not a path) — the
+    // dashboard's image field renderer stores ids, so anything else here
+    // would be replaced the first time an editor swaps the picture. It is
+    // non-localizable (one file per case, only `image_alt` is translated), so
+    // it rides in the JA data dict alongside `slug` and never in `en`.
+    useCase.cases.forEach((c, i) => {
       const highlights = biJoin(c.highlights);
       const split = splitBilingual({
         title: c.title,
@@ -166,9 +202,9 @@ async function main(): Promise<void> {
         highlights,
         image_alt: c.imageAlt,
       });
-      const ja = { slug: c.slug, ...split.ja };
+      const ja = { slug: c.slug, ...split.ja, image: mediaId(media, USE_CASE_IMAGES[i]) };
       blocks.push(makeBlock(typeIds, "use_case_item", next(), ja, split.en));
-    }
+    });
 
     if (blocks.length !== 5) {
       throw new Error(`use-case: expected 5 blocks, built ${blocks.length}`);

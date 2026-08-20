@@ -1,6 +1,6 @@
 /**
- * Runs the full Atlas seeding pipeline in one command: `schema.ts` first,
- * then every `seed-*.ts` script.
+ * Runs the full Atlas seeding pipeline in one command: `schema.ts`, then
+ * `upload-media.ts`, then every `seed-*.ts` script.
  *
  * Why child processes, not imports: every script under scripts/atlas/*.ts
  * calls its own `main().catch(...)` at module load time (see the bottom of
@@ -13,13 +13,27 @@
  * this file never has to touch (or duplicate) a single line of seeding
  * logic that the other lanes have already verified.
  *
- * Ordering: schema.ts creates the 30 block content types every seed-*
- * script depends on (they resolve block_type_id by slug), so it must
- * finish, successfully, before any seed-* runs. The five seed-* scripts
- * write to disjoint page slugs (site / home / legal-* / rates+pricing+fees /
- * service-flow+use-case+company) and share no other mutable state, so they
- * run concurrently after schema succeeds — see architecture-plan.json#pages
- * for the slug-to-script mapping this assumes.
+ * Ordering: two prerequisite stages run first, one after the other, then the
+ * five seed-* scripts run concurrently.
+ *
+ *   1. schema.ts creates the 30 block content types every seed-* script
+ *      depends on (they resolve block_type_id by slug).
+ *   2. upload-media.ts uploads public/images/* into the Atlas media library
+ *      and writes scripts/atlas/media-manifest.json. seed-site, seed-home and
+ *      seed-pages read that manifest to fill their `image` fields with media
+ *      ids, and `requireMediaManifest()` throws if it isn't there — so the
+ *      upload cannot be folded into the parallel batch, it has to complete
+ *      before any seed starts.
+ *
+ * Stage 2 does not technically depend on stage 1 (media and content types are
+ * disjoint resources, so they could overlap), but they are kept sequential
+ * anyway: both are prerequisites, the pair costs a few seconds next to the
+ * seeding itself, and one failing prerequisite at a time is far easier to
+ * read in the log than two interleaved ones. The seeds are the stages worth
+ * parallelizing — they write to disjoint page slugs (site / home / legal-* /
+ * rates+pricing+fees / service-flow+use-case+company) and share no other
+ * mutable state — see architecture-plan.json#pages for the slug-to-script
+ * mapping this assumes.
  *
  * Idempotent end-to-end, with one deliberate exception spelled out below.
  * Every page write in every seed-*.ts goes through the single
@@ -43,8 +57,8 @@
  * Fail-loud: the first stage (or, within the parallel batch, the first
  * *reported* stage) to exit non-zero is named explicitly, its stderr tail is
  * printed, and this process exits non-zero. Nothing after a failed
- * prerequisite silently proceeds — if `schema` fails, no seed-* script is
- * even spawned.
+ * prerequisite silently proceeds — if `schema` or `upload-media` fails, no
+ * seed-* script is even spawned.
  *
  * Usage (from marketing-web/):
  *   npx tsx scripts/atlas/seed-all.ts
@@ -63,10 +77,15 @@ interface StageResult {
 const SCRIPTS_DIR = resolve(__dirname);
 const TSX_BIN = resolve(SCRIPTS_DIR, "..", "..", "node_modules", ".bin", "tsx");
 
-/** Schema must complete before any seed script (they all resolve block type
- * ids by slug). The five seed-* scripts below write disjoint page slugs, so
- * they're safe to run concurrently — see the file-level comment. */
-const SCHEMA_STAGE = { name: "schema", file: "schema.ts" };
+/** Both prerequisites must complete, in this order, before any seed script:
+ * schema.ts creates the content types every seed resolves by slug, and
+ * upload-media.ts writes the media manifest three of them read. The five
+ * seed-* scripts below write disjoint page slugs, so they're safe to run
+ * concurrently — see the file-level comment. */
+const PREREQ_STAGES = [
+  { name: "schema", file: "schema.ts" },
+  { name: "upload-media", file: "upload-media.ts" },
+];
 const SEED_STAGES = [
   { name: "seed-site", file: "seed-site.ts" },
   { name: "seed-home", file: "seed-home.ts" },
@@ -155,18 +174,23 @@ async function main(): Promise<void> {
   const overallStart = Date.now();
   const results: StageResult[] = [];
 
-  console.log(`=== stage: ${SCHEMA_STAGE.name} ===`);
-  const schemaResult = await runStage(SCHEMA_STAGE);
-  results.push(schemaResult);
+  for (const stage of PREREQ_STAGES) {
+    console.log(`=== stage: ${stage.name} ===`);
+    const result = await runStage(stage);
+    results.push(result);
 
-  if (schemaResult.exitCode !== 0) {
-    printSummary(results, Date.now() - overallStart);
-    console.error(
-      `\n[atlas:seed-all] stage "${schemaResult.name}" failed (exit ${schemaResult.exitCode}) — ` +
-        "stopping before any seed-* script runs (they all depend on the content types schema.ts creates).",
-    );
-    process.exitCode = 1;
-    return;
+    if (result.exitCode !== 0) {
+      printSummary(results, Date.now() - overallStart);
+      console.error(
+        `\n[atlas:seed-all] prerequisite stage "${result.name}" failed (exit ${result.exitCode}) — ` +
+          "stopping before any seed-* script runs. The seeds resolve block types by slug (schema.ts) " +
+          "and read media ids out of scripts/atlas/media-manifest.json (upload-media.ts); running " +
+          "them on a half-built prerequisite would write pages with missing block types or empty " +
+          "image fields.",
+      );
+      process.exitCode = 1;
+      return;
+    }
   }
 
   console.log(`\n=== stage: ${SEED_STAGES.map((s) => s.name).join(", ")} (parallel) ===`);
