@@ -714,6 +714,344 @@ const NOT_FOUND_NEW_HOME_LINKS = new Set<string>([
   "</div>",
 ]);
 
+/**
+ * ST-U2 (Tugas 1/ST-09, Tugas 2, Tugas 3). Exact-string sets, same idiom as
+ * `NOT_FOUND_NEW_HOME_LINKS` above — used instead of a content-blind
+ * canonicalize() because these ARE genuine, deliberate content changes
+ * (not "same info, different form"), so DIFF_CLASSES's canonicalization
+ * mechanism does not apply (see the file-header comment on why kelas vs
+ * ledger are different tools). Every set below was extracted VERBATIM from
+ * a real `npx tsx scripts/atlas/verify-html-parity.ts` run's own
+ * `[tak-terjelaskan]` output (temporarily printed uncapped, see the 500-cap
+ * comment further down) — never hand-typed from memory, so there is no
+ * transcription-error risk between what actually rendered and what these
+ * sets match.
+ *
+ * WHY FOUR SEPARATE PAIRS FOR ONE CONCEPT ("description content changed").
+ * `AcceptedResidual.count` is checked independently in EACH of this
+ * script's two gates (`vs baseline`, `CMS-ON vs CMS-OFF`) — the same entry
+ * fires against both gates' own removed/added pools, and MUST match the
+ * SAME declared count in both, or the gate reports "TIDAK COCOK". The
+ * meta-description change does NOT produce the same count in both gates:
+ * - "vs baseline" gate: ALL 13 routes' description changed (baseline had
+ *   old hardcoded/generic text; live now has the ST-09-approved text) — 78
+ *   lines each side (13 routes x {ja,en} x {description, og:description,
+ *   twitter:description}).
+ * - "CMS-ON vs CMS-OFF" gate: only the 7 LEGAL routes diverge. The 6
+ *   non-legal routes' `constants/seo.ts` fallback was synced to the exact
+ *   ST-09 text (see that file), so CMS-ON and CMS-OFF render byte-identical
+ *   description tags for them — zero diff, nothing to explain. The 7 legal
+ *   routes were DELIBERATELY NOT extended with a literal fallback
+ *   description (see `pageMetadata.ts`'s `titleFrom: "legal-heading"`
+ *   branch, unchanged) — scope decision, not an oversight: adding a
+ *   `description: Bilingual` field to `LegalSeoRoute` would grow this
+ *   sub-task's claimed-file surface for a fallback that already exists and
+ *   still works (the pre-existing `${heading.ja} | ${heading.en} —
+ *   ${brand}` template), just less polished than the Atlas-only ST-09 copy.
+ *   So CMS-OFF for these 7 routes still renders that older template while
+ *   CMS-ON renders the new approved text — 42 lines each side (7 routes x
+ *   {ja,en} x 3 tags). Splitting into 4 sets (old-baseline-13 /
+ *   new-approved-13 / new-approved-legal7 / template-legal7) — rather than
+ *   one generic `name="description"` regex — is what keeps each entry's
+ *   count exactly right in whichever gate it fires in; a generic regex
+ *   would either double-fire or mismatch the count in one gate or the
+ *   other (verified: an earlier draft using a bare regex here failed the
+ *   CMS-ON/OFF gate with "TIDAK COCOK: tercatat 78" against an actual 42).
+ */
+const ST_U2_DESC_OLD_ALL13 = new Set<string>([
+  "<meta name=\"description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta property=\"og:description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta name=\"twitter:description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta property=\"og:description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta name=\"twitter:description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta name=\"description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta property=\"og:description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta name=\"twitter:description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta name=\"description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta property=\"og:description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta name=\"twitter:description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta property=\"og:description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta name=\"twitter:description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta name=\"description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta property=\"og:description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta name=\"twitter:description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta name=\"description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta name=\"description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta name=\"description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta property=\"og:description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta name=\"twitter:description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+]);
+
+const ST_U2_DESC_NEW_ALL13 = new Set<string>([
+  "<meta name=\"description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta property=\"og:description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta name=\"twitter:description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta property=\"og:description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta name=\"twitter:description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta name=\"description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta property=\"og:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"twitter:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta name=\"description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta property=\"og:description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta name=\"twitter:description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta name=\"description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta property=\"og:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"twitter:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta property=\"og:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"twitter:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta property=\"og:description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta name=\"twitter:description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta name=\"description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta property=\"og:description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta name=\"twitter:description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta name=\"description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta property=\"og:description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta name=\"twitter:description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta property=\"og:description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta name=\"description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta property=\"og:description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta name=\"twitter:description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta property=\"og:description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta name=\"twitter:description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta property=\"og:description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta name=\"twitter:description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+]);
+
+const ST_U2_DESC_NEW_LEGAL7_CMS_ON = new Set<string>([
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta property=\"og:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"twitter:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta property=\"og:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"twitter:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta property=\"og:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"twitter:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+]);
+
+const ST_U2_DESC_TEMPLATE_LEGAL7_CMS_OFF = new Set<string>([
+  "<meta name=\"description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+]);
+
+const ST_U2_LEGAL_TITLE_OLD = new Set<string>([
+  "<title>Care24Japan Cancellation Policy | Care 24 Japan</title>",
+  "<title>Care24Japan Care Supporter Remuneration Regulations | Care 24 Japan</title>",
+  "<title>Care24Japan Platform Terms &amp; Conditions (For Care Supporters) | Care 24 Japan</title>",
+  "<title>Care24Japan Platform Terms of Service (For Users) | Care 24 Japan</title>",
+  "<title>Care24Japan キャンセルポリシー | Care 24 Japan</title>",
+  "<title>Care24Japan ケアサポーター報酬規程 | Care 24 Japan</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care 24 Japan</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care 24 Japan</title>",
+]);
+
+const ST_U2_LEGAL_TITLE_NEW = new Set<string>([
+  "<title>Care24Japan Cancellation Policy</title>",
+  "<title>Care24Japan Care Supporter Remuneration Regulations</title>",
+  "<title>Care24Japan Platform Terms &amp; Conditions (For Care Supporters)</title>",
+  "<title>Care24Japan Platform Terms of Service (For Users)</title>",
+  "<title>Care24Japan キャンセルポリシー</title>",
+  "<title>Care24Japan ケアサポーター報酬規程</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ケアサポーター向け）</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ご利用者様向け）</title>",
+]);
+
+const ST_U2_YEN_OLD = new Set<string>([
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥6,000</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included ¥6,600</p>",
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥3,400</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included ¥3,740</p>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">¥330/hour</dd>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">¥990 separately</dd>",
+  "<dd class=\"whitespace-pre-line text-sm leading-relaxed text-body\">¥100 million</dd>",
+]);
+
+const ST_U2_YEN_NEW = new Set<string>([
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">JPY 6,000</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included JPY 6,600</p>",
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">JPY 3,400</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included JPY 3,740</p>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">JPY 330/hour</dd>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">JPY 990 separately</dd>",
+  "<dd class=\"whitespace-pre-line text-sm leading-relaxed text-body\">JPY 100 million</dd>",
+]);
+
 const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
   {
     id: "preload-font-hilang-pada-rute-dinamis",
@@ -886,6 +1224,107 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     why: 'ST-FIX3: app/manifest.ts baru (file convention Next, di luar app/[lang]/, jadi site-wide) — Next otomatis menyuntikkan <link rel="manifest"> pada 13 rute x {ja,en} = 26, PLUS 1 di halaman _not-found (global-not-found.tsx tidak mewarisi layout [lang] tapi tetap kena karena file convention ini berlaku seluruh situs).',
     matches: (line) => /<link rel="manifest" href="[^"]*"\/>/.test(line),
   },
+  // --- ST-U1: constants/pricing.ts#formatYen, keputusan konten pengguna ---
+  {
+    id: "en-yen-symbol-diganti-jpy-lama-dihapus",
+    side: "dihapus",
+    count: 24,
+    why: 'formatYen() kini merender jumlah pada halaman EN sebagai "JPY 1,234" alih-alih "¥1,234" (konvensi mata uang Inggris, keputusan klien Agu 2026); halaman JA tidak berubah. Baris ini adalah representasi lama "¥..." di baseline pre-migrasi, pada rute EN saja. 24 = 16 di /en/fees.txt (2 kursus x 4 baris x kolom pelanggan+supporter) + 8 di /en/pricing.txt (2 kursus x {2 baris basic + 2 baris tambahan}).',
+    matches: (line) => /^<(?:td|p|dd)\b[^>]*>¥[\d,]+<\/(?:td|p|dd)>$/.test(line),
+  },
+  {
+    id: "en-yen-symbol-diganti-jpy-baru-ditambah",
+    side: "ditambah",
+    count: 24,
+    why: 'Pasangan dari en-yen-symbol-diganti-jpy-lama-dihapus: baris baru dengan awalan "JPY " menggantikan "¥", digit setelahnya identik dengan versi lama. Sama 24 = 16 /en/fees.txt + 8 /en/pricing.txt.',
+    matches: (line) => /^<(?:td|p|dd)\b[^>]*>JPY [\d,]+<\/(?:td|p|dd)>$/.test(line),
+  },
+  // --- ST-U2 Tugas 1 (ST-09): 26 meta description disetujui user, ditulis
+  // ke Atlas (page.seo.description / seo_translations.en.description) —
+  // lihat output/meta-descriptions-review.md Bagian 1 (di luar repo, dirujuk
+  // untuk konteks, bukan dibaca oleh skrip ini). Sebelumnya field ini KOSONG
+  // di Atlas untuk ke-13 rute, jadi setiap route sebenarnya SUDAH merender
+  // sebuah description non-kosong (fallback constants/seo.ts untuk 6 rute
+  // non-legal, atau template `${heading.ja} | ${heading.en} — ${brand}`
+  // untuk 7 rute legal) — perubahan ini adalah pergantian ISI, bukan
+  // penambahan field baru, karena itu masuk ledger (isi nyata berubah),
+  // bukan DIFF_CLASSES (tidak ada bentuk yang bisa dibuktikan sama).
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-desc-lama-13-rute-dihapus",
+    side: "dihapus",
+    count: 78,
+    why: 'ST-09: isi lama <meta name="description">/og:description/twitter:description (fallback constants/seo.ts atau template legal-heading) digantikan oleh 26 deskripsi yang disetujui user. 78 = 13 rute x {ja,en} x 3 tag.',
+    matches: (line) => ST_U2_DESC_OLD_ALL13.has(line),
+  },
+  {
+    id: "st-u2-desc-baru-13-rute-ditambah",
+    side: "ditambah",
+    count: 78,
+    why: 'Pasangan dari st-u2-desc-lama-13-rute-dihapus: 26 deskripsi baru yang disetujui user (meta-descriptions-review.md Bagian 1), sekarang live di Atlas page.seo.description / seo_translations.en.description. 78 = 13 rute x {ja,en} x 3 tag.',
+    matches: (line) => ST_U2_DESC_NEW_ALL13.has(line),
+  },
+  {
+    id: "st-u2-desc-cms-on-legal7-dihapus",
+    side: "dihapus",
+    count: 42,
+    why: "ST-09 / gerbang CMS-ON vs CMS-OFF: untuk 7 rute legal, CMS-ON (Atlas) sekarang merender deskripsi baru yang disetujui user, sedangkan CMS-OFF masih memakai template lama (lihat st-u2-desc-cms-off-legal7-fallback-template-ditambah) — keputusan sengaja, BUKAN kelalaian: LegalSeoRoute (constants/seo.ts) sengaja TIDAK diperluas dengan literal description baru untuk menjaga cakupan file yang diklaim sub-task ini tetap kecil; fallback lama tetap berfungsi, hanya kurang selaras dengan copy yang disetujui. 42 = 7 rute x {ja,en} x 3 tag. Konten baris ini SAMA PERSIS dengan separuh dari st-u2-desc-baru-13-rute-ditambah (subset legal-nya) — sengaja dua entri berbeda karena jumlahnya berbeda di tiap gerbang (78 di 'vs baseline', 42 di 'CMS-ON vs CMS-OFF'), lihat komentar di atas ST_U2_DESC_OLD_ALL13 untuk alasan lengkapnya.",
+    matches: (line) => ST_U2_DESC_NEW_LEGAL7_CMS_ON.has(line),
+  },
+  {
+    id: "st-u2-desc-cms-off-legal7-fallback-template-ditambah",
+    side: "ditambah",
+    count: 42,
+    why: "Pasangan dari st-u2-desc-cms-on-legal7-dihapus: CMS-OFF (Atlas mati) untuk 7 rute legal tetap merender template lama `${heading.ja} | ${heading.en} — ${brand}` (pageMetadata.ts, titleFrom: \"legal-heading\", tidak diubah) — fallback yang lebih tua, tapi tetap benar dan bilingual. 42 = 7 rute x {ja,en} x 3 tag.",
+    matches: (line) => ST_U2_DESC_TEMPLATE_LEGAL7_CMS_OFF.has(line),
+  },
+  // --- ST-U2 Tugas 2: title.absolute untuk 4 halaman legal yang seo.title
+  // Atlas-nya sudah memuat nama brand sendiri (Care24Japan/Care 24 Japan)
+  // — lihat titleContainsBrand di features/seo/pageMetadata.ts. Hanya
+  // <title> yang berubah bentuk (absolute, bukan lagi lewat title.template);
+  // og:title/twitter:title TIDAK berubah pada 4 halaman ini karena
+  // buildPageMetadataFields sudah pakai bare title (tanpa sufiks brand) di
+  // og:title untuk kasus ini SEBELUM ledger ini ditulis juga — lihat
+  // ogTwitterTitleBrandSuffixClass di atas, kelas itu sudah menjelaskan pola
+  // og-title-tanpa-sufiks secara umum sejak ST-FIX1, jadi og:title/
+  // twitter:title 4 halaman ini tidak menghasilkan baris tak-terjelaskan
+  // baru sama sekali.
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-legal-title-absolute-lama-dihapus",
+    side: "dihapus",
+    count: 8,
+    why: 'ST-U2 Tugas 2: <title> lama untuk 4 halaman legal (terms-for-users, terms-for-care-supporters, compensation, cancellation-policy) lewat title.template selalu menambahkan " | Care 24 Japan" — tapi seo.title Atlas ke-4 halaman ini SUDAH memuat brand sendiri ("Care24Japan ..."), jadi brand tampil DUA KALI dengan dua ejaan berbeda. 8 = 4 rute x {ja,en}.',
+    matches: (line) => ST_U2_LEGAL_TITLE_OLD.has(line),
+  },
+  {
+    id: "st-u2-legal-title-absolute-baru-ditambah",
+    side: "ditambah",
+    count: 8,
+    why: "Pasangan dari st-u2-legal-title-absolute-lama-dihapus: titleContainsBrand() mendeteksi brand sudah ada di title, buildPageMetadataFields merender title: { absolute: title } (bypass title.template sepenuhnya, mekanisme sama seperti home) — brand hanya tampil sekali. 8 = 4 rute x {ja,en}. Terverifikasi ke live Atlas (bukan dari daftar hardcoded): keempat rute ini yang seo.title-nya benar-benar memuat brand pada tanggal penulisan ledger ini.",
+    matches: (line) => ST_U2_LEGAL_TITLE_NEW.has(line),
+  },
+  // --- ST-U2 Tugas 3: ¥ -> JPY untuk pembaca EN, 6 field di halaman home
+  // (home-care-course, home-nursing-course, home-care-course-fee x2) + 1
+  // field di halaman company (company-row "Capital"). constants/copy.ts
+  // (fallback) dan Atlas (live, block data EN) disinkronkan ke nilai yang
+  // sama, jadi CMS-ON dan CMS-OFF identik untuk ketujuh field ini — gerbang
+  // CMS-ON vs CMS-OFF tidak melaporkan apa pun untuk perubahan ini.
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-en-yen-ke-jpy-home-company-lama-dihapus",
+    side: "dihapus",
+    count: 7,
+    why: 'ST-U2 Tugas 3 (keputusan user "en ya en", konsisten dengan formatYen ST-U1): representasi lama "¥..." pada 6 field halaman home (price_amount x2, price_tax_included x2, home-care-course-fee.value x2) + 1 field company-row "Capital". 7 baris.',
+    matches: (line) => ST_U2_YEN_OLD.has(line),
+  },
+  {
+    id: "st-u2-en-yen-ke-jpy-home-company-baru-ditambah",
+    side: "ditambah",
+    count: 7,
+    why: 'Pasangan dari st-u2-en-yen-ke-jpy-home-company-lama-dihapus: baris baru berawalan "JPY " menggantikan "¥", angka setelahnya identik. 7 baris.',
+    matches: (line) => ST_U2_YEN_NEW.has(line),
+  },
 ];
 
 type Classification = {
@@ -1014,12 +1453,16 @@ function reportClassification(label: string, c: Classification): boolean {
     log("  [tak-terjelaskan]  tidak ada.");
   } else {
     log(`  [tak-terjelaskan]  ${unexplained} baris — INI yang menggagalkan gerbang:`);
-    for (const l of c.unexplainedRemoved.slice(0, 25)) log(`        - ${l}`);
-    if (c.unexplainedRemoved.length > 25)
-      log(`        ... (${c.unexplainedRemoved.length - 25} baris dihapus lainnya)`);
-    for (const l of c.unexplainedAdded.slice(0, 25)) log(`        + ${l}`);
-    if (c.unexplainedAdded.length > 25)
-      log(`        ... (${c.unexplainedAdded.length - 25} baris ditambah lainnya)`);
+    // Cap dinaikkan dari 25 -> 500 (ST-U2): 25 tidak cukup untuk menulis
+    // entri ledger yang presisi saat satu perubahan bergeser >25 baris
+    // sekaligus (mis. 26 rute x 3 tag deskripsi meta) — sebelumnya harus
+    // menebak isi baris yang terpotong "... N baris lainnya".
+    for (const l of c.unexplainedRemoved.slice(0, 500)) log(`        - ${l}`);
+    if (c.unexplainedRemoved.length > 500)
+      log(`        ... (${c.unexplainedRemoved.length - 500} baris dihapus lainnya)`);
+    for (const l of c.unexplainedAdded.slice(0, 500)) log(`        + ${l}`);
+    if (c.unexplainedAdded.length > 500)
+      log(`        ... (${c.unexplainedAdded.length - 500} baris ditambah lainnya)`);
   }
   return ledgerFailed || unexplained > 0;
 }
