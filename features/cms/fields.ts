@@ -1,0 +1,314 @@
+/**
+ * Shared field pickers and block-type mapping for every `features/cms/*.ts`
+ * loader.
+ *
+ * Two responsibilities, both previously copy-pasted per loader:
+ *
+ * 1. **Field pickers** (`pick`/`pickJa`/`pickBi`/`pickLines`/...) —
+ *    `client.ts#mergeBlockData` cannot see the workspace schema, so every
+ *    string field comes back as `Bilingual | undefined` regardless of whether
+ *    it is localizable. These narrow that back to the shape
+ *    `constants/*.ts` already declares, with a constants fallback per field.
+ * 2. **`mapBlocksByType`** — turns a page's flat block list into one group per
+ *    block type, so a loader reads `groups["nav-item"]` instead of
+ *    destructuring by array index.
+ *
+ * DELIBERATELY DEPENDENCY-FREE at runtime: no `server-only`, no `react`, no
+ * `@/constants/*`, no `./client`. Everything here is a pure function over
+ * plain data (the one exception, `warnOnce`, touches only `console`). That is
+ * what lets `features/cms/fields.test.ts` run under `node --test` with no
+ * bundler and no Atlas connection. Anything needing the Atlas client belongs
+ * in `client.ts`; anything needing `constants/*.ts` belongs in a loader.
+ */
+import type { Bilingual, CmsBlock, CmsBlockTypeId } from "./types";
+
+// ---------------------------------------------------------------------------
+// Diagnostics
+// ---------------------------------------------------------------------------
+
+/**
+ * Keys already warned about in this process. Deliberately a plain
+ * module-level Set, mirroring `client.ts#reportedUnexpectedContentSlugs`:
+ * pages are fetched `no-store`, so without dedupe a permanent content
+ * mismatch would log identically on every single request.
+ */
+const warnedKeys = new Set<string>();
+
+/**
+ * `console.warn`, at most once per `key` per process.
+ *
+ * Two log tags exist in this feature and they mean different things — do not
+ * add a third:
+ * - `[cms:fallback:failure]` (client.ts) — Atlas did not answer.
+ * - `[cms:fallback:unexpected-content]` (client.ts#reportUnexpectedContent) —
+ *   Atlas answered, but a loader threw the whole page away and served
+ *   `constants/*.ts` instead. Loaders call that function directly.
+ * - `[cms:unexpected-content]` (this file) — Atlas answered and the page IS
+ *   being served from the CMS; only a PART of it was not understood (an extra
+ *   block nobody maps, a number that arrived as the wrong type). Same family,
+ *   no "fallback:" segment, because the page did not fall back.
+ */
+export function warnOnce(key: string, message: string): void {
+  if (warnedKeys.has(key)) return;
+  warnedKeys.add(key);
+  console.warn(message);
+}
+
+// ---------------------------------------------------------------------------
+// Field pickers
+// ---------------------------------------------------------------------------
+
+/**
+ * Narrows a merged field back to `Bilingual`.
+ *
+ * Checks the TYPE of `ja`/`en`, not merely that the keys exist: a
+ * non-localization object that happens to carry `ja`/`en` keys with
+ * non-string values used to pass the old key-presence-only test, and then
+ * `t(value, lang)` rendered `[object Object]` into the page.
+ */
+export function pick(data: CmsBlock["data"], key: string): Bilingual | undefined {
+  const value = data[key];
+  if (!value || typeof value !== "object") return undefined;
+  const candidate = value as Record<string, unknown>;
+  if (typeof candidate.ja !== "string" || typeof candidate.en !== "string") return undefined;
+  return candidate as unknown as Bilingual;
+}
+
+/** Non-localizable string field — reads `.ja` (== `.en`), falls back to the
+ * constants value if the block came back empty in both locales. */
+export function pickJa(data: CmsBlock["data"], key: string, fallback: string): string {
+  return pick(data, key)?.ja || fallback;
+}
+
+/** Localizable field — falls back to the constants `Bilingual` wholesale if
+ * the block came back empty in both locales (never a stray `{ja:"",en:""}`). */
+export function pickBi(data: CmsBlock["data"], key: string, fallback: Bilingual): Bilingual {
+  return pick(data, key) ?? fallback;
+}
+
+/**
+ * OPTIONAL localizable field (`home_care_course_fee.note`, `rate_row.detail`)
+ * — returns `undefined` as-is when the block has no value, WITHOUT falling
+ * back to constants. Presence itself is the content here: `page.tsx` renders
+ * a `<dd>` only `{fee.note && ...}` and `CourseRateCard.tsx` splits "timed"
+ * rows from "extras" by `row.detail`'s truthiness, so reintroducing a
+ * constants fallback would resurrect a value the editor deliberately cleared.
+ */
+export function pickBiOptional(data: CmsBlock["data"], key: string): Bilingual | undefined {
+  return pick(data, key);
+}
+
+function splitLines(value: string): string[] {
+  return value === "" ? [] : value.split("\n");
+}
+
+/**
+ * Splits a `textarea` field's joined-by-`\n` JA/EN pair back into one
+ * `Bilingual` per line. Falls back to the whole constants array if the field
+ * is absent.
+ *
+ * Iterates `max(jaLines, enLines)`, not `jaLines`: locking the loop to the JA
+ * side silently DROPPED every EN line past the JA line count (an editor with
+ * 4 EN bullets and 3 JA bullets never saw the 4th), and an empty JA value
+ * collapsed a multi-line EN value to a single line, because `"".split("\n")`
+ * is `[""]`, not `[]`. A missing line on either side falls back to the other
+ * side's text — never dropped, and never rendered as an empty bullet.
+ */
+export function pickLines(
+  data: CmsBlock["data"],
+  key: string,
+  fallback: Bilingual[],
+): Bilingual[] {
+  const bi = pick(data, key);
+  if (!bi) return fallback;
+  // An entirely empty side has ZERO lines, not one empty line — `"".split("\n")`
+  // returns `[""]`, which would render a blank bullet at the top of the list.
+  // A blank line INSIDE a value is still preserved.
+  const jaLines = splitLines(bi.ja);
+  const enLines = splitLines(bi.en);
+  const count = Math.max(jaLines.length, enLines.length);
+  const lines: Bilingual[] = [];
+  for (let i = 0; i < count; i++) {
+    const ja = jaLines[i];
+    const en = enLines[i];
+    lines.push({ ja: ja ?? en ?? "", en: en ?? ja ?? "" });
+  }
+  return lines;
+}
+
+/** Non-localizable `textarea` field (`home_example_case.schedule_times`)
+ * split into plain strings, one per line. Falls back to the whole constants
+ * array if absent. */
+export function pickJaLines(data: CmsBlock["data"], key: string, fallback: string[]): string[] {
+  const bi = pick(data, key);
+  if (!bi) return fallback;
+  return splitLines(bi.ja);
+}
+
+/**
+ * `number` field (`rate_row.customer_price`, `rate_row.supporter_pay`) —
+ * every yen figure on the site comes through here.
+ *
+ * A well-formed block carries a real JS `number` (`client.ts#mergeBlockData`
+ * passes non-strings through untouched). A numeric STRING (`"3500"`) is also
+ * accepted: silently discarding it would show the OLD price from
+ * `constants/pricing.ts` on `/pricing` and `/fees` while the dashboard showed
+ * the new one, and would broadcast the stale figure in JSON-LD `Offer.price`
+ * — a wrong price is worse than a missing one. Anything genuinely
+ * unparseable falls back to constants AND warns, so the discrepancy is not
+ * silent.
+ */
+export function pickNumber(
+  data: CmsBlock["data"],
+  key: string,
+  fallback: number,
+  context: string,
+): number {
+  const value = data[key];
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+
+  warnOnce(
+    `number:${context}:${key}`,
+    `[cms:unexpected-content] ${context}: field "${key}" is not a usable number (got ${JSON.stringify(value)}) — using the constants/pricing.ts amount ${fallback} instead. The page still renders from Atlas; only this figure fell back, so the site and the dashboard may now disagree on a price. This warning only prints once per field per process.`,
+  );
+  return fallback;
+}
+
+// ---------------------------------------------------------------------------
+// Block-type mapping
+//
+// A block's type is READ, not inferred. `GET /pages/:slug` returns every block
+// with its content type's hyphenated slug in a `type` field
+// (`id, page_id, block_type_id, position, data, type`), and
+// `client.ts#fetchPageBlocks` forwards it as `CmsBlock.type`.
+//
+// Note it is `type` and NOT `blockTypeId` that is matched here: `block_type_id`
+// is the content type's UUID (`01a01d67-77d2-7bb7-...`), which
+// `scripts/atlas/seed-*.ts` fills from `getContentType(...).id`, so comparing
+// it to a schema slug would never match.
+//
+// This replaced an earlier field-signature heuristic that guessed a block's
+// type from the set of field names it carried. That heuristic could not tell
+// `nav-item` from `footer-legal-link` on merit — both carry `href` + `label` —
+// so the winner came down to declaration order, which is exactly the silent
+// mis-render the mapping exists to prevent. Reading the slug removes the
+// guess, and with it the hand-copied field lists that used to shadow
+// `scripts/atlas/schema.ts`.
+// ---------------------------------------------------------------------------
+
+/**
+ * The block types one page is built from, as a list of content-type slugs.
+ *
+ * Typed `readonly CmsBlockTypeId[]` (`keyof AtlasContentTypes`, generated by
+ * `npm run atlas:types`), which is the compile-time half of the contract: a
+ * typo (`"nav_item"`) or a content type deleted from the workspace fails
+ * `tsc` at the declaration, instead of silently never matching a block and
+ * reverting the page to `constants/*.ts` at runtime.
+ *
+ * Declare each list with `as const satisfies BlockTypeList` so the literal
+ * slugs survive into `BlockGroups` and `groups["nav-tem"]` is also an error.
+ */
+export type BlockTypeList = readonly CmsBlockTypeId[];
+
+/** The result of `mapBlocksByType`: one non-empty, position-sorted list of
+ * blocks per declared slug. Keys are the literal slugs passed in. */
+export type BlockGroups<S extends BlockTypeList> = {
+  readonly [K in S[number]]: CmsBlock[];
+};
+
+function groupBySlug(blocks: readonly CmsBlock[]): Map<string, CmsBlock[]> {
+  const groups = new Map<string, CmsBlock[]>();
+
+  for (const block of blocks) {
+    const existing = groups.get(block.type);
+    if (existing) existing.push(block);
+    else groups.set(block.type, [block]);
+  }
+
+  // `client.ts` already sorts a page's blocks by position and grouping keeps
+  // that order, but sorting here makes "items render in dashboard order" a
+  // property of this function rather than of its caller.
+  for (const group of groups.values()) group.sort((a, b) => a.position - b.position);
+
+  return groups;
+}
+
+function describeGroups(groups: Iterable<[string, CmsBlock[]]>): string {
+  const parts: string[] = [];
+  for (const [slug, blocks] of groups) {
+    const fields = new Set<string>();
+    for (const block of blocks) for (const key of Object.keys(block.data)) fields.add(key);
+    parts.push(
+      `${slug || "(block with no type slug)"} (x${blocks.length}, fields: ${[...fields].sort().join("/") || "none"})`,
+    );
+  }
+  return parts.join(", ");
+}
+
+/**
+ * Maps a page's blocks onto the block types it is built from, by content-type
+ * slug — NOT by array index, and NOT by guessing from field names.
+ *
+ * Consequences, both deliberate:
+ * - A repeated type may have ANY number of blocks. Adding a 5th nav item in
+ *   the dashboard renders 5 nav items; it no longer reverts the entire header,
+ *   footer and brand to `constants/copy.ts`.
+ * - Blocks of a type this page does not declare are IGNORED (with one warning
+ *   per page per process), not treated as corruption.
+ * - Two types that carry identical fields stay distinct, because nothing here
+ *   looks at fields. A `footer-legal-link` dragged above a `nav-item` is
+ *   still a legal link.
+ *
+ * Returns `null` — after calling `reportFallback`, which is
+ * `client.ts#reportUnexpectedContent` — only when a declared type has no
+ * matching block at all. That is the one case where the page genuinely cannot
+ * be assembled and the caller must serve `constants/*.ts`.
+ */
+export function mapBlocksByType<S extends BlockTypeList>(
+  slug: string,
+  blocks: readonly CmsBlock[],
+  types: S,
+  reportFallback: (slug: string, detail: string) => void,
+): BlockGroups<S> | null {
+  const groups = groupBySlug(blocks);
+
+  // `Object.create(null)`, not `{}`: a group is looked up by a slug that came
+  // off the wire, and an inherited `constructor`/`toString` would otherwise
+  // read as an already-claimed type.
+  const assigned = Object.create(null) as Record<string, CmsBlock[]>;
+  const declared = new Set<string>(types);
+  const missing: string[] = [];
+
+  for (const type of types) {
+    const group = groups.get(type);
+    if (!group || group.length === 0) {
+      missing.push(type);
+      continue;
+    }
+    assigned[type] = group;
+  }
+
+  if (missing.length > 0) {
+    reportFallback(
+      slug,
+      `missing required block type(s) [${missing.join(", ")}]; received ${blocks.length} block(s) in ${groups.size} type group(s): ${describeGroups(groups) || "none"}`,
+    );
+    return null;
+  }
+
+  const ignored = [...groups].filter(([type]) => !declared.has(type));
+  if (ignored.length > 0) {
+    const ignoredCount = ignored.reduce((sum, [, group]) => sum + group.length, 0);
+    warnOnce(
+      `ignored-blocks:${slug}`,
+      `[cms:unexpected-content] page "${slug}" returned ${ignoredCount} block(s) of ${ignored.length} type(s) that no loader maps — they are IGNORED and the rest of the page still renders from Atlas: ${describeGroups(ignored)}. Either the block was added to the page in the dashboard without a loader change, or the loader's block-type list in features/cms/*.ts is out of date. This warning only prints once per page per process.`,
+    );
+  }
+
+  return assigned as BlockGroups<S>;
+}

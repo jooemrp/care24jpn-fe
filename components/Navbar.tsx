@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { brand, nav, contactPhone, ui } from "@/constants/copy";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import type { SiteContent } from "@/features/cms/site";
 import LangToggle from "./LangToggle";
 
 /** Scroll distance (px) after which the header condenses. */
@@ -54,11 +54,6 @@ function useCondensedOnScroll() {
 
   return { sentinelRef, condensed };
 }
-
-/** In-page hash targets from `nav` (e.g. "service-details"), computed once. */
-const SECTION_IDS = nav
-  .map((item) => item.href.split("#")[1])
-  .filter((id): id is string => Boolean(id));
 
 /**
  * Tracks which in-page section (if any) currently sits in the "active" band
@@ -122,10 +117,12 @@ function useActiveSection(ids: string[], pathname: string) {
  */
 function PhoneBlock({
   lang,
+  contactPhone,
   align = "end",
   condensed = false,
 }: {
   lang: Lang;
+  contactPhone: SiteContent["contactPhone"];
   align?: "start" | "end";
   condensed?: boolean;
 }) {
@@ -156,11 +153,24 @@ function PhoneBlock({
   );
 }
 
-export default function Navbar({ lang }: { lang: Lang }) {
+export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { sentinelRef, condensed } = useCondensedOnScroll();
-  const activeSectionId = useActiveSection(SECTION_IDS, pathname);
+  // In-page hash targets from `site.nav` (e.g. "service-details"). Memoized
+  // on `site.nav` — the array reference from the server-fetched `site` prop
+  // is stable across client re-renders caused by `open`/`condensed` state
+  // changes, so this stays referentially stable too and never causes
+  // useActiveSection's effect (dep `ids`, below) to tear down and rebuild
+  // its IntersectionObserver on every render.
+  const sectionIds = useMemo(
+    () =>
+      site.nav
+        .map((item) => item.href.split("#")[1])
+        .filter((id): id is string => Boolean(id)),
+    [site.nav],
+  );
+  const activeSectionId = useActiveSection(sectionIds, pathname);
   const homeHref = localizeHref("/", lang);
   const activeHref =
     pathname === homeHref && activeSectionId
@@ -206,12 +216,12 @@ export default function Navbar({ lang }: { lang: Lang }) {
           <Link
             href={homeHref}
             className="flex items-center shrink-0"
-            aria-label={t(brand.logoAlt, lang)}
+            aria-label={t(site.brand.logoAlt, lang)}
             onClick={() => setOpen(false)}
           >
             <Image
               src="/images/logo.png"
-              alt={t(brand.logoAlt, lang)}
+              alt={t(site.brand.logoAlt, lang)}
               width={427}
               height={160}
               priority
@@ -227,7 +237,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
               visitor was already on. The client update sheet (0727) specifies
               this row as tabs + phone number only. */}
           <div className="hidden md:flex items-center gap-6">
-            <PhoneBlock lang={lang} condensed={condensed} />
+            <PhoneBlock lang={lang} contactPhone={site.contactPhone} condensed={condensed} />
             <LangToggle lang={lang} className={HIT_AREA} />
           </div>
 
@@ -237,7 +247,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
             <button
               type="button"
               className="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2"
-              aria-label={t(ui.menuToggleLabel, lang)}
+              aria-label={t(site.ui.menuToggleLabel, lang)}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
             >
@@ -256,7 +266,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
                 condensed ? "h-11" : "h-12"
               }`}
             >
-              {nav.map((item) => {
+              {site.nav.map((item) => {
                 const href = localizeHref(item.href, lang);
                 const active = href === activeHref;
                 return (
@@ -284,7 +294,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
           <div className="md:hidden border-t border-border bg-surface">
             <nav>
               <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
-                {nav.map((item) => {
+                {site.nav.map((item) => {
                   const href = localizeHref(item.href, lang);
                   const active = href === activeHref;
                   return (
@@ -305,7 +315,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
                 {/* Dropped alongside the desktop one — /pricing is already the
                     fourth item in the list directly above. */}
                 <li className="border-t border-border pt-4">
-                  <PhoneBlock lang={lang} align="start" />
+                  <PhoneBlock lang={lang} contactPhone={site.contactPhone} align="start" />
                 </li>
               </ul>
             </nav>

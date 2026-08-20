@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Section from "@/components/ui/Section";
 import StepFlow from "@/components/ui/StepFlow";
-import { serviceFlow, cta } from "@/constants/copy";
+import { getServiceFlow } from "@/features/cms/pages";
+import { getSite } from "@/features/cms/site";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
 
 // Title/description are short JA strings; the root layout's title.template
@@ -33,6 +34,7 @@ export async function generateMetadata({
 export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const [serviceFlow, site] = await Promise.all([getServiceFlow(), getSite()]);
 
   return (
     <>
@@ -49,7 +51,7 @@ export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) 
             href={localizeHref("/pricing", lang)}
             className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
-            {t(cta.primary, lang)}
+            {t(site.cta.primary, lang)}
           </Link>
         </div>
       </Section>

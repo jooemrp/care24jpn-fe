@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LegalDocPage from "@/components/LegalDocPage";
-import { legalDocs } from "@/constants/legal";
-import { brand } from "@/constants/copy";
+import { getLegalDoc } from "@/features/cms/legal";
+import { getSite } from "@/features/cms/site";
 import { isLang } from "@/features/lang/i18n";
-
-const doc = legalDocs.quasiMandate;
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const [doc, { brand }] = await Promise.all([
+    getLegalDoc("legal-quasi-mandate"),
+    getSite(),
+  ]);
 
   return {
     title: doc.heading[lang],
@@ -34,5 +36,6 @@ export default async function QuasiMandatePage({
 }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
-  return <LegalDocPage doc={legalDocs.quasiMandate} lang={lang} />;
+  const doc = await getLegalDoc("legal-quasi-mandate");
+  return <LegalDocPage doc={doc} lang={lang} />;
 }

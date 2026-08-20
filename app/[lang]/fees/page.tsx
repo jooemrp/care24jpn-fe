@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Section from "@/components/ui/Section";
-import { actionPlan as feesCopy, cta } from "@/constants/copy";
-import {
-  supporterRates,
-  formatYen,
-  type SupporterRates,
-} from "@/constants/pricing";
+import { type Bilingual } from "@/constants/copy";
+import { formatYen, type SupporterRates } from "@/constants/pricing";
+import { getFeesCopy, getSupporterRates } from "@/features/cms/rates";
+import { getSite } from "@/features/cms/site";
 import { t, isLang, localizeHref, type Lang } from "@/features/lang/i18n";
 
 /**
@@ -17,9 +15,11 @@ import { t, isLang, localizeHref, type Lang } from "@/features/lang/i18n";
  */
 function SupporterRateTable({
   course,
+  columns,
   lang,
 }: {
   course: SupporterRates;
+  columns: { customer: Bilingual; supporter: Bilingual };
   lang: Lang;
 }) {
   return (
@@ -33,10 +33,10 @@ function SupporterRateTable({
             <tr className="border-b border-border text-left">
               <th className="py-4 pr-4 font-bold text-heading" />
               <th className="py-4 pr-4 text-right font-bold text-heading">
-                {t(feesCopy.columns.customer, lang)}
+                {t(columns.customer, lang)}
               </th>
               <th className="py-4 text-right font-bold text-heading">
-                {t(feesCopy.columns.supporter, lang)}
+                {t(columns.supporter, lang)}
               </th>
             </tr>
           </thead>
@@ -100,6 +100,12 @@ export default async function FeesPage({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
+  const [feesCopy, supporterRates, site] = await Promise.all([
+    getFeesCopy(),
+    getSupporterRates(),
+    getSite(),
+  ]);
+
   return (
     <>
       <Section heading={feesCopy.hero.heading} level="h1" lang={lang}>
@@ -113,7 +119,12 @@ export default async function FeesPage({
       <Section surface lang={lang}>
         <div className="flex flex-col gap-6">
           {supporterRates.map((course) => (
-            <SupporterRateTable key={course.key} course={course} lang={lang} />
+            <SupporterRateTable
+              key={course.key}
+              course={course}
+              columns={feesCopy.columns}
+              lang={lang}
+            />
           ))}
         </div>
         <p className="mt-8 text-lg text-muted">{t(feesCopy.note, lang)}</p>
@@ -127,7 +138,7 @@ export default async function FeesPage({
             href={localizeHref("/#contact", lang)}
             className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
-            {t(cta.contact, lang)}
+            {t(site.cta.contact, lang)}
           </Link>
         </div>
       </Section>

@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LegalDocPage from "@/components/LegalDocPage";
-import { legalDocs } from "@/constants/legal";
-import { brand } from "@/constants/copy";
+import { getLegalDoc } from "@/features/cms/legal";
+import { getSite } from "@/features/cms/site";
 import { isLang } from "@/features/lang/i18n";
-
-const doc = legalDocs.privacy;
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const [doc, { brand }] = await Promise.all([
+    getLegalDoc("legal-privacy"),
+    getSite(),
+  ]);
 
   return {
     title: doc.heading[lang],
@@ -32,5 +34,6 @@ export async function generateMetadata({
 export default async function PrivacyPage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
-  return <LegalDocPage doc={legalDocs.privacy} lang={lang} />;
+  const doc = await getLegalDoc("legal-privacy");
+  return <LegalDocPage doc={doc} lang={lang} />;
 }

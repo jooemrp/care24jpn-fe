@@ -3,26 +3,8 @@ import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import JsonLd from "@/components/JsonLd";
-import { pricing as pricingCopy } from "@/constants/copy";
-import { courseRates } from "@/constants/pricing";
+import { getPricingCopy, getCourseRates } from "@/features/cms/rates";
 import { t, isLang } from "@/features/lang/i18n";
-
-// PriceSpecification per rate row, built directly from constants/pricing.ts
-// (`courseRates`) so the JSON-LD amounts can never drift from the rates
-// rendered by CourseRateCard below.
-const pricingJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "OfferCatalog",
-  name: pricingCopy.hero.heading.ja,
-  itemListElement: courseRates.flatMap((course) =>
-    course.rows.map((row) => ({
-      "@type": "Offer",
-      name: row.detail ? `${course.name.ja} ${row.label.ja}（${row.detail.ja}）` : `${course.name.ja} ${row.label.ja}`,
-      priceCurrency: "JPY",
-      price: row.price,
-    })),
-  ),
-};
 
 // Title/description are short JA strings; the root layout's title.template
 // appends the brand name, so the brand must not be repeated here.
@@ -56,6 +38,27 @@ export default async function PricingPage({
 }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+
+  const [pricingCopy, courseRates] = await Promise.all([getPricingCopy(), getCourseRates()]);
+
+  // PriceSpecification per rate row, built directly from the CMS-sourced
+  // `courseRates` (features/cms/rates.ts) so the JSON-LD amounts can never
+  // drift from the rates rendered by CourseRateCard below. Key order and
+  // flatMap order match the original module-level constant exactly, so
+  // JSON.stringify produces a byte-identical string.
+  const pricingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    name: pricingCopy.hero.heading.ja,
+    itemListElement: courseRates.flatMap((course) =>
+      course.rows.map((row) => ({
+        "@type": "Offer",
+        name: row.detail ? `${course.name.ja} ${row.label.ja}（${row.detail.ja}）` : `${course.name.ja} ${row.label.ja}`,
+        priceCurrency: "JPY",
+        price: row.price,
+      })),
+    ),
+  };
 
   return (
     <>
