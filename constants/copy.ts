@@ -95,6 +95,24 @@ export const ui = {
   langShortEn: "EN",
 };
 
+/**
+ * `app/[lang]/error.tsx`'s copy — the route-segment error boundary Next
+ * renders when something below `app/[lang]/layout.tsx` throws (a Server or
+ * Client Component render error, not a layout failure — see that file's own
+ * doc comment for why the layout is guaranteed to have already succeeded
+ * whenever this renders). Verbatim from the JSX that used to hardcode this
+ * per-`lang` inline; this is now both the live text AND the fallback used
+ * when Atlas is unreachable.
+ */
+export const errorPage = {
+  title: { ja: "エラーが発生しました", en: "Something went wrong" } satisfies Bilingual,
+  body: {
+    ja: "しばらくしてから再度お試しください。",
+    en: "Please try again in a moment.",
+  } satisfies Bilingual,
+  retryLabel: { ja: "再試行", en: "Try again" } satisfies Bilingual,
+};
+
 /* ------------------------------------------------------------------ */
 /* Homepage                                                            */
 /* ------------------------------------------------------------------ */

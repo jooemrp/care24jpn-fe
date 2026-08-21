@@ -9,6 +9,7 @@ import { isLang, LANGS } from "@/features/lang/i18n";
 import { getSite } from "@/features/cms/site";
 import { getLegalHeading } from "@/features/cms/legal";
 import { routeAlternates, titleTemplate } from "@/features/seo/pageMetadata";
+import { ErrorLabelsProvider } from "./error-labels-provider";
 
 // Dashboard edits must appear immediately, with no rebuild — see
 // `features/cms/client.ts`'s `cache: "no-store"` on the delivery fetch.
@@ -143,7 +144,14 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
         <JsonLd data={organizationJsonLd(site)} />
-        <AppShell lang={lang}>{children}</AppShell>
+        {/* `AppShell` (a Server Component) survived by definition whenever
+            this renders — see error-labels-provider.tsx's doc comment on why
+            `app/[lang]/error.tsx` can never activate from a failure inside
+            THIS layout. Wraps AppShell entirely (not just `children`) purely
+            for placement simplicity; Navbar/Footer ignore the context. */}
+        <ErrorLabelsProvider value={site.errorPage}>
+          <AppShell lang={lang}>{children}</AppShell>
+        </ErrorLabelsProvider>
       </body>
     </html>
   );

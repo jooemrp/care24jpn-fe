@@ -28,6 +28,7 @@ import {
   cta as fallbackCta,
   ui as fallbackUi,
   footer as fallbackFooter,
+  errorPage as fallbackErrorPage,
   type Bilingual,
 } from "@/constants/copy";
 
@@ -46,6 +47,7 @@ export type SiteContent = {
   cta: typeof fallbackCta;
   ui: typeof fallbackUi;
   footer: typeof fallbackFooter;
+  errorPage: typeof fallbackErrorPage;
 };
 
 /**
@@ -66,6 +68,7 @@ export const FALLBACK: SiteContent = {
   cta: fallbackCta,
   ui: fallbackUi,
   footer: fallbackFooter,
+  errorPage: fallbackErrorPage,
 };
 
 /**
@@ -84,6 +87,7 @@ export const SITE_TYPES = [
   "site-contact-phone",
   "site-cta",
   "site-ui-labels",
+  "site-error-labels",
   "nav-item",
   "site-footer",
   "footer-legal-link",
@@ -115,6 +119,7 @@ export function mapSite(
   const [contactPhoneBlock] = groups["site-contact-phone"];
   const [ctaBlock] = groups["site-cta"];
   const [uiBlock] = groups["site-ui-labels"];
+  const [errorLabelsBlock] = groups["site-error-labels"];
   const [footerBlock] = groups["site-footer"];
   const navBlocks = groups["nav-item"];
   const legalBlocks = groups["footer-legal-link"];
@@ -144,6 +149,12 @@ export function mapSite(
     tocLabel: pickBi(uiBlock.data, "toc_label", FALLBACK.ui.tocLabel),
     langShortJa: pickJa(uiBlock.data, "lang_short_ja", FALLBACK.ui.langShortJa),
     langShortEn: pickJa(uiBlock.data, "lang_short_en", FALLBACK.ui.langShortEn),
+  };
+
+  const errorPage: SiteContent["errorPage"] = {
+    title: pickBi(errorLabelsBlock.data, "title", FALLBACK.errorPage.title),
+    body: pickBi(errorLabelsBlock.data, "body", FALLBACK.errorPage.body),
+    retryLabel: pickBi(errorLabelsBlock.data, "retry_label", FALLBACK.errorPage.retryLabel),
   };
 
   // `FALLBACK.nav[i]` / `FALLBACK.footer.legalLinks[i]` are indexed
@@ -196,5 +207,5 @@ export function mapSite(
     legal: pickBi(footerBlock.data, "legal", FALLBACK.footer.legal),
   };
 
-  return { brand, nav, contactPhone, cta, ui, footer };
+  return { brand, nav, contactPhone, cta, ui, footer, errorPage };
 }

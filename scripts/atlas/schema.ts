@@ -98,6 +98,16 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     ],
   },
   {
+    slug: "site_error_labels",
+    name: "Site — Error page labels",
+    is_block: true,
+    fields: [
+      { name: "title", label: "Error heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "body", label: "Error body", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "retry_label", label: "Retry button label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+    ],
+  },
+  {
     slug: "nav_item",
     name: "Nav Item",
     is_block: true,

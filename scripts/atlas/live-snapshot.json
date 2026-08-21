@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T18:46:12.763Z",
+  "generatedAt": "2026-08-21T02:50:06.336Z",
   "pages": [
     {
       "slug": "site",
@@ -189,6 +189,23 @@
             "secondary": {
               "ja": "料金を見る",
               "en": "View pricing"
+            }
+          }
+        },
+        {
+          "type": "site-error-labels",
+          "data": {
+            "body": {
+              "ja": "しばらくしてから再度お試しください。",
+              "en": "Please try again in a moment."
+            },
+            "title": {
+              "ja": "エラーが発生しました",
+              "en": "Something went wrong"
+            },
+            "retry_label": {
+              "ja": "再試行",
+              "en": "Try again"
             }
           }
         },

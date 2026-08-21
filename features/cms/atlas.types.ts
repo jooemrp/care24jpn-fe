@@ -4,6 +4,13 @@
 
 export type Locale = "ja" | "en";
 
+/** Site — Error page labels (content type: "site-error-labels") */
+export interface SiteErrorLabels {
+  title?: string; // localizable
+  body?: string; // localizable
+  retry_label?: string; // localizable
+}
+
 /** Legal — Document (content type: "legal-doc") */
 export interface LegalDoc {
   heading?: string; // localizable
@@ -40,6 +47,7 @@ export interface FeesMeta {
   column_supporter?: string; // localizable
   note?: string; // localizable
   column_service?: string; // localizable
+  cta_href?: string;
 }
 
 /** Pricing — Meta (content type: "pricing-meta") */
@@ -256,10 +264,12 @@ export interface SiteBrand {
 export interface PageHero {
   heading?: string; // localizable
   body?: string; // localizable
+  cta_href?: string;
 }
 
 /** Maps each content-type slug to its entry interface. */
 export interface AtlasContentTypes {
+  "site-error-labels": SiteErrorLabels;
   "legal-doc": LegalDoc;
   "company-row": CompanyRow;
   "service-flow-step": ServiceFlowStep;

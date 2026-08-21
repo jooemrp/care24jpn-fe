@@ -91,8 +91,9 @@ function otherSiteBlocks(): CmsBlock[] {
     simple("site-contact-phone", 1, { display: bi("0120"), tel: bi("0120"), note: bi("note") }),
     simple("site-cta", 2, { primary: bi("p"), secondary: bi("s"), contact: bi("c") }),
     simple("site-ui-labels", 3, { menu_toggle_label: bi("m"), lang_toggle_label: bi("l") }),
-    simple("nav-item", 4, { href: bi("/"), label: bi("Home") }),
-    simple("site-footer", 5, { description: bi("d"), legal: bi("c 2026") }),
+    simple("site-error-labels", 4, { title: bi("t"), body: bi("b"), retry_label: bi("r") }),
+    simple("nav-item", 5, { href: bi("/"), label: bi("Home") }),
+    simple("site-footer", 6, { description: bi("d"), legal: bi("c 2026") }),
   ];
 }
 
@@ -232,6 +233,62 @@ async function main(): Promise<void> {
     const blocks = siteBlocks([legalBlock(9, {})]);
     const result = legalLinksOf(blocks);
     assert.deepEqual(result[0], FALLBACK.footer.legalLinks[0]);
+  });
+
+  // ---------------------------------------------------------------------------
+  // (e) F-1 audit fix: `app/[lang]/error.tsx`'s title/body/retry-button text
+  // now comes from a "site-error-labels" block, wired through the SAME
+  // `pickBi` + `mapSite` machinery as every other `site.ui.*` field. These
+  // lock the field mapping (`title`/`body`/`retry_label` on the wire ->
+  // `errorPage.title`/`.body`/`.retryLabel` on `SiteContent`) so a rename on
+  // either side fails here instead of silently going dead (the exact failure
+  // mode `tab_switch_label`/`toc_label` already suffered once each).
+  // ---------------------------------------------------------------------------
+
+  function siteBlocksWithLegal(extra: Partial<Record<string, unknown>> = {}): CmsBlock[] {
+    const base = otherSiteBlocks().filter((b) => b.type !== "site-error-labels");
+    const errorLabels: CmsBlock = {
+      id: "site-error-labels-0",
+      type: "site-error-labels",
+      blockTypeId: "uuid-of-site-error-labels",
+      parentId: null,
+      position: 4,
+      data: { title: bi("エラー"), body: bi("本文"), retry_label: bi("再試行"), ...extra },
+    };
+    return [...base, errorLabels, ...liveOrderLegalBlocks()];
+  }
+
+  test("mapSite() returns null when the site-error-labels block type is entirely missing", () => {
+    const blocks = otherSiteBlocks()
+      .filter((b) => b.type !== "site-error-labels")
+      .concat(liveOrderLegalBlocks());
+    assert.equal(mapSite(blocks, noop), null);
+  });
+
+  test("mapSite() reads title/body/retry_label off the site-error-labels block into errorPage.title/.body/.retryLabel", () => {
+    const result = mapSite(siteBlocksWithLegal(), noop);
+    assert.ok(result, "mapSite must succeed for a full set of site blocks");
+    assert.deepEqual(result.errorPage, {
+      title: bi("エラー"),
+      body: bi("本文"),
+      retryLabel: bi("再試行"),
+    });
+  });
+
+  test("a site-error-labels block missing a field falls back to constants/copy.ts#errorPage for that field only", () => {
+    const result = mapSite(siteBlocksWithLegal({ body: undefined }), noop);
+    assert.ok(result, "mapSite must succeed for a full set of site blocks");
+    assert.deepEqual(result.errorPage.title, bi("エラー"));
+    assert.deepEqual(result.errorPage.body, FALLBACK.errorPage.body);
+    assert.deepEqual(result.errorPage.retryLabel, bi("再試行"));
+  });
+
+  test("CMS-off path: FALLBACK.errorPage matches today's hardcoded error.tsx copy", () => {
+    assert.deepEqual(FALLBACK.errorPage, {
+      title: { ja: "エラーが発生しました", en: "Something went wrong" },
+      body: { ja: "しばらくしてから再度お試しください。", en: "Please try again in a moment." },
+      retryLabel: { ja: "再試行", en: "Try again" },
+    });
   });
 }
 
