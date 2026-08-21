@@ -1386,28 +1386,28 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
   {
     id: "og-image-cms-off-kartu-lokal",
     side: "ditambah",
-    count: 24,
-    why: "Gerbang CMS-ON vs CMS-OFF: sejak seo.og_image terisi di Atlas (13 rute x {ja,en}), CMS-ON merender url media Atlas sedangkan CMS-OFF tetap merender kartu lokal constants/seo.ts#fallbackOgImage. Ini sisi CMS-OFF. PENTING soal angkanya: 24, bukan 26 — rute home (/) dilaporkan 'sama | sama' oleh tabel rute gerbang ini meski og:image-nya seharusnya berbeda seperti 12 rute lain. Itu titik buta gerbang yang sudah ada sebelumnya, bukan akibat perubahan ini; dicatat apa adanya daripada dibulatkan ke 26.",
+    count: 26,
+    why: "Gerbang CMS-ON vs CMS-OFF: sejak seo.og_image terisi di Atlas (13 rute x {ja,en}), CMS-ON merender url media Atlas sedangkan CMS-OFF tetap merender kartu lokal constants/seo.ts#fallbackOgImage. Ini sisi CMS-OFF. 26 = 13 rute x {ja,en}. (Sempat tercatat 24: rute home tidak pernah benar-benar diukur gerbang ini karena `seenRoutes` merekonstruksi slug dari nama berkas dan mengubah `ja.txt` jadi `.txt`. Angkanya dicatat apa adanya waktu itu, lalu sebabnya diperbaiki — bukan dibulatkan.)",
     matches: (line) => /property="og:image"/.test(line) && LOCAL_CARD.test(line),
   },
   {
     id: "og-image-cms-on-media-atlas",
     side: "dihapus",
-    count: 24,
-    why: "Pasangan dari og-image-cms-off-kartu-lokal: sisi CMS-ON, url media Atlas. Jumlah sama persis (24) karena setiap baris kartu lokal punya lawan satu-satu.",
+    count: 26,
+    why: "Pasangan dari og-image-cms-off-kartu-lokal: sisi CMS-ON, url media Atlas. Jumlah sama persis (26) karena setiap baris kartu lokal punya lawan satu-satu.",
     matches: (line) => /property="og:image"/.test(line) && !LOCAL_CARD.test(line),
   },
   {
     id: "twitter-image-cms-off-kartu-lokal",
     side: "ditambah",
-    count: 24,
+    count: 26,
     why: "Efek samping Next yang sama seperti seo-twitter-image: postProcessMetadata mengisi twitter:image dari openGraph.images, jadi perpecahan og:image di atas terduplikasi di twitter:image. Sisi CMS-OFF.",
     matches: (line) => /name="twitter:image"/.test(line) && LOCAL_CARD.test(line),
   },
   {
     id: "twitter-image-cms-on-media-atlas",
     side: "dihapus",
-    count: 24,
+    count: 26,
     why: "Pasangan dari twitter-image-cms-off-kartu-lokal: sisi CMS-ON.",
     matches: (line) => /name="twitter:image"/.test(line) && !LOCAL_CARD.test(line),
   },
@@ -1731,7 +1731,17 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
   const abFailures: { file: string; diffs: number }[] = [];
   let abIdentical = 0;
   const abClass = emptyClassification();
-  const seenRoutes = new Set(keys.map((k) => k.baselineFile.replace(/^(ja|en)(__)?/, "")));
+  // Route slugs come straight from ROUTES, not reconstructed from baseline
+  // filenames. The old form stripped the `ja`/`en` prefix off each filename,
+  // which works for `ja__pricing.txt` -> `pricing.txt` but turns home's
+  // `ja.txt` into `.txt` — never the empty string the branches below test
+  // for. Home therefore looked up `ja__.txt`, a file that does not exist,
+  // read `""` for both builds, compared empty to empty, and reported "sama"
+  // while being counted twice toward the identical tally. The site's biggest
+  // CMS-driven page was the one page this gate never actually measured. The
+  // printed label gave it away — `/.txt` instead of `/` — for as long as this
+  // gate has existed.
+  const seenRoutes = new Set(ROUTES.map((r) => (r.slug === "" ? "" : `${r.slug}.txt`)));
 
   if (!buildOff.success) {
     log(
