@@ -34,7 +34,7 @@ import {
 } from "./lib";
 
 interface LegalPageSpec {
-  /** Atlas page slug — matches architecture-plan.json#pages[].slug. */
+  /** Atlas page slug this legal doc is published under. */
   slug: string;
   /** Key into constants/legal.ts#legalDocs. */
   docKey: keyof typeof legalDocs;
@@ -73,6 +73,26 @@ function buildLegalDocBlock(blockTypeId: string, doc: LegalDoc) {
 }
 
 async function main(): Promise<void> {
+  // Guard added alongside legal-html.ts's gap-6 fix: blocksToHtml now
+  // serializes `[label](href)` markdown link syntax into a real
+  // `<a href="...">` element instead of leaving it as literal characters.
+  // That is render-neutral (LegalDocPage.tsx already turns the markdown
+  // form into a real <Link>, and this script's own output is never
+  // rendered — it only feeds Atlas/seeding), but it DOES change the exact
+  // HTML this script would write, and the project rule is that legal
+  // document CONTENT in Atlas is not to be touched. Without this guard, the
+  // next routine `npm run atlas:seed` would silently rewrite all 7 live
+  // legal bodies from `[label](/path)` to `<a href>`.
+  if (process.env.ATLAS_ALLOW_LEGAL_RESEED !== "1") {
+    console.error(
+      "[atlas:seed-legal] refusing to run: legal document CONTENT in Atlas must not be " +
+        "touched (see marketing-web project rules). Set ATLAS_ALLOW_LEGAL_RESEED=1 if you " +
+        "have deliberately decided to reseed the 7 live legal pages.",
+    );
+    process.exitCode = 1;
+    return;
+  }
+
   const env = requireAtlasEnv();
 
   const legalDocType = await getContentType(env, "legal_doc");

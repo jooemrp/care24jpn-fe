@@ -115,6 +115,46 @@ function normalizeHtml(html: string): string {
 }
 
 /**
+ * Titik buta JSON-LD (K-1): `normalizeHtml` di atas MEMBUANG seluruh
+ * `<script>` (baris 106) sebelum pembandingan lulus/gagal, jadi isi
+ * `<script type="application/ld+json">` — termasuk salah bahasa, field
+ * hilang, atau typo struktur data — tidak pernah bisa membuat gerbang ini
+ * merah, benar atau salah isinya. Blok ini TIDAK mengubah itu (mengubah
+ * `normalizeHtml` akan membatalkan seluruh 27 baseline yang terukur
+ * sekaligus). Ia hanya membaca `rawOn`/`rawOff` — SEBELUM normalisasi — lalu
+ * mencetak diff key-set JSON-LD sebagai informasi, murni untuk mata manusia.
+ * Tidak pernah memengaruhi `gateFailed`.
+ */
+function collectJsonLdKeys(value: unknown, prefix: string, out: Set<string>): void {
+  if (Array.isArray(value)) {
+    for (const item of value) collectJsonLdKeys(item, prefix, out);
+    return;
+  }
+  if (value !== null && typeof value === "object") {
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      const keyPath = prefix ? `${prefix}.${k}` : k;
+      out.add(keyPath);
+      collectJsonLdKeys(v, keyPath, out);
+    }
+  }
+}
+
+function extractJsonLdKeySet(rawHtml: string): Set<string> {
+  const keys = new Set<string>();
+  const scriptRe = /<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = scriptRe.exec(rawHtml))) {
+    try {
+      collectJsonLdKeys(JSON.parse(m[1]), "", keys);
+    } catch {
+      // JSON-LD malformed — bukan urusan blok informasional ini untuk
+      // memperbaikinya, hanya lewati diam-diam untuk skrip itu saja.
+    }
+  }
+  return keys;
+}
+
+/**
  * Menolak berjalan kalau baseline tidak bisa dipakai.
  *
  * Dipanggil PALING AWAL di `main()`, sebelum dua `next build` yang makan
@@ -322,20 +362,20 @@ function diffLines(a: string, b: string): Hunk[] {
 
 // CATATAN: skrip ini SENGAJA tidak membuang/menyaring baris beda apa pun di
 // luar apa yang `normalizeHtml` sudah lakukan (yang identik dengan
-// normalizer resmi baseline). Setiap baris beda yang lolos normalisasi
-// dicetak apa adanya dan diklasifikasikan secara manual di parity-report.md
-// — lihat instruksi "JANGAN diam-diam membuang baris agar diff terlihat
-// kosong" di brief st-08.
+// normalizer resmi baseline). Aturannya: JANGAN diam-diam membuang baris
+// agar diff terlihat kosong. Setiap baris beda yang lolos normalisasi harus
+// tetap dicetak apa adanya dan diklasifikasikan lewat mekanisme DIFF_CLASSES
+// / ACCEPTED_RESIDUALS di bawah, bukan disaring diam-diam di sini.
 
 
 // ===========================================================================
 // KLASIFIKASI PERBEDAAN
 //
 // Sampai sebelum ini skrip mencetak setiap baris beda apa adanya dan seorang
-// manusia (saya) memutuskan mana yang "wajar" dan mana yang regresi, lalu
-// menuliskannya di parity-report.md. Artinya gerbang ini tidak pernah bisa
-// LULUS: selama ada satu baris beda, hasilnya GAGAL, dan pembacanya harus
-// percaya pada penilaian manual yang tidak ikut ter-commit.
+// manusia (saya) memutuskan mana yang "wajar" dan mana yang regresi lewat
+// penilaian ad-hoc yang tidak ikut ter-commit ke mana pun. Artinya gerbang
+// ini tidak pernah bisa LULUS: selama ada satu baris beda, hasilnya GAGAL,
+// dan pembacanya harus percaya begitu saja pada penilaian manual itu.
 //
 // Sekarang ada dua mekanisme, dan perbedaan di antara keduanya adalah inti
 // dari desain ini:
@@ -356,8 +396,8 @@ function diffLines(a: string, b: string): Hunk[] {
 //      lewat diam-diam.
 //
 // Apa pun yang bukan keduanya dicetak verbatim dan menggagalkan gerbang.
-// Aturan lama dari brief st-08 tetap berlaku dan diperkuat, bukan dilonggarkan:
-// JANGAN diam-diam membuang baris agar diff terlihat kosong.
+// Aturan asal gerbang ini (ST-08) tetap berlaku dan diperkuat, bukan
+// dilonggarkan: JANGAN diam-diam membuang baris agar diff terlihat kosong.
 //
 // Klasifikasi dilakukan per HALAMAN, bukan per hunk. Algoritma diff memecah
 // satu baris yang sekadar berpindah tempat menjadi DUA hunk terpisah (dihapus
@@ -411,7 +451,221 @@ const navActiveStateClass: DiffClass = {
       .replace(NAV_INACTIVE_CLASSES, "STATUS-NAV"),
 };
 
-const DIFF_CLASSES: DiffClass[] = [imageSourceClass, navActiveStateClass];
+/**
+ * ST-GATE, area A (ST-05). `<meta property="og:title">` dan
+ * `<meta name="twitter:title">` (twitter:title dicerminkan dari og:title oleh
+ * Next sendiri — lihat `postProcessMetadata` di
+ * node_modules/next/dist/lib/metadata/resolve-metadata.js:619-655) kini
+ * TIDAK LAGI membawa akhiran " | Care 24 Japan" yang masih dipertahankan
+ * `<title>`. TIDAK ADA sub-task yang memprediksi ini — ditemukan lewat
+ * investigasi gerbang ini sendiri, bukan dari laporan mana pun.
+ *
+ * Akar penyebab, dibuktikan lewat sumber Next (bukan dugaan):
+ * `features/seo/pageMetadata.ts` sekarang menyetel `openGraph.title` secara
+ * EKSPLISIT ke string polos `title` (tanpa brand). Sebelumnya `openGraph`
+ * sama sekali tidak menyetel `title`, sehingga `inheritFromMetadata`
+ * (resolve-metadata.js:603-612, dipanggil dari postProcessMetadata:658)
+ * menyalin `metadata.title` — yang SUDAH melalui `title.template` layout
+ * (jadi membawa brand) — ke `openGraph.title`. Begitu `openGraph.title`
+ * diisi eksplisit, `inheritFromMetadata` tidak lagi menimpanya
+ * (`!hasTitle(target)` sudah false), dan `resolveTitle(title,
+ * titleTemplates.openGraph)` (resolve-opengraph.js:150) memakai
+ * `titleTemplates.openGraph` — kolam template TERPISAH dari
+ * `titleTemplates.title` (resolve-metadata.js:747-805) — yang tidak pernah
+ * diisi ulang oleh objek `openGraph` polos ini, sehingga tidak ada template
+ * yang diterapkan sama sekali.
+ *
+ * Kelas ini HANYA membuktikan bahwa baris yang dihapus dan baris yang
+ * ditambah menjadi identik setelah membuang akhiran " | Care 24 Japan" itu
+ * — dan HANYA pada baris og:title/twitter:title. Ini SENGAJA tidak
+ * dipasang sebagai kelas yang mengkanonikalisasi og:title/twitter:title
+ * secara umum: kalau sisa isinya (judul itu sendiri) berbeda, kelas ini
+ * TIDAK cocok dan baris itu tetap tak-terjelaskan — lihat
+ * `og-en-mengambil-judul-ja-tanpa-terjemahan` di bawah, yang justru
+ * TIDAK tertangkap kelas ini karena isinya bukan cuma beda akhiran.
+ *
+ * INI BUKAN PERSETUJUAN BAHWA PERILAKU INI BENAR — apakah og:title/
+ * twitter:title SEHARUSNYA tetap membawa brand (mis. karena og:site_name
+ * dianggap tidak cukup oleh sebagian crawler) adalah keputusan produk yang
+ * di luar wewenang gerbang ini untuk mengambil. Dicatat di laporan ST-GATE
+ * secara menonjol, bukan dikubur di sini.
+ *
+ * STATUS SETELAH ST-FIX1: DORMAN, sengaja TIDAK dihapus. ST-FIX1
+ * (features/seo/pageMetadata.ts) membangun ulang og:title/twitter:title agar
+ * identik dengan <title> (menambahkan " | Care 24 Japan" secara eksplisit,
+ * home dikecualikan), jadi kelas ini sekarang cocok 0 pasangan — og:title
+ * sudah byte-identik dengan baseline lagi, tidak pernah masuk ke `diffLines`
+ * sama sekali. Dibiarkan di sini sebagai jaring pengaman struktural: kalau
+ * regresi yang PERSIS sama (openGraph.title eksplisit lolos tanpa sufiks
+ * brand) muncul lagi di masa depan, kelas ini akan langsung menangkapnya
+ * lagi tanpa perlu ditulis ulang.
+ */
+const OG_TWITTER_TITLE_TAGS = /(property="og:title"|name="twitter:title")/;
+const ogTwitterTitleBrandSuffixClass: DiffClass = {
+  id: "og-twitter-title-kehilangan-akhiran-brand",
+  why: 'og:title/twitter:title kini di-set eksplisit ke title.template layout tanpa turut menerapkan template-nya (lihat komentar definisi di atas: inheritFromMetadata vs titleTemplates.openGraph terpisah, dibuktikan lewat node_modules/next/dist/lib/metadata/{resolve-metadata,resolve-opengraph,resolve-title}.js) — kehilangan akhiran " | Care 24 Japan" yang <title> sendiri tetap punya. TIDAK diprediksi sub-task manapun. Ini keputusan konten/brand yang belum diputuskan, bukan sesuatu yang terbukti benar — lihat laporan ST-GATE.',
+  canonicalize: (line) =>
+    OG_TWITTER_TITLE_TAGS.test(line) ? line.replace(/ \| Care 24 Japan"/, '"') : line,
+};
+
+/**
+ * ST-GATE, area A (ST-05). Begitu `openGraph.images` terisi,
+ * `postProcessMetadata` (resolve-metadata.js:621-654) mengisi `twitter.card`
+ * bawaan dari "summary" (tanpa gambar) menjadi "summary_large_image" (ada
+ * gambar) — efek samping otomatis dari Next, bukan sesuatu yang
+ * `pageMetadata()` set langsung. Sempit: hanya menyamakan nilai `content=`
+ * pada baris `name="twitter:card"`, tidak menyentuh atribut lain di baris
+ * itu (tidak ada yang lain di baris ini).
+ */
+const twitterCardUpgradeClass: DiffClass = {
+  id: "twitter-card-summary-ke-large-image",
+  why: 'twitter:card naik dari "summary" ke "summary_large_image" begitu og:image ada — perilaku bawaan Next (postProcessMetadata, resolve-metadata.js:621-654), bukan nilai yang di-set langsung oleh pageMetadata().',
+  canonicalize: (line) =>
+    /name="twitter:card"/.test(line) ? line.replace(/content="[^"]*"/, 'content="CARD"') : line,
+};
+
+/**
+ * ST-GATE, area F (ST-HOME). Kedua tautan banner ajakan (`register` untuk
+ * pengguna, `caregiver` untuk staf) kini membawa `target="_blank"
+ * rel="noopener noreferrer"` yang baseline pre-migrasi TIDAK punya sama
+ * sekali pada KEDUANYA (dicek langsung: `grep portal.care24.jp
+ * scripts/atlas/baseline/en.txt` — tidak ada `target=` di baris manapun).
+ * Ini BEDA dari prediksi awal ST-HOME (yang menyebut hanya banner
+ * "user" sebagai baru, karena saat itu ST-HOME membandingkan kodenya
+ * sendiri sebelum-dan-sesudah, bukan terhadap baseline pre-migrasi ini).
+ * ST-GATE menginvestigasi selisihnya dan mengonfirmasi: KEDUA banner sudah
+ * tidak punya `target=` sama sekali di baseline, jadi keduanya sah masuk
+ * kelas diff yang sama di bawah ini.
+ *
+ * Sempit lewat GUARD (href persis ke portal.care24.jp/register atau
+ * /caregiver) sebelum membongkar atributnya sama sekali — bukan pola bebas
+ * yang bisa menyamarkan tautan lain. `target`/`rel` dibuang lalu SISA
+ * atributnya diurutkan alfabetis sebelum dibandingkan, karena `href` juga
+ * pindah posisi (dari akhir ke awal atribut) bersamaan dengan penambahan
+ * target/rel — dibuktikan sebagai perubahan URUTAN atribut semata (nilai
+ * setiap atribut tetap sama), bukan konten baru yang menumpang di baris
+ * yang sama.
+ */
+const BANNER_HREF_GUARD = /href="https:\/\/portal\.care24\.jp\/(register|caregiver)"/;
+const bannerTargetBlankClass: DiffClass = {
+  id: "banner-target-blank-rel-noopener",
+  why: 'kedua tautan ApplyBanner (register, caregiver) kini membawa target="_blank" rel="noopener noreferrer", dan href pindah ke awal daftar atribut (bukan lagi akhir) — perbaikan aksesibilitas/keamanan yang disengaja (ST-HOME), sebab kelima di luar 4 prediksi ST-HOME. TIDAK ADA di baseline pre-migrasi pada kedua banner. Dibandingkan lewat set atribut terurut (order-independent) karena hanya urutan + kehadiran target/rel yang beda, bukan nilai atribut lain.',
+  canonicalize: (line) => {
+    if (!BANNER_HREF_GUARD.test(line)) return line;
+    const inner = line.replace(/^<a\s+/, "").replace(/>\s*$/, "");
+    const attrs = (inner.match(/[a-zA-Z-]+="[^"]*"/g) ?? []).filter(
+      (a) => !a.startsWith('target="') && !a.startsWith('rel="'),
+    );
+    attrs.sort();
+    return `<a ${attrs.join(" ")}>`;
+  },
+};
+
+/**
+ * ST-GATE, area B (ST-HOME hero "why choose us" list -> mt-3/mt-10 wrapper).
+ * Sempit: hanya mengganti `mt-10` dengan `mt-3` pada baris `<ul ...
+ * flex flex-wrap gap-2.5">` — satu-satunya beda pada baris itu.
+ */
+const trustListWrapperClass: DiffClass = {
+  id: "home-trust-list-wrapper-mt",
+  why: 'wrapper <ul> daftar kepercayaan (ST-HOME) berubah margin-top dari mt-10 ke mt-3 karena <p> label baru (values.heading) kini ditempatkan di atasnya. Hanya nilai margin yang beda pada baris ini.',
+  canonicalize: (line) =>
+    /class="mt-(10|3) flex flex-wrap gap-2\.5"/.test(line)
+      ? line.replace('class="mt-10 flex flex-wrap gap-2.5"', 'class="mt-X flex flex-wrap gap-2.5"').replace('class="mt-3 flex flex-wrap gap-2.5"', 'class="mt-X flex flex-wrap gap-2.5"')
+      : line,
+};
+
+/**
+ * ST-GATE, area B (ST-HOME hero "why choose us" list). Sempit: hanya
+ * mengganti dua kelas Tailwind literal pada pembuka `<li>` daftar
+ * kepercayaan — satu-satunya beda pada baris ini (item lain di baris yang
+ * sama, mis. `style="animation-delay:..."`, tetap identik).
+ */
+const TRUST_ITEM_GUARD =
+  'rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up';
+const trustItemOpenTagClass: DiffClass = {
+  id: "home-trust-item-li-buka",
+  why: `pembuka <li> daftar kepercayaan (ST-HOME) berganti dari class="flex items-center gap-2 ${TRUST_ITEM_GUARD}" menjadi class="flex flex-col gap-0.5 ${TRUST_ITEM_GUARD}" — item dipecah jadi dua baris (judul + body). Hanya dua kata kelas layout yang beda.`,
+  canonicalize: (line) =>
+    line.includes(TRUST_ITEM_GUARD)
+      ? line.replace("flex items-center gap-2 " + TRUST_ITEM_GUARD, "TRUST-ITEM-LAYOUT " + TRUST_ITEM_GUARD).replace(
+          "flex flex-col gap-0.5 " + TRUST_ITEM_GUARD,
+          "TRUST-ITEM-LAYOUT " + TRUST_ITEM_GUARD,
+        )
+      : line,
+};
+
+/**
+ * ST-GATE, area B (ST-HOME). Baris penutup judul item kepercayaan: dulu
+ * `</span>TEKS</li>` (item ditutup langsung setelah judul), sekarang
+ * `</span>TEKS</span>` (judul jadi baris tersendiri, `</li>` pindah ke
+ * baris barunya sendiri — lihat `home-trust-item-li-tutup-baru` di
+ * ACCEPTED_RESIDUALS). Sempit: HANYA baris yang diawali `</span>`, dan
+ * hanya menyamakan tag PENUTUP paling akhir (`</li>` atau `</span>`) —
+ * teks di antaranya (judul kepercayaan itu sendiri) harus identik persis
+ * di kedua sisi, kalau tidak baris tetap tak-terjelaskan.
+ */
+const trustItemTitleCloseClass: DiffClass = {
+  id: "home-trust-item-judul-tutup",
+  why: '</span>JUDUL</li> (lama) menjadi </span>JUDUL</span> (baru) — judul kepercayaan dipindah jadi baris sendiri, </li> pindah ke baris baru terpisah. Teks JUDUL di antara harus identik, hanya tag penutup akhir yang beda.',
+  canonicalize: (line) => {
+    if (!line.startsWith("</span>")) return line;
+    if (line.endsWith("</li>")) return line.slice(0, -"</li>".length) + "CLOSE";
+    if (line.endsWith("</span>")) return line.slice(0, -"</span>".length) + "CLOSE";
+    return line;
+  },
+};
+
+/**
+ * ST-GATE2 (ST-FIX7). Logo `<Image>` di Navbar dan Footer, plus baris
+ * `<link rel="preload" as="image" imageSrcSet=...>` yang Next memancarkan
+ * untuk logo Navbar (`priority`). Tiga lini per URL: 1 preload link + 1
+ * `<img>` Navbar + 1 `<img>` Footer.
+ *
+ * Dua hal berubah SEKALIGUS pada baris yang sama, dan keduanya disengaja
+ * (ST-FIX7): (1) dimensi intrinsik diseragamkan ke `560x210`
+ * (dulu Navbar `427x160`, Footer `320x120`), yang ikut menggeser kandidat
+ * `w=` di `srcSet`/`imageSrcSet` Next (mis. `w=1080`->`w=1200` untuk
+ * Navbar `2x`); (2) `url=` gambar berpindah dari `/images/logo.png` lokal
+ * ke media S3 Atlas — migrasi konten yang sama dengan `imageSourceClass`
+ * di atas, bukan bagian dari perubahan ST-FIX7 itu sendiri.
+ *
+ * Sempit lewat GUARD: `url=...logo.png` (cocok untuk `/images/logo.png`
+ * lokal maupun jalur S3 yang berakhiran `-logo.png`) HARUS ada di baris
+ * mentah sebelum kanonikalisasi apa pun dijalankan — baris apa pun di
+ * luar itu (apple-touch-icon, og:image, dst.) tidak tersentuh. Hanya
+ * `url=`, `width=`, `height=`, dan angka `w=` pada query yang
+ * dikanonikalisasi; `alt`, `class`, `style`, `loading`, `decoding` harus
+ * tetap identik verbatim di kedua sisi, kalau tidak baris tetap
+ * tak-terjelaskan. Karena `class` Navbar (`w-36 origin-left ...`) dan
+ * Footer (`w-32`) tidak disentuh, kelas ini tidak bisa memasangkan baris
+ * Navbar dengan baris Footer secara keliru.
+ */
+const LOGO_URL_GUARD = /url=[^&"']*logo\.png/i;
+const logoUnifiedDimensionsClass: DiffClass = {
+  id: "logo-dimensi-560x210-dan-sumber-atlas",
+  why: 'ST-FIX7: dimensi intrinsik <Image> logo diseragamkan ke 560x210 (dulu Navbar 427x160, Footer 320x120), yang ikut mengubah kandidat w= di srcSet/imageSrcSet Next; url= gambar juga berpindah dari /images/logo.png lokal ke media S3 Atlas (migrasi konten, sama seperti imageSourceClass, bukan bagian dari ST-FIX7). Sempit lewat GUARD url=...logo.png; hanya url=, width=, height=, dan angka w= yang dikanonikalisasi — atribut lain (alt, class, style, loading, decoding) harus tetap identik.',
+  canonicalize: (line) => {
+    if (!LOGO_URL_GUARD.test(line)) return line;
+    return line
+      .replace(/url=[^&"']+/g, "url=GAMBAR")
+      .replace(/w=\d+/g, "w=N")
+      .replace(/width="\d+"/g, 'width="N"')
+      .replace(/height="\d+"/g, 'height="N"');
+  },
+};
+
+const DIFF_CLASSES: DiffClass[] = [
+  imageSourceClass,
+  navActiveStateClass,
+  ogTwitterTitleBrandSuffixClass,
+  twitterCardUpgradeClass,
+  bannerTargetBlankClass,
+  trustListWrapperClass,
+  trustItemOpenTagClass,
+  trustItemTitleCloseClass,
+  logoUnifiedDimensionsClass,
+];
 
 type AcceptedResidual = {
   id: string;
@@ -446,6 +700,358 @@ type AcceptedResidual = {
  * dengan font cadangan lalu bertukar — preload hanya mempersempit jendela
  * pertukaran itu. Bukan bug kebenaran, bukan pergeseran tata letak.
  */
+/** Empat baris literal baru di app/[lang]/not-found.tsx (ST-F1): tautan
+ * home dwibahasa (localizeHref ke '/' untuk ja dan en, dibungkus satu
+ * <div>) menggantikan satu tautan campur-bahasa lama yang tidak
+ * locale-aware. `_not-found.txt` adalah satu-satunya baseline "spesial"
+ * yang benar-benar bisa dipicu lewat HTTP sungguhan dan diukur gerbang
+ * ini — lihat komentar di fetchRaw("/__st08_parity_probe_nonexistent__")
+ * lebih bawah, dan bagian "ST-F1 (area F)" di ACCEPTED_RESIDUALS. */
+const NOT_FOUND_NEW_HOME_LINKS = new Set<string>([
+  '<div class="flex flex-wrap items-center justify-center gap-3">',
+  '<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/">トップページへ</a>',
+  '<a lang="en" class="inline-flex items-center gap-2 rounded-full border border-primary px-8 py-3 font-medium text-primary transition hover:bg-primary/10" href="/en">Back to home</a>',
+  "</div>",
+]);
+
+/**
+ * ST-U2 (Tugas 1/ST-09, Tugas 2, Tugas 3). Exact-string sets, same idiom as
+ * `NOT_FOUND_NEW_HOME_LINKS` above — used instead of a content-blind
+ * canonicalize() because these ARE genuine, deliberate content changes
+ * (not "same info, different form"), so DIFF_CLASSES's canonicalization
+ * mechanism does not apply (see the file-header comment on why kelas vs
+ * ledger are different tools). Every set below was extracted VERBATIM from
+ * a real `npx tsx scripts/atlas/verify-html-parity.ts` run's own
+ * `[tak-terjelaskan]` output (temporarily printed uncapped, see the 500-cap
+ * comment further down) — never hand-typed from memory, so there is no
+ * transcription-error risk between what actually rendered and what these
+ * sets match.
+ *
+ * WHY FOUR SEPARATE PAIRS FOR ONE CONCEPT ("description content changed").
+ * `AcceptedResidual.count` is checked independently in EACH of this
+ * script's two gates (`vs baseline`, `CMS-ON vs CMS-OFF`) — the same entry
+ * fires against both gates' own removed/added pools, and MUST match the
+ * SAME declared count in both, or the gate reports "TIDAK COCOK". The
+ * meta-description change does NOT produce the same count in both gates:
+ * - "vs baseline" gate: ALL 13 routes' description changed (baseline had
+ *   old hardcoded/generic text; live now has the ST-09-approved text) — 78
+ *   lines each side (13 routes x {ja,en} x {description, og:description,
+ *   twitter:description}).
+ * - "CMS-ON vs CMS-OFF" gate: only the 7 LEGAL routes diverge. The 6
+ *   non-legal routes' `constants/seo.ts` fallback was synced to the exact
+ *   ST-09 text (see that file), so CMS-ON and CMS-OFF render byte-identical
+ *   description tags for them — zero diff, nothing to explain. The 7 legal
+ *   routes were DELIBERATELY NOT extended with a literal fallback
+ *   description (see `pageMetadata.ts`'s `titleFrom: "legal-heading"`
+ *   branch, unchanged) — scope decision, not an oversight: adding a
+ *   `description: Bilingual` field to `LegalSeoRoute` would grow this
+ *   sub-task's claimed-file surface for a fallback that already exists and
+ *   still works (the pre-existing `${heading.ja} | ${heading.en} —
+ *   ${brand}` template), just less polished than the Atlas-only ST-09 copy.
+ *   So CMS-OFF for these 7 routes still renders that older template while
+ *   CMS-ON renders the new approved text — 42 lines each side (7 routes x
+ *   {ja,en} x 3 tags). Splitting into 4 sets (old-baseline-13 /
+ *   new-approved-13 / new-approved-legal7 / template-legal7) — rather than
+ *   one generic `name="description"` regex — is what keeps each entry's
+ *   count exactly right in whichever gate it fires in; a generic regex
+ *   would either double-fire or mismatch the count in one gate or the
+ *   other (verified: an earlier draft using a bare regex here failed the
+ *   CMS-ON/OFF gate with "TIDAK COCOK: tercatat 78" against an actual 42).
+ */
+const ST_U2_DESC_OLD_ALL13 = new Set<string>([
+  "<meta name=\"description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta property=\"og:description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta name=\"twitter:description\" content=\"Premium 24-hour in-home care\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta property=\"og:description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta name=\"twitter:description\" content=\"Company profile of MedicalInformatics Co.,Ltd., the operator of Care 24 Japan — trade name, head office, establishment, capital and more.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japan care-supporter hourly wage and salary system. Hourly rates (tax included) for the caregiving and nursing courses.\"/>",
+  "<meta name=\"description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta property=\"og:description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta name=\"twitter:description\" content=\"Caregiving course ¥3,740/hour, nursing course ¥6,600/hour (daytime, tax included). Care 24 Japan in-home care pricing.\"/>",
+  "<meta name=\"description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta property=\"og:description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta name=\"twitter:description\" content=\"From registration to completion, in four simple steps. How to use Care 24 Japan&#x27;s services.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta property=\"og:description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta name=\"twitter:description\" content=\"After hospital discharge, dementia care, respite for families, end-of-life home care — the everyday situations where Care 24 Japan&#x27;s in-home care helps.\"/>",
+  "<meta name=\"description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta property=\"og:description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta name=\"twitter:description\" content=\"ご自宅で、心安らぐ24時間の在宅ケアを\"/>",
+  "<meta name=\"description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japanを運営するメディカルインフォマティクス株式会社の会社概要（商号・所在地・設立・資本金など）をご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーターの時給・給与体系。介護コース・看護コースの1時間単価（税込）をご案内します。\"/>",
+  "<meta name=\"description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"介護コース1時間3,740円、看護コース1時間6,600円（税込・日中料金）。Care 24 Japanの在宅ケア料金をご案内します。\"/>",
+  "<meta name=\"description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta property=\"og:description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta name=\"twitter:description\" content=\"退院後のサポート、認知症のケア、レスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアがお役に立てるさまざまな暮らしの場面をご紹介します。\"/>",
+]);
+
+const ST_U2_DESC_NEW_ALL13 = new Set<string>([
+  "<meta name=\"description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta property=\"og:description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta name=\"twitter:description\" content=\"Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.\"/>",
+  "<meta name=\"description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta property=\"og:description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta name=\"twitter:description\" content=\"Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.\"/>",
+  "<meta name=\"description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta property=\"og:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"twitter:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta property=\"og:description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care 24 Japan&#x27;s hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.\"/>",
+  "<meta name=\"description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta property=\"og:description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta name=\"twitter:description\" content=\"Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.\"/>",
+  "<meta name=\"description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta property=\"og:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"twitter:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta property=\"og:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"twitter:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta property=\"og:description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta name=\"twitter:description\" content=\"From member registration through your care supporter&#x27;s home visit to the completion report — how Care 24 Japan&#x27;s service flow works, step by step.\"/>",
+  "<meta name=\"description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta property=\"og:description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta name=\"twitter:description\" content=\"After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan&#x27;s in-home care helps with.\"/>",
+  "<meta name=\"description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta property=\"og:description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta name=\"twitter:description\" content=\"医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta property=\"og:description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。\"/>",
+  "<meta name=\"description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta property=\"og:description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta name=\"twitter:description\" content=\"入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta property=\"og:description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta name=\"twitter:description\" content=\"ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta property=\"og:description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+  "<meta name=\"twitter:description\" content=\"退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。\"/>",
+]);
+
+const ST_U2_DESC_NEW_LEGAL7_CMS_ON = new Set<string>([
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。\"/>",
+  "<meta name=\"description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta property=\"og:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"twitter:description\" content=\"MedicalInformatics Co., Ltd.&#x27;s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。\"/>",
+  "<meta name=\"description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。\"/>",
+  "<meta name=\"description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta property=\"og:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"twitter:description\" content=\"Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。\"/>",
+  "<meta name=\"description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on Japan&#x27;s Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.\"/>",
+  "<meta name=\"description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta property=\"og:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"twitter:description\" content=\"メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。\"/>",
+  "<meta name=\"description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta property=\"og:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"twitter:description\" content=\"A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan&#x27;s Terms of Use.\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。\"/>",
+  "<meta name=\"description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta property=\"og:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"twitter:description\" content=\"Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.\"/>",
+  "<meta name=\"description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。\"/>",
+  "<meta name=\"description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan&#x27;s policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.\"/>",
+]);
+
+const ST_U2_DESC_TEMPLATE_LEGAL7_CMS_OFF = new Set<string>([
+  "<meta name=\"description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"プライバシーポリシー | Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Privacy Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms of Service (For Users) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Platform Terms &amp; Conditions (For Care Supporters) — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"特定商取引法に基づく表記 | Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Notation based on the Act on Specified Commercial Transactions — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"ケアサービス準委任契約書 | Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care Service Quasi-Mandate Contract — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan ケアサポーター報酬規程 | Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Care Supporter Remuneration Regulations — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan キャンセルポリシー | Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta property=\"og:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+  "<meta name=\"twitter:description\" content=\"Care24Japan Cancellation Policy — Care 24 Japan\"/>",
+]);
+
+const ST_U2_LEGAL_TITLE_OLD = new Set<string>([
+  "<title>Care24Japan Cancellation Policy | Care 24 Japan</title>",
+  "<title>Care24Japan Care Supporter Remuneration Regulations | Care 24 Japan</title>",
+  "<title>Care24Japan Platform Terms &amp; Conditions (For Care Supporters) | Care 24 Japan</title>",
+  "<title>Care24Japan Platform Terms of Service (For Users) | Care 24 Japan</title>",
+  "<title>Care24Japan キャンセルポリシー | Care 24 Japan</title>",
+  "<title>Care24Japan ケアサポーター報酬規程 | Care 24 Japan</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ケアサポーター向け） | Care 24 Japan</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ご利用者様向け） | Care 24 Japan</title>",
+]);
+
+const ST_U2_LEGAL_TITLE_NEW = new Set<string>([
+  "<title>Care24Japan Cancellation Policy</title>",
+  "<title>Care24Japan Care Supporter Remuneration Regulations</title>",
+  "<title>Care24Japan Platform Terms &amp; Conditions (For Care Supporters)</title>",
+  "<title>Care24Japan Platform Terms of Service (For Users)</title>",
+  "<title>Care24Japan キャンセルポリシー</title>",
+  "<title>Care24Japan ケアサポーター報酬規程</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ケアサポーター向け）</title>",
+  "<title>Care24Japan プラットフォーム利用規約（ご利用者様向け）</title>",
+]);
+
+const ST_U2_YEN_OLD = new Set<string>([
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥6,000</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included ¥6,600</p>",
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥3,400</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included ¥3,740</p>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">¥330/hour</dd>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">¥990 separately</dd>",
+  "<dd class=\"whitespace-pre-line text-sm leading-relaxed text-body\">¥100 million</dd>",
+]);
+
+const ST_U2_YEN_NEW = new Set<string>([
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">JPY 6,000</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included JPY 6,600</p>",
+  "<span class=\"text-5xl font-bold tabular-nums text-heading\">JPY 3,400</span>",
+  "<p class=\"mt-1 text-lg text-body\">Tax included JPY 3,740</p>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">JPY 330/hour</dd>",
+  "<dd class=\"mt-1.5 text-lg font-bold text-heading\">JPY 990 separately</dd>",
+  "<dd class=\"whitespace-pre-line text-sm leading-relaxed text-body\">JPY 100 million</dd>",
+]);
+
 const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
   {
     id: "preload-font-hilang-pada-rute-dinamis",
@@ -453,6 +1059,271 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     count: 26,
     why: "rendering dinamis (syarat: konten CMS tanpa rebuild) menggugurkan <link rel=preload as=font> dari next/font. Font tetap termuat lewat @font-face; hanya petunjuk prioritas yang hilang. 26 = 13 rute x {ja,en}.",
     matches: (line) => /rel="preload"[^>]*as="font"/.test(line),
+  },
+  // --- ST-05 (area A): metadata CMS-driven baru, murni aditif ---------
+  {
+    id: "seo-hreflang-x-default",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item hreflang x-default: routeAlternates() kini menyetel languages['x-default'], baris <link rel=alternate hrefLang=x-default> baru di 13 rute x {ja,en}.",
+    matches: (line) => /hrefLang="x-default"/.test(line),
+  },
+  {
+    id: "seo-og-url",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:url: pageMetadata() kini menyetel openGraph.url pada 13 rute x {ja,en} (termasuk home, ditutup lewat pageMetadata({key:'home',...}) di app/[lang]/page.tsx).",
+    matches: (line) => /property="og:url"/.test(line),
+  },
+  {
+    id: "seo-og-locale-alternate",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:locale:alternate: openGraph.alternateLocale baru pada 13 rute x {ja,en}.",
+    matches: (line) => /property="og:locale:alternate"/.test(line),
+  },
+  {
+    id: "seo-og-image",
+    side: "ditambah",
+    count: 26,
+    why: "ST-05 / audit item og:image: openGraph.images baru (CMS og_image kosong di 15/15 halaman -> constants/seo.ts#fallbackOgImage) pada 13 rute x {ja,en}.",
+    matches: (line) => /property="og:image"/.test(line),
+  },
+  {
+    id: "seo-twitter-image",
+    side: "ditambah",
+    count: 26,
+    why: "Efek samping Next dari og:image baru: postProcessMetadata (resolve-metadata.js:621-654) mengisi twitter:image dari openGraph.images begitu ada, pada 13 rute x {ja,en}.",
+    matches: (line) => /name="twitter:image"/.test(line),
+  },
+  // --- ST-HOME (area D): 4 field baru + 1 sebab kelima (banner) -------
+  {
+    id: "home-values-heading",
+    side: "ditambah",
+    count: 2,
+    why: "ST-HOME / audit item values.heading: label baru di atas trust-strip, 1x ja + 1x en.",
+    matches: (line) => /<p class="mt-10 text-sm font-semibold text-body animate-fade-up">/.test(line),
+  },
+  {
+    id: "home-values-item-body",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME / audit item values.items[].body: baris kedua baru per pill (3 item x {ja,en} = 6). Prediksi awal menyebut 18 baris untuk restrukturisasi ini, tapi entri ini sendiri hanya menyumbang 6 — selisihnya bukan salah hitung, melainkan baris LAIN dari restrukturisasi yang sama ditangani oleh entri terpisah: home-trust-item-li-buka, home-trust-item-judul-tutup, home-trust-item-icon-wrap, home-trust-item-li-tutup-baru, home-trust-list-wrapper-mt.",
+    matches: (line) => /<span class="pl-6 text-xs font-normal text-body">/.test(line),
+  },
+  {
+    id: "home-trust-item-icon-wrap",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: ikon+judul trust-strip kini dibungkus <span class=\"flex items-center gap-2\"> tersendiri (bagian dari restrukturisasi values.items[].body, 3 item x {ja,en}) — baris baru murni, tidak ada padanan lama untuk dipasangkan.",
+    matches: (line) => line.trim() === '<span class="flex items-center gap-2">',
+  },
+  {
+    id: "home-trust-item-li-tutup-baru",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: </li> pindah jadi baris tersendiri setelah body <span> baru (pasangan dari home-trust-item-judul-tutup di DIFF_CLASSES, 3 item x {ja,en}).",
+    matches: (line) => line.trim() === "</li>",
+  },
+  {
+    id: "home-examples-hours-label",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME / audit item examples.hoursLabel: label baru sebelum rentang jam pada 3 kasus x {ja,en}.",
+    matches: (line) => /<span class="mr-1 text-lg font-normal text-muted">/.test(line),
+  },
+  {
+    id: "home-hours-p-buka-baru",
+    side: "ditambah",
+    count: 6,
+    why: "ST-HOME: <p> pembungkus rentang jam kini berdiri sendiri (isinya pindah ke baris hours-label baru) — pasangan dari home-hours-p-gabungan-lama, 3 kasus x {ja,en}.",
+    matches: (line) => line.trim() === '<p class="text-lg font-bold tabular-nums text-heading">',
+  },
+  {
+    id: "home-hours-p-gabungan-lama",
+    side: "dihapus",
+    count: 6,
+    why: "ST-HOME: baris <p> lama yang menggabungkan rentang jam + durasi dalam satu baris, digantikan oleh home-hours-p-buka-baru + home-examples-hours-label, 3 kasus x {ja,en}.",
+    matches: (line) =>
+      /^<p class="text-lg font-bold tabular-nums text-heading">\d{1,2}:\d{2}/.test(line),
+  },
+  {
+    id: "home-contact-hours",
+    side: "ditambah",
+    count: 2,
+    why: "ST-HOME / audit item contact.hours: jam operasional sungguhan kini dirender di bawah nomor telepon, 1x ja + 1x en.",
+    matches: (line) => /<p class="mt-1 text-sm text-muted">/.test(line),
+  },
+  // --- ST-F1 (area F): satu-satunya baseline spesial yang terukur -----
+  {
+    id: "st-f1-not-found-description",
+    side: "dihapus",
+    count: 1,
+    why: 'ST-F1 / audit item deskripsi global-not-found: deskripsi lama English-only dibuang, diganti versi dwibahasa (lihat st-f1-not-found-description-baru untuk sisi ditambah).',
+    matches: (line) =>
+      line === '<meta name="description" content="The page you are looking for does not exist."/>',
+  },
+  {
+    id: "st-f1-not-found-description-baru",
+    side: "ditambah",
+    count: 1,
+    why: "ST-F1 / audit item deskripsi global-not-found: deskripsi dwibahasa baru (JA lalu EN) menggantikan versi English-only.",
+    matches: (line) =>
+      line ===
+      '<meta name="description" content="お探しのページが見つかりません。 / The page you are looking for does not exist."/>',
+  },
+  {
+    id: "st-f1-not-found-home-link-lama",
+    side: "dihapus",
+    count: 1,
+    why: "ST-F1 / audit item tautan home global-not-found: satu tautan campur-bahasa lama (href=/, teks JA+EN dicampur) dibuang, diganti dua tautan locale-correct (lihat st-f1-not-found-home-links-baru).",
+    matches: (line) =>
+      line ===
+      '<a class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid" href="/">トップページへ / Back to home</a>',
+  },
+  {
+    id: "st-f1-not-found-home-links-baru",
+    side: "ditambah",
+    count: 4,
+    why: "ST-F1 / audit item tautan home global-not-found: global-not-found.tsx berada di luar app/[lang]/ sehingga tidak tahu bahasa pengunjung, karena itu localizeHref('/','ja') dan localizeHref('/','en') dirender sebagai dua tautan terpisah dibungkus <div> — 1 <div> buka + 2 <a> + 1 </div> tutup.",
+    matches: (line) => NOT_FOUND_NEW_HOME_LINKS.has(line),
+  },
+  // --- ST-FIX3 (icons + manifest + robots/theme-color): 5 tag baru, murni aditif ---
+  {
+    id: "seo-theme-color",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: export const viewport baru menyetel themeColor="#2b7ec1" (--color-primary), dirender sebagai <meta name="theme-color"> pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="theme-color" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-robots",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: metadata.robots baru (index, follow) di app/[lang]/layout.tsx, dirender sebagai <meta name="robots"> pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="robots" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-googlebot",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: efek turunan Next dari metadata.robots.googleBot — <meta name="googlebot"> dipancarkan otomatis begitu robots.googleBot diisi, pada 13 rute x {ja,en}.',
+    matches: (line) => /<meta name="googlebot" content="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-apple-touch-icon",
+    side: "ditambah",
+    count: 26,
+    why: 'ST-FIX3: icons.apple baru di app/[lang]/layout.tsx (public/apple-touch-icon.png, dibuat dari public/images/logo.png lewat scripts/atlas/make-icons.ts), dirender sebagai <link rel="apple-touch-icon"> pada 13 rute x {ja,en}. Dibatasi [lang]/layout.tsx, tidak mencapai global-not-found.tsx.',
+    matches: (line) => /<link rel="apple-touch-icon" href="[^"]*"\/>/.test(line),
+  },
+  {
+    id: "seo-manifest-link",
+    side: "ditambah",
+    count: 27,
+    why: 'ST-FIX3: app/manifest.ts baru (file convention Next, di luar app/[lang]/, jadi site-wide) — Next otomatis menyuntikkan <link rel="manifest"> pada 13 rute x {ja,en} = 26, PLUS 1 di halaman _not-found (global-not-found.tsx tidak mewarisi layout [lang] tapi tetap kena karena file convention ini berlaku seluruh situs).',
+    matches: (line) => /<link rel="manifest" href="[^"]*"\/>/.test(line),
+  },
+  // --- ST-U1: constants/pricing.ts#formatYen, keputusan konten pengguna ---
+  {
+    id: "en-yen-symbol-diganti-jpy-lama-dihapus",
+    side: "dihapus",
+    count: 24,
+    why: 'formatYen() kini merender jumlah pada halaman EN sebagai "JPY 1,234" alih-alih "¥1,234" (konvensi mata uang Inggris, keputusan klien Agu 2026); halaman JA tidak berubah. Baris ini adalah representasi lama "¥..." di baseline pre-migrasi, pada rute EN saja. 24 = 16 di /en/fees.txt (2 kursus x 4 baris x kolom pelanggan+supporter) + 8 di /en/pricing.txt (2 kursus x {2 baris basic + 2 baris tambahan}).',
+    matches: (line) => /^<(?:td|p|dd)\b[^>]*>¥[\d,]+<\/(?:td|p|dd)>$/.test(line),
+  },
+  {
+    id: "en-yen-symbol-diganti-jpy-baru-ditambah",
+    side: "ditambah",
+    count: 24,
+    why: 'Pasangan dari en-yen-symbol-diganti-jpy-lama-dihapus: baris baru dengan awalan "JPY " menggantikan "¥", digit setelahnya identik dengan versi lama. Sama 24 = 16 /en/fees.txt + 8 /en/pricing.txt.',
+    matches: (line) => /^<(?:td|p|dd)\b[^>]*>JPY [\d,]+<\/(?:td|p|dd)>$/.test(line),
+  },
+  // --- ST-U2 Tugas 1 (ST-09): 26 meta description disetujui user, ditulis
+  // ke Atlas (page.seo.description / seo_translations.en.description) —
+  // lihat output/meta-descriptions-review.md Bagian 1 (di luar repo, dirujuk
+  // untuk konteks, bukan dibaca oleh skrip ini). Sebelumnya field ini KOSONG
+  // di Atlas untuk ke-13 rute, jadi setiap route sebenarnya SUDAH merender
+  // sebuah description non-kosong (fallback constants/seo.ts untuk 6 rute
+  // non-legal, atau template `${heading.ja} | ${heading.en} — ${brand}`
+  // untuk 7 rute legal) — perubahan ini adalah pergantian ISI, bukan
+  // penambahan field baru, karena itu masuk ledger (isi nyata berubah),
+  // bukan DIFF_CLASSES (tidak ada bentuk yang bisa dibuktikan sama).
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-desc-lama-13-rute-dihapus",
+    side: "dihapus",
+    count: 78,
+    why: 'ST-09: isi lama <meta name="description">/og:description/twitter:description (fallback constants/seo.ts atau template legal-heading) digantikan oleh 26 deskripsi yang disetujui user. 78 = 13 rute x {ja,en} x 3 tag.',
+    matches: (line) => ST_U2_DESC_OLD_ALL13.has(line),
+  },
+  {
+    id: "st-u2-desc-baru-13-rute-ditambah",
+    side: "ditambah",
+    count: 78,
+    why: 'Pasangan dari st-u2-desc-lama-13-rute-dihapus: 26 deskripsi baru yang disetujui user (meta-descriptions-review.md Bagian 1), sekarang live di Atlas page.seo.description / seo_translations.en.description. 78 = 13 rute x {ja,en} x 3 tag.',
+    matches: (line) => ST_U2_DESC_NEW_ALL13.has(line),
+  },
+  {
+    id: "st-u2-desc-cms-on-legal7-dihapus",
+    side: "dihapus",
+    count: 42,
+    why: "ST-09 / gerbang CMS-ON vs CMS-OFF: untuk 7 rute legal, CMS-ON (Atlas) sekarang merender deskripsi baru yang disetujui user, sedangkan CMS-OFF masih memakai template lama (lihat st-u2-desc-cms-off-legal7-fallback-template-ditambah) — keputusan sengaja, BUKAN kelalaian: LegalSeoRoute (constants/seo.ts) sengaja TIDAK diperluas dengan literal description baru untuk menjaga cakupan file yang diklaim sub-task ini tetap kecil; fallback lama tetap berfungsi, hanya kurang selaras dengan copy yang disetujui. 42 = 7 rute x {ja,en} x 3 tag. Konten baris ini SAMA PERSIS dengan separuh dari st-u2-desc-baru-13-rute-ditambah (subset legal-nya) — sengaja dua entri berbeda karena jumlahnya berbeda di tiap gerbang (78 di 'vs baseline', 42 di 'CMS-ON vs CMS-OFF'), lihat komentar di atas ST_U2_DESC_OLD_ALL13 untuk alasan lengkapnya.",
+    matches: (line) => ST_U2_DESC_NEW_LEGAL7_CMS_ON.has(line),
+  },
+  {
+    id: "st-u2-desc-cms-off-legal7-fallback-template-ditambah",
+    side: "ditambah",
+    count: 42,
+    why: "Pasangan dari st-u2-desc-cms-on-legal7-dihapus: CMS-OFF (Atlas mati) untuk 7 rute legal tetap merender template lama `${heading.ja} | ${heading.en} — ${brand}` (pageMetadata.ts, titleFrom: \"legal-heading\", tidak diubah) — fallback yang lebih tua, tapi tetap benar dan bilingual. 42 = 7 rute x {ja,en} x 3 tag.",
+    matches: (line) => ST_U2_DESC_TEMPLATE_LEGAL7_CMS_OFF.has(line),
+  },
+  // --- ST-U2 Tugas 2: title.absolute untuk 4 halaman legal yang seo.title
+  // Atlas-nya sudah memuat nama brand sendiri (Care24Japan/Care 24 Japan)
+  // — lihat titleContainsBrand di features/seo/pageMetadata.ts. Hanya
+  // <title> yang berubah bentuk (absolute, bukan lagi lewat title.template);
+  // og:title/twitter:title TIDAK berubah pada 4 halaman ini karena
+  // buildPageMetadataFields sudah pakai bare title (tanpa sufiks brand) di
+  // og:title untuk kasus ini SEBELUM ledger ini ditulis juga — lihat
+  // ogTwitterTitleBrandSuffixClass di atas, kelas itu sudah menjelaskan pola
+  // og-title-tanpa-sufiks secara umum sejak ST-FIX1, jadi og:title/
+  // twitter:title 4 halaman ini tidak menghasilkan baris tak-terjelaskan
+  // baru sama sekali.
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-legal-title-absolute-lama-dihapus",
+    side: "dihapus",
+    count: 8,
+    why: 'ST-U2 Tugas 2: <title> lama untuk 4 halaman legal (terms-for-users, terms-for-care-supporters, compensation, cancellation-policy) lewat title.template selalu menambahkan " | Care 24 Japan" — tapi seo.title Atlas ke-4 halaman ini SUDAH memuat brand sendiri ("Care24Japan ..."), jadi brand tampil DUA KALI dengan dua ejaan berbeda. 8 = 4 rute x {ja,en}.',
+    matches: (line) => ST_U2_LEGAL_TITLE_OLD.has(line),
+  },
+  {
+    id: "st-u2-legal-title-absolute-baru-ditambah",
+    side: "ditambah",
+    count: 8,
+    why: "Pasangan dari st-u2-legal-title-absolute-lama-dihapus: titleContainsBrand() mendeteksi brand sudah ada di title, buildPageMetadataFields merender title: { absolute: title } (bypass title.template sepenuhnya, mekanisme sama seperti home) — brand hanya tampil sekali. 8 = 4 rute x {ja,en}. Terverifikasi ke live Atlas (bukan dari daftar hardcoded): keempat rute ini yang seo.title-nya benar-benar memuat brand pada tanggal penulisan ledger ini.",
+    matches: (line) => ST_U2_LEGAL_TITLE_NEW.has(line),
+  },
+  // --- ST-U2 Tugas 3: ¥ -> JPY untuk pembaca EN, 6 field di halaman home
+  // (home-care-course, home-nursing-course, home-care-course-fee x2) + 1
+  // field di halaman company (company-row "Capital"). constants/copy.ts
+  // (fallback) dan Atlas (live, block data EN) disinkronkan ke nilai yang
+  // sama, jadi CMS-ON dan CMS-OFF identik untuk ketujuh field ini — gerbang
+  // CMS-ON vs CMS-OFF tidak melaporkan apa pun untuk perubahan ini.
+  // ---------------------------------------------------------------------
+  {
+    id: "st-u2-en-yen-ke-jpy-home-company-lama-dihapus",
+    side: "dihapus",
+    count: 7,
+    why: 'ST-U2 Tugas 3 (keputusan user "en ya en", konsisten dengan formatYen ST-U1): representasi lama "¥..." pada 6 field halaman home (price_amount x2, price_tax_included x2, home-care-course-fee.value x2) + 1 field company-row "Capital". 7 baris.',
+    matches: (line) => ST_U2_YEN_OLD.has(line),
+  },
+  {
+    id: "st-u2-en-yen-ke-jpy-home-company-baru-ditambah",
+    side: "ditambah",
+    count: 7,
+    why: 'Pasangan dari st-u2-en-yen-ke-jpy-home-company-lama-dihapus: baris baru berawalan "JPY " menggantikan "¥", angka setelahnya identik. 7 baris.',
+    matches: (line) => ST_U2_YEN_NEW.has(line),
   },
 ];
 
@@ -582,12 +1453,16 @@ function reportClassification(label: string, c: Classification): boolean {
     log("  [tak-terjelaskan]  tidak ada.");
   } else {
     log(`  [tak-terjelaskan]  ${unexplained} baris — INI yang menggagalkan gerbang:`);
-    for (const l of c.unexplainedRemoved.slice(0, 25)) log(`        - ${l}`);
-    if (c.unexplainedRemoved.length > 25)
-      log(`        ... (${c.unexplainedRemoved.length - 25} baris dihapus lainnya)`);
-    for (const l of c.unexplainedAdded.slice(0, 25)) log(`        + ${l}`);
-    if (c.unexplainedAdded.length > 25)
-      log(`        ... (${c.unexplainedAdded.length - 25} baris ditambah lainnya)`);
+    // Cap dinaikkan dari 25 -> 500 (ST-U2): 25 tidak cukup untuk menulis
+    // entri ledger yang presisi saat satu perubahan bergeser >25 baris
+    // sekaligus (mis. 26 rute x 3 tag deskripsi meta) — sebelumnya harus
+    // menebak isi baris yang terpotong "... N baris lainnya".
+    for (const l of c.unexplainedRemoved.slice(0, 500)) log(`        - ${l}`);
+    if (c.unexplainedRemoved.length > 500)
+      log(`        ... (${c.unexplainedRemoved.length - 500} baris dihapus lainnya)`);
+    for (const l of c.unexplainedAdded.slice(0, 500)) log(`        + ${l}`);
+    if (c.unexplainedAdded.length > 500)
+      log(`        ... (${c.unexplainedAdded.length - 500} baris ditambah lainnya)`);
   }
   return ledgerFailed || unexplained > 0;
 }
@@ -633,9 +1508,10 @@ async function main() {
     }
     // _not-found — satu-satunya "halaman spesial" yang benar-benar bisa
     // dipicu lewat HTTP sungguhan (path tak terdaftar). `_global-error` dan
-    // `favicon.ico` di baseline-raw TIDAK bisa dipicu lewat HTTP normal
-    // (lihat catatan di parity-report.md) — sengaja dilewati di sini, bukan
-    // dibuang diam-diam.
+    // `favicon.ico` di baseline-raw TIDAK punya rute HTTP yang memicunya
+    // secara normal (`_global-error` hanya terpicu oleh error render yang
+    // tak tertangani, `favicon.ico` disajikan sebagai file statis tanpa
+    // lewat App Router) — sengaja dilewati di sini, bukan dibuang diam-diam.
     const notFoundRaw = await fetchRaw(baseUrlOn, "/__st08_parity_probe_nonexistent__");
     rawOn.set("_not-found.txt", notFoundRaw);
     normalizedOn.set("_not-found.txt", normalizeHtml(notFoundRaw));
@@ -654,6 +1530,7 @@ async function main() {
   const baseUrlOff = `http://localhost:${PORT_CMS_OFF}`;
 
   const normalizedOff = new Map<string, string>();
+  const rawOff = new Map<string, string>();
 
   if (buildOff.success) {
     const serverOff = startServer(envOff, PORT_CMS_OFF, "CMS-OFF");
@@ -661,6 +1538,7 @@ async function main() {
       await waitForServer(`${baseUrlOff}/`);
       for (const k of keys) {
         const raw = await fetchRaw(baseUrlOff, k.urlPath);
+        rawOff.set(k.baselineFile, raw);
         normalizedOff.set(k.baselineFile, normalizeHtml(raw));
       }
     } finally {
@@ -816,6 +1694,35 @@ log("\n########## 4. Gerbang CMS-ON vs CMS-OFF (fallback constants) ##########")
   log(
     `\n  Ringkasan CMS-on vs CMS-off: ${abIdentical}/${seenRoutes.size * 2} URL byte-identik setelah normalisasi.`,
   );
+  }
+
+  // ---------------------------------------------------------------------
+  // Pertanyaan 5 (INFORMASIONAL, tidak memengaruhi lulus/gagal): diff
+  // key-set JSON-LD CMS-ON vs CMS-OFF, dibaca dari HTML MENTAH sebelum
+  // normalizeHtml membuang <script>. Lihat komentar di extractJsonLdKeySet.
+  // ---------------------------------------------------------------------
+  log(
+    "\n########## 5. JSON-LD key-set: CMS-ON vs CMS-OFF (INFORMASIONAL — tidak memengaruhi lulus/gagal) ##########",
+  );
+  if (buildOff.success) {
+    let anyDiff = false;
+    for (const k of keys) {
+      const onKeys = extractJsonLdKeySet(rawOn.get(k.baselineFile) ?? "");
+      const offKeys = extractJsonLdKeySet(rawOff.get(k.baselineFile) ?? "");
+      const onlyOn = [...onKeys].filter((x) => !offKeys.has(x)).sort();
+      const onlyOff = [...offKeys].filter((x) => !onKeys.has(x)).sort();
+      if (onlyOn.length === 0 && onlyOff.length === 0) continue;
+      anyDiff = true;
+      log(`  ${k.urlPath.padEnd(28)} JSON-LD key-set beda:`);
+      for (const key of onlyOn) log(`      + hanya di CMS-ON: ${key}`);
+      for (const key of onlyOff) log(`      - hanya di CMS-OFF: ${key}`);
+    }
+    if (!anyDiff) log("  tidak ada beda key-set JSON-LD di 26 URL manapun.");
+    log(
+      "  (murni informasional — normalizeHtml membuang <script> sebelum perbandingan lulus/gagal di atas, jadi isi JSON-LD TIDAK PERNAH memengaruhi HASIL LULUS/GAGAL, benar atau salah isinya.)",
+    );
+  } else {
+    log("  dilewati — build CMS-OFF gagal, tidak ada rawOff untuk dibandingkan.");
   }
 
   // ---------------------------------------------------------------------

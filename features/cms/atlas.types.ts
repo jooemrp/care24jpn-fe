@@ -4,6 +4,13 @@
 
 export type Locale = "ja" | "en";
 
+/** Site — Error page labels (content type: "site-error-labels") */
+export interface SiteErrorLabels {
+  title?: string; // localizable
+  body?: string; // localizable
+  retry_label?: string; // localizable
+}
+
 /** Legal — Document (content type: "legal-doc") */
 export interface LegalDoc {
   heading?: string; // localizable
@@ -20,6 +27,7 @@ export interface CompanyRow {
 export interface ServiceFlowStep {
   title?: string; // localizable
   body?: string; // localizable
+  number?: string;
 }
 
 /** Use Case — Item (content type: "use-case-item") */
@@ -30,6 +38,7 @@ export interface UseCaseItem {
   detail?: string; // localizable
   highlights?: string; // localizable
   image_alt?: string; // localizable
+  image?: string;
 }
 
 /** Fees — Meta (content type: "fees-meta") */
@@ -37,6 +46,8 @@ export interface FeesMeta {
   column_customer?: string; // localizable
   column_supporter?: string; // localizable
   note?: string; // localizable
+  column_service?: string; // localizable
+  cta_href?: string;
 }
 
 /** Pricing — Meta (content type: "pricing-meta") */
@@ -67,6 +78,13 @@ export interface HomeContact {
   heading?: string; // localizable
   hours?: string; // localizable
   isms?: string; // localizable
+  mics_logo?: string;
+  iso_logo?: string;
+  mics_logo_alt?: string; // localizable
+  iso_logo_alt?: string; // localizable
+  contact_cta_href?: string;
+  lead_in_ornament_start?: string; // localizable
+  lead_in_ornament_end?: string; // localizable
 }
 
 /** Home — Apply banners (content type: "home-apply") */
@@ -76,6 +94,7 @@ export interface HomeApply {
   staff_eyebrow?: string; // localizable
   staff_label?: string; // localizable
   staff_href?: string;
+  user_href?: string;
 }
 
 /** Home — Flow step (content type: "home-flow-step") */
@@ -89,6 +108,7 @@ export interface HomeFlowStep {
 /** Home — Flow header (content type: "home-flow") */
 export interface HomeFlow {
   heading?: string; // localizable
+  step_label?: string; // localizable
 }
 
 /** Home — Example case (content type: "home-example-case") */
@@ -137,6 +157,7 @@ export interface HomeCareCourseCard {
   title?: string; // localizable
   image_alt?: string; // localizable
   items?: string; // localizable
+  image?: string;
 }
 
 /** Home — Care Course fee cell (content type: "home-care-course-fee") */
@@ -183,6 +204,9 @@ export interface HomeHero {
   cta_primary?: string; // localizable
   cta_secondary?: string; // localizable
   image_alt?: string; // localizable
+  image?: string;
+  cta_primary_href?: string;
+  cta_secondary_href?: string;
 }
 
 /** Footer Legal Link (content type: "footer-legal-link") */
@@ -208,6 +232,10 @@ export interface NavItem {
 export interface SiteUiLabels {
   menu_toggle_label?: string; // localizable
   tab_switch_label?: string; // localizable
+  lang_toggle_label?: string; // localizable
+  toc_label?: string; // localizable
+  lang_short_ja?: string;
+  lang_short_en?: string;
 }
 
 /** Site — Shared CTA labels (content type: "site-cta") */
@@ -229,16 +257,19 @@ export interface SiteBrand {
   name?: string;
   logo_alt?: string; // localizable
   tagline?: string; // localizable
+  logo?: string;
 }
 
 /** Page Hero (content type: "page-hero") */
 export interface PageHero {
   heading?: string; // localizable
   body?: string; // localizable
+  cta_href?: string;
 }
 
 /** Maps each content-type slug to its entry interface. */
 export interface AtlasContentTypes {
+  "site-error-labels": SiteErrorLabels;
   "legal-doc": LegalDoc;
   "company-row": CompanyRow;
   "service-flow-step": ServiceFlowStep;

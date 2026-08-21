@@ -1,15 +1,21 @@
 /**
- * Seeds the "site" page (14 blocks: chrome global — brand, contact phone,
- * shared CTA labels, UI chrome labels, 4 nav items, footer, 5 footer legal
- * links) on the live Atlas workspace, sourced verbatim from
- * constants/copy.ts (`brand`, `nav`, `contactPhone`, `cta`, `ui`, `footer`).
+ * Seeds the "site" page (15 blocks: chrome global — brand, contact phone,
+ * shared CTA labels, UI chrome labels, error page labels, 4 nav items,
+ * footer, 5 footer legal links) on the live Atlas workspace, sourced
+ * verbatim from constants/copy.ts (`brand`, `nav`, `contactPhone`, `cta`,
+ * `ui`, `footer`, `errorPage`).
  *
- * Field <-> block-type mapping matches architecture-plan.json#pages[0]
- * ("site") exactly — see that file for the authoritative field list per
- * block type. Block order (position 0..13) is a hard contract:
- * features/cms/site.ts#getSite() destructures the returned blocks
- * positionally, so this script and that loader must never disagree about
- * which index holds which block type.
+ * Field <-> block-type mapping: the 15 blocks below (brand, contact_phone,
+ * cta, ui, error_labels, nav_item x4, footer, footer_legal_link x5) are
+ * seeded with the exact field names declared for each block type in
+ * scripts/atlas/schema.ts — that file is the authoritative field list per
+ * block type, not this one. Block order (position 0..14) is NOT a
+ * contract: per `mapSite`
+ * (features/cms/site-map.ts) and `mapBlocksByType` (features/cms/fields.ts),
+ * blocks are matched by content-type slug, never by array position — a block can move
+ * anywhere in the dashboard's ordering without breaking the reader. The
+ * `position` values below only control display order within a type (e.g.
+ * which nav item renders first), not identity.
  *
  * Idempotent: safe to run twice, via `ensurePublishedPage`
  * (scripts/atlas/lib.ts). The management plane has no GET for pages, so that
@@ -25,7 +31,7 @@
  * Usage (from marketing-web/):
  *   npx tsx scripts/atlas/seed-site.ts
  */
-import { brand, nav, contactPhone, cta, ui, footer } from "../../constants/copy";
+import { brand, nav, contactPhone, cta, ui, footer, errorPage } from "../../constants/copy";
 import {
   requireAtlasEnv,
   createScriptManagementClient,
@@ -46,6 +52,7 @@ const BLOCK_TYPE_SLUGS = [
   "site_contact_phone",
   "site_cta",
   "site_ui_labels",
+  "site_error_labels",
   "nav_item",
   "site_footer",
   "footer_legal_link",
@@ -129,38 +136,88 @@ function buildBlocks(
     }),
   });
 
-  // position 3 — site_ui_labels: menuToggleLabel / tabSwitchLabel
+  // position 3 — site_ui_labels: menuToggleLabel, langToggleLabel.
+  // `tab_switch_label` is a dead field — its only consumer, TabPanel.tsx,
+  // was deleted along with `ui.tabSwitchLabel` in constants/copy.ts (ST-K1).
+  // The Atlas management API has no delete-field endpoint, so the field
+  // stays in the `site_ui_labels` content type forever; this seed writes it
+  // as an explicit empty string (both locales) rather than omitting the
+  // key, to match this file's existing convention for a
+  // retired-but-undeletable field (see the tokushoho branch of the
+  // footer_legal_link loop below, which does the same for `label`) — an
+  // explicit "" tells a dashboard editor the field was deliberately
+  // decommissioned, not forgotten.
+  //
+  // `lang_toggle_label` is new (ST-01/ST-S1): the value is DIRECTIONAL, not
+  // per-language — see the doc comment on constants/copy.ts#ui.langToggleLabel
+  // for why `.ja` holds the English prompt and `.en` holds the Japanese one.
+  //
+  // `toc_label` (ST-FIX4) is a normal localizable label — LegalDocPage.tsx's
+  // table-of-contents heading. `lang_short_ja`/`lang_short_en` (ST-FIX4) are
+  // non-localizable: they are LangToggle.tsx's two always-visible option
+  // abbreviations ("JP"/"EN"), not a message translated per `lang` — see
+  // constants/copy.ts#ui.langShortJa for why they carry one value each,
+  // written into the JA `data` dict only.
   blocks.push({
     block_type_id: blockTypeIds.site_ui_labels,
     parent_id: null,
     position: 3,
     data: {
       menu_toggle_label: ui.menuToggleLabel.ja,
-      tab_switch_label: ui.tabSwitchLabel.ja,
+      tab_switch_label: "",
+      lang_toggle_label: ui.langToggleLabel.ja,
+      toc_label: ui.tocLabel.ja,
+      lang_short_ja: ui.langShortJa,
+      lang_short_en: ui.langShortEn,
     },
     translations: en({
       menu_toggle_label: ui.menuToggleLabel.en,
-      tab_switch_label: ui.tabSwitchLabel.en,
+      tab_switch_label: "",
+      lang_toggle_label: ui.langToggleLabel.en,
+      toc_label: ui.tocLabel.en,
     }),
   });
 
-  // positions 4..7 — nav_item x4, in array order (href is the scroll-spy /
+  // position 4 — site_error_labels: title / body / retry_label.
+  //
+  // F-1 audit fix: `app/[lang]/error.tsx`'s title/body/retry-button text,
+  // previously hardcoded per-lang inline in the JSX. Verbatim from
+  // constants/copy.ts#errorPage, which is itself verbatim from the strings
+  // that were live in error.tsx before this task — value-preserving, not
+  // new copy.
+  blocks.push({
+    block_type_id: blockTypeIds.site_error_labels,
+    parent_id: null,
+    position: 4,
+    data: {
+      title: errorPage.title.ja,
+      body: errorPage.body.ja,
+      retry_label: errorPage.retryLabel.ja,
+    },
+    translations: en({
+      title: errorPage.title.en,
+      body: errorPage.body.en,
+      retry_label: errorPage.retryLabel.en,
+    }),
+  });
+
+  // positions 5..8 — nav_item x4, in array order (href is the scroll-spy /
   // routing contract — non-localizable, JA/EN share the same value).
   nav.forEach((item, i) => {
     blocks.push({
       block_type_id: blockTypeIds.nav_item,
       parent_id: null,
-      position: 4 + i,
+      position: 5 + i,
       data: { href: item.href, label: item.label.ja },
       translations: en({ label: item.label.en }),
     });
   });
 
-  // position 8 — site_footer: description / legal
+  // position 9 — site_footer: description / legal
   blocks.push({
     block_type_id: blockTypeIds.site_footer,
     parent_id: null,
-    position: 8,
+    position: 9,
     data: {
       description: footer.description.ja,
       legal: footer.legal.ja,
@@ -168,7 +225,7 @@ function buildBlocks(
     translations: en({ description: footer.description.en, legal: footer.legal.en }),
   });
 
-  // positions 9..13 — footer_legal_link x5. The tokushoho entry (index 2,
+  // positions 10..14 — footer_legal_link x5. The tokushoho entry (index 2,
   // href "/tokushoho") carries use_legal_heading="tokushoho" and an empty
   // label in both locales — matching the `{ href, key: "tokushoho" }` union
   // member in constants/copy.ts#footer.legalLinks with no `label` at all.
@@ -177,7 +234,7 @@ function buildBlocks(
     blocks.push({
       block_type_id: blockTypeIds.footer_legal_link,
       parent_id: null,
-      position: 9 + i,
+      position: 10 + i,
       data: {
         href: link.href,
         label: isTokushoho ? "" : link.label.ja,

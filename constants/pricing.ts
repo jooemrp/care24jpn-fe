@@ -9,10 +9,25 @@
  */
 
 import type { Bilingual } from "./copy";
+import type { Lang } from "@/features/lang/i18n";
 
-/** Format an integer amount of yen as e.g. `¥3,500`. */
-export function formatYen(amount: number): string {
-  return `¥${amount.toLocaleString("ja-JP")}`;
+/**
+ * Format an integer amount of yen for display — `¥3,500` on `ja`, `JPY 3,500`
+ * on `en` (client decision, Aug 2026: the EN site reads by English currency
+ * convention, not by mirroring the JA symbol).
+ *
+ * The digit grouping itself is locale-aware in its plumbing only: for every
+ * amount this site renders, `ja-JP` and `en-US` group digits identically (no
+ * amount here reaches the thousand-separator edge cases where the two
+ * locales diverge), so only the currency marker moves between the two
+ * branches, never the digits. Do NOT switch the `ja` branch to
+ * `Intl.NumberFormat(..., { style: "currency", currency: "JPY" })` —
+ * `ja-JP` emits the full-width ￥ (U+FFE5), not the halfwidth ¥ this site has
+ * always used, and would change every price on every JA page.
+ */
+export function formatYen(amount: number, lang: Lang): string {
+  const grouped = amount.toLocaleString(lang === "ja" ? "ja-JP" : "en-US");
+  return lang === "ja" ? `¥${grouped}` : `JPY ${grouped}`;
 }
 
 /**
@@ -119,71 +134,16 @@ export type CourseRateRow = {
   price: number;
 };
 
+/**
+ * `CourseRates`/`CourseRateRow` are still exported: `features/cms/rates.ts`
+ * imports `CourseRates` for its `/pricing` projection (`getCourseRates()`).
+ * The module-level fallback ARRAY that used to live here was dead code —
+ * `getCourseRates()` derives its fallback from `supporterRates` above via
+ * `features/cms/rates.ts`'s `FALLBACK_TABLE`, never from a second literal —
+ * so it was deleted (ST-G2). Do not re-add a `courseRates` value here.
+ */
 export type CourseRates = {
   key: string;
   name: Bilingual;
   rows: CourseRateRow[];
 };
-
-/**
- * User-facing rate tables shown on /pricing — the customer column of the
- * client's Aug 2026 pricing sheet (per hour, tax included).
- */
-export const courseRates: CourseRates[] = [
-  {
-    key: "care",
-    name: { ja: "介護コース", en: "Caregiving course" },
-    rows: [
-      {
-        key: "basic-day",
-        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
-        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
-        price: CAREGIVING_BASIC_DAY_CUSTOMER_RATE,
-      },
-      {
-        key: "basic-night",
-        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
-        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
-        price: 4488,
-      },
-      {
-        key: "nomination",
-        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
-        price: 330,
-      },
-      {
-        key: "transport",
-        label: { ja: "交通費", en: "Transportation expenses" },
-        price: 990,
-      },
-    ],
-  },
-  {
-    key: "nursing",
-    name: { ja: "看護コース", en: "Nursing course" },
-    rows: [
-      {
-        key: "basic-day",
-        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
-        detail: { ja: "9時～18時", en: "9:00 AM – 6:00 PM" },
-        price: 6600,
-      },
-      {
-        key: "basic-night",
-        label: { ja: "基本料金（1時間あたり）", en: "Basic rate (per hour)" },
-        detail: { ja: "18時～9時", en: "6:00 PM – 9:00 AM" },
-        price: 7920,
-      },
-      {
-        key: "nomination",
-        label: { ja: "指名料（1時間あたり）", en: "Nomination fee (per hour)" },
-        price: 330,
-      },
-      {
-        key: "transport",
-        label: { ja: "交通費", en: "Transportation expenses" },
-        price: 990,
-      },
-    ],
-  },
-];

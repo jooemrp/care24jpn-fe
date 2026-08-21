@@ -37,10 +37,26 @@ import type * as MergeModule from "./merge.ts";
  * resolution (TS5097) while Node's loader still gets the extension it needs. */
 const mergePath = "./merge" + ".ts";
 
+/** Captures `console.warn` for the duration of `run` — same helper shape as
+ * `fields.test.ts#captureWarnings`, duplicated rather than imported so this
+ * file keeps importing nothing but `./merge.ts` and `./types`. */
+async function captureWarnings(run: () => void): Promise<string[]> {
+  const warnings: string[] = [];
+  const original = console.warn;
+  console.warn = (...args: unknown[]) => {
+    warnings.push(args.map(String).join(" "));
+  };
+  try {
+    run();
+  } finally {
+    console.warn = original;
+  }
+  return warnings;
+}
+
 async function main() {
-  const { parseData, mergeBlockData, findEnTranslationData, shapePageBlocks } = (await import(
-    mergePath
-  )) as typeof MergeModule;
+  const { parseData, mergeBlockData, findEnTranslationData, shapePageBlocks, shapePageMeta } =
+    (await import(mergePath)) as typeof MergeModule;
 
   // -------------------------------------------------------------------------
   // parseData — one corrupt block must never take down a whole page.
@@ -177,6 +193,71 @@ async function main() {
     assert.deepEqual(mergeBlockData({ href: "/fees" }, { href: "/fees" }), {
       href: { ja: "/fees", en: "/fees" },
     });
+  });
+
+  // -------------------------------------------------------------------------
+  // J2: a block with NO EN translation row at all must warn once — this is
+  // the exact shape of the legal-document regression flagged during review:
+  // a whole page silently serving Japanese content on the English site,
+  // with nothing in the logs to say so ("hardest to detect" because it
+  // looks like a correctly-rendered page, not a missing one).
+  // -------------------------------------------------------------------------
+
+  test("mergeBlockData warns once when a whole block has no EN translation at all", async () => {
+    let first: unknown;
+    let second: unknown;
+    const warnings = await captureWarnings(() => {
+      first = mergeBlockData(
+        { heading: "特定商取引法", body: "本文です" },
+        {},
+        "legal-tokushoho/legal-doc",
+      );
+      // Same context again -> still exactly one warning.
+      second = mergeBlockData(
+        { heading: "特定商取引法", body: "本文です" },
+        {},
+        "legal-tokushoho/legal-doc",
+      );
+    });
+
+    assert.deepEqual(first, {
+      heading: { ja: "特定商取引法", en: "特定商取引法" },
+      body: { ja: "本文です", en: "本文です" },
+    });
+    assert.deepEqual(second, first);
+    assert.equal(warnings.length, 1, "one warning per page+block-type per process");
+    assert.match(warnings[0], /\[cms:unexpected-content\]/);
+    assert.match(warnings[0], /legal-tokushoho\/legal-doc/);
+    assert.match(warnings[0], /"heading"/);
+    assert.match(warnings[0], /"body"/);
+  });
+
+  test("mergeBlockData stays silent without a context (backward compatible with scripts/atlas/drift-check.ts)", async () => {
+    const warnings = await captureWarnings(() => {
+      mergeBlockData({ heading: "運営会社" }, {});
+    });
+    assert.deepEqual(warnings, []);
+  });
+
+  test("mergeBlockData stays silent when the block has SOME EN data — a non-localizable field mirroring alongside a translated one must not warn", async () => {
+    // `href` never gets a translation row by design; `label` does. If the
+    // block-level "enData is entirely empty" guard were dropped for a
+    // per-field check instead, this case would incorrectly warn on `href`.
+    const warnings = await captureWarnings(() => {
+      mergeBlockData(
+        { href: "/pricing", label: "料金" },
+        { label: "Pricing" },
+        "site/nav-item",
+      );
+    });
+    assert.deepEqual(warnings, []);
+  });
+
+  test("mergeBlockData stays silent when there is nothing meaningful to mirror (all ja fields empty)", async () => {
+    const warnings = await captureWarnings(() => {
+      mergeBlockData({ note: "" }, {}, "home/apply");
+    });
+    assert.deepEqual(warnings, []);
   });
 
   test("mergeBlockData: inputs are not mutated", () => {
@@ -325,6 +406,31 @@ async function main() {
     assert.deepEqual(blocks[0].data, {});
   });
 
+  test("shapePageBlocks: threads slug/block-type into mergeBlockData's J2 warning end-to-end", async () => {
+    const warnings = await captureWarnings(() => {
+      // livePage's page-hero block (b1) has an EN translation row with an
+      // empty body, so it is NOT the untranslated case — build a page whose
+      // block genuinely has zero translation rows instead.
+      shapePageBlocks({
+        page: { id: "p1", slug: "company", status: "published" },
+        blocks: [
+          {
+            id: "b9",
+            block_type_id: "u",
+            type: "company-row",
+            parent_id: null,
+            position: 0,
+            data: '{"label":"所在地","value":"東京都"}',
+          },
+        ],
+        block_translations: [],
+      });
+    });
+
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /company\/company-row/);
+  });
+
   test("shapePageBlocks: a page with zero blocks is [] — a fetch that worked", () => {
     // Distinct from `null`. An empty array means Atlas answered with a page
     // that has no blocks, which loaders report as unexpected CONTENT; `null`
@@ -343,6 +449,258 @@ async function main() {
       shapePageBlocks({ blocks: "nope" as unknown as RawPageResponse["blocks"] }),
       null,
     );
+  });
+
+  // -------------------------------------------------------------------------
+  // shapePageMeta — the parallel SEO read path. `page.seo` is a real OBJECT
+  // (never JSON.parse it). `seo_translations[].seo` is handled for BOTH
+  // shapes it can arrive in, per `RawSeoTranslation`'s doc comment
+  // (types.ts:76-94, corrected after live verification for ST-03): the
+  // VERIFIED LIVE wire shape is a real OBJECT (`home`, `company`,
+  // `use-case` all returned it that way) — that is the branch every
+  // production request actually runs, and the block below tests it
+  // directly rather than only through a `JSON.stringify`'d proxy. A JSON
+  // STRING is also accepted (documented, but never observed live) and
+  // parsed inside a try/catch as a defensive fallback, not the primary
+  // path. Do not collapse this back to "always a string" — that is the
+  // exact assumption that shipped `getPageMeta("use-case").title.en`
+  // silently mirroring `ja` before ST-03.
+  // -------------------------------------------------------------------------
+
+  test("shapePageMeta: no page (whole response missing) is null, so the caller falls back", () => {
+    assert.equal(shapePageMeta(null), null);
+    assert.equal(shapePageMeta(undefined), null);
+    assert.equal(shapePageMeta({ blocks: [] }), null);
+  });
+
+  test("shapePageMeta: a page with no seo object yields all-undefined fields, not null", () => {
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published" },
+      blocks: [],
+    });
+    assert.ok(meta);
+    assert.equal(meta.title, undefined);
+    assert.equal(meta.description, undefined);
+    assert.equal(meta.ogImage, undefined);
+    assert.equal(meta.updatedAt, undefined);
+  });
+
+  test("shapePageMeta: ja-only (no EN translation row at all) surfaces the CMS ja value; en still falls through, never mirrors ja", () => {
+    // The pricing/fees/rates regression this guards against has two halves,
+    // and they pull in opposite directions:
+    //  1. Atlas has no `seo_translations` "en" row for these slugs at all.
+    //     A missing EN row means EN is UNKNOWN, not "same as ja" — mirroring
+    //     ja into en is what made `/en/pricing` render a Japanese `<title>`.
+    //     So `meta.title.en` must be "" here, never the ja text, and
+    //     `pageMetadata()`'s truthy check then falls through to
+    //     `constants/seo.ts`'s real English copy.
+    //  2. `pricing`/`fees`/`rates` DO have a real, CMS-authored ja title —
+    //     dropping the WHOLE field to `undefined` whenever en is missing
+    //     (the original fix for half 1) threw this away too, so an editor
+    //     changing the ja title in the dashboard saw no effect on the
+    //     rendered ja page. `pageMetadata()` resolves title/description PER
+    //     LOCALE (`cmsMeta.title?.[lang]`), so the ja side must survive on
+    //     its own.
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "pricing",
+        status: "published",
+        seo: { title: "ご利用者様向け料金" },
+      },
+      blocks: [],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用者様向け料金", en: "" });
+  });
+
+  test("shapePageMeta: a page with no seo content at all (ja empty, no EN row) still collapses to undefined", () => {
+    // The other half of the ja-only case: if ja is ALSO empty/absent, there
+    // is nothing CMS-authored to surface, so the field collapses the same
+    // way it always has rather than emitting a useless {ja:"",en:""}.
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published", seo: { title: "" } },
+      blocks: [],
+    });
+    assert.ok(meta);
+    assert.equal(meta.title, undefined);
+  });
+
+  test("shapePageMeta: ja + en overlay from seo_translations (STRING shape — documented but never observed live)", () => {
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン", description: "介護サービスの利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [
+        { locale: "en", seo: '{"title":"Use cases","description":"Care service use cases"}' },
+      ],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "Use cases" });
+    assert.deepEqual(meta.description, {
+      ja: "介護サービスの利用シーン",
+      en: "Care service use cases",
+    });
+  });
+
+  test("shapePageMeta: ja + en overlay from seo_translations (OBJECT shape — the verified live wire shape)", () => {
+    // Same scenario as the STRING-shape test above, but `seo` arrives as a
+    // real object, exactly as `home`/`company`/`use-case` do on the live
+    // workspace. This is the branch every production request actually
+    // exercises, and until this test existed it had zero coverage.
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン", description: "介護サービスの利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [
+        {
+          locale: "en",
+          seo: { title: "Use cases", description: "Care service use cases" },
+        },
+      ],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "Use cases" });
+    assert.deepEqual(meta.description, {
+      ja: "介護サービスの利用シーン",
+      en: "Care service use cases",
+    });
+  });
+
+  test("shapePageMeta: an en-only field (empty ja) is not dropped (STRING shape)", () => {
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published", seo: { og_image: "" } },
+      blocks: [],
+      seo_translations: [
+        { locale: "en", seo: '{"og_image":"https://example.com/og-en.png"}' },
+      ],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.ogImage, { ja: "", en: "https://example.com/og-en.png" });
+  });
+
+  test("shapePageMeta: an en-only field (empty ja) is not dropped (OBJECT shape)", () => {
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published", seo: { og_image: "" } },
+      blocks: [],
+      seo_translations: [
+        { locale: "en", seo: { og_image: "https://example.com/og-en.png" } },
+      ],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.ogImage, { ja: "", en: "https://example.com/og-en.png" });
+  });
+
+  test("shapePageMeta: empty in BOTH locales collapses to undefined, never {ja:'',en:''} (STRING shape)", () => {
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published", seo: { og_image: "" } },
+      blocks: [],
+      seo_translations: [{ locale: "en", seo: '{"og_image":""}' }],
+    });
+    assert.ok(meta);
+    assert.equal(meta.ogImage, undefined);
+    assert.equal(Boolean(meta.ogImage), false);
+  });
+
+  test("shapePageMeta: empty in BOTH locales collapses to undefined, never {ja:'',en:''} (OBJECT shape)", () => {
+    const meta = shapePageMeta({
+      page: { id: "p1", slug: "use-case", status: "published", seo: { og_image: "" } },
+      blocks: [],
+      seo_translations: [{ locale: "en", seo: { og_image: "" } }],
+    });
+    assert.ok(meta);
+    assert.equal(meta.ogImage, undefined);
+    assert.equal(Boolean(meta.ogImage), false);
+  });
+
+  test("shapePageMeta: malformed seo_translations JSON does not throw, EN is unknown so it stays empty (ja still surfaces, per the per-locale rule above)", () => {
+    // A row exists but can't be parsed — `findEnSeoTranslation` degrades to
+    // `{}`, same as "no row at all". We genuinely don't know the EN value,
+    // so this must NOT mirror ja into en; the caller falls back to
+    // constants for en. ja is still CMS-authored and real, so it surfaces.
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [{ locale: "en", seo: "{not json" }],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "" });
+  });
+
+  test("shapePageMeta: an ARRAY value for seo_translations[].seo (the one object-shaped edge case findEnSeoTranslation guards) degrades to {}, EN stays empty", () => {
+    // findEnSeoTranslation: `Array.isArray(match.seo) ? {} : match.seo` —
+    // never executed by any other test in this file until now.
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [{ locale: "en", seo: [] as unknown as Record<string, unknown> }],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "" });
+  });
+
+  test("shapePageMeta: a non-en seo_translations locale is not used as the EN overlay (STRING shape)", () => {
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [{ locale: "id", seo: '{"title":"Skenario penggunaan"}' }],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "" });
+  });
+
+  test("shapePageMeta: a non-en seo_translations locale is not used as the EN overlay (OBJECT shape)", () => {
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { title: "ご利用シーン" },
+      },
+      blocks: [],
+      seo_translations: [{ locale: "id", seo: { title: "Skenario penggunaan" } }],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.title, { ja: "ご利用シーン", en: "" });
+  });
+
+  test("shapePageMeta: og_image with no EN row surfaces the ja value, en stays empty; updatedAt is still forwarded", () => {
+    const meta = shapePageMeta({
+      page: {
+        id: "p1",
+        slug: "use-case",
+        status: "published",
+        seo: { og_image: "https://example.com/og.png" },
+        updated_at: "2026-08-20T08:57:44Z",
+      },
+      blocks: [],
+    });
+    assert.ok(meta);
+    assert.deepEqual(meta.ogImage, { ja: "https://example.com/og.png", en: "" });
+    assert.equal(meta.updatedAt, "2026-08-20T08:57:44Z");
   });
 }
 

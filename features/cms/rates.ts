@@ -31,8 +31,7 @@ type FeesCopy = typeof fallbackFees;
 // RATE` (constants/pricing.ts:23) used to guarantee courseRates[0].rows[0]
 // .price === supporterRates[0].rows[0].customer by being the same TS
 // constant read twice; now it's guaranteed structurally, because there is
-// only ONE `customer_price` field per row and BOTH projections below read it
-// — see plan-notes.md#4.
+// only ONE `customer_price` field per row and BOTH projections below read it.
 //
 // Nothing here depends on block POSITION any more. Courses and rows are told
 // apart by block type, and each row is attached to its course by the
@@ -238,10 +237,12 @@ function mapFeesCopy(blocks: CmsBlock[]): FeesCopy | null {
       body: pickBi(heroBlock.data, "body", fallbackFees.hero.body),
     },
     columns: {
+      service: pickBi(metaBlock.data, "column_service", fallbackFees.columns.service),
       customer: pickBi(metaBlock.data, "column_customer", fallbackFees.columns.customer),
       supporter: pickBi(metaBlock.data, "column_supporter", fallbackFees.columns.supporter),
     },
     note: pickBi(metaBlock.data, "note", fallbackFees.note),
+    ctaHref: pickJa(metaBlock.data, "cta_href", fallbackFees.ctaHref),
   };
 }
 

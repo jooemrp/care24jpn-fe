@@ -2,12 +2,13 @@ import "server-only";
 
 import { cache } from "react";
 import { legalDocs, type LegalDoc } from "@/constants/legal";
-import { pick } from "./fields";
-import { getPageBlocks } from "./client";
+import { getPageBlocks, reportUnexpectedContent } from "./client";
 import { htmlToBlocks } from "./legal-html";
+import { selectLegalFields, type RawLegalFields } from "./legal-select";
 
-/** Atlas page slug -> key into constants/legal.ts#legalDocs. Matches
- * architecture-plan.json#pages[].slug for the 7 "legal-*" pages. */
+/** Atlas page slug -> key into constants/legal.ts#legalDocs. One entry per
+ * "legal-*" page seeded in Atlas (see scripts/atlas/seed-legal.ts) — the 7
+ * keys below are exhaustive, not a subset. */
 const LEGAL_SLUG_TO_KEY = {
   "legal-privacy": "privacy",
   "legal-tokushoho": "tokushoho",
@@ -20,16 +21,15 @@ const LEGAL_SLUG_TO_KEY = {
 
 export type LegalSlug = keyof typeof LEGAL_SLUG_TO_KEY;
 
-/** The two localizable fields the `legal-doc` block carries, still in their
- * stored form: `heading` ready to render, `body` as the raw richtext HTML
- * string per locale (NOT yet parsed into `LegalBlock[]`). */
-type RawLegalFields = { heading: LegalDoc["heading"]; body: { ja: string; en: string } };
-
 /**
  * Everything both readers below need from Atlas, and nothing more: one
- * `getPageBlocks` call plus the field-shape guards. Deliberately stops
- * BEFORE `htmlToBlocks` so the heading-only reader never pays for parsing a
- * body it is going to throw away.
+ * `getPageBlocks` call plus `./legal-select`'s pure field-shape guards
+ * (extracted there so `pages-map.test.ts`'s sibling, `legal-select.test.ts`,
+ * can import and exercise them for real — `legal.ts` itself opens with
+ * `import "server-only"`, which cannot be loaded outside Next's bundler; see
+ * `./legal-select`'s header). Deliberately stops BEFORE `htmlToBlocks` so the
+ * heading-only reader never pays for parsing a body it is going to throw
+ * away.
  *
  * `getPageBlocks` is `cache()`-ed, so a page that calls both readers for the
  * same slug (every `legal-*` route does — the route renders the document and
@@ -44,24 +44,12 @@ async function readLegalFields(
   caller: "getLegalDoc" | "getLegalHeading",
 ): Promise<RawLegalFields | null> {
   const blocks = await getPageBlocks(slug);
-  const block = blocks?.[0];
-  if (!block) {
+  if (!blocks) {
     console.warn(`[cms] ${caller}("${slug}"): no page/block found, using constants fallback`);
     return null;
   }
 
-  // Same guard as every other loader (`fields.ts#pick`) rather than a raw
-  // cast: a `heading`/`body` that came back as something other than a
-  // `{ ja: string; en: string }` pair used to sail through the cast and only
-  // fail later, inside `htmlToBlocks`, or render as "[object Object]".
-  const heading = pick(block.data, "heading");
-  const body = pick(block.data, "body");
-  if (!heading || !body) {
-    console.warn(`[cms] ${caller}("${slug}"): missing heading/body field, using constants fallback`);
-    return null;
-  }
-
-  return { heading, body };
+  return selectLegalFields(slug, blocks, caller, reportUnexpectedContent);
 }
 
 /**
@@ -70,9 +58,9 @@ async function readLegalFields(
  * `LegalDocPage.tsx` / `TableOfContents.tsx` never need to know whether the
  * document came from Atlas or the fallback constant.
  *
- * `body` is a single richtext field per locale (see architecture-plan.json —
- * JA and EN block structures are not parallel, so one Atlas block cannot map
- * to one `LegalBlock`). `htmlToBlocks` is the exact inverse of the
+ * `body` is a single richtext field per locale — JA and EN block structures
+ * are not parallel, so one Atlas block cannot map to one `LegalBlock`.
+ * `htmlToBlocks` is the exact inverse of the
  * `blocksToHtml` serializer `scripts/atlas/seed-legal.ts` used to write it,
  * so a successful parse reproduces the original block order — which is what
  * keeps `LegalDocPage`'s index-based `sec-${i}` TOC anchors correct.

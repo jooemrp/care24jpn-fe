@@ -10,12 +10,25 @@ import { localizeHref, type Lang } from "@/features/lang/i18n";
  * Stays a `<button>` (not a `<Link>`) so it can compute the sibling-language
  * path from the *current* pathname at click time via `localizeHref`, rather
  * than baking a static href.
+ *
+ * `label`, `shortJa` and `shortEn` are pre-resolved by the Server Component
+ * caller — Navbar/Footer hold `site` (CMS-backed, constants fallback), this
+ * Client Component does not fetch it itself. `shortJa`/`shortEn` are not run
+ * through `t()`: they are the two options' own abbreviations (both shown at
+ * once, one bold depending on `lang`), not a message translated per
+ * language — see `constants/copy.ts#ui.langShortJa` for why.
  */
 export default function LangToggle({
   lang,
+  label,
+  shortJa,
+  shortEn,
   className,
 }: {
   lang: Lang;
+  label: string;
+  shortJa: string;
+  shortEn: string;
   className?: string;
 }) {
   const pathname = usePathname();
@@ -38,14 +51,14 @@ export default function LangToggle({
       className={`flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary${
         className ? ` ${className}` : ""
       }`}
-      aria-label={lang === "ja" ? "Switch to English" : "日本語に切り替える"}
+      aria-label={label}
     >
       <span className={lang === "en" ? "font-bold text-primary" : "text-muted"}>
-        EN
+        {shortEn}
       </span>
       <span className="text-border">/</span>
       <span className={lang === "ja" ? "font-bold text-primary" : "text-muted"}>
-        JP
+        {shortJa}
       </span>
     </button>
   );

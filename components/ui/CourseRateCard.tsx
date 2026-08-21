@@ -63,7 +63,7 @@ export default function CourseRateCard({ course, lang, tone }: CourseRateCardPro
                   accent ? "text-accent" : "text-primary"
                 }`}
               >
-                {formatYen(row.price)}
+                {formatYen(row.price, lang)}
               </p>
             </div>
           ))}
@@ -75,7 +75,7 @@ export default function CourseRateCard({ course, lang, tone }: CourseRateCardPro
               <div key={row.key} className="flex items-baseline justify-between gap-4 py-4">
                 <dt className="text-lg text-body">{t(row.label, lang)}</dt>
                 <dd className="text-lg font-bold tabular-nums text-heading">
-                  {formatYen(row.price)}
+                  {formatYen(row.price, lang)}
                 </dd>
               </div>
             ))}

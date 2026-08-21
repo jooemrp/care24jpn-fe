@@ -74,16 +74,79 @@ export function pick(data: CmsBlock["data"], key: string): Bilingual | undefined
   return candidate as unknown as Bilingual;
 }
 
+/**
+ * Warns once when `pickJa`/`pickBi` fall back to their constants value
+ * because the field arrived empty in both locales (or malformed — `pick`
+ * cannot tell the two apart, same limitation it has always had). Silent when
+ * `fallbackPreview` is itself empty: nothing would visibly change, so there
+ * is nothing to flag (this is what keeps the very common `?? ""` array-index
+ * fallbacks in home.ts/pages.ts/rates.ts quiet).
+ *
+ * J1: editors CANNOT clear one of these fields — clearing it in the
+ * dashboard does not blank the site, it silently resurrects this old
+ * build-time text, and there was previously no signal anywhere that this
+ * happened. Two options existed:
+ *   (a) extend `pickBiOptional`'s "empty is respected" semantics here too, or
+ *   (b) keep today's fallback-to-constants default, but make the previously
+ *       totally silent case observable.
+ * Chose (b). `pickBiOptional` exists for exactly two fields
+ * (`home_care_course_fee.note`, `rate_row.detail`) whose ABSENCE is read as
+ * meaningful content by a specific call site (`fee.note &&` /
+ * `row.detail`'s truthiness splits two render branches) — for those, "empty"
+ * is a valid state the UI already understands. Every other field this module
+ * exists for is required, load-bearing text (headings, CTAs, labels): an
+ * accidentally emptied hero heading rendering as a blank hero is a worse,
+ * more silent failure than rendering last-known-good text with a log line
+ * attached — and turning (a) into the default would additionally change
+ * runtime behaviour project-wide (`home.tsx`/`site.ts`/`pages.ts`/`rates.ts`,
+ * none of which are this task's to touch — see the ST-FIX5 scope note) for a
+ * problem that, as of writing, has never actually occurred: no live field is
+ * empty today, so this warning does not fire against the live workspace and
+ * the rendered HTML is unchanged. `context` is OPTIONAL (mirrors
+ * `pickNumber`/`pickImage`'s required `context`, but required here would mean
+ * threading a slug/block-type string through every call site in
+ * features/cms/home.ts, site.ts, pages.ts, rates.ts — none of which this task
+ * may edit); omitted, the warning still fires but dedupes only by `key`, so
+ * two unrelated blocks sharing a field name (e.g. "heading") share one slot.
+ */
+function warnTextFallback(key: string, fallbackPreview: string, context?: string): void {
+  if (!fallbackPreview) return;
+  const label = context ?? key;
+  warnOnce(
+    `text-fallback:${label}:${key}`,
+    `[cms:unexpected-content] ${label}: field "${key}" arrived empty in both locales (or was not a usable ja/en pair) — using the constants/*.ts value ${JSON.stringify(fallbackPreview)} instead. This is indistinguishable from an editor CLEARING the field in the dashboard: clearing it does not make the site blank, it silently keeps showing this old text. Contrast with pickBiOptional's fields (fee.note, rate_row.detail), where an empty value IS respected. This warning only prints once per field per process.`,
+  );
+}
+
 /** Non-localizable string field — reads `.ja` (== `.en`), falls back to the
- * constants value if the block came back empty in both locales. */
-export function pickJa(data: CmsBlock["data"], key: string, fallback: string): string {
-  return pick(data, key)?.ja || fallback;
+ * constants value if the block came back empty in both locales. `context`
+ * (optional) labels the fallback warning above — see its doc comment. */
+export function pickJa(
+  data: CmsBlock["data"],
+  key: string,
+  fallback: string,
+  context?: string,
+): string {
+  const value = pick(data, key)?.ja;
+  if (value) return value;
+  warnTextFallback(key, fallback, context);
+  return fallback;
 }
 
 /** Localizable field — falls back to the constants `Bilingual` wholesale if
- * the block came back empty in both locales (never a stray `{ja:"",en:""}`). */
-export function pickBi(data: CmsBlock["data"], key: string, fallback: Bilingual): Bilingual {
-  return pick(data, key) ?? fallback;
+ * the block came back empty in both locales (never a stray `{ja:"",en:""}`).
+ * `context` (optional) labels the fallback warning above — see its doc
+ * comment. */
+export function pickBi(
+  data: CmsBlock["data"],
+  key: string,
+  fallback: Bilingual,
+  context?: string,
+): Bilingual {
+  const value = pick(data, key);
+  if (value) return value;
+  warnTextFallback(key, fallback.ja || fallback.en, context);
+  return fallback;
 }
 
 /**
@@ -93,6 +156,11 @@ export function pickBi(data: CmsBlock["data"], key: string, fallback: Bilingual)
  * a `<dd>` only `{fee.note && ...}` and `CourseRateCard.tsx` splits "timed"
  * rows from "extras" by `row.detail`'s truthiness, so reintroducing a
  * constants fallback would resurrect a value the editor deliberately cleared.
+ *
+ * This is the ONE place in this file where an editor-cleared field is
+ * respected instead of resurrecting constants text — see `warnTextFallback`'s
+ * doc comment (J1) for why `pickJa`/`pickBi` do not extend this same
+ * treatment to every field.
  */
 export function pickBiOptional(data: CmsBlock["data"], key: string): Bilingual | undefined {
   return pick(data, key);

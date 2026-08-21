@@ -3,8 +3,8 @@
  * from `constants/copy.ts#home` (single source of truth, never retyped by
  * hand) onto the live Atlas workspace, then publishes it.
  *
- * Order and field names follow architecture-plan.json#pages[slug=home]
- * exactly: home_hero, home_values, home_problems, home_nursing_course,
+ * Order and field names (matching the block types declared in
+ * scripts/atlas/schema.ts): home_hero, home_values, home_problems, home_nursing_course,
  * home_nursing_feature x6, home_care_course, home_care_course_fee x3,
  * home_care_course_card x4, home_examples, home_example_case x3, home_flow,
  * home_flow_step x4, home_apply, home_contact.
@@ -173,7 +173,15 @@ async function main(): Promise<void> {
     // would be overwritten with an id the first time an editor swaps the
     // picture. Non-localizable — one file for both locales, only the alt text
     // is translated — so it goes into the JA `data` dict and never into `en`.
-    const ja = { ...split.ja, image: mediaId(media, "hero.webp") };
+    // `cta_primary_href`/`cta_secondary_href` (ST-FIX4) are relative paths,
+    // also non-localizable — `localizeHref()` prefixes the language at render
+    // time same as the hardcoded literals they replace.
+    const ja = {
+      ...split.ja,
+      image: mediaId(media, "hero.webp"),
+      cta_primary_href: home.hero.ctaPrimaryHref,
+      cta_secondary_href: home.hero.ctaSecondaryHref,
+    };
     blocks.push(makeBlock(typeIds, "home_hero", next(), ja, split.en));
   }
 
@@ -294,18 +302,27 @@ async function main(): Promise<void> {
 
   // 22: home_flow
   {
-    const split = splitBilingual({ heading: home.flow.heading });
+    const split = splitBilingual({ heading: home.flow.heading, step_label: home.flow.stepLabel });
     blocks.push(makeBlock(typeIds, "home_flow", next(), split.ja, split.en));
   }
 
-  // 23-26: home_flow_step (4 steps) — number and icon are non-localizable
+  // 23-26: home_flow_step (4 steps) — number is non-localizable.
+  // `icon` is retired: the rail in app/[lang]/page.tsx renders each step as a
+  // numbered node on a dashed line — the number IS the visual, there is no
+  // icon slot. The Atlas management API has no delete-field endpoint, so the
+  // `select` field stays in the `home_flow_step` content type forever; this
+  // seed writes it as an explicit empty string rather than `step.icon`'s
+  // real value, matching this repo's convention for a retired-but-
+  // undeletable field (see `tab_switch_label` in seed-site.ts) — an explicit
+  // "" tells a dashboard editor the control was deliberately decommissioned,
+  // not forgotten. `step.icon` itself stays in constants/copy.ts untouched.
   for (const step of home.flow.steps) {
     const split = splitBilingual({ title: step.title, body: step.body });
-    const ja = { number: step.number, icon: step.icon, ...split.ja };
+    const ja = { number: step.number, icon: "", ...split.ja };
     blocks.push(makeBlock(typeIds, "home_flow_step", next(), ja, split.en));
   }
 
-  // 27: home_apply — staff_href is non-localizable
+  // 27: home_apply — staff_href and user_href are non-localizable
   {
     const split = splitBilingual({
       user_eyebrow: home.apply.user.eyebrow,
@@ -313,7 +330,11 @@ async function main(): Promise<void> {
       staff_eyebrow: home.apply.staff.eyebrow,
       staff_label: home.apply.staff.label,
     });
-    const ja = { ...split.ja, staff_href: home.apply.staff.href };
+    const ja = {
+      ...split.ja,
+      staff_href: home.apply.staff.href,
+      user_href: home.apply.user.href,
+    };
     blocks.push(makeBlock(typeIds, "home_apply", next(), ja, split.en));
   }
 
@@ -325,17 +346,30 @@ async function main(): Promise<void> {
       heading: home.contact.heading,
       hours: home.contact.hours,
       isms: home.contact.isms,
+      lead_in_ornament_start: home.contact.leadInOrnamentStart,
+      lead_in_ornament_end: home.contact.leadInOrnamentEnd,
     });
-    // The two certification marks rendered next to the ISMS note. Their alt
-    // text is still hardcoded in app/[lang]/page.tsx — it has never lived in
-    // constants/copy.ts, and inventing CMS copy for it is outside this
-    // change; only the picture moves to Atlas here.
+    // The two certification marks rendered next to the ISMS note. Alt text
+    // now comes from constants/copy.ts#home.contact.{micsLogoAlt,isoLogoAlt}
+    // (ST-K1), verbatim from the literals app/[lang]/page.tsx used to hold
+    // inline — the seeded value equals the fallback, so this is additive.
+    // `contact_cta_href` (ST-FIX4) is a relative path, non-localizable, same
+    // as `home_hero.cta_primary_href` above.
     const ja = {
       ...split.ja,
       mics_logo: mediaId(media, "mics-logo.png"),
       iso_logo: mediaId(media, "iso27001-bsi.png"),
+      mics_logo_alt: home.contact.micsLogoAlt.ja,
+      iso_logo_alt: home.contact.isoLogoAlt.ja,
+      contact_cta_href: home.contact.ctaHref,
     };
-    blocks.push(makeBlock(typeIds, "home_contact", next(), ja, split.en));
+    blocks.push(
+      makeBlock(typeIds, "home_contact", next(), ja, {
+        ...split.en,
+        mics_logo_alt: home.contact.micsLogoAlt.en,
+        iso_logo_alt: home.contact.isoLogoAlt.en,
+      }),
+    );
   }
 
   if (blocks.length !== 29) {

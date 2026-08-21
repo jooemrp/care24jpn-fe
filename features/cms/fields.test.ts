@@ -142,7 +142,9 @@ async function main(): Promise<void> {
   test("parity: site page maps to the same blocks the positional loader picked", () => {
     const blocks = siteBlocks();
 
-    // Verbatim shape of the OLD features/cms/site.ts:83-100.
+    // Verbatim shape of the OLD positional array-destructuring that this
+    // parity test replaces (site.ts, before mapBlocksByType existed — the
+    // code itself is gone now, this literal array IS the historical record).
     const [
       oldBrand,
       oldPhone,
@@ -413,6 +415,69 @@ async function main(): Promise<void> {
     const fb = { ja: "fb", en: "fb" };
     assert.deepEqual(pickBi({ label: { ja: "a", en: "b" } }, "label", fb), { ja: "a", en: "b" });
     assert.deepEqual(pickBi({}, "label", fb), fb);
+  });
+
+  // -------------------------------------------------------------------------
+  // J1: pickJa/pickBi must WARN, not stay silent, when they resurrect the
+  // constants text — this is the case
+  // indistinguishable from an editor clearing the field in the dashboard.
+  // -------------------------------------------------------------------------
+
+  test("pickJa warns once when it falls back to a non-empty constants value", async () => {
+    let first = "";
+    let second = "";
+    const warnings = await captureWarnings(() => {
+      first = pickJa({}, "heading", "運営会社", "company/page-hero");
+      // Same field+context again -> still exactly one warning.
+      second = pickJa({ heading: { ja: "", en: "" } }, "heading", "運営会社", "company/page-hero");
+    });
+
+    assert.equal(first, "運営会社");
+    assert.equal(second, "運営会社");
+    assert.equal(warnings.length, 1, "one warning per field+context per process");
+    assert.match(warnings[0], /\[cms:unexpected-content\]/);
+    assert.match(warnings[0], /company\/page-hero/);
+    assert.match(warnings[0], /"heading"/);
+    assert.match(warnings[0], /運営会社/);
+  });
+
+  test("pickBi warns once when it falls back to a non-empty constants Bilingual", async () => {
+    const fb = { ja: "お申込みはこちら", en: "Apply now" };
+    let value: unknown;
+    const warnings = await captureWarnings(() => {
+      value = pickBi({}, "cta_primary", fb, "home/hero");
+    });
+
+    assert.deepEqual(value, fb);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /\[cms:unexpected-content\]/);
+    assert.match(warnings[0], /home\/hero/);
+    assert.match(warnings[0], /"cta_primary"/);
+  });
+
+  test("pickJa/pickBi stay silent when the fallback itself is empty — nothing would visibly change", async () => {
+    const warnings = await captureWarnings(() => {
+      assert.equal(pickJa({}, "number", "", "home/flow-step[0]"), "");
+      assert.deepEqual(pickBi({}, "note", { ja: "", en: "" }, "home/apply"), { ja: "", en: "" });
+    });
+    assert.deepEqual(warnings, [], "a same-as-empty fallback has nothing to resurrect");
+  });
+
+  test("pickJa/pickBi do NOT warn when a real CMS value is present", async () => {
+    const warnings = await captureWarnings(() => {
+      pickJa({ heading: { ja: "本文", en: "Body" } }, "heading", "fallback");
+      pickBi({ heading: { ja: "本文", en: "Body" } }, "heading", { ja: "fb", en: "fb" });
+    });
+    assert.deepEqual(warnings, []);
+  });
+
+  test("pickJa/pickBi still warn (deduped by key alone) when context is omitted", async () => {
+    const warnings = await captureWarnings(() => {
+      pickJa({}, "tagline", "見守り、寄り添う。");
+      pickJa({}, "tagline", "見守り、寄り添う。");
+    });
+    assert.equal(warnings.length, 1, "context-less calls still dedupe, just more coarsely");
+    assert.match(warnings[0], /"tagline"/);
   });
 
   // -------------------------------------------------------------------------

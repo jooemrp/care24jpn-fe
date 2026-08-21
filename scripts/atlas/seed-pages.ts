@@ -4,8 +4,8 @@
  * `#company` (single source of truth, never retyped by hand) onto the live
  * Atlas workspace, then publishes each.
  *
- * Block order/fields follow architecture-plan.json#pages[slug=use-case|
- * service-flow|company] exactly:
+ * Block order/fields for each page (matching the block types declared in
+ * scripts/atlas/schema.ts):
  *   use-case:     page_hero, use_case_item x4
  *   service-flow: page_hero, service_flow_step x4
  *   company:      page_hero (heading only), company_row x8
@@ -177,7 +177,8 @@ async function main(): Promise<void> {
 
     {
       const split = splitBilingual({ heading: useCase.hero.heading, body: useCase.hero.body });
-      blocks.push(makeBlock(typeIds, "page_hero", next(), split.ja, split.en));
+      const ja = { ...split.ja, cta_href: useCase.hero.ctaHref };
+      blocks.push(makeBlock(typeIds, "page_hero", next(), ja, split.en));
     }
 
     if (useCase.cases.length !== USE_CASE_IMAGES.length) {
@@ -229,12 +230,16 @@ async function main(): Promise<void> {
 
     {
       const split = splitBilingual({ heading: serviceFlow.hero.heading, body: serviceFlow.hero.body });
-      blocks.push(makeBlock(typeIds, "page_hero", next(), split.ja, split.en));
+      const ja = { ...split.ja, cta_href: serviceFlow.hero.ctaHref };
+      blocks.push(makeBlock(typeIds, "page_hero", next(), ja, split.en));
     }
 
+    // `number` (ST-FIX4) is non-localizable — replaces StepFlow.tsx's old
+    // `{i + 1}` loop-index numeral, same contract as `home_flow_step.number`.
     for (const step of serviceFlow.steps) {
       const split = splitBilingual({ title: step.title, body: step.body });
-      blocks.push(makeBlock(typeIds, "service_flow_step", next(), split.ja, split.en));
+      const ja = { number: step.number, ...split.ja };
+      blocks.push(makeBlock(typeIds, "service_flow_step", next(), ja, split.en));
     }
 
     if (blocks.length !== 5) {

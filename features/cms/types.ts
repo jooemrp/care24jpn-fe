@@ -5,10 +5,10 @@ import type { AtlasContentTypes } from "./atlas.types";
  *
  * These describe two shapes:
  * 1. The RAW response of `atlas.raw.get("/pages/<slug>")` — read WITHOUT a
- *    `?locale=` query param, per architecture-plan.json#read_strategy. This is
- *    the only call that returns JA (`data`) and EN (`block_translations`) in a
- *    single request; `atlas.pages.get()` merges to one locale and must not be
- *    used for pages.
+ *    `?locale=` query param, because that is the only call that returns JA
+ *    (`data`) and EN (`block_translations`) in a single request;
+ *    `atlas.pages.get()` merges to one locale and must not be used for
+ *    pages.
  * 2. The PARSED shape `getPageBlocks()` (features/cms/client.ts) returns after
  *    `JSON.parse`-ing every stringified `data` field and merging JA/EN per
  *    field into `Bilingual`.
@@ -73,10 +73,29 @@ export interface RawBlockTranslation {
   data: string;
 }
 
-/** The EN overlay for a page's SEO metadata. `seo` is a JSON string. */
+/**
+ * The EN overlay for a page's SEO metadata.
+ *
+ * CORRECTED after live verification for ST-03 (2026-08-20): the plan and an
+ * earlier version of this comment claimed `seo` is a JSON-encoded STRING,
+ * by analogy with block `data`. It is not. `GET /pages/<slug>` returned
+ * `seo_translations[0].seo` as a real OBJECT on all three live pages checked
+ * (`home`, `company`, `use-case`; `pricing` has no EN seo_translations row to
+ * check). `atlas.raw.get` performs zero transformation on the response body
+ * (see `@latellu/atlas-sdk`'s `src/http.ts` — `return { data: body.data, ... }`
+ * verbatim), so this is the wire shape, not an SDK artifact.
+ *
+ * Typed as `string | Record<string, unknown>` and handled defensively in
+ * `merge.ts#findEnSeoTranslation` (object used directly, string JSON.parse'd
+ * inside try/catch) so neither shape silently degrades to "no EN overlay" —
+ * which is exactly the failure the string-only assumption produced: parsing
+ * an already-parsed object emits `"[object Object]"`, `JSON.parse` throws,
+ * and the EN title mirrors `ja` instead of surfacing "Use cases" for
+ * `getPageMeta("use-case")`.
+ */
 export interface RawSeoTranslation {
   locale: string;
-  seo: string;
+  seo: string | Record<string, unknown>;
 }
 
 /**
@@ -99,6 +118,12 @@ export interface RawPageRecord {
     og_image?: string;
     canonical?: string;
   };
+  /**
+   * ISO timestamp of the page's last publish/edit. Present on the live
+   * response (`data.page.updated_at`) but not previously declared here — see
+   * the file header on `RawPageResponse` for the same kind of gap.
+   */
+  updated_at?: string;
 }
 
 /**
@@ -138,9 +163,30 @@ export type MergedField = Bilingual | undefined;
  * A block's field map after JA/EN merge. Non-localizable fields keep their
  * raw JSON value (string | number | boolean | null); localizable fields
  * become `MergedField`. Loaders in features/cms/*.ts narrow this per block
- * type using the field lists in architecture-plan.json.
+ * type using the field lists declared in scripts/atlas/schema.ts — that
+ * file is the authoritative field list per block type, this type is
+ * intentionally untyped beyond `Record<string, unknown>`.
  */
 export type ParsedBlockData = Record<string, unknown>;
+
+/**
+ * A page's SEO metadata after JA/EN merge — what `getPageMeta()`
+ * (features/cms/client.ts) returns, parallel to `CmsBlock[]` /
+ * `getPageBlocks()`. Every field follows the same collapse rule as
+ * `MergedField`: empty in BOTH locales becomes `undefined`, never
+ * `{ ja: "", en: "" }`.
+ *
+ * `og_image` is exposed as `ogImage`, mirroring the camelCase the rest of
+ * this file uses for parsed output (`RawPageRecord.seo.og_image` stays
+ * snake_case because it is the raw wire shape).
+ */
+export interface PageMeta {
+  title?: MergedField;
+  description?: MergedField;
+  ogImage?: MergedField;
+  /** `RawPageRecord.updated_at`, forwarded unmerged — it is not per-locale. */
+  updatedAt?: string;
+}
 
 /** A block after JSON.parse + JA/EN merge, sorted by `position`. */
 export interface CmsBlock {

@@ -6,29 +6,15 @@ import StepFlow from "@/components/ui/StepFlow";
 import { getServiceFlow } from "@/features/cms/pages";
 import { getSite } from "@/features/cms/site";
 import { t, localizeHref, isLang } from "@/features/lang/i18n";
+import { pageMetadata } from "@/features/seo/pageMetadata";
 
-// Title/description are short JA strings; the root layout's title.template
-// appends the brand name, so the brand must not be repeated here.
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  return {
-    title: lang === "ja" ? "ご利用の流れ" : "How it works",
-    description:
-      lang === "ja"
-        ? "ご登録からサービス終了まで、4つのステップでご利用いただけます。Care 24 Japanのサービス利用の流れをご案内します。"
-        : "From registration to completion, in four simple steps. How to use Care 24 Japan's services.",
-    alternates: {
-      canonical: lang === "ja" ? "/service-flow" : `/${lang}/service-flow`,
-      languages: {
-        ja: "/service-flow",
-        en: "/en/service-flow",
-      },
-    },
-  };
+  return pageMetadata({ key: "service-flow", lang });
 }
 
 export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) {
@@ -48,7 +34,7 @@ export default async function ServiceFlowPage({ params }: PageProps<"/[lang]">) 
         <StepFlow steps={serviceFlow.steps} lang={lang} />
         <div className="mt-12 animate-fade-up">
           <Link
-            href={localizeHref("/pricing", lang)}
+            href={localizeHref(serviceFlow.hero.ctaHref, lang)}
             className="inline-flex rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
             {t(site.cta.primary, lang)}

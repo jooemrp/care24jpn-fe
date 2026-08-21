@@ -30,6 +30,30 @@ export function isLang(v: string): v is Lang {
 }
 
 /**
+ * Derive the active language from the browser-visible pathname (e.g. from
+ * `usePathname()`), not from the route's `[lang]` segment.
+ *
+ * This matters for the default locale: proxy.ts rewrites bare paths
+ * ("/", "/pricing", ...) to "/ja/..." internally without changing the
+ * address bar (proxy.ts:28-33), and redirects any incoming "/ja/..." link
+ * back to its prefix-less form (proxy.ts:11-19). So for "ja", the URL the
+ * browser shows never contains a lang segment, even though the route tree
+ * underneath it does. Client components that only have `usePathname()`
+ * available (e.g. app/[lang]/error.tsx, which the error.js contract gives
+ * no `params` prop at all) must read the same signal `localizeHref` itself
+ * is written against: the first path segment, mirroring proxy.ts:9's own
+ * `pathname.split("/")[1] ?? ""`.
+ *
+ * Only an exact "en" first segment counts — "/english-something" is NOT
+ * the "en" locale, it is a ja page whose slug happens to start with those
+ * letters.
+ */
+export function langFromPathname(pathname: string): Lang {
+  const firstSegment = pathname.split("/")[1] ?? "";
+  return firstSegment === "en" ? "en" : DEFAULT_LANG;
+}
+
+/**
  * Rewrite an internal href to be prefixed with the given language.
  *
  * Left untouched:
