@@ -31,7 +31,16 @@
  * Usage (from marketing-web/):
  *   npx tsx scripts/atlas/seed-site.ts
  */
-import { brand, nav, contactPhone, cta, ui, footer, errorPage } from "../../constants/copy";
+import {
+  brand,
+  nav,
+  contactPhone,
+  cta,
+  ui,
+  footer,
+  errorPage,
+  notFoundPage,
+} from "../../constants/copy";
 import {
   requireAtlasEnv,
   createScriptManagementClient,
@@ -53,6 +62,7 @@ const BLOCK_TYPE_SLUGS = [
   "site_cta",
   "site_ui_labels",
   "site_error_labels",
+  "site_not_found_labels",
   "nav_item",
   "site_footer",
   "footer_legal_link",
@@ -201,23 +211,54 @@ function buildBlocks(
     }),
   });
 
-  // positions 5..8 — nav_item x4, in array order (href is the scroll-spy /
+  // position 5 — site_not_found_labels: eyebrow / title / body / home_label
+  // / meta_description.
+  //
+  // `app/global-not-found.tsx`'s copy, previously hardcoded inline in that
+  // file's JSX — the last user-facing surface with no CMS representation at
+  // all. Verbatim from constants/copy.ts#notFoundPage, which is itself
+  // verbatim from those literals: value-preserving, not new copy. Placed
+  // next to site_error_labels because the two are the same kind of thing
+  // (the site's two failure surfaces), which pushes nav/footer/legal-link
+  // positions down by one.
+  //
+  // `eyebrow` has no `en` entry: the field is non-localizable in schema.ts.
+  blocks.push({
+    block_type_id: blockTypeIds.site_not_found_labels,
+    parent_id: null,
+    position: 5,
+    data: {
+      eyebrow: notFoundPage.eyebrow,
+      title: notFoundPage.title.ja,
+      body: notFoundPage.body.ja,
+      home_label: notFoundPage.homeLabel.ja,
+      meta_description: notFoundPage.metaDescription.ja,
+    },
+    translations: en({
+      title: notFoundPage.title.en,
+      body: notFoundPage.body.en,
+      home_label: notFoundPage.homeLabel.en,
+      meta_description: notFoundPage.metaDescription.en,
+    }),
+  });
+
+  // positions 6..9 — nav_item x4, in array order (href is the scroll-spy /
   // routing contract — non-localizable, JA/EN share the same value).
   nav.forEach((item, i) => {
     blocks.push({
       block_type_id: blockTypeIds.nav_item,
       parent_id: null,
-      position: 5 + i,
+      position: 6 + i,
       data: { href: item.href, label: item.label.ja },
       translations: en({ label: item.label.en }),
     });
   });
 
-  // position 9 — site_footer: description / legal
+  // position 10 — site_footer: description / legal
   blocks.push({
     block_type_id: blockTypeIds.site_footer,
     parent_id: null,
-    position: 9,
+    position: 10,
     data: {
       description: footer.description.ja,
       legal: footer.legal.ja,
@@ -225,7 +266,7 @@ function buildBlocks(
     translations: en({ description: footer.description.en, legal: footer.legal.en }),
   });
 
-  // positions 10..14 — footer_legal_link x5. The tokushoho entry (index 2,
+  // positions 11..15 — footer_legal_link x5. The tokushoho entry (index 2,
   // href "/tokushoho") carries use_legal_heading="tokushoho" and an empty
   // label in both locales — matching the `{ href, key: "tokushoho" }` union
   // member in constants/copy.ts#footer.legalLinks with no `label` at all.
@@ -234,7 +275,7 @@ function buildBlocks(
     blocks.push({
       block_type_id: blockTypeIds.footer_legal_link,
       parent_id: null,
-      position: 10 + i,
+      position: 11 + i,
       data: {
         href: link.href,
         label: isTokushoho ? "" : link.label.ja,

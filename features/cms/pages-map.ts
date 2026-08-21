@@ -189,7 +189,15 @@ export function mapCompany(
   // default (unsafe as an index-based value: changes what KIND of link a row
   // renders as). `EMPTY` is what a row beyond `F.rows`' length already fell
   // back to before this fix; every row now gets that same safe default.
+  // `row_key` is `pickJa`, not `pickBi`: non-localizable in
+  // `scripts/atlas/schema.ts`, because it is an identifier, not copy. Its
+  // fallback is `""` rather than `F.rows[i]?.key` for exactly the reason the
+  // comment above gives about index-based fallbacks: guessing a row's
+  // IDENTITY from its position is the failure this key exists to prevent, and
+  // `organization.ts#findRow` already falls back to label-matching when the
+  // key is absent (a workspace seeded before this field existed).
   const rows: CompanyRow[] = rowBlocks.map((block) => ({
+    key: pickJa(block.data, "row_key", ""),
     label: pickBi(block.data, "label", EMPTY),
     value: pickBi(block.data, "value", EMPTY),
   }));

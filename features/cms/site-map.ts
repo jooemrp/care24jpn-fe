@@ -29,6 +29,7 @@ import {
   ui as fallbackUi,
   footer as fallbackFooter,
   errorPage as fallbackErrorPage,
+  notFoundPage as fallbackNotFoundPage,
   type Bilingual,
 } from "@/constants/copy";
 
@@ -48,6 +49,7 @@ export type SiteContent = {
   ui: typeof fallbackUi;
   footer: typeof fallbackFooter;
   errorPage: typeof fallbackErrorPage;
+  notFoundPage: typeof fallbackNotFoundPage;
 };
 
 /**
@@ -69,6 +71,7 @@ export const FALLBACK: SiteContent = {
   ui: fallbackUi,
   footer: fallbackFooter,
   errorPage: fallbackErrorPage,
+  notFoundPage: fallbackNotFoundPage,
 };
 
 /**
@@ -88,6 +91,14 @@ export const SITE_TYPES = [
   "site-cta",
   "site-ui-labels",
   "site-error-labels",
+  // DEPLOY ORDER MATTERS for this one, as it did when `site-error-labels`
+  // was added: a declared type with no matching block makes
+  // `mapBlocksByType` return `null`, which reverts the ENTIRE site chrome —
+  // brand, nav, footer, every page — to `constants/copy.ts`. A workspace
+  // that has not been re-seeded since this line landed has no
+  // `site-not-found-labels` block. Run `npx tsx scripts/atlas/seed-site.ts`
+  // against an environment BEFORE deploying this code to it.
+  "site-not-found-labels",
   "nav-item",
   "site-footer",
   "footer-legal-link",
@@ -120,6 +131,7 @@ export function mapSite(
   const [ctaBlock] = groups["site-cta"];
   const [uiBlock] = groups["site-ui-labels"];
   const [errorLabelsBlock] = groups["site-error-labels"];
+  const [notFoundLabelsBlock] = groups["site-not-found-labels"];
   const [footerBlock] = groups["site-footer"];
   const navBlocks = groups["nav-item"];
   const legalBlocks = groups["footer-legal-link"];
@@ -155,6 +167,21 @@ export function mapSite(
     title: pickBi(errorLabelsBlock.data, "title", FALLBACK.errorPage.title),
     body: pickBi(errorLabelsBlock.data, "body", FALLBACK.errorPage.body),
     retryLabel: pickBi(errorLabelsBlock.data, "retry_label", FALLBACK.errorPage.retryLabel),
+  };
+
+  const notFoundPage: SiteContent["notFoundPage"] = {
+    // `eyebrow` is `pickJa`, not `pickBi`: the field is non-localizable in
+    // `scripts/atlas/schema.ts` (the HTTP status "404" reads the same in
+    // both locales), so there is no EN translation to merge.
+    eyebrow: pickJa(notFoundLabelsBlock.data, "eyebrow", FALLBACK.notFoundPage.eyebrow),
+    title: pickBi(notFoundLabelsBlock.data, "title", FALLBACK.notFoundPage.title),
+    body: pickBi(notFoundLabelsBlock.data, "body", FALLBACK.notFoundPage.body),
+    homeLabel: pickBi(notFoundLabelsBlock.data, "home_label", FALLBACK.notFoundPage.homeLabel),
+    metaDescription: pickBi(
+      notFoundLabelsBlock.data,
+      "meta_description",
+      FALLBACK.notFoundPage.metaDescription,
+    ),
   };
 
   // `FALLBACK.nav[i]` / `FALLBACK.footer.legalLinks[i]` are indexed
@@ -207,5 +234,5 @@ export function mapSite(
     legal: pickBi(footerBlock.data, "legal", FALLBACK.footer.legal),
   };
 
-  return { brand, nav, contactPhone, cta, ui, footer, errorPage };
+  return { brand, nav, contactPhone, cta, ui, footer, errorPage, notFoundPage };
 }

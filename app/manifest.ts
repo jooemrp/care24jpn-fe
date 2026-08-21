@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { brand } from "@/constants/copy";
+import { getSite } from "@/features/cms/site";
 
 /**
  * Closes the "manifest — none exist" line of the 2026-08-12 SEO/AEO audit
@@ -18,17 +18,34 @@ import { brand } from "@/constants/copy";
  * copy is used here rather than inventing a second, English manifest with
  * no route to serve it from.
  *
- * `name`/`short_name` both use the same `brand.name` ("Care 24 Japan")
- * already used everywhere else in the app (app/global-error.tsx,
- * app/global-not-found.tsx) — not a shortened/invented variant. Web App
- * Manifest's `short_name` is only used when space is constrained (e.g. a
- * home-screen icon label); reusing the one real brand string the codebase
- * has is safer than making up an abbreviation nobody approved.
+ * CMS-DRIVEN, via `getSite()` — the same loader `app/[lang]/layout.tsx`,
+ * `Navbar` and `Footer` already read. It used to import `brand` straight
+ * out of `constants/copy.ts`, which is the FALLBACK layer, not the source:
+ * renaming the brand in the dashboard changed the navbar, the footer, the
+ * `<title>` template, `og:siteName` and the Organization JSON-LD, but left
+ * the Android home-screen label on the old name with nothing to signal the
+ * split. `getSite()` never throws (see features/cms/site.ts) — it returns
+ * the very same `constants/copy.ts` values when Atlas is unreachable — so
+ * this reads the CMS without giving the manifest route a new way to fail.
  *
- * `description` reuses `constants/copy.ts`'s existing `brand.tagline.ja`
- * (the same string `app/[lang]/layout.tsx` falls back to for the
- * meta-description when no CMS value is set) rather than drafting new
- * copy, which is out of scope here.
+ * Making the export `async` is what that costs. `manifest.js` is a Route
+ * Handler that Next caches by default "unless it uses a Request-time API"
+ * (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/
+ * 01-metadata/manifest.md, "Generate a Manifest file"); `getSite()` fetches
+ * with `cache: "no-store"` (features/cms/client.ts#noStoreFetch), so this
+ * route renders per request like every other CMS-driven surface here.
+ *
+ * `name`/`short_name` both use the same `site.brand.name` ("Care 24 Japan")
+ * already used everywhere else in the app — not a shortened/invented
+ * variant. Web App Manifest's `short_name` is only used when space is
+ * constrained (e.g. a home-screen icon label); reusing the one real brand
+ * string the site has is safer than making up an abbreviation nobody
+ * approved.
+ *
+ * `description` reuses `site.brand.tagline.ja` (the same string
+ * `app/[lang]/layout.tsx` uses for the meta-description when a route sets
+ * no CMS value of its own) rather than drafting new copy, which is out of
+ * scope here.
  *
  * `background_color` is `--color-bg` (styles/globals.css) — the site's
  * actual page background — used for the splash screen Android shows while
@@ -43,7 +60,23 @@ import { brand } from "@/constants/copy";
  * with a maskable safe zone, so claiming `"maskable"` here would be a
  * false claim about content that was never built for it.
  */
-export default function manifest(): MetadataRoute.Manifest {
+/**
+ * Declared dynamic EXPLICITLY, not left to inference. Next tries the static
+ * pass first, `getSite()`'s `cache: "no-store"` fetch throws
+ * `DynamicServerError` mid-render, and Next then correctly re-marks the
+ * route dynamic — the built output is identical either way. What is not
+ * identical is the build log: `features/cms/client.ts#fetchRawPage` catches
+ * that throw like any other fetch failure and prints
+ * `[cms:fallback:failure] getRawPage("site") failed, falling back` on every
+ * single build. Nothing failed and nothing fell back; the line is pure
+ * noise sitting in the one channel that is supposed to mean the CMS is
+ * down. Declaring the route dynamic skips the doomed static attempt.
+ */
+export const dynamic = "force-dynamic";
+
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const { brand } = await getSite();
+
   return {
     name: brand.name,
     short_name: brand.name,

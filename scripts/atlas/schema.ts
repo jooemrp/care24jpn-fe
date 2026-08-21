@@ -108,6 +108,23 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     ],
   },
   {
+    // The 404 page (`app/global-not-found.tsx`). Separate from
+    // `site_error_labels` above because they are different surfaces with
+    // different copy: that one is the route-segment ERROR boundary (a throw),
+    // this one is a page that does not exist. `eyebrow` is non-localizable —
+    // "404" is the HTTP status, identical in both locales.
+    slug: "site_not_found_labels",
+    name: "Site — 404 page labels",
+    is_block: true,
+    fields: [
+      { name: "eyebrow", label: "Eyebrow (status code)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "title", label: "404 heading", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "body", label: "404 body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "home_label", label: "Back-to-home link label", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "meta_description", label: "404 meta description", field_type: "textarea", localizable: true, required: false, sort_order: 4 },
+    ],
+  },
+  {
     slug: "nav_item",
     name: "Nav Item",
     is_block: true,
@@ -389,8 +406,22 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     name: "Company — Row",
     is_block: true,
     fields: [
+      // `row_key` is the STABLE identity of a row, and exists so the
+      // Organization JSON-LD (features/seo/organization.ts) can find the
+      // three rows it needs without matching on `label.en` text. Renaming
+      // "Head office" to "Head Office" in the dashboard is an ordinary
+      // content edit; before this field it silently dropped `address` and
+      // `foundingDate` from the site's structured data. Same role `course_key`
+      // / `row_key` already play for `rate_row` below — non-localizable, and
+      // not rendered anywhere.
+      //
+      // Appended at `sort_order: 2` rather than inserted first: `lib.ts:554`
+      // excludes `sort_order` from drift detection, so re-ordering the two
+      // existing fields here would change nothing on a workspace that already
+      // has them and would only make this file disagree with the live schema.
       { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "value", label: "Value", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "row_key", label: "Row key (internal, do not translate)", field_type: "text", localizable: false, required: false, sort_order: 2 },
     ],
   },
   {
