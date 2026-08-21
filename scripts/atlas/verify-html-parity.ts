@@ -1066,6 +1066,13 @@ const LEGAL_CONTACT_FIX_NEW = new Set<string>([
   "<p>電話番号：0120-001-224</p>",
 ]);
 
+/** The share card served from the app's own `public/` folder, i.e. the
+ * `constants/seo.ts#fallbackOgImage` layer. Distinguishing it from the Atlas
+ * media URL is what lets the two og:image ledger entries below fire in one
+ * gate each instead of colliding in both. URL-agnostic on purpose: the Atlas
+ * url changes whenever the card is re-uploaded, the local path does not. */
+const LOCAL_CARD = /\/images\/og-card/;
+
 const ST_U2_YEN_OLD = new Set<string>([
 
   "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥6,000</span>",
@@ -1122,14 +1129,14 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     side: "ditambah",
     count: 26,
     why: "ST-05 / audit item og:image: openGraph.images baru (CMS og_image kosong di 15/15 halaman -> constants/seo.ts#fallbackOgImage) pada 13 rute x {ja,en}.",
-    matches: (line) => /property="og:image"/.test(line),
+    matches: (line) => /property="og:image"/.test(line) && !LOCAL_CARD.test(line),
   },
   {
     id: "seo-twitter-image",
     side: "ditambah",
     count: 26,
     why: "Efek samping Next dari og:image baru: postProcessMetadata (resolve-metadata.js:621-654) mengisi twitter:image dari openGraph.images begitu ada, pada 13 rute x {ja,en}.",
-    matches: (line) => /name="twitter:image"/.test(line),
+    matches: (line) => /name="twitter:image"/.test(line) && !LOCAL_CARD.test(line),
   },
   // --- ST-HOME (area D): 4 field baru + 1 sebab kelima (banner) -------
   {
@@ -1374,6 +1381,35 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     count: 3,
     why: "Pasangan dari legal-kontak-placeholder-lama-dihapus: nomor telepon asli 0120-001-224 (dari constants/copy.ts#contactPhone) pada sisi JA dan EN /tokushoho, plus baris email JA yang kini berdiri sendiri setelah kalimat usang dicabut. 3 baris, bukan 4 — catatan internal /quasi-mandate dihapus tanpa pengganti.",
     matches: (line) => LEGAL_CONTACT_FIX_NEW.has(line),
+  },
+
+  {
+    id: "og-image-cms-off-kartu-lokal",
+    side: "ditambah",
+    count: 24,
+    why: "Gerbang CMS-ON vs CMS-OFF: sejak seo.og_image terisi di Atlas (13 rute x {ja,en}), CMS-ON merender url media Atlas sedangkan CMS-OFF tetap merender kartu lokal constants/seo.ts#fallbackOgImage. Ini sisi CMS-OFF. PENTING soal angkanya: 24, bukan 26 — rute home (/) dilaporkan 'sama | sama' oleh tabel rute gerbang ini meski og:image-nya seharusnya berbeda seperti 12 rute lain. Itu titik buta gerbang yang sudah ada sebelumnya, bukan akibat perubahan ini; dicatat apa adanya daripada dibulatkan ke 26.",
+    matches: (line) => /property="og:image"/.test(line) && LOCAL_CARD.test(line),
+  },
+  {
+    id: "og-image-cms-on-media-atlas",
+    side: "dihapus",
+    count: 24,
+    why: "Pasangan dari og-image-cms-off-kartu-lokal: sisi CMS-ON, url media Atlas. Jumlah sama persis (24) karena setiap baris kartu lokal punya lawan satu-satu.",
+    matches: (line) => /property="og:image"/.test(line) && !LOCAL_CARD.test(line),
+  },
+  {
+    id: "twitter-image-cms-off-kartu-lokal",
+    side: "ditambah",
+    count: 24,
+    why: "Efek samping Next yang sama seperti seo-twitter-image: postProcessMetadata mengisi twitter:image dari openGraph.images, jadi perpecahan og:image di atas terduplikasi di twitter:image. Sisi CMS-OFF.",
+    matches: (line) => /name="twitter:image"/.test(line) && LOCAL_CARD.test(line),
+  },
+  {
+    id: "twitter-image-cms-on-media-atlas",
+    side: "dihapus",
+    count: 24,
+    why: "Pasangan dari twitter-image-cms-off-kartu-lokal: sisi CMS-ON.",
+    matches: (line) => /name="twitter:image"/.test(line) && !LOCAL_CARD.test(line),
   },
 ];
 

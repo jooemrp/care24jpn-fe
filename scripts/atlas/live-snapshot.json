@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T06:00:25.051Z",
+  "generatedAt": "2026-08-21T06:23:50.041Z",
   "pages": [
     {
       "slug": "site",
@@ -255,7 +255,7 @@
         "title": "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
         "description": "医療保険や介護保険を利用しない、完全オーダーメイドの介護・看護ご支援サービス。24時間の安心、専門スタッフ、ご家族との連携でお困りごとを解消します。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -263,7 +263,7 @@
           "title": "Care 24 Japan — Premium 24-hour in-home care",
           "description": "Completely custom-made care and nursing support without medical or long-term care insurance — 24-hour presence, trained staff, family partnership.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -349,6 +349,10 @@
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg"
             },
+            "image_alt": {
+              "ja": "ご自宅で高齢女性に寄り添う介護スタッフ",
+              "en": "A caregiver assisting an elderly woman at home"
+            },
             "items": {
               "ja": "移動介助\n食事介助\n入浴・清拭介助\n口腔ケア\n排泄介助\n着替えのお手伝い\n服薬の管理\nケアマネジャーとの連携",
               "en": "Mobility assistance\nMeal assistance\nBathing and wiping assistance\nOral care\nToileting assistance\nHelp with dressing\nMedication management\nCoordination with care managers"
@@ -356,10 +360,6 @@
             "title": {
               "ja": "ご自宅内の介護",
               "en": "In-home caregiving"
-            },
-            "image_alt": {
-              "ja": "ご自宅で高齢女性に寄り添う介護スタッフ",
-              "en": "A caregiver assisting an elderly woman at home"
             }
           }
         },
@@ -370,6 +370,10 @@
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg"
             },
+            "image_alt": {
+              "ja": "ご自宅でリビングを掃除するスタッフ",
+              "en": "A staff member cleaning a living room at home"
+            },
             "items": {
               "ja": "掃除\n洗濯\n話し相手\n調理\nペットの世話\n庭の手入れ\n窓拭き",
               "en": "Cleaning\nLaundry\nCompanionship\nCooking\nPet care\nGarden care\nWindow cleaning"
@@ -377,10 +381,6 @@
             "title": {
               "ja": "ご自宅内の家事",
               "en": "In-home housework"
-            },
-            "image_alt": {
-              "ja": "ご自宅でリビングを掃除するスタッフ",
-              "en": "A staff member cleaning a living room at home"
             }
           }
         },
@@ -391,6 +391,10 @@
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg"
             },
+            "image_alt": {
+              "ja": "施設で車椅子の高齢男性に寄り添う介護スタッフ",
+              "en": "A caregiver assisting an elderly man in a wheelchair at a facility"
+            },
             "items": {
               "ja": "日中の居室介護支援\n施設内外の移動介助\n夜間の見守り\n話し相手\n入浴サポート\n居室のお掃除\n買い物代行",
               "en": "Daytime in-room care support\nMobility assistance in and out of the facility\nOvernight supervision\nCompanionship\nBathing support\nRoom cleaning\nShopping on your behalf"
@@ -398,10 +402,6 @@
             "title": {
               "ja": "病院・施設内の介護",
               "en": "Hospital and facility caregiving"
-            },
-            "image_alt": {
-              "ja": "施設で車椅子の高齢男性に寄り添う介護スタッフ",
-              "en": "A caregiver assisting an elderly man in a wheelchair at a facility"
             }
           }
         },
@@ -412,6 +412,10 @@
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg"
             },
+            "image_alt": {
+              "ja": "車椅子の高齢女性の外出に付き添う介護スタッフ",
+              "en": "A caregiver accompanying an elderly woman in a wheelchair on an outing"
+            },
             "items": {
               "ja": "通院の行き帰りの介助\n診察内容の聞き取り\n薬の受け取り\nお散歩\nイベントへの出席\n買い物",
               "en": "Assistance to and from medical appointments\nNoting down consultation details\nPicking up medication\nWalks\nAttending events\nShopping"
@@ -419,10 +423,6 @@
             "title": {
               "ja": "通院・外出の付き添い",
               "en": "Hospital-visit and outing accompaniment"
-            },
-            "image_alt": {
-              "ja": "車椅子の高齢女性の外出に付き添う介護スタッフ",
-              "en": "A caregiver accompanying an elderly woman in a wheelchair on an outing"
             }
           }
         },
@@ -472,41 +472,33 @@
         {
           "type": "home-contact",
           "data": {
-            "isms": {
-              "ja": "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-              "en": "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS)."
-            },
-            "hours": {
-              "ja": "【受付時間】平日 9:00〜18:00",
-              "en": "[Reception Hours] Weekdays 9:00 AM – 6:00 PM"
+            "contact_cta_href": {
+              "ja": "/service-flow",
+              "en": "/service-flow"
             },
             "heading": {
               "ja": "24時間365日お気軽にご相談ください",
               "en": "Please feel free to contact us anytime, 24 hours a day, 365 days a year."
             },
-            "lead_in": {
-              "ja": "ご相談は無料です",
-              "en": "Consultations are free of charge."
+            "hours": {
+              "ja": "【受付時間】平日 9:00〜18:00",
+              "en": "[Reception Hours] Weekdays 9:00 AM – 6:00 PM"
+            },
+            "isms": {
+              "ja": "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+              "en": "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS)."
             },
             "iso_logo": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6d36-7bcf-b507-256d246f0735-iso27001-bsi.png",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6d36-7bcf-b507-256d246f0735-iso27001-bsi.png"
             },
-            "mics_logo": {
-              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png",
-              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png"
-            },
             "iso_logo_alt": {
               "ja": "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
               "en": "BSI ISMS-AC ISO27001 認証マーク（IS 793656）"
             },
-            "mics_logo_alt": {
-              "ja": "mics — MedicalInformatics Co.,Ltd.",
-              "en": "mics — MedicalInformatics Co.,Ltd."
-            },
-            "contact_cta_href": {
-              "ja": "/service-flow",
-              "en": "/service-flow"
+            "lead_in": {
+              "ja": "ご相談は無料です",
+              "en": "Consultations are free of charge."
             },
             "lead_in_ornament_end": {
               "ja": "／",
@@ -515,6 +507,14 @@
             "lead_in_ornament_start": {
               "ja": "＼",
               "en": "＼"
+            },
+            "mics_logo": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6cbf-7418-a19a-dbb3a00f2ffb-mics-logo.png"
+            },
+            "mics_logo_alt": {
+              "ja": "mics — MedicalInformatics Co.,Ltd.",
+              "en": "mics — MedicalInformatics Co.,Ltd."
             }
           }
         },
@@ -738,49 +738,49 @@
         {
           "type": "home-hero",
           "data": {
-            "body": {
-              "ja": "介護保険の「できない」を、家族の「当たり前」に変えていく。",
-              "en": "We're transforming the \"impossible\" aspects of long-term care insurance into \"normal\" for families."
+            "assist": {
+              "ja": "ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
+              "en": "We will assist you with everything from housework to personal care, according to your needs."
             },
             "badge": {
               "ja": "完全オーダーメイドで",
               "en": "Completely custom-made"
             },
-            "image": {
-              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
-              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg"
-            },
-            "assist": {
-              "ja": "ご希望に合わせて、家事から身の回りのお世話までお手伝いします",
-              "en": "We will assist you with everything from housework to personal care, according to your needs."
-            },
-            "heading": {
-              "ja": "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
-              "en": "Care and nursing support services that do not utilize medical insurance or long-term care insurance."
-            },
-            "resolve": {
-              "ja": "不安やお困りごとを解消",
-              "en": "Resolving your anxieties and problems"
-            },
-            "image_alt": {
-              "ja": "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
-              "en": "An elderly woman resting calmly by a window with a care professional"
+            "body": {
+              "ja": "介護保険の「できない」を、家族の「当たり前」に変えていく。",
+              "en": "We're transforming the \"impossible\" aspects of long-term care insurance into \"normal\" for families."
             },
             "cta_primary": {
               "ja": "お申込みはこちら",
               "en": "Apply here"
             },
-            "cta_secondary": {
-              "ja": "まずは無料登録",
-              "en": "Register for free first."
-            },
             "cta_primary_href": {
               "ja": "/service-flow",
               "en": "/service-flow"
             },
+            "cta_secondary": {
+              "ja": "まずは無料登録",
+              "en": "Register for free first."
+            },
             "cta_secondary_href": {
               "ja": "/pricing",
               "en": "/pricing"
+            },
+            "heading": {
+              "ja": "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
+              "en": "Care and nursing support services that do not utilize medical insurance or long-term care insurance."
+            },
+            "image": {
+              "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
+              "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg"
+            },
+            "image_alt": {
+              "ja": "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
+              "en": "An elderly woman resting calmly by a window with a care professional"
+            },
+            "resolve": {
+              "ja": "不安やお困りごとを解消",
+              "en": "Resolving your anxieties and problems"
             }
           }
         },
@@ -1152,7 +1152,7 @@
         "title": "ご利用者様向け料金",
         "description": "入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1160,7 +1160,7 @@
           "title": "",
           "description": "Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1199,7 +1199,7 @@
         "title": "ケアサポーターの時給・報酬体系一覧",
         "description": "介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1207,7 +1207,7 @@
           "title": "",
           "description": "Care 24 Japan's hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1254,7 +1254,7 @@
         "title": "ご利用シーン",
         "description": "退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1262,7 +1262,7 @@
           "title": "Use cases",
           "description": "After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan's in-home care helps with.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1291,29 +1291,29 @@
               "ja": "入院後のご自宅での生活を、看護と介護の両面で支えます。",
               "en": "Nursing and daily-living support during recovery at home."
             },
-            "slug": {
-              "ja": "after-hospital-discharge",
-              "en": "after-hospital-discharge"
+            "detail": {
+              "ja": "入院中は医療スタッフに囲まれた環境で過ごされますが、退院後はご自宅でのリハビリや生活支援が重要になります。Care 24 Japan では、退院直後から看護師と介護福祉士が連携し、服薬管理・創傷ケア・食事・入浴・移動など、回復期に必要なあらゆるサポートをご提供します。ご家族の不安を和らげながら、安心して在宅療養できる環境を整えます。",
+              "en": "Leaving hospital can feel daunting. Care 24 Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home."
+            },
+            "highlights": {
+              "ja": "退院当日からの対応が可能\n看護師・介護福祉士の連携チーム\n服薬・処置管理のサポート\nリハビリ支援・歩行練習の同行\nご家族への定期的な状況報告",
+              "en": "Available from the day of discharge\nCoordinated nurse and caregiver team\nMedication and wound-care management\nRehabilitation and mobility support\nRegular updates to family members"
             },
             "image": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6e19-79b0-8446-893cfb77087b-use-case-1.jpg"
             },
-            "title": {
-              "ja": "退院後のサポート",
-              "en": "After hospital discharge"
-            },
-            "detail": {
-              "ja": "入院中は医療スタッフに囲まれた環境で過ごされますが、退院後はご自宅でのリハビリや生活支援が重要になります。Care 24 Japan では、退院直後から看護師と介護福祉士が連携し、服薬管理・創傷ケア・食事・入浴・移動など、回復期に必要なあらゆるサポートをご提供します。ご家族の不安を和らげながら、安心して在宅療養できる環境を整えます。",
-              "en": "Leaving hospital can feel daunting. Care 24 Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home."
-            },
             "image_alt": {
               "ja": "退院後にご自宅で休む高齢男性に付き添うスタッフ",
               "en": "A caregiver assisting an elderly man recovering at home"
             },
-            "highlights": {
-              "ja": "退院当日からの対応が可能\n看護師・介護福祉士の連携チーム\n服薬・処置管理のサポート\nリハビリ支援・歩行練習の同行\nご家族への定期的な状況報告",
-              "en": "Available from the day of discharge\nCoordinated nurse and caregiver team\nMedication and wound-care management\nRehabilitation and mobility support\nRegular updates to family members"
+            "slug": {
+              "ja": "after-hospital-discharge",
+              "en": "after-hospital-discharge"
+            },
+            "title": {
+              "ja": "退院後のサポート",
+              "en": "After hospital discharge"
             }
           }
         },
@@ -1324,29 +1324,29 @@
               "ja": "見守りと声かけを大切に、穏やかな日常をお守りします。",
               "en": "Gentle supervision and companionship for peace of mind."
             },
-            "slug": {
-              "ja": "dementia-care",
-              "en": "dementia-care"
+            "detail": {
+              "ja": "認知症のご本人が住み慣れた環境で穏やかに過ごせるよう、専門トレーニングを受けたスタッフが寄り添います。徘徊防止の見守り、日常的な声かけ・回想法の実践、服薬・食事のサポートなど、ご本人の尊厳を第一に考えたケアをご提供します。ご家族の精神的な負担を軽減することも、私たちの大切な役割です。",
+              "en": "Our specially trained caregivers provide compassionate, person-centred dementia care at home. We focus on familiar routines, gentle reminders, reminiscence activities, and safe supervision — helping maintain dignity and reduce anxiety. We also keep family members closely informed, so everyone feels supported."
+            },
+            "highlights": {
+              "ja": "認知症ケア専門スタッフが対応\n24時間見守りプランあり\n回想法・コミュニケーション支援\n服薬・食事管理のサポート\nご家族への定期報告と相談対応",
+              "en": "Dementia-trained specialist caregivers\n24-hour supervision plans available\nReminiscence and communication support\nMedication and meal management\nFamily updates and counselling support"
             },
             "image": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6f25-7e78-b26f-1e7d3d57def8-use-case-2.jpg"
             },
-            "title": {
-              "ja": "認知症のケア",
-              "en": "Dementia care"
-            },
-            "detail": {
-              "ja": "認知症のご本人が住み慣れた環境で穏やかに過ごせるよう、専門トレーニングを受けたスタッフが寄り添います。徘徊防止の見守り、日常的な声かけ・回想法の実践、服薬・食事のサポートなど、ご本人の尊厳を第一に考えたケアをご提供します。ご家族の精神的な負担を軽減することも、私たちの大切な役割です。",
-              "en": "Our specially trained caregivers provide compassionate, person-centred dementia care at home. We focus on familiar routines, gentle reminders, reminiscence activities, and safe supervision — helping maintain dignity and reduce anxiety. We also keep family members closely informed, so everyone feels supported."
-            },
             "image_alt": {
               "ja": "高齢女性と一緒にアルバムを眺める介護スタッフ",
               "en": "A care professional looking at a photo album with an elderly woman"
             },
-            "highlights": {
-              "ja": "認知症ケア専門スタッフが対応\n24時間見守りプランあり\n回想法・コミュニケーション支援\n服薬・食事管理のサポート\nご家族への定期報告と相談対応",
-              "en": "Dementia-trained specialist caregivers\n24-hour supervision plans available\nReminiscence and communication support\nMedication and meal management\nFamily updates and counselling support"
+            "slug": {
+              "ja": "dementia-care",
+              "en": "dementia-care"
+            },
+            "title": {
+              "ja": "認知症のケア",
+              "en": "Dementia care"
             }
           }
         },
@@ -1357,29 +1357,29 @@
               "ja": "介護をされるご家族が休息できるよう、一時的にケアを引き継ぎます。",
               "en": "Temporary cover so family caregivers can rest."
             },
-            "slug": {
-              "ja": "respite-care",
-              "en": "respite-care"
+            "detail": {
+              "ja": "日々介護を担うご家族は、心身ともに大きな負担を抱えています。Care 24 Japan のレスパイトケアでは、数時間から数日間、ご家族に代わって専門スタッフがご自宅でのケアを引き受けます。ご家族がリフレッシュし、自分自身の時間を持てるよう、安心してお任せいただける体制を整えています。",
+              "en": "Family caregivers give everything — and they deserve to rest. Care 24 Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind."
+            },
+            "highlights": {
+              "ja": "数時間から数日間まで柔軟に対応\n普段と変わらないケアの継続\n緊急時の迅速対応体制\nケア記録の共有で安心の引き継ぎ\n定期・スポット両プランに対応",
+              "en": "Flexible from a few hours to several days\nSeamless continuity of existing care routines\nRapid response in case of emergency\nShared care records for smooth handover\nAvailable as regular or spot bookings"
             },
             "image": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-703e-7e3b-be74-f5aa6f5b2571-use-case-3.jpg"
             },
-            "title": {
-              "ja": "ご家族の休息（レスパイト）",
-              "en": "Respite for families"
-            },
-            "detail": {
-              "ja": "日々介護を担うご家族は、心身ともに大きな負担を抱えています。Care 24 Japan のレスパイトケアでは、数時間から数日間、ご家族に代わって専門スタッフがご自宅でのケアを引き受けます。ご家族がリフレッシュし、自分自身の時間を持てるよう、安心してお任せいただける体制を整えています。",
-              "en": "Family caregivers give everything — and they deserve to rest. Care 24 Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind."
-            },
             "image_alt": {
               "ja": "笑顔で会話する高齢者と訪問スタッフ",
               "en": "A visiting caregiver chatting warmly with an older client"
             },
-            "highlights": {
-              "ja": "数時間から数日間まで柔軟に対応\n普段と変わらないケアの継続\n緊急時の迅速対応体制\nケア記録の共有で安心の引き継ぎ\n定期・スポット両プランに対応",
-              "en": "Flexible from a few hours to several days\nSeamless continuity of existing care routines\nRapid response in case of emergency\nShared care records for smooth handover\nAvailable as regular or spot bookings"
+            "slug": {
+              "ja": "respite-care",
+              "en": "respite-care"
+            },
+            "title": {
+              "ja": "ご家族の休息（レスパイト）",
+              "en": "Respite for families"
             }
           }
         },
@@ -1390,29 +1390,29 @@
               "ja": "ご本人とご家族の希望に寄り添い、住み慣れた場所での時間を支えます。",
               "en": "Compassionate support to spend final days at home."
             },
-            "slug": {
-              "ja": "end-of-life-care",
-              "en": "end-of-life-care"
+            "detail": {
+              "ja": "人生の最終段階を、住み慣れたご自宅で穏やかに過ごしたいというご本人・ご家族の願いに、Care 24 Japan は全力で寄り添います。痛みや不快感を最小限にする身体ケア、精神的なサポート、そしてご家族が大切な時間を共に過ごせる環境づくりをお手伝いします。医療機関とも連携し、安心できる看取りの場を整えます。",
+              "en": "When the time comes, most people wish to be at home — surrounded by those they love. Care 24 Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible."
+            },
+            "highlights": {
+              "ja": "緩和ケアチームとの医療連携\n苦痛の緩和と身体ケアの提供\nご本人・ご家族の精神的サポート\n24時間体制での見守りと対応\nご家族が寄り添える環境づくり",
+              "en": "Coordination with palliative care teams\nPain management and physical comfort care\nEmotional support for client and family\nRound-the-clock presence and response\nSpace for family to be present and grieve"
             },
             "image": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg",
               "en": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-719f-7abe-a7db-04caf4a4fcff-use-case-4.jpg"
             },
-            "title": {
-              "ja": "終末期の在宅ケア",
-              "en": "End-of-life home care"
-            },
-            "detail": {
-              "ja": "人生の最終段階を、住み慣れたご自宅で穏やかに過ごしたいというご本人・ご家族の願いに、Care 24 Japan は全力で寄り添います。痛みや不快感を最小限にする身体ケア、精神的なサポート、そしてご家族が大切な時間を共に過ごせる環境づくりをお手伝いします。医療機関とも連携し、安心できる看取りの場を整えます。",
-              "en": "When the time comes, most people wish to be at home — surrounded by those they love. Care 24 Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible."
-            },
             "image_alt": {
               "ja": "手を取り合う高齢者と介護スタッフ",
               "en": "A caregiver holding the hand of an elderly client"
             },
-            "highlights": {
-              "ja": "緩和ケアチームとの医療連携\n苦痛の緩和と身体ケアの提供\nご本人・ご家族の精神的サポート\n24時間体制での見守りと対応\nご家族が寄り添える環境づくり",
-              "en": "Coordination with palliative care teams\nPain management and physical comfort care\nEmotional support for client and family\nRound-the-clock presence and response\nSpace for family to be present and grieve"
+            "slug": {
+              "ja": "end-of-life-care",
+              "en": "end-of-life-care"
+            },
+            "title": {
+              "ja": "終末期の在宅ケア",
+              "en": "End-of-life home care"
             }
           }
         }
@@ -1424,7 +1424,7 @@
         "title": "ご利用の流れ",
         "description": "ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1432,7 +1432,7 @@
           "title": "How it works",
           "description": "From member registration through your care supporter's home visit to the completion report — how Care 24 Japan's service flow works, step by step.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1530,7 +1530,7 @@
         "title": "運営会社",
         "description": "メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1538,7 +1538,7 @@
           "title": "Operating Company",
           "description": "Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1664,7 +1664,7 @@
         "title": "プライバシーポリシー",
         "description": "メディカルインフォマティクス株式会社が、取得した個人情報の保護を経営上の重要課題と位置づけ、全社員に周知徹底する基本方針を定めたCare 24 Japanのプライバシーポリシーです。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1672,7 +1672,7 @@
           "title": "Privacy Policy",
           "description": "MedicalInformatics Co., Ltd.'s privacy policy for Care 24 Japan — how personal information from stakeholders is protected as a core management priority.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1698,7 +1698,7 @@
         "title": "特定商取引法に基づく表記",
         "description": "メディカルインフォマティクス株式会社の名称・住所・代表者・お問い合わせ専用メールアドレスなど、特定商取引法に基づく表記をまとめたページです。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1706,7 +1706,7 @@
           "title": "Notation based on the Act on Specified Commercial Transactions",
           "description": "Notation based on Japan's Act on Specified Commercial Transactions for MedicalInformatics Co., Ltd. — name, address, representative and contact details.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1732,7 +1732,7 @@
         "title": "Care24Japan プラットフォーム利用規約（ケアサポーター向け）",
         "description": "メディカルインフォマティクス株式会社が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」の、ケアサポーター向け利用規約です。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1740,7 +1740,7 @@
           "title": "Care24Japan Platform Terms & Conditions (For Care Supporters)",
           "description": "Terms of Use for Care Supporters — nurses and caregivers registering on Care24Japan, the home-care matching platform run by MedicalInformatics Co., Ltd.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1766,7 +1766,7 @@
         "title": "Care24Japan プラットフォーム利用規約（ご利用者様向け）",
         "description": "メディカルインフォマティクス株式会社が運営する保険外サービスマッチングプラットフォーム「Care24Japan」の、ご利用者様向け利用条件を定めた利用規約です。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1774,7 +1774,7 @@
           "title": "Care24Japan Platform Terms of Service (For Users)",
           "description": "Terms of Service for Care24Japan users — the non-insurance care matching platform operated by MedicalInformatics Co., Ltd., covering conditions of use.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1800,7 +1800,7 @@
         "title": "Care24Japan キャンセルポリシー",
         "description": "Care24Japanで予約確定した訪問介護・訪問看護・リハビリ等のサービスを変更・キャンセルする場合の条件とキャンセル料を定めたポリシーです。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1808,7 +1808,7 @@
           "title": "Care24Japan Cancellation Policy",
           "description": "Care24Japan's policy on the conditions and fees when a user changes or cancels a confirmed visiting care, nursing, or rehabilitation service reservation.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1834,7 +1834,7 @@
         "title": "Care24Japan ケアサポーター報酬規程",
         "description": "Care24Japanで準委任契約により独立した請負人として業務を提供するケアサポーターへの、報酬の支払いに関する基本事項を定めた規程です。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1842,7 +1842,7 @@
           "title": "Care24Japan Care Supporter Remuneration Regulations",
           "description": "Regulations on how MedicalInformatics Co., Ltd. pays remuneration to Care Supporters who provide services as independent contractors on Care24Japan.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
@@ -1868,7 +1868,7 @@
         "title": "ケアサービス準委任契約書",
         "description": "メディカルインフォマティクス株式会社の「Care24Japan」利用規約に基づき、契約者とケアサポーター間で成立する個別準委任契約の内容を証明する書面です。",
         "keywords": null,
-        "og_image": "",
+        "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
         "canonical": ""
       },
       "seoTranslations": {
@@ -1876,7 +1876,7 @@
           "title": "Care Service Quasi-Mandate Contract",
           "description": "A document certifying the individual quasi-mandate contract between a Contractor and Care Supporter, formed under Care24Japan's Terms of Use.",
           "keywords": null,
-          "og_image": "",
+          "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
           "canonical": ""
         }
       },
