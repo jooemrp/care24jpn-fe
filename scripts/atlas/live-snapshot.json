@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T06:23:50.041Z",
+  "generatedAt": "2026-08-21T16:11:42.661Z",
   "pages": [
     {
       "slug": "site",
@@ -219,6 +219,31 @@
             "description": {
               "ja": "Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。",
               "en": "Premium 24-hour in-home elderly care across Japan."
+            }
+          }
+        },
+        {
+          "type": "site-not-found-labels",
+          "data": {
+            "body": {
+              "ja": "このページは移動または削除された可能性があります。",
+              "en": "The page you are looking for may have been moved or removed."
+            },
+            "title": {
+              "ja": "お探しのページが見つかりません",
+              "en": "Page not found"
+            },
+            "eyebrow": {
+              "ja": "404",
+              "en": "404"
+            },
+            "home_label": {
+              "ja": "トップページへ",
+              "en": "Back to home"
+            },
+            "meta_description": {
+              "ja": "お探しのページが見つかりません。",
+              "en": "The page you are looking for does not exist."
             }
           }
         },
@@ -1157,7 +1182,7 @@
       },
       "seoTranslations": {
         "en": {
-          "title": "",
+          "title": "Pricing for users",
           "description": "Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.",
           "keywords": null,
           "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
@@ -1204,7 +1229,7 @@
       },
       "seoTranslations": {
         "en": {
-          "title": "",
+          "title": "Hourly wage/salary system for care supporters",
           "description": "Care 24 Japan's hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.",
           "keywords": null,
           "og_image": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
@@ -1553,6 +1578,10 @@
             "value": {
               "ja": "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
               "en": "MedicalInformatics Co.,Ltd."
+            },
+            "row_key": {
+              "ja": "trade-name",
+              "en": "trade-name"
             }
           }
         },
@@ -1566,6 +1595,10 @@
             "value": {
               "ja": "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
               "en": "Meiji Seimei Building 4F, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005"
+            },
+            "row_key": {
+              "ja": "head-office",
+              "en": "head-office"
             }
           }
         },
@@ -1579,6 +1612,10 @@
             "value": {
               "ja": "03-5733-6600",
               "en": "03-5733-6600"
+            },
+            "row_key": {
+              "ja": "tel",
+              "en": "tel"
             }
           }
         },
@@ -1592,6 +1629,10 @@
             "value": {
               "ja": "2002年10月18日",
               "en": "October 18, 2002"
+            },
+            "row_key": {
+              "ja": "established",
+              "en": "established"
             }
           }
         },
@@ -1605,6 +1646,10 @@
             "value": {
               "ja": "1億円",
               "en": "JPY 100 million"
+            },
+            "row_key": {
+              "ja": "capital",
+              "en": "capital"
             }
           }
         },
@@ -1618,6 +1663,10 @@
             "value": {
               "ja": "代表取締役 佐々木 美樹",
               "en": "Representative Director: Miki Sasaki"
+            },
+            "row_key": {
+              "ja": "representative",
+              "en": "representative"
             }
           }
         },
@@ -1631,6 +1680,10 @@
             "value": {
               "ja": "Social Impact Solutions株式会社 100％",
               "en": "Social Impact Solutions Inc. 100%"
+            },
+            "row_key": {
+              "ja": "shareholders",
+              "en": "shareholders"
             }
           }
         },
@@ -1644,6 +1697,10 @@
             "value": {
               "ja": "Aegis Care Advisors Pvt.ltd (Care24)、PT. SIPS Edutech Indonesia、EvoCare Japan株式会社",
               "en": "Aegis Care Advisors Pvt. Ltd. (Care24), PT. SIPS Edutech Indonesia, EvoCare Japan Co., Ltd."
+            },
+            "row_key": {
+              "ja": "group-companies",
+              "en": "group-companies"
             }
           }
         },
