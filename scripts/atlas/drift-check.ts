@@ -498,7 +498,8 @@ async function main(): Promise<void> {
   );
   console.error(
     "[atlas:drift] This means a dashboard edit exists that `npm run atlas:seed` would SILENTLY OVERWRITE " +
-      "(ensurePublishedPage is a full replace, not a merge — scripts/atlas/lib.ts:733-737). " +
+      "(ensurePublishedPage replaces a page's BLOCK list wholesale; only `seo` is merged — " +
+      "see scripts/atlas/lib.ts#preserveEditorSeo). " +
       "Do NOT reseed the affected page(s) until this is investigated and, if the drift is intentional, " +
       "the snapshot is refreshed with --write.",
   );

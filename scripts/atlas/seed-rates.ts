@@ -46,6 +46,7 @@ import {
   ensurePublishedPage,
   type AtlasScriptEnv,
 } from "./lib";
+import { ogImageForSlug } from "./og-image";
 import { supporterRates, type SupporterRateRow } from "../../constants/pricing";
 import { pricing as pricingCopy, actionPlan as feesCopy, type Bilingual } from "../../constants/copy";
 
@@ -276,7 +277,19 @@ async function main(): Promise<void> {
   ];
 
   for (const page of pages) {
-    const { created, published } = await ensurePublishedPage(client, page);
+    // og:image travels with the page that owns it — see og-image.ts. `rates`
+    // backs no public route, so ogImageForSlug returns null for it.
+    const og = ogImageForSlug(page.slug);
+    const { created, published } = await ensurePublishedPage(client, {
+      ...page,
+      seo: { ...page.seo, ...(og ? { og_image: og.ja } : {}) },
+      // Only `og_image` is named here on purpose: `preserveEditorSeo` merges
+      // it onto whatever EN seo the page already carries (its title, and any
+      // description an editor set), so naming one key does not blank the
+      // rest. `rates` (og === null) gets no EN row at all — it backs no
+      // public route.
+      ...(og ? { seo_translations: { en: { og_image: og.en } } } : {}),
+    });
     const createdLabel = created ? "+ created" : "= updated (already existed)";
     const publishedLabel = published ? "+ published" : "= already published";
     console.log(

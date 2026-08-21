@@ -32,6 +32,7 @@ import {
   createScriptManagementClient,
   ensurePublishedPage,
 } from "./lib";
+import { ogImageForSlug } from "./og-image";
 
 interface LegalPageSpec {
   /** Atlas page slug this legal doc is published under. */
@@ -73,16 +74,24 @@ function buildLegalDocBlock(blockTypeId: string, doc: LegalDoc) {
 }
 
 async function main(): Promise<void> {
-  // Guard added alongside legal-html.ts's gap-6 fix: blocksToHtml now
-  // serializes `[label](href)` markdown link syntax into a real
-  // `<a href="...">` element instead of leaving it as literal characters.
-  // That is render-neutral (LegalDocPage.tsx already turns the markdown
-  // form into a real <Link>, and this script's own output is never
-  // rendered — it only feeds Atlas/seeding), but it DOES change the exact
-  // HTML this script would write, and the project rule is that legal
-  // document CONTENT in Atlas is not to be touched. Without this guard, the
-  // next routine `npm run atlas:seed` would silently rewrite all 7 live
-  // legal bodies from `[label](/path)` to `<a href>`.
+  // The project rule is that legal document CONTENT in Atlas is not touched
+  // by a routine seed: these are compliance documents, and a reseed that
+  // "just" reformats them is still a change to live legal text.
+  //
+  // The guard was originally added because blocksToHtml had started
+  // serializing `[label](href)` markdown into a real `<a href="...">`, and
+  // the fear was that a reseed would rewrite all 7 live bodies. A measured
+  // reseed on 2026-08-21 showed the real blast radius is ONE document:
+  // `legal-tokushoho` is the only body containing markdown link syntax, and
+  // the conversion is render-neutral (LegalDocPage.tsx already turns the
+  // markdown form into a real <Link>). The other six bodies came back
+  // byte-identical — verified by `atlas:drift`, which reported exactly the
+  // three fields that run intended to change and nothing else.
+  //
+  // So the guard stays, but for the durable reason rather than the original
+  // one: reseeding legal is a deliberate act, not a step in `atlas:seed`.
+  // Run it with the opt-in, then `atlas:drift --write` the pages it touched
+  // and re-run `atlas:verify`.
   if (process.env.ATLAS_ALLOW_LEGAL_RESEED !== "1") {
     console.error(
       "[atlas:seed-legal] refusing to run: legal document CONTENT in Atlas must not be " +
@@ -110,9 +119,12 @@ async function main(): Promise<void> {
 
   for (const { slug, docKey } of LEGAL_PAGES) {
     const doc = legalDocs[docKey];
+    // og:image travels with the page that owns it — see og-image.ts for why
+    // it is not written by a script of its own.
+    const og = ogImageForSlug(slug);
     const pageInput = {
-      seo: { title: doc.heading.ja },
-      seo_translations: { en: { title: doc.heading.en } },
+      seo: { title: doc.heading.ja, ...(og ? { og_image: og.ja } : {}) },
+      seo_translations: { en: { title: doc.heading.en, ...(og ? { og_image: og.en } : {}) } },
       blocks: [buildLegalDocBlock(legalDocType.id, doc)],
     };
 

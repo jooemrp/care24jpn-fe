@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T08:57:42.138Z",
+  "generated_at": "2026-08-21T06:09:56.419Z",
   "folder": "/marketing-web/",
   "assets": {
     "hero.webp": {
@@ -65,6 +65,22 @@
       "height": 667,
       "mime_type": "image/jpeg",
       "uploaded_as": "use-case-4.jpg"
+    },
+    "og-card.png": {
+      "id": "01a022f0-b829-796e-bf44-95623fb5e840",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b718-728b-92fe-e7a50d7ca046-og-card.png",
+      "width": 1200,
+      "height": 630,
+      "mime_type": "image/png",
+      "uploaded_as": "og-card.png"
+    },
+    "og-card-en.png": {
+      "id": "01a022f0-b8fe-74ed-aef4-e555d1b6345a",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a022f0-b8c4-72b8-9221-0d142df44320-og-card-en.png",
+      "width": 1200,
+      "height": 630,
+      "mime_type": "image/png",
+      "uploaded_as": "og-card-en.png"
     }
   }
 }

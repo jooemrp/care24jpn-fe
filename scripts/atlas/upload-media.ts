@@ -103,6 +103,14 @@ const ASSETS: { file: string; usedBy: string }[] = [
   { file: "use-case-2.webp", usedBy: "use_case_item[1].image + home_care_course_card[1].image" },
   { file: "use-case-3.webp", usedBy: "use_case_item[2].image + home_care_course_card[2].image" },
   { file: "use-case-4.webp", usedBy: "use_case_item[3].image + home_care_course_card[3].image" },
+  // The two share cards. Unlike every entry above they back no BLOCK field —
+  // they are read by `seed-og-image.ts`, which writes their absolute url into
+  // each page's `seo.og_image` / `seo_translations.en.seo.og_image`. They are
+  // listed here anyway because this script is the only thing that records a
+  // media url in the manifest, and the pruning loop at the bottom of `main`
+  // deletes any manifest key NOT listed here.
+  { file: "og-card.png", usedBy: "seo.og_image (ja) — via seed-og-image.ts" },
+  { file: "og-card-en.png", usedBy: "seo_translations.en.seo.og_image — via seed-og-image.ts" },
 ];
 
 const MIME_BY_EXT: Record<string, string> = {

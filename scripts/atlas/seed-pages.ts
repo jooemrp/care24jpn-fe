@@ -30,6 +30,7 @@
  *   npx tsx scripts/atlas/seed-pages.ts
  */
 import { useCase, serviceFlow, company, type Bilingual } from "@/constants/copy";
+import { ogImageForSlug } from "./og-image";
 import {
   requireAtlasEnv,
   createScriptManagementClient,
@@ -112,10 +113,14 @@ async function upsertPage(
   seoTranslations: { en: { title: string } },
   blocks: BlockDraft[],
 ): Promise<void> {
+  // og:image travels with the page that owns it — see og-image.ts for why it
+  // is not written by a script of its own.
+  const og = ogImageForSlug(pageSlug);
+
   const { created, published } = await ensurePublishedPage(client, {
     slug: pageSlug,
-    seo,
-    seo_translations: seoTranslations,
+    seo: { ...seo, ...(og ? { og_image: og.ja } : {}) },
+    seo_translations: { en: { ...seoTranslations.en, ...(og ? { og_image: og.en } : {}) } },
     blocks,
   });
 
