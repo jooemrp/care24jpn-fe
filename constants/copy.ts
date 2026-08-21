@@ -113,6 +113,41 @@ export const errorPage = {
   retryLabel: { ja: "再試行", en: "Try again" } satisfies Bilingual,
 };
 
+/**
+ * `app/global-not-found.tsx`'s copy — the 404 page. Verbatim from the JSX
+ * that used to hardcode it; this is now both the seed source for the
+ * `site_not_found_labels` block and the fallback when Atlas is unreachable,
+ * exactly like `errorPage` above.
+ *
+ * `eyebrow` is NOT bilingual on purpose: "404" is the HTTP status, the same
+ * three digits in both locales, and the field is non-localizable in
+ * `scripts/atlas/schema.ts` to match.
+ *
+ * `metaDescription` is a separate field rather than being derived from
+ * `title`, because the rendered heading and the `<meta name="description">`
+ * differ by one character today (`…見つかりません` vs `…見つかりません。`)
+ * and the EN halves are different sentences outright. Deriving one from the
+ * other would silently rewrite copy this migration is supposed to preserve.
+ * `global-not-found.tsx` joins the two locales with " / " — the page has no
+ * `[lang]` param to choose with, same constraint the body copy has.
+ */
+export const notFoundPage = {
+  eyebrow: "404",
+  title: {
+    ja: "お探しのページが見つかりません",
+    en: "Page not found",
+  } satisfies Bilingual,
+  body: {
+    ja: "このページは移動または削除された可能性があります。",
+    en: "The page you are looking for may have been moved or removed.",
+  } satisfies Bilingual,
+  homeLabel: { ja: "トップページへ", en: "Back to home" } satisfies Bilingual,
+  metaDescription: {
+    ja: "お探しのページが見つかりません。",
+    en: "The page you are looking for does not exist.",
+  } satisfies Bilingual,
+};
+
 /* ------------------------------------------------------------------ */
 /* Homepage                                                            */
 /* ------------------------------------------------------------------ */
@@ -919,10 +954,23 @@ export const footer = {
 /* Operating company (/company — content from mics.tokyo/company)      */
 /* ------------------------------------------------------------------ */
 
+/**
+ * `key` is each row's STABLE identity, and is never rendered. It exists
+ * because `features/seo/organization.ts` needs three specific rows —
+ * trade name, head office, established — to build the Organization
+ * JSON-LD's `legalName`, `address` and `foundingDate`. It used to find them
+ * by matching `label.en` against the literals "Trade name" / "Head office" /
+ * "Established", which made an ordinary content edit (renaming a row label
+ * in the dashboard) silently drop those three facts from the site's
+ * structured data. Mirrored in Atlas as `company_row.row_key`
+ * (scripts/atlas/schema.ts), the same role `course_key`/`row_key` already
+ * play for `rate_row`.
+ */
 export const company = {
   heading: { ja: "運営会社", en: "Operating Company" } satisfies Bilingual,
   rows: [
     {
+      key: "trade-name",
       label: { ja: "商号", en: "Trade name" } satisfies Bilingual,
       value: {
         ja: "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
@@ -930,6 +978,7 @@ export const company = {
       } satisfies Bilingual,
     },
     {
+      key: "head-office",
       label: { ja: "本社", en: "Head office" } satisfies Bilingual,
       value: {
         ja: "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
@@ -937,20 +986,24 @@ export const company = {
       } satisfies Bilingual,
     },
     {
+      key: "tel",
       label: { ja: "Tel", en: "Tel" } satisfies Bilingual,
       value: { ja: "03-5733-6600", en: "03-5733-6600" } satisfies Bilingual,
     },
     {
+      key: "established",
       label: { ja: "設立", en: "Established" } satisfies Bilingual,
       value: { ja: "2002年10月18日", en: "October 18, 2002" } satisfies Bilingual,
     },
     {
+      key: "capital",
       label: { ja: "資本金", en: "Capital" } satisfies Bilingual,
       // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en").
       // Synced with Atlas (company page, company-row block, en.value).
       value: { ja: "1億円", en: "JPY 100 million" } satisfies Bilingual,
     },
     {
+      key: "representative",
       label: { ja: "代表者", en: "Representative" } satisfies Bilingual,
       value: {
         ja: "代表取締役 佐々木 美樹",
@@ -958,6 +1011,7 @@ export const company = {
       } satisfies Bilingual,
     },
     {
+      key: "shareholders",
       label: { ja: "株主構成", en: "Shareholders" } satisfies Bilingual,
       value: {
         ja: "Social Impact Solutions株式会社 100％",
@@ -965,6 +1019,7 @@ export const company = {
       } satisfies Bilingual,
     },
     {
+      key: "group-companies",
       label: { ja: "グループ企業", en: "Group companies" } satisfies Bilingual,
       value: {
         ja: "Aegis Care Advisors Pvt.ltd (Care24)、PT. SIPS Edutech Indonesia、EvoCare Japan株式会社",

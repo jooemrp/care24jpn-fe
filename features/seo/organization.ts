@@ -35,8 +35,13 @@
 type Bi = { ja: string; en: string };
 
 /** Matches `constants/copy.ts#company`'s row shape
- * (`Company["rows"][number]`), duplicated locally — see file header. */
-export type CompanyRow = { label: Bi; value: Bi };
+ * (`Company["rows"][number]`), duplicated locally — see file header.
+ *
+ * `key` is the stable, non-localizable row identity (`company_row.row_key`
+ * in Atlas). It is optional here on purpose: `features/cms/pages-map.ts`
+ * fills it with `""` for a workspace seeded before that field existed, and
+ * `findRow` below is what handles that case. */
+export type CompanyRow = { key?: string; label: Bi; value: Bi };
 
 export type PostalAddress = {
   streetAddress: string;
@@ -85,12 +90,59 @@ function warnOnce(key: string, message: string): void {
 // company_row lookups
 // ---------------------------------------------------------------------------
 
-const TRADE_NAME_LABEL_EN = "Trade name";
-const HEAD_OFFICE_LABEL_EN = "Head office";
-const ESTABLISHED_LABEL_EN = "Established";
+/**
+ * The three rows this module needs, identified by `company_row.row_key` —
+ * the stable, non-localizable key seeded from `constants/copy.ts#company.rows[].key`
+ * (see scripts/atlas/schema.ts and scripts/atlas/seed-pages.ts).
+ *
+ * WHY A KEY AND NOT THE LABEL. This used to match on `row.label.en ===
+ * "Head office"`. Renaming that row's English label in the dashboard is an
+ * ordinary content edit — "Head office" -> "Head Office", or translating it
+ * differently — and it silently dropped `address` and `foundingDate` from
+ * the site's structured data, with nothing but one server-log warning to
+ * say so. The label is copy; copy is the editor's to change. Identity has
+ * to live somewhere the editor is not expected to keep byte-stable.
+ */
+const TRADE_NAME_ROW_KEY = "trade-name";
+const HEAD_OFFICE_ROW_KEY = "head-office";
+const ESTABLISHED_ROW_KEY = "established";
 
-function findRow(rows: CompanyRow[], labelEn: string): CompanyRow | undefined {
-  return rows.find((row) => row.label.en === labelEn);
+/** The English labels these rows carried before `row_key` existed. Kept
+ * ONLY for `findRow`'s second pass — see there. */
+const LEGACY_LABEL_EN: Record<string, string> = {
+  [TRADE_NAME_ROW_KEY]: "Trade name",
+  [HEAD_OFFICE_ROW_KEY]: "Head office",
+  [ESTABLISHED_ROW_KEY]: "Established",
+};
+
+/**
+ * Key first, legacy English label second.
+ *
+ * The second pass is not belt-and-braces: it is what keeps this working
+ * against a workspace that has not been re-seeded since `company_row.row_key`
+ * was added, where every row's key is `""` (`features/cms/pages-map.ts`
+ * falls back to the empty string rather than guessing from position). It
+ * also covers `fallbackCompanyRows`, which always carries real keys, so the
+ * fallback path never depends on the label either.
+ *
+ * A row whose key matches wins outright, even if some other row happens to
+ * carry the legacy label — the key is the identity, the label is not.
+ */
+function findRow(rows: CompanyRow[], rowKey: string): CompanyRow | undefined {
+  const byKey = rows.find((row) => row.key === rowKey);
+  if (byKey) return byKey;
+
+  const legacyLabel = LEGACY_LABEL_EN[rowKey];
+  const byLabel = legacyLabel
+    ? rows.find((row) => row.label.en === legacyLabel)
+    : undefined;
+  if (byLabel) {
+    warnOnce(
+      `company-row-legacy-label:${rowKey}`,
+      `[seo:organization] company row "${rowKey}" was found by its English label ("${legacyLabel}"), not by row_key — this workspace predates the company_row.row_key field. Re-run "npx tsx scripts/atlas/seed-pages.ts" so the key is stored; until then, renaming that row's label in the dashboard will drop it from the Organization JSON-LD. This warning prints once per key per process.`,
+    );
+  }
+  return byLabel;
 }
 
 /**
@@ -175,18 +227,18 @@ function toAbsoluteUrl(url: string, siteUrl: string): string {
 // ---------------------------------------------------------------------------
 
 function resolveLegalName(companyRows: CompanyRow[], fallbackCompanyRows: CompanyRow[]): string {
-  const row = findRow(companyRows, TRADE_NAME_LABEL_EN);
+  const row = findRow(companyRows, TRADE_NAME_ROW_KEY);
   if (row && row.value.en.trim() !== "") return row.value.en;
 
   warnOnce(
     row
       ? "organization:legal-name-empty"
-      : `organization:row-miss:${TRADE_NAME_LABEL_EN}`,
+      : `organization:row-miss:${TRADE_NAME_ROW_KEY}`,
     row
-      ? `[cms:unexpected-content] organization: company_row "${TRADE_NAME_LABEL_EN}" has an empty/whitespace value.en — using the constants/copy.ts fallback company row for JSON-LD legalName instead, rather than emitting an empty legalName. Check for a cleared field in the dashboard. This warning only prints once per process.`
-        : `[cms:unexpected-content] organization: no company_row with label.en "${TRADE_NAME_LABEL_EN}" — using the constants/copy.ts fallback company row for JSON-LD legalName instead. Check for a renamed row label in the dashboard. This warning only prints once per process.`,
+      ? `[cms:unexpected-content] organization: company_row "${TRADE_NAME_ROW_KEY}" has an empty/whitespace value.en — using the constants/copy.ts fallback company row for JSON-LD legalName instead, rather than emitting an empty legalName. Check for a cleared field in the dashboard. This warning only prints once per process.`
+        : `[cms:unexpected-content] organization: no company_row with row_key "${TRADE_NAME_ROW_KEY}" (and none carrying the legacy label "Trade name") — using the constants/copy.ts fallback company row for JSON-LD legalName instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
   );
-  return findRow(fallbackCompanyRows, TRADE_NAME_LABEL_EN)?.value.en ?? "";
+  return findRow(fallbackCompanyRows, TRADE_NAME_ROW_KEY)?.value.en ?? "";
 }
 
 const EMPTY_ADDRESS: PostalAddress = {
@@ -201,22 +253,22 @@ function resolveAddress(
   companyRows: CompanyRow[],
   fallbackCompanyRows: CompanyRow[],
 ): PostalAddress {
-  const row = findRow(companyRows, HEAD_OFFICE_LABEL_EN);
+  const row = findRow(companyRows, HEAD_OFFICE_ROW_KEY);
   if (row) {
     const parsed = parseAddress(row.value.en);
     if (parsed) return parsed;
     warnOnce(
       "organization:address-unparseable",
-      `[cms:unexpected-content] organization: company_row "${HEAD_OFFICE_LABEL_EN}" value "${row.value.en}" does not match the expected "<building>, <street>, <ward>, <region> <postal>" shape — using the constants/copy.ts fallback address for JSON-LD instead. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: company_row "${HEAD_OFFICE_ROW_KEY}" value "${row.value.en}" does not match the expected "<building>, <street>, <ward>, <region> <postal>" shape — using the constants/copy.ts fallback address for JSON-LD instead. This warning only prints once per process.`,
     );
   } else {
     warnOnce(
-      `organization:row-miss:${HEAD_OFFICE_LABEL_EN}`,
-      `[cms:unexpected-content] organization: no company_row with label.en "${HEAD_OFFICE_LABEL_EN}" — using the constants/copy.ts fallback address for JSON-LD instead. Check for a renamed row label in the dashboard. This warning only prints once per process.`,
+      `organization:row-miss:${HEAD_OFFICE_ROW_KEY}`,
+      `[cms:unexpected-content] organization: no company_row with row_key "${HEAD_OFFICE_ROW_KEY}" (and none carrying the legacy label "Head office") — using the constants/copy.ts fallback address for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
     );
   }
 
-  const fallbackRow = findRow(fallbackCompanyRows, HEAD_OFFICE_LABEL_EN);
+  const fallbackRow = findRow(fallbackCompanyRows, HEAD_OFFICE_ROW_KEY);
   const fallbackParsed = fallbackRow ? parseAddress(fallbackRow.value.en) : null;
   return fallbackParsed ?? EMPTY_ADDRESS;
 }
@@ -225,22 +277,22 @@ function resolveFoundingDate(
   companyRows: CompanyRow[],
   fallbackCompanyRows: CompanyRow[],
 ): string {
-  const row = findRow(companyRows, ESTABLISHED_LABEL_EN);
+  const row = findRow(companyRows, ESTABLISHED_ROW_KEY);
   if (row) {
     const parsed = parseFoundingDate(row.value.en);
     if (parsed) return parsed;
     warnOnce(
       "organization:founding-date-unparseable",
-      `[cms:unexpected-content] organization: company_row "${ESTABLISHED_LABEL_EN}" value "${row.value.en}" does not match the expected "<Month> <day>, <year>" shape — using the constants/copy.ts fallback founding date for JSON-LD instead. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: company_row "${ESTABLISHED_ROW_KEY}" value "${row.value.en}" does not match the expected "<Month> <day>, <year>" shape — using the constants/copy.ts fallback founding date for JSON-LD instead. This warning only prints once per process.`,
     );
   } else {
     warnOnce(
-      `organization:row-miss:${ESTABLISHED_LABEL_EN}`,
-      `[cms:unexpected-content] organization: no company_row with label.en "${ESTABLISHED_LABEL_EN}" — using the constants/copy.ts fallback founding date for JSON-LD instead. Check for a renamed row label in the dashboard. This warning only prints once per process.`,
+      `organization:row-miss:${ESTABLISHED_ROW_KEY}`,
+      `[cms:unexpected-content] organization: no company_row with row_key "${ESTABLISHED_ROW_KEY}" (and none carrying the legacy label "Established") — using the constants/copy.ts fallback founding date for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
     );
   }
 
-  const fallbackRow = findRow(fallbackCompanyRows, ESTABLISHED_LABEL_EN);
+  const fallbackRow = findRow(fallbackCompanyRows, ESTABLISHED_ROW_KEY);
   const fallbackParsed = fallbackRow ? parseFoundingDate(fallbackRow.value.en) : null;
   return fallbackParsed ?? "";
 }

@@ -92,8 +92,15 @@ function otherSiteBlocks(): CmsBlock[] {
     simple("site-cta", 2, { primary: bi("p"), secondary: bi("s"), contact: bi("c") }),
     simple("site-ui-labels", 3, { menu_toggle_label: bi("m"), lang_toggle_label: bi("l") }),
     simple("site-error-labels", 4, { title: bi("t"), body: bi("b"), retry_label: bi("r") }),
-    simple("nav-item", 5, { href: bi("/"), label: bi("Home") }),
-    simple("site-footer", 6, { description: bi("d"), legal: bi("c 2026") }),
+    simple("site-not-found-labels", 5, {
+      eyebrow: bi("404"),
+      title: bi("nf-t"),
+      body: bi("nf-b"),
+      home_label: bi("nf-h"),
+      meta_description: bi("nf-m"),
+    }),
+    simple("nav-item", 6, { href: bi("/"), label: bi("Home") }),
+    simple("site-footer", 7, { description: bi("d"), legal: bi("c 2026") }),
   ];
 }
 

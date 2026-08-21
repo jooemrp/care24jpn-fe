@@ -273,9 +273,16 @@ async function main(): Promise<void> {
       blocks.push(makeBlock(typeIds, "page_hero", next(), split.ja, split.en));
     }
 
+    // `row_key` goes into the base (`ja`) data only, never the `en`
+    // translation: it is non-localizable in schema.ts because it is a stable
+    // identifier, not copy. `features/seo/organization.ts` reads it to find
+    // the trade-name / head-office / established rows without matching on
+    // translated label text.
     for (const row of company.rows) {
       const split = splitBilingual({ label: row.label, value: row.value });
-      blocks.push(makeBlock(typeIds, "company_row", next(), split.ja, split.en));
+      blocks.push(
+        makeBlock(typeIds, "company_row", next(), { ...split.ja, row_key: row.key }, split.en),
+      );
     }
 
     if (blocks.length !== 9) {
