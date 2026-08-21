@@ -726,29 +726,172 @@ export interface PageUpsertResult {
   published: boolean;
 }
 
+type SeoObject = Record<string, unknown>;
+
+/** Atlas double-encodes `seo` / `seo_translations[].seo` as JSON strings on
+ * this backend — the same quirk `features/cms/merge.ts` documents for block
+ * data. Tolerates a plain object too, so a backend that stops double-encoding
+ * does not silently start returning `{}` here. */
+function parseSeoValue(value: unknown): SeoObject {
+  if (typeof value === "string") {
+    if (value.trim() === "") return {};
+    try {
+      const parsed: unknown = JSON.parse(value);
+      return parsed && typeof parsed === "object" ? (parsed as SeoObject) : {};
+    } catch {
+      return {};
+    }
+  }
+  return value && typeof value === "object" ? (value as SeoObject) : {};
+}
+
+export interface LiveSeo {
+  base: SeoObject;
+  byLocale: Record<string, SeoObject>;
+}
+
+/** Reads a page's CURRENT seo over the read-only delivery path. Returns
+ * `null` when the page does not exist yet or is not published — in both cases
+ * there is nothing to preserve. */
+async function fetchLiveSeo(slug: string): Promise<LiveSeo | null> {
+  loadEnv();
+  const baseUrl = process.env.ATLAS_BASE_URL;
+  const apiKey = process.env.ATLAS_API_KEY;
+
+  if (!baseUrl || !apiKey) {
+    throw new Error(
+      "ATLAS_API_KEY (delivery key) is not set, and seeding without it is unsafe: " +
+        "seed scripts declare only `seo: { title }`, so any description / canonical / " +
+        "keywords / og_image an editor set in the dashboard would be replaced rather " +
+        "than merged. Add ATLAS_API_KEY to marketing-web/.env and re-run.",
+    );
+  }
+
+  const res = await fetch(`${baseUrl}/api/v1/public/pages/${slug}`, {
+    headers: { "X-API-Key": apiKey },
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`GET /api/v1/public/pages/${slug} -> ${res.status} while reading current seo.`);
+  }
+
+  const body = (await res.json()) as {
+    data?: { page?: { seo?: unknown }; seo_translations?: { locale?: string; seo?: unknown }[] };
+  };
+  const byLocale: Record<string, SeoObject> = {};
+  for (const row of body.data?.seo_translations ?? []) {
+    if (row.locale) byLocale[row.locale] = parseSeoValue(row.seo);
+  }
+  return { base: parseSeoValue(body.data?.page?.seo), byLocale };
+}
+
+/**
+ * Merges the seo a seed script declares ON TOP of whatever the page already
+ * carries, instead of letting it replace the object wholesale.
+ *
+ * ## The failure this prevents
+ *
+ * Every `seed-*.ts` passes `seo: { title }` — one key. The live pages carry
+ * five: `title`, `description`, `canonical`, `keywords`, `og_image`. The 13
+ * meta descriptions among them were written straight to Atlas and are not
+ * reproduced by any seed script, so a plain `npm run atlas:seed` would take
+ * them with it — silently, in a command that looks routine, with no
+ * recovery path but `scripts/atlas/live-snapshot.json`.
+ *
+ * The script still WINS for every key it names: seeding is how repo-owned
+ * copy reaches Atlas, and that is unchanged. What survives is only the keys
+ * the script says nothing about — precisely the fields an editor owns.
+ *
+ * A page that does not exist yet, or is unpublished, has nothing to preserve
+ * and is passed through untouched. So is an input that declares no `seo` at
+ * all: adding one here would be this helper inventing content.
+ */
+async function preserveEditorSeo(
+  slug: string,
+  rest: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  const declaresSeo = "seo" in rest || "seo_translations" in rest;
+  if (!declaresSeo) return rest;
+
+  const live = await fetchLiveSeo(slug);
+  return mergePageSeo(slug, live, rest);
+}
+
+/**
+ * The pure half of `preserveEditorSeo` — the merge itself, with the network
+ * read already done. Split out so `lib.seo-merge.test.ts` can prove the rule
+ * ("the script wins for every key it names, the page keeps every key it does
+ * not") without an Atlas round trip, matching the same testability split
+ * `features/cms/site-map.ts` and `features/seo/pageMetadata.ts` already use.
+ */
+export function mergePageSeo(
+  slug: string,
+  live: LiveSeo | null,
+  rest: Record<string, unknown>,
+): Record<string, unknown> {
+  // Both guards return the caller's own object: "nothing to merge" must be
+  // indistinguishable from not having called this at all.
+  if (!live) return rest;
+  if (!("seo" in rest) && !("seo_translations" in rest)) return rest;
+
+  const merged: Record<string, unknown> = { ...rest };
+  const keptNotes: string[] = [];
+
+  if ("seo" in rest) {
+    const incoming = (rest.seo ?? {}) as SeoObject;
+    const kept = Object.keys(live.base).filter((key) => !(key in incoming));
+    if (kept.length > 0) keptNotes.push(`ja: ${kept.join(", ")}`);
+    merged.seo = { ...live.base, ...incoming };
+  }
+
+  if ("seo_translations" in rest) {
+    const incoming = (rest.seo_translations ?? {}) as Record<string, SeoObject>;
+    const out: Record<string, SeoObject> = {};
+    for (const [locale, fields] of Object.entries(incoming)) {
+      const liveFields = live.byLocale[locale] ?? {};
+      const kept = Object.keys(liveFields).filter((key) => !(key in fields));
+      if (kept.length > 0) keptNotes.push(`${locale}: ${kept.join(", ")}`);
+      out[locale] = { ...liveFields, ...fields };
+    }
+    merged.seo_translations = out;
+  }
+
+  if (keptNotes.length > 0) {
+    console.log(`  · ${slug}: kept editor-set seo field(s) — ${keptNotes.join(" | ")}`);
+  }
+
+  return merged;
+}
+
 /**
  * Create-or-replace a page and leave it published — the single idempotent
  * write path for every seed-*.ts. Do not hand-roll this per script.
  *
- * `input` must be the COMPLETE desired page (`slug` plus whatever `seo` /
- * `seo_translations` / `blocks` belong on it), because the update path sends
- * everything but `slug` and the backend replaces the whole block list rather
- * than merging into it. Passing a partial page would delete the blocks it
- * omits.
+ * `input` must carry the COMPLETE desired BLOCK list, because the update path
+ * sends everything but `slug` and the backend replaces the block list rather
+ * than merging into it. Passing a partial block list would delete the blocks
+ * it omits.
+ *
+ * `seo` and `seo_translations` are the exception: they go through
+ * `preserveEditorSeo` first, which merges what this input declares on top of
+ * what the page already carries. A seed script therefore does NOT have to
+ * restate `description` / `canonical` / `keywords` / `og_image` just to avoid
+ * destroying them. See that function for the incident this prevents.
  */
 export async function ensurePublishedPage(
   client: ManagementClient<Record<string, unknown>>,
   input: CreatePageInput,
 ): Promise<PageUpsertResult> {
   const { slug, ...rest } = input;
+  const preserved = await preserveEditorSeo(slug, rest);
 
   let existing: PageBaseState | null;
   try {
-    existing = (await client.pages.update(slug, rest as UpdatePageInput)) as PageBaseState;
+    existing = (await client.pages.update(slug, preserved as UpdatePageInput)) as PageBaseState;
   } catch (error) {
     if (errorStatus(error) !== 404) throw error;
     existing = null;
-    await client.pages.create(input);
+    await client.pages.create({ slug, ...preserved });
   }
 
   const published = await publishIfNeeded(client, slug, existing?.status);
