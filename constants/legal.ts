@@ -40,6 +40,7 @@
  *     blocks.
  */
 
+import { contactPhone } from "./copy";
 import type { Bilingual } from "./copy";
 
 /**
@@ -244,7 +245,15 @@ export const legalDocs = {
         { type: "h2", text: "代表者" },
         { type: "p", text: "代表取締役 佐々木 美樹" },
         { type: "h2", text: "問い合わせ先" },
-        { type: "p", text: "【問い合わせ専用メールアドレス】 からお問い合わせください。 ※上記宛にお問い合わせいただければ、連絡先電話番号についても遅滞なく開示いたします。 （※公開用電話番号を設定した場合は、「電話番号03-XXXX-XXXX」と直接記載）" },
+        { type: "p", text: "【問い合わせ専用メールアドレス】 からお問い合わせください。" },
+        // 特定商取引法 requires a reachable contact. The number is taken from
+        // `contactPhone` rather than typed again so the 特商法 page can never
+        // disagree with the number in the header, the footer and the contact
+        // block. The sentence this replaced said a phone number "will be
+        // disclosed without delay on request", followed by a note to the
+        // editor telling them to state it directly if one exists — one does,
+        // and it is published site-wide, so both were false.
+        { type: "p", text: `電話番号：${contactPhone.display}` },
         { type: "h2", text: "利用料金" },
         { type: "p", text: "ご利用料金については、[こちらの料金ページ](/pricing)をご確認ください。" },
         { type: "h2", text: "利用料金の支払い方法" },
@@ -269,8 +278,7 @@ export const legalDocs = {
         { type: "p", text: "Miki Sasaki, Representative Director" },
         { type: "h2", text: "Contact Information" },
         { type: "p", text: "Please contact us via [Dedicated Inquiry Email Address]." },
-        { type: "p", text: "*If you contact us at the address above, we will disclose our contact phone number without delay." },
-        { type: "p", text: "(*If a public phone number is set, state it directly as \"Phone Number: 03-XXXX-XXXX\")" },
+        { type: "p", text: `Phone Number: ${contactPhone.display}` },
         { type: "h2", text: "Usage Fees" },
         { type: "p", text: "Regarding usage fees, please check [our pricing page](/pricing)." },
         { type: "h2", text: "Payment Method for Usage Fees" },
@@ -644,7 +652,6 @@ export const legalDocs = {
         { type: "p", text: "本業務の遂行に伴い、受託者の故意または過失によって委託者に損害（怪我、器物破損等）が発生した場合、受託者は民法上の善管注意義務違反に基づく責任を直接負うものとし、プラットフォーム運営会社である当社は原則として責任を負いません。ただし、当社が加入する賠償責任保険が適用可能な場合は、その範囲内で補填が行われるものとします。" },
         { type: "p", text: "本契約は、当社システム上において、委託者の予約申込みに対して受託者が受諾の操作を行い、マッチング完了の電磁的記録が当社のサーバーに記録された時点をもって、有効に成立したものとみなします。" },
         { type: "p", text: "（本通知はシステムより自動配信されているため、署名・捺印は省略されます）" },
-        { type: "p", text: "※「マッチング成立時にシステムから自動発行（メール送信または画面表示）される電子書面」としてシステムに組み込む想定" },
       ],
       en: [
         { type: "p", text: "This notice (document) certifies the details of the individual quasi-mandate contract established directly between the following Contractor and Care Supporter, based on the Terms of Use of the \"Care24Japan\" platform operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\")." },

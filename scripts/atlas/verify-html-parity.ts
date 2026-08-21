@@ -1032,7 +1032,42 @@ const ST_U2_LEGAL_TITLE_NEW = new Set<string>([
   "<title>Care24Japan プラットフォーム利用規約（ご利用者様向け）</title>",
 ]);
 
+// --- 2026-08-21 perbaikan konten legal (permintaan user, tindak lanjut audit
+// bagian E "konten placeholder tayang publik").
+//
+// Tiga suntingan, dua halaman:
+//   1. /tokushoho (ja & en) — nomor telepon asli menggantikan instruksi
+//      editorial ke diri sendiri. 特定商取引法 mewajibkan kontak yang bisa
+//      dihubungi; yang tayang sebelumnya adalah catatan "kalau nomor publik
+//      sudah ada, tulis langsung" PLUS janji "akan diungkap bila diminta" —
+//      padahal nomornya ada dan sudah tampil di header, footer dan blok
+//      kontak. Diambil dari constants/copy.ts#contactPhone, bukan diketik
+//      ulang, supaya halaman 特商法 tidak bisa berbeda dengan sisa situs.
+//   2. /quasi-mandate (ja) — catatan implementasi internal tim dihapus.
+//   3. Sisi EN tokushoho: dua paragraf usang menyatu jadi satu baris nomor.
+//
+// constants/legal.ts DAN Atlas disemai ke nilai yang sama (reseed legal
+// dengan opt-in ATLAS_ALLOW_LEGAL_RESEED=1, lalu drift --write pada dua
+// halaman itu), jadi CMS-ON dan CMS-OFF identik — gerbang CMS-ON vs CMS-OFF
+// tidak melaporkan apa pun untuk perubahan ini.
+//
+// Placeholder [X,XXX] di /quasi-mandate SENGAJA dibiarkan (keputusan user):
+// nilai-nilai itu per-penugasan, bukan data situs.
+// ---------------------------------------------------------------------
+const LEGAL_CONTACT_FIX_OLD = new Set<string>([
+  "<p>*If you contact us at the address above, we will disclose our contact phone number without delay.</p>",
+  "<p>(*If a public phone number is set, state it directly as &quot;Phone Number: 03-XXXX-XXXX&quot;)</p>",
+  "<p>※「マッチング成立時にシステムから自動発行（メール送信または画面表示）される電子書面」としてシステムに組み込む想定</p>",
+  "<p>【問い合わせ専用メールアドレス】 からお問い合わせください。 ※上記宛にお問い合わせいただければ、連絡先電話番号についても遅滞なく開示いたします。 （※公開用電話番号を設定した場合は、「電話番号03-XXXX-XXXX」と直接記載）</p>",
+]);
+const LEGAL_CONTACT_FIX_NEW = new Set<string>([
+  "<p>Phone Number: 0120-001-224</p>",
+  "<p>【問い合わせ専用メールアドレス】 からお問い合わせください。</p>",
+  "<p>電話番号：0120-001-224</p>",
+]);
+
 const ST_U2_YEN_OLD = new Set<string>([
+
   "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥6,000</span>",
   "<p class=\"mt-1 text-lg text-body\">Tax included ¥6,600</p>",
   "<span class=\"text-5xl font-bold tabular-nums text-heading\">¥3,400</span>",
@@ -1324,6 +1359,21 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
     count: 7,
     why: 'Pasangan dari st-u2-en-yen-ke-jpy-home-company-lama-dihapus: baris baru berawalan "JPY " menggantikan "¥", angka setelahnya identik. 7 baris.',
     matches: (line) => ST_U2_YEN_NEW.has(line),
+  },
+
+  {
+    id: "legal-kontak-placeholder-lama-dihapus",
+    side: "dihapus",
+    count: 4,
+    why: "Perbaikan konten legal 2026-08-21 (audit bagian E): instruksi editorial ke diri sendiri dan janji \"nomor akan diungkap bila diminta\" di /tokushoho (1 paragraf JA gabungan + 2 paragraf EN), plus catatan implementasi internal tim di /quasi-mandate (ja). 4 baris.",
+    matches: (line) => LEGAL_CONTACT_FIX_OLD.has(line),
+  },
+  {
+    id: "legal-kontak-placeholder-baru-ditambah",
+    side: "ditambah",
+    count: 3,
+    why: "Pasangan dari legal-kontak-placeholder-lama-dihapus: nomor telepon asli 0120-001-224 (dari constants/copy.ts#contactPhone) pada sisi JA dan EN /tokushoho, plus baris email JA yang kini berdiri sendiri setelah kalimat usang dicabut. 3 baris, bukan 4 — catatan internal /quasi-mandate dihapus tanpa pengganti.",
+    matches: (line) => LEGAL_CONTACT_FIX_NEW.has(line),
   },
 ];
 
