@@ -30,6 +30,7 @@ import {
   requireMediaManifest,
   mediaId,
 } from "./lib";
+import { ogImageForSlug } from "./og-image";
 
 // ---------------------------------------------------------------------------
 // Small builders — derive block `data` / `translations.en.data` from the
@@ -377,8 +378,19 @@ async function main(): Promise<void> {
   }
 
   const pageSlug = "home";
-  const seo = { title: "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを" };
-  const seoTranslations = { en: { title: "Care 24 Japan — Premium 24-hour in-home care" } };
+  // og:image travels with the page that owns it — see og-image.ts for why it
+  // is not written by a script of its own.
+  const og = ogImageForSlug(pageSlug);
+  const seo = {
+    title: "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
+    ...(og ? { og_image: og.ja } : {}),
+  };
+  const seoTranslations = {
+    en: {
+      title: "Care 24 Japan — Premium 24-hour in-home care",
+      ...(og ? { og_image: og.en } : {}),
+    },
+  };
 
   const { created, published } = await ensurePublishedPage(client, {
     slug: pageSlug,

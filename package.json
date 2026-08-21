@@ -7,11 +7,10 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test $(find features scripts -name '*.test.ts' ! -name 'legal-html.test.ts' ! -name 'site.test.ts' ! -name 'pageMetadata.test.ts' ! -name 'pricingJsonLd.test.ts' ! -name 'legal-select.test.ts' ! -name 'pages-map.test.ts' ! -name 'lib.seo-merge.test.ts' | sort) && npx tsx features/cms/legal-html.test.ts && npx tsx features/cms/site.test.ts && npx tsx features/seo/pageMetadata.test.ts && npx tsx features/seo/pricingJsonLd.test.ts && npx tsx features/cms/legal-select.test.ts && npx tsx features/cms/pages-map.test.ts && npx tsx scripts/atlas/lib.seo-merge.test.ts",
+    "test": "node --test $(find features scripts -name '*.test.ts' ! -name 'legal-html.test.ts' ! -name 'site.test.ts' ! -name 'pageMetadata.test.ts' ! -name 'pricingJsonLd.test.ts' ! -name 'legal-select.test.ts' ! -name 'pages-map.test.ts' ! -name 'lib.seo-merge.test.ts' ! -name 'og-image.test.ts' | sort) && npx tsx features/cms/legal-html.test.ts && npx tsx features/cms/site.test.ts && npx tsx features/seo/pageMetadata.test.ts && npx tsx features/seo/pricingJsonLd.test.ts && npx tsx features/cms/legal-select.test.ts && npx tsx features/cms/pages-map.test.ts && npx tsx scripts/atlas/lib.seo-merge.test.ts && npx tsx scripts/atlas/og-image.test.ts",
     "atlas:schema": "npx tsx scripts/atlas/schema.ts",
     "atlas:seed": "npx tsx scripts/atlas/seed-all.ts",
     "atlas:media": "npx tsx scripts/atlas/upload-media.ts",
-    "atlas:seed-og": "npx tsx scripts/atlas/seed-og-image.ts",
     "atlas:verify": "npx tsx scripts/atlas/verify-html-parity.ts",
     "atlas:types": "set -a && . ./.env && set +a && atlas-cms generate --url=\"$ATLAS_BASE_URL\" --api-key=\"$ATLAS_API_KEY\" --output=./features/cms/atlas.types.ts",
     "atlas:drift": "npx tsx scripts/atlas/drift-check.ts"

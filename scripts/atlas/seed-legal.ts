@@ -32,6 +32,7 @@ import {
   createScriptManagementClient,
   ensurePublishedPage,
 } from "./lib";
+import { ogImageForSlug } from "./og-image";
 
 interface LegalPageSpec {
   /** Atlas page slug this legal doc is published under. */
@@ -118,9 +119,12 @@ async function main(): Promise<void> {
 
   for (const { slug, docKey } of LEGAL_PAGES) {
     const doc = legalDocs[docKey];
+    // og:image travels with the page that owns it — see og-image.ts for why
+    // it is not written by a script of its own.
+    const og = ogImageForSlug(slug);
     const pageInput = {
-      seo: { title: doc.heading.ja },
-      seo_translations: { en: { title: doc.heading.en } },
+      seo: { title: doc.heading.ja, ...(og ? { og_image: og.ja } : {}) },
+      seo_translations: { en: { title: doc.heading.en, ...(og ? { og_image: og.en } : {}) } },
       blocks: [buildLegalDocBlock(legalDocType.id, doc)],
     };
 
