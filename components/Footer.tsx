@@ -3,8 +3,6 @@ import Image from "next/image";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
 import type { Bilingual } from "@/constants/copy";
 import type { SiteContent } from "@/features/cms/site";
-import LangToggle from "./LangToggle";
-
 /**
  * Reference `width`/`height` for `public/images/logo.png` — the file
  * `site_brand.logo` falls back to, and (today) the only file it resolves
@@ -67,26 +65,11 @@ export default function Footer({
           height={LOGO_INTRINSIC_HEIGHT}
           className="h-auto w-32"
         />
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
-          {t(site.footer.description, lang)}
-        </p>
-
-        {/* Primary menu — same pill style as the top navigation tabs */}
-        <nav className="mt-8">
-          {/* -ml-4 cancels the first pill's padding so its text lines up with the logo */}
-          <ul className="-ml-4 flex flex-wrap items-center gap-2">
-            {site.nav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={localizeHref(item.href, lang)}
-                  className="block rounded-full px-4 py-1.5 text-sm text-body transition hover:bg-primary-light hover:text-primary"
-                >
-                  {t(item.label, lang)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {t(site.footer.description, lang) ? (
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
+            {t(site.footer.description, lang)}
+          </p>
+        ) : null}
 
         {/* Legal / company links */}
         <ul className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-border/60 pt-7">
@@ -104,14 +87,8 @@ export default function Footer({
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div className="mx-auto max-w-6xl px-6 py-5">
           <p className="text-xs text-muted">{t(site.footer.legal, lang)}</p>
-          <LangToggle
-            lang={lang}
-            label={t(site.ui.langToggleLabel, lang)}
-            shortJa={site.ui.langShortJa}
-            shortEn={site.ui.langShortEn}
-          />
         </div>
       </div>
     </footer>

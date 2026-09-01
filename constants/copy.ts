@@ -35,8 +35,8 @@ export const nav: { href: string; label: Bilingual }[] = [
     href: "/service-flow",
     label: { ja: "ご利用の流れ", en: "How to Use Our Services" },
   },
-  // Label per the client update sheet (0727), row J4: 「ご利用料金」 / "Usage Fees".
   { href: "/pricing", label: { ja: "ご利用料金", en: "Usage Fees" } },
+  { href: "/faq", label: { ja: "よくあるご質問", en: "FAQ" } },
 ];
 
 /**
@@ -902,8 +902,8 @@ export const pricing = {
 
 export const footer = {
   description: {
-    ja: "Care 24 Japan は、ご自宅での24時間プレミアム在宅介護を提供します。",
-    en: "Premium 24-hour in-home elderly care across Japan.",
+    ja: "",
+    en: "",
   } satisfies Bilingual,
   /**
    * Legal / company links.
