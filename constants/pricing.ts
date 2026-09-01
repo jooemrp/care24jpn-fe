@@ -147,3 +147,9 @@ export type CourseRates = {
   name: Bilingual;
   rows: CourseRateRow[];
 };
+
+/** Link label below the pricing note — points to /cancellation-policy. */
+export const cancellationLinkLabel: Bilingual = {
+  ja: "詳しくはこちら（キャンセルポリシー）をご確認ください。",
+  en: "For cancellation terms, please click here.",
+};

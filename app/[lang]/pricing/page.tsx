@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import JsonLd from "@/components/JsonLd";
+import { cancellationLinkLabel } from "@/constants/pricing";
 import { getPricingCopy, getCourseRates } from "@/features/cms/rates";
-import { t, isLang } from "@/features/lang/i18n";
+import { t, localizeHref, isLang } from "@/features/lang/i18n";
 import { pageMetadata } from "@/features/seo/pageMetadata";
 import { buildPricingJsonLd } from "@/features/seo/pricingJsonLd";
 
@@ -96,6 +98,14 @@ export default async function PricingPage({
           ))}
         </div>
         <p className="mt-8 text-lg text-muted">{t(pricingCopy.note, lang)}</p>
+        <p className="mt-4 text-base text-body">
+          <Link
+            href={localizeHref("/cancellation-policy", lang)}
+            className="font-medium text-primary underline-offset-2 hover:underline"
+          >
+            {t(cancellationLinkLabel, lang)}
+          </Link>
+        </p>
       </Section>
     </>
   );
