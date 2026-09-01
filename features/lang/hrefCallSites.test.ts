@@ -81,16 +81,16 @@ type Binding = {
 const ALLOWLIST: Array<Binding & { reason: string }> = [
   {
     file: "app/[lang]/page.tsx",
-    line: 877,
+    line: 1030,
     content: "href",
     reason:
       "ApplyBanner's <a> branch. Its only caller wraps the value first: " +
-      "page.tsx:537 and :546 both pass href={localizeHref(...)} into this " +
+      "page.tsx staff banner passes href={localizeHref(...)} into this " +
       "component — see the comment above the ApplyBanner call site.",
   },
   {
     file: "app/[lang]/page.tsx",
-    line: 888,
+    line: 1041,
     content: "href",
     reason:
       "Same ApplyBanner component, the <Link> branch a few lines below " +

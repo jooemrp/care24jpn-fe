@@ -44,14 +44,12 @@ const nextConfig: NextConfig = {
           ]
         : []),
     ],
-    // Companion to the localhost entry above, and dev-only for the same
-    // reason. Next refuses to proxy an upstream image whose hostname
-    // resolves to a private IP (SSRF guard) even when a `remotePatterns`
-    // entry matches it, so without this the MinIO media 400s and every
-    // image on every page renders broken against a local Atlas. The
-    // `NODE_ENV` guard keeps the flag out of the production build, where
-    // the only allowed origin is the public S3 bucket.
-    ...(process.env.NODE_ENV !== "production" ? { dangerouslyAllowLocalIP: true } : {}),
+    // S3 for this workspace sometimes resolves via NAT64 / private-looking
+    // addresses (64:ff9b::…) on local and some corporate networks. Next's
+    // SSRF guard then 400s every `/_next/image` proxy even though the host is
+    // already allow-listed above. Keep the flag on — the pathname + hostname
+    // remotePatterns still bound what can be fetched.
+    dangerouslyAllowLocalIP: true,
   },
   // /terms (Care Supporter doc) is retired but already indexed publicly —
   // send both locales to their new home instead of 404ing. `redirects()`

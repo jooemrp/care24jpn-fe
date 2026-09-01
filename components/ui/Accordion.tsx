@@ -19,6 +19,7 @@
  */
 
 import { useState, useId } from "react";
+import { IconChevronDown } from "@tabler/icons-react";
 
 export type AccordionItemProps = {
   /** The question / trigger label */
@@ -58,21 +59,7 @@ export function AccordionItem({
           aria-hidden="true"
           className={`shrink-0 text-primary transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M5 7.5L10 12.5L15 7.5"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <IconChevronDown size={20} stroke={1.75} />
         </span>
       </button>
 

@@ -192,6 +192,10 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
       { name: "card_titles", label: "Card titles (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
       { name: "card_bodies", label: "Card bodies (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 4 },
+      { name: "illustration", label: "Family illustration", field_type: "image", localizable: false, required: false, sort_order: 5 },
+      { name: "card_image_1", label: "Card 1 icon image", field_type: "image", localizable: false, required: false, sort_order: 6 },
+      { name: "card_image_2", label: "Card 2 icon image", field_type: "image", localizable: false, required: false, sort_order: 7 },
+      { name: "card_image_3", label: "Card 3 icon image", field_type: "image", localizable: false, required: false, sort_order: 8 },
     ],
   },
   {
@@ -201,6 +205,27 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "items", label: "Items (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "closing", label: "Closing line", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "item_image_1", label: "Item 1 image", field_type: "image", localizable: false, required: false, sort_order: 3 },
+      { name: "item_image_2", label: "Item 2 image", field_type: "image", localizable: false, required: false, sort_order: 4 },
+      { name: "item_image_3", label: "Item 3 image", field_type: "image", localizable: false, required: false, sort_order: 5 },
+      { name: "item_image_4", label: "Item 4 image", field_type: "image", localizable: false, required: false, sort_order: 6 },
+      { name: "item_image_5", label: "Item 5 image", field_type: "image", localizable: false, required: false, sort_order: 7 },
+    ],
+  },
+  {
+    slug: "home_pricing_summary",
+    name: "Home — Pricing summary + payment logos",
+    is_block: true,
+    fields: [
+      { name: "heading", label: "Fees heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "payment_heading", label: "Payment heading", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "payment_body", label: "Payment body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "payment_settle_note", label: "Payment settle note", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "payment_visa", label: "Logo Visa", field_type: "image", localizable: false, required: false, sort_order: 4 },
+      { name: "payment_mastercard", label: "Logo Mastercard", field_type: "image", localizable: false, required: false, sort_order: 5 },
+      { name: "payment_jcb", label: "Logo JCB", field_type: "image", localizable: false, required: false, sort_order: 6 },
+      { name: "payment_amex", label: "Logo American Express", field_type: "image", localizable: false, required: false, sort_order: 7 },
     ],
   },
   {
@@ -312,6 +337,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "icon", label: "Icon", field_type: "select", localizable: false, required: false, sort_order: 1 },
       { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 2 },
       { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "image", label: "Step photo", field_type: "image", localizable: false, required: false, sort_order: 4 },
     ],
   },
   {
@@ -325,6 +351,11 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "staff_label", label: "Staff label", field_type: "text", localizable: true, required: false, sort_order: 3 },
       { name: "staff_href", label: "Staff href", field_type: "text", localizable: false, required: false, sort_order: 4 },
       { name: "user_href", label: "User href", field_type: "text", localizable: false, required: false, sort_order: 5 },
+      { name: "consult_heading", label: "Consult heading", field_type: "text", localizable: true, required: false, sort_order: 6 },
+      { name: "consult_body", label: "Consult body", field_type: "textarea", localizable: true, required: false, sort_order: 7 },
+      { name: "consult_cta", label: "Consult CTA", field_type: "text", localizable: true, required: false, sort_order: 8 },
+      { name: "consult_href", label: "Consult href", field_type: "text", localizable: false, required: false, sort_order: 9 },
+      { name: "consult_illustration", label: "Consult illustration", field_type: "image", localizable: false, required: false, sort_order: 10 },
     ],
   },
   {

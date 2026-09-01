@@ -1,15 +1,7 @@
 {
-  "generated_at": "2026-08-21T06:09:56.419Z",
+  "generated_at": "2026-09-01T10:22:56.058Z",
   "folder": "/marketing-web/",
   "assets": {
-    "hero.webp": {
-      "id": "01a01e63-687a-79bd-a631-c689d4d63355",
-      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
-      "width": 800,
-      "height": 764,
-      "mime_type": "image/jpeg",
-      "uploaded_as": "hero.jpg"
-    },
     "logo.png": {
       "id": "01a01e63-6c74-7a16-94a3-605591de1c0f",
       "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-6bfe-7dc8-925d-9e5d986a4ffe-logo.png",
@@ -81,6 +73,158 @@
       "height": 630,
       "mime_type": "image/png",
       "uploaded_as": "og-card-en.png"
+    },
+    "payment-visa.png": {
+      "id": "01a05c05-2019-73e4-baa3-14310dda924d",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c05-1dc5-727e-b949-ed3c737b2039-payment-visa.png",
+      "width": 96,
+      "height": 64,
+      "mime_type": "image/png",
+      "uploaded_as": "payment-visa.png"
+    },
+    "payment-mastercard.png": {
+      "id": "01a05c05-20eb-7ce4-a0fe-eae16bb1bc34",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c05-20b4-7929-9ff6-2a260895ca93-payment-mastercard.png",
+      "width": 96,
+      "height": 64,
+      "mime_type": "image/png",
+      "uploaded_as": "payment-mastercard.png"
+    },
+    "payment-jcb.png": {
+      "id": "01a05c05-2187-721d-9e0f-78fad49f272a",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c05-214b-781e-8a72-f12b027356d5-payment-jcb.png",
+      "width": 96,
+      "height": 64,
+      "mime_type": "image/png",
+      "uploaded_as": "payment-jcb.png"
+    },
+    "payment-amex.png": {
+      "id": "01a05c05-220d-7412-bb02-635e7083d526",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c05-21de-76dd-a4cc-36eae100a171-payment-amex.png",
+      "width": 96,
+      "height": 64,
+      "mime_type": "image/png",
+      "uploaded_as": "payment-amex.png"
+    },
+    "hero.webp": {
+      "id": "01a05c7d-d052-7cb2-a406-fb5376a24e85",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7d-ce41-7920-a23b-123d8212c1e9-hero.jpg",
+      "width": 2400,
+      "height": 1600,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "hero.jpg"
+    },
+    "about-family.png": {
+      "id": "01a05c7e-12ee-7a5e-8927-1e4d4ed9f726",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-1158-7722-a742-959cbd7e2228-about-family.png",
+      "width": 960,
+      "height": 720,
+      "mime_type": "image/png",
+      "uploaded_as": "about-family.png"
+    },
+    "consult-family.png": {
+      "id": "01a05c7e-1573-7769-83b8-ca513d3a0db1",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-152e-72de-b1c9-f933321509a9-consult-family.png",
+      "width": 640,
+      "height": 480,
+      "mime_type": "image/png",
+      "uploaded_as": "consult-family.png"
+    },
+    "icon-about-qualified.png": {
+      "id": "01a05c7e-15f7-787c-8a49-6c437783a009",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-15c3-7226-b42f-3fcaa0c41d3c-icon-about-qualified.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "icon-about-qualified.png"
+    },
+    "icon-about-flexible.png": {
+      "id": "01a05c7e-166c-7b8b-90ac-f21d6a9f0d29",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-1644-757b-ac81-d360ec08b253-icon-about-flexible.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "icon-about-flexible.png"
+    },
+    "icon-about-private.png": {
+      "id": "01a05c7e-1721-7a2b-9865-41f2f67dd18c",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-16f5-7736-a12d-245a21c4e31c-icon-about-private.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "icon-about-private.png"
+    },
+    "problem-discharge.png": {
+      "id": "01a05c7e-17aa-7ecd-ba3a-590ec9efce8e",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-177f-756c-84a7-cd7004757864-problem-discharge.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "problem-discharge.png"
+    },
+    "problem-absence.png": {
+      "id": "01a05c7e-18cd-7aa5-85e1-28bc9f46d2b9",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-18a1-7cd4-8210-f0dc4c5b6e9b-problem-absence.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "problem-absence.png"
+    },
+    "problem-bathing.png": {
+      "id": "01a05c7e-194b-7ec7-a4b7-6d6543d5e024",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-191e-72b3-b7a4-af408cd31dd7-problem-bathing.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "problem-bathing.png"
+    },
+    "problem-hospital.png": {
+      "id": "01a05c7e-19d5-7bb7-9417-14cfe5a581c3",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-19a7-7571-a8ef-29f993ddbb74-problem-hospital.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "problem-hospital.png"
+    },
+    "problem-insurance.png": {
+      "id": "01a05c7e-1a61-714e-9fd7-0eb335dfd891",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-1a32-7400-b7b9-e2570bf59a58-problem-insurance.png",
+      "width": 256,
+      "height": 192,
+      "mime_type": "image/png",
+      "uploaded_as": "problem-insurance.png"
+    },
+    "flow-01-apply.webp": {
+      "id": "01a05c7e-1c75-7df8-8dbc-f8d9122998b3",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-1c38-799e-9150-574f265cbff5-flow-01-apply.jpg",
+      "width": 800,
+      "height": 800,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "flow-01-apply.jpg"
+    },
+    "flow-02-confirm.webp": {
+      "id": "01a05c7e-1f5c-75a5-b544-7ddd7ecc1c52",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-1f12-71bd-859c-20c618621d4e-flow-02-confirm.jpg",
+      "width": 800,
+      "height": 800,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "flow-02-confirm.jpg"
+    },
+    "flow-03-visit.webp": {
+      "id": "01a05c7e-2ebb-7279-89b6-bd85dc7bb6a4",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-2e5b-798f-83e0-75a2dd0fbfe5-flow-03-visit.jpg",
+      "width": 800,
+      "height": 800,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "flow-03-visit.jpg"
+    },
+    "flow-04-report.webp": {
+      "id": "01a05c7e-4c5e-7bca-a786-f5ac988d5463",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a05c7e-4bd5-75aa-a9fb-1dc81bb620da-flow-04-report.jpg",
+      "width": 800,
+      "height": 800,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "flow-04-report.jpg"
     }
   }
 }

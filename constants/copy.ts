@@ -262,16 +262,67 @@ export const home = {
       ja: "このようなお困りごとはありませんか？",
       en: "Are you experiencing any of these problems?",
     } satisfies Bilingual,
+    closing: {
+      ja: "Care24Japanが、あなたのお困りごとをサポートします。",
+      en: "Care24Japan supports you with the challenges you face.",
+    } satisfies Bilingual,
+    // Visual Ref 3 — five illustrated concern cards (title + short body).
     items: [
-      { ja: "一人で生活しているため何かあったら不安", en: "I live alone and worry about what might happen." } satisfies Bilingual,
-      { ja: "介護保険がなかなかおりない", en: "Long-term care insurance payments are often delayed." } satisfies Bilingual,
-      { ja: "ショッピングや映画に外出をしたいが一人では行けないので誰か一緒に行ってほしい", en: "I want to go out but can't go alone." } satisfies Bilingual,
-      { ja: "話し相手がほしい", en: "I want someone to talk to." } satisfies Bilingual,
-      { ja: "家事や掃除など手伝ってほしい", en: "I need help with housework and cleaning." } satisfies Bilingual,
-      { ja: "離れて暮らす親の様子が心配だが、仕事があって休み以外は見に行けない", en: "I'm worried about my parents who live far away." } satisfies Bilingual,
-      { ja: "家族が不在の時に見守りをしてほしい", en: "I'd like someone to watch over them when family is away." } satisfies Bilingual,
-      { ja: "施設や病院では対応できないことを個別に対応してほしい", en: "I need individual care beyond what facilities offer." } satisfies Bilingual,
-      { ja: "もしもの時の対応をプロにお願いしたい", en: "I want a professional to handle emergencies." } satisfies Bilingual,
+      {
+        icon: "discharge",
+        title: {
+          ja: "退院後の生活が心配",
+          en: "Worried about life after discharge",
+        } satisfies Bilingual,
+        body: {
+          ja: "退院後の生活が不安で、誰かに見守ってほしい。",
+          en: "Life after leaving hospital feels uncertain — someone to watch over you would help.",
+        } satisfies Bilingual,
+      },
+      {
+        icon: "absence",
+        title: {
+          ja: "家族が不在になる時間がある",
+          en: "Times when family is away",
+        } satisfies Bilingual,
+        body: {
+          ja: "家族が不在のあいだ、一人にしておくのが心配。",
+          en: "It is hard to leave a loved one alone while family is away.",
+        } satisfies Bilingual,
+      },
+      {
+        icon: "bathing",
+        title: {
+          ja: "入浴やトイレの介助を頼みたい",
+          en: "Need help with bathing or toileting",
+        } satisfies Bilingual,
+        body: {
+          ja: "入浴やトイレの介助を、家族だけでは担いきれない。",
+          en: "Bathing and toileting care is too much for family alone.",
+        } satisfies Bilingual,
+      },
+      {
+        icon: "hospital",
+        title: {
+          ja: "通院に付き添ってほしい",
+          en: "Want a hospital escort",
+        } satisfies Bilingual,
+        body: {
+          ja: "通院の付き添いや待ち時間のサポートがほしい。",
+          en: "Need someone to accompany hospital visits and waiting time.",
+        } satisfies Bilingual,
+      },
+      {
+        icon: "insurance",
+        title: {
+          ja: "介護保険では足りない",
+          en: "Public insurance is not enough",
+        } satisfies Bilingual,
+        body: {
+          ja: "介護保険では時間や内容が足りず、もっと自由に頼みたい。",
+          en: "Public care insurance falls short — more flexible support is needed.",
+        } satisfies Bilingual,
+      },
     ],
   },
 
@@ -587,43 +638,59 @@ export const home = {
       {
         number: "01",
         icon: "register",
-        title: { ja: "ご登録", en: "Registration" } satisfies Bilingual,
+        title: { ja: "お申込み・ご相談", en: "Apply / consult" } satisfies Bilingual,
         body: {
-          ja: "お客様の情報をご入力いただき、サービス利用のための会員登録を頂きます。",
-          en: "Please enter your information to register as a member in order to use the service.",
+          ja: "WEBまたはお電話にてお気軽にご相談ください。",
+          en: "Feel free to consult us via the web or phone.",
         } satisfies Bilingual,
       },
       {
         number: "02",
         icon: "confirm",
-        title: { ja: "ご予約の確定", en: "Confirmation of your reservation" } satisfies Bilingual,
+        title: { ja: "ご希望内容の確認", en: "Confirm your needs" } satisfies Bilingual,
         body: {
-          ja: "ケアサポーターのマッチングができ次第、ご予約確定となりメール・LINE等でご連絡します。",
-          en: "Once a care supporter has been matched with you, your reservation will be confirmed and you will be notified via email, LINE, etc.",
+          ja: "ご希望のサポート内容や日時をヒアリングします。",
+          en: "We discuss your desired support content, date, and time.",
         } satisfies Bilingual,
       },
       {
         number: "03",
         icon: "start",
-        title: { ja: "サービス開始", en: "Service Start" } satisfies Bilingual,
+        title: {
+          ja: "有資格者がご自宅へ訪問",
+          en: "A qualified specialist visits your home",
+        } satisfies Bilingual,
         body: {
-          ja: "ご予約の日時にケアサポーターがご自宅へお伺いします。",
-          en: "A care supporter will visit your home at the scheduled date and time.",
+          ja: "ご指定の日時に有資格者が訪問し、サービスを開始します。",
+          en: "A qualified specialist visits at the scheduled time to start service.",
         } satisfies Bilingual,
       },
       {
         number: "04",
         icon: "report",
-        title: { ja: "終了ご報告", en: "Completion Report" } satisfies Bilingual,
+        title: { ja: "レポート報告", en: "Service report" } satisfies Bilingual,
         body: {
-          ja: "サービス終了後、ケアサポーターよりご報告レポートをお送りし終了となります。",
-          en: "After the service is completed, the care supporter will send you a report, and the service will be finished.",
+          ja: "サービス終了後、内容をもとにレポートを作成・ご報告します。",
+          en: "After the visit, we prepare and share a report based on the session.",
         } satisfies Bilingual,
       },
     ],
   },
 
   apply: {
+    // Visual Ref 6 — single consultation CTA band (primary).
+    consult: {
+      heading: {
+        ja: "まずはお気軽にご相談ください",
+        en: "Please feel free to contact us first",
+      } satisfies Bilingual,
+      body: {
+        ja: "ご相談・お見積りは無料です。あなたやご家族の「困った」を、私たちがサポートします。",
+        en: "Consultations and estimates are free. We support you and your family's challenges.",
+      } satisfies Bilingual,
+      cta: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
+      href: "https://portal.care24.jp/register",
+    },
     user: {
       eyebrow: {
         ja: "サービスをご利用されたい方",
@@ -697,6 +764,77 @@ export const home = {
     ja: "詳しくはこちら（料金ページ）をご確認ください。",
     en: "For full pricing details, please click here.",
   } satisfies Bilingual,
+
+  // Visual Ref 4 — TOP baseline rates only + payment methods.
+  pricingSummary: {
+    heading: {
+      ja: "料金について（税込）",
+      en: "About fees (tax included)",
+    } satisfies Bilingual,
+    care: {
+      label: { ja: "介護コース", en: "Caregiving course" } satisfies Bilingual,
+      amount: { ja: "3,740円／時間〜", en: "JPY 3,740 / hour~" } satisfies Bilingual,
+      minNote: {
+        ja: "※ご利用は2時間からとなります。",
+        en: "*Minimum booking is 2 hours.",
+      } satisfies Bilingual,
+      transportNote: {
+        ja: "※交通費990円（税込）/回を別途頂戴します。",
+        en: "*Transportation fee JPY 990 (tax included) per visit applies separately.",
+      } satisfies Bilingual,
+    },
+    nursing: {
+      label: { ja: "看護コース", en: "Nursing course" } satisfies Bilingual,
+      amount: { ja: "6,600円／時間〜", en: "JPY 6,600 / hour~" } satisfies Bilingual,
+      minNote: {
+        ja: "※ご利用は2時間からとなります。",
+        en: "*Minimum booking is 2 hours.",
+      } satisfies Bilingual,
+      transportNote: {
+        ja: "※交通費990円（税込）/回を別途頂戴します。",
+        en: "*Transportation fee JPY 990 (tax included) per visit applies separately.",
+      } satisfies Bilingual,
+    },
+    extensionNote: {
+      ja: "※延長は1時間単位でご利用いただけます。",
+      en: "*Extensions are available in 1-hour increments.",
+    } satisfies Bilingual,
+    payment: {
+      heading: { ja: "お支払い方法", en: "Payment methods" } satisfies Bilingual,
+      body: {
+        ja: "クレジットカード決済のみとなります。",
+        en: "Credit card payment only.",
+      } satisfies Bilingual,
+      settleNote: {
+        ja: "※ご利用後に決済が確定します。",
+        en: "*Payment is finalized after use.",
+      } satisfies Bilingual,
+      // Brand marks for accepted cards (Visual Ref 4). Files live in
+      // public/images/ and are also uploaded to Atlas via upload-media.ts.
+      logos: [
+        {
+          mark: "visa",
+          src: "/images/payment-visa.png",
+          alt: { ja: "Visa", en: "Visa" } satisfies Bilingual,
+        },
+        {
+          mark: "mastercard",
+          src: "/images/payment-mastercard.png",
+          alt: { ja: "Mastercard", en: "Mastercard" } satisfies Bilingual,
+        },
+        {
+          mark: "jcb",
+          src: "/images/payment-jcb.png",
+          alt: { ja: "JCB", en: "JCB" } satisfies Bilingual,
+        },
+        {
+          mark: "amex",
+          src: "/images/payment-amex.png",
+          alt: { ja: "American Express", en: "American Express" } satisfies Bilingual,
+        },
+      ],
+    },
+  },
 };
 
 /* ------------------------------------------------------------------ */

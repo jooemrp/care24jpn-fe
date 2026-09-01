@@ -206,6 +206,18 @@ export interface HomeProblems {
   items?: string; // localizable
 }
 
+/** Home — Pricing summary + payment logos (content type: "home-pricing-summary") */
+export interface HomePricingSummary {
+  heading?: string; // localizable
+  payment_heading?: string; // localizable
+  payment_body?: string; // localizable
+  payment_settle_note?: string; // localizable
+  payment_visa?: string;
+  payment_mastercard?: string;
+  payment_jcb?: string;
+  payment_amex?: string;
+}
+
 /** Home — Values (trust strip) (content type: "home-values") */
 export interface HomeValues {
   heading?: string; // localizable
@@ -310,6 +322,7 @@ export interface AtlasContentTypes {
   "home-care-course-fee": HomeCareCourseFee;
   "home-care-course": HomeCareCourse;
   "home-problems": HomeProblems;
+  "home-pricing-summary": HomePricingSummary;
   "home-about": HomeAbout;
   "home-values": HomeValues;
   "home-hero": HomeHero;

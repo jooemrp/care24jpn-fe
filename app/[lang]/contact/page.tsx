@@ -19,16 +19,78 @@ export default async function ContactPage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
+  const phoneTel = contactPage.phone.number.replace(/-/g, "");
+
   return (
     <>
       <Section heading={contactPage.heading} level="h1" lang={lang}>
-        <p className="max-w-2xl text-base leading-relaxed text-body">
-          {t(contactPage.requiredNote, lang)}
+        <p className="max-w-3xl text-base leading-relaxed text-body md:text-lg">
+          {t(contactPage.intro, lang)}
         </p>
       </Section>
 
       <Section surface lang={lang}>
-        <ContactForm lang={lang} />
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          {/* Phone card — Visual Ref 7 */}
+          <div className="rounded-2xl bg-primary px-6 py-8 text-white sm:px-8">
+            <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide">
+              {t(contactPage.phone.badge, lang)}
+            </span>
+            <h2 className="mt-4 text-2xl font-bold">{t(contactPage.phone.title, lang)}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-white/90 md:text-base">
+              {t(contactPage.phone.body, lang)}
+            </p>
+            <a
+              href={`tel:${phoneTel}`}
+              className="mt-6 block rounded-xl bg-primary-deep/40 px-5 py-4 transition hover:bg-primary-deep/55"
+            >
+              <p className="text-xs font-semibold tracking-[0.2em] text-white/80">
+                {t(contactPage.phone.telLabel, lang)}
+              </p>
+              <p className="mt-1 text-3xl font-bold tabular-nums md:text-4xl">
+                {contactPage.phone.number}
+              </p>
+              <p className="mt-2 text-sm text-white/85">
+                {t(contactPage.phone.hours, lang)}
+              </p>
+            </a>
+            <ul className="mt-6 space-y-2 text-sm text-white/90">
+              {contactPage.phone.bullets.map((bullet) => (
+                <li key={bullet.ja} className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/80" />
+                  <span>{t(bullet, lang)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Form card */}
+          <div className="rounded-2xl border border-border bg-surface px-5 py-7 sm:px-7 sm:py-8">
+            <span className="inline-flex rounded-full border border-primary/30 px-3 py-1 text-xs font-semibold text-primary">
+              {t(contactPage.form.badge, lang)}
+            </span>
+            <h2 className="mt-4 text-2xl font-bold text-heading">
+              {t(contactPage.form.title, lang)}
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-body md:text-base">
+              {t(contactPage.form.body, lang)}
+            </p>
+            <ul className="mt-4 space-y-1.5 text-sm text-body">
+              {contactPage.form.bullets.map((bullet) => (
+                <li key={bullet.ja} className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{t(bullet, lang)}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6">
+              <ContactForm lang={lang} />
+            </div>
+            <p className="mt-5 rounded-xl bg-primary-light px-4 py-3 text-sm leading-relaxed text-body">
+              {t(contactPage.form.followUp, lang)}
+            </p>
+          </div>
+        </div>
       </Section>
     </>
   );
