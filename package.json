@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test $(find features scripts -name '*.test.ts' ! -name 'legal-html.test.ts' ! -name 'site.test.ts' ! -name 'pageMetadata.test.ts' ! -name 'pricingJsonLd.test.ts' ! -name 'legal-select.test.ts' ! -name 'pages-map.test.ts' ! -name 'lib.seo-merge.test.ts' ! -name 'og-image.test.ts' | sort) && npx tsx features/cms/legal-html.test.ts && npx tsx features/cms/site.test.ts && npx tsx features/seo/pageMetadata.test.ts && npx tsx features/seo/pricingJsonLd.test.ts && npx tsx features/cms/legal-select.test.ts && npx tsx features/cms/pages-map.test.ts && npx tsx scripts/atlas/lib.seo-merge.test.ts && npx tsx scripts/atlas/og-image.test.ts",
+    "test": "node --test $(find features scripts constants -name '*.test.ts' ! -name 'legal-html.test.ts' ! -name 'site.test.ts' ! -name 'pageMetadata.test.ts' ! -name 'pricingJsonLd.test.ts' ! -name 'legal-select.test.ts' ! -name 'pages-map.test.ts' ! -name 'lib.seo-merge.test.ts' ! -name 'og-image.test.ts' ! -name 'faq.test.ts' | sort) && npx tsx features/cms/legal-html.test.ts && npx tsx features/cms/site.test.ts && npx tsx features/seo/pageMetadata.test.ts && npx tsx features/seo/pricingJsonLd.test.ts && npx tsx features/cms/legal-select.test.ts && npx tsx features/cms/pages-map.test.ts && npx tsx scripts/atlas/lib.seo-merge.test.ts && npx tsx scripts/atlas/og-image.test.ts && npx tsx constants/faq.test.ts",
     "atlas:schema": "npx tsx scripts/atlas/schema.ts",
     "atlas:seed": "npx tsx scripts/atlas/seed-all.ts",
     "atlas:media": "npx tsx scripts/atlas/upload-media.ts",
