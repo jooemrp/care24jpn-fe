@@ -222,6 +222,41 @@ export const home = {
     ],
   },
 
+  about: {
+    heading: { ja: "Care24Japanとは", en: "What is Care24Japan?" } satisfies Bilingual,
+    catchphrase: {
+      ja: "保険では足りない時間を、有資格者がサポートします。",
+      en: "Certified Specialists Filling the Care Gap Beyond Standard Insurance.",
+    } satisfies Bilingual,
+    body: {
+      ja: "介護保険では対応しきれないサポートや、ご家族の不安に寄り添うケアを、必要なときに必要な時間だけご利用いただけます。",
+      en: "We offer tailored care and emotional support for your family that standard nursing care insurance cannot cover, available whenever and for as long as you need it.",
+    } satisfies Bilingual,
+    cards: [
+      {
+        title: { ja: "有資格者が対応", en: "Qualified Specialists" } satisfies Bilingual,
+        body: {
+          ja: "看護師・介護士などの有資格者が訪問します。",
+          en: "Certified nurses and professional caregivers visit your home.",
+        } satisfies Bilingual,
+      },
+      {
+        title: { ja: "必要なときに利用", en: "Flexible Availability" } satisfies Bilingual,
+        body: {
+          ja: "必要な時間・内容に合わせて、最低2時間からご利用いただけます。",
+          en: "Available from a 2-hour minimum according to your needs and schedule.",
+        } satisfies Bilingual,
+      },
+      {
+        title: { ja: "保険外だから柔軟", en: "Private & Adaptable" } satisfies Bilingual,
+        body: {
+          ja: "保険では対応できないご要望にも柔軟に対応します。",
+          en: "Since it is non-insurance, we can flexibly adapt to special requests outside standard insurance constraints.",
+        } satisfies Bilingual,
+      },
+    ],
+  },
+
   problems: {
     heading: {
       ja: "このようなお困りごとはありませんか？",

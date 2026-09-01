@@ -183,6 +183,18 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     ],
   },
   {
+    slug: "home_about",
+    name: "Home — About (Care24Japanとは)",
+    is_block: true,
+    fields: [
+      { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "catchphrase", label: "Catchphrase", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "card_titles", label: "Card titles (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "card_bodies", label: "Card bodies (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 4 },
+    ],
+  },
+  {
     slug: "home_problems",
     name: "Home — Problems",
     is_block: true,

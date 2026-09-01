@@ -1,10 +1,10 @@
 /**
- * Seeds the "home" page — the 29 blocks that make up `app/[lang]/page.tsx` —
+ * Seeds the "home" page — the 30 blocks that make up `app/[lang]/page.tsx` —
  * from `constants/copy.ts#home` (single source of truth, never retyped by
  * hand) onto the live Atlas workspace, then publishes it.
  *
  * Order and field names (matching the block types declared in
- * scripts/atlas/schema.ts): home_hero, home_values, home_problems, home_nursing_course,
+ * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems, home_nursing_course,
  * home_nursing_feature x6, home_care_course, home_care_course_fee x3,
  * home_care_course_card x4, home_examples, home_example_case x3, home_flow,
  * home_flow_step x4, home_apply, home_contact.
@@ -15,7 +15,7 @@
  * never a second page under the same slug (page slugs are NOT unique at the
  * create endpoint on this backend; see that helper's doc comment).
  *
- * Requires the 30 block types to already exist — run `npm run atlas:schema`
+ * Requires the 31 block types to already exist — run `npm run atlas:schema`
  * first.
  *
  * Usage (from marketing-web/):
@@ -125,6 +125,7 @@ const CARE_COURSE_CARD_IMAGES = [
 const BLOCK_TYPE_SLUGS = [
   "home_hero",
   "home_values",
+  "home_about",
   "home_problems",
   "home_nursing_course",
   "home_nursing_feature",
@@ -200,14 +201,28 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_values", next(), split.ja, split.en));
   }
 
-  // 2: home_problems (9 items)
+  // 2: home_about (3 cards)
+  {
+    const cardTitles = biJoin(home.about.cards.map((c) => c.title));
+    const cardBodies = biJoin(home.about.cards.map((c) => c.body));
+    const split = splitBilingual({
+      heading: home.about.heading,
+      catchphrase: home.about.catchphrase,
+      body: home.about.body,
+      card_titles: cardTitles,
+      card_bodies: cardBodies,
+    });
+    blocks.push(makeBlock(typeIds, "home_about", next(), split.ja, split.en));
+  }
+
+  // 3: home_problems (9 items)
   {
     const items = biJoin(home.problems.items);
     const split = splitBilingual({ heading: home.problems.heading, items });
     blocks.push(makeBlock(typeIds, "home_problems", next(), split.ja, split.en));
   }
 
-  // 3: home_nursing_course
+  // 4: home_nursing_course
   {
     const split = splitBilingual({
       lead_in: home.nursingCourse.leadIn,

@@ -94,6 +94,7 @@ const FALLBACK_IMAGES = {
 const HOME_TYPES = [
   "home-hero",
   "home-values",
+  "home-about",
   "home-problems",
   "home-nursing-course",
   "home-nursing-feature",
@@ -123,6 +124,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
 
   const [heroBlock] = groups["home-hero"];
   const [valuesBlock] = groups["home-values"];
+  const [aboutBlock] = groups["home-about"];
   const [problemsBlock] = groups["home-problems"];
   const [nursingCourseBlock] = groups["home-nursing-course"];
   const [careCourseBlock] = groups["home-care-course"];
@@ -169,6 +171,18 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     items: valueTitles.map((title, i) => ({
       title,
       body: valueBodies[i] ?? F.values.items[i]?.body ?? title,
+    })),
+  };
+
+  const cardTitles = pickLines(aboutBlock.data, "card_titles", F.about.cards.map((c) => c.title));
+  const cardBodies = pickLines(aboutBlock.data, "card_bodies", F.about.cards.map((c) => c.body));
+  const about: Home["about"] = {
+    heading: pickBi(aboutBlock.data, "heading", F.about.heading),
+    catchphrase: pickBi(aboutBlock.data, "catchphrase", F.about.catchphrase),
+    body: pickBi(aboutBlock.data, "body", F.about.body),
+    cards: cardTitles.map((title, i) => ({
+      title,
+      body: cardBodies[i] ?? F.about.cards[i]?.body ?? title,
     })),
   };
 
@@ -301,7 +315,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   // block, because the phone number is a site-wide value (also used in the
   // navbar/footer), not something an editor would set per-page on `home`.
   return {
-    rest: { hero, values, problems, nursingCourse, careCourse, examples, flow, apply },
+    rest: { hero, values, about, problems, nursingCourse, careCourse, examples, flow, apply },
     contactData: contactBlock.data,
   };
 }

@@ -119,6 +119,27 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </div>
       </section>
 
+      {/* About — what Care24Japan is, before the problems grid */}
+      <Section heading={home.about.heading} lang={lang}>
+        <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
+          {t(home.about.catchphrase, lang)}
+        </p>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-body">
+          {t(home.about.body, lang)}
+        </p>
+        <ul className="mt-10 grid gap-6 sm:grid-cols-3">
+          {home.about.cards.map((card, i) => (
+            <li
+              key={i}
+              className="rounded-2xl border border-border bg-surface px-6 py-8 text-center"
+            >
+              <h3 className="text-lg font-bold text-heading">{t(card.title, lang)}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-body">{t(card.body, lang)}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
       {/* Problems */}
       <Section surface heading={home.problems.heading} lang={lang}>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">

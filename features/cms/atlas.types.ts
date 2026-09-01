@@ -191,6 +191,15 @@ export interface HomeCareCourse {
   price_tax_included?: string; // localizable
 }
 
+/** Home — About (Care24Japanとは) (content type: "home-about") */
+export interface HomeAbout {
+  heading?: string; // localizable
+  catchphrase?: string; // localizable
+  body?: string; // localizable
+  card_titles?: string; // localizable
+  card_bodies?: string; // localizable
+}
+
 /** Home — Problems (content type: "home-problems") */
 export interface HomeProblems {
   heading?: string; // localizable
@@ -301,6 +310,7 @@ export interface AtlasContentTypes {
   "home-care-course-fee": HomeCareCourseFee;
   "home-care-course": HomeCareCourse;
   "home-problems": HomeProblems;
+  "home-about": HomeAbout;
   "home-values": HomeValues;
   "home-hero": HomeHero;
   "footer-legal-link": FooterLegalLink;
