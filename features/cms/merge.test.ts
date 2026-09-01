@@ -242,10 +242,10 @@ async function main() {
     assert.deepEqual(warnings, []);
   });
 
-  test("mergeBlockData stays silent when the block has SOME EN data — a non-localizable field mirroring alongside a translated one must not warn", async () => {
-    // `href` never gets a translation row by design; `label` does. If the
-    // block-level "enData is entirely empty" guard were dropped for a
-    // per-field check instead, this case would incorrectly warn on `href`.
+  test("mergeBlockData warns per missing-EN field even when the block has SOME EN data", async () => {
+    // `label` has a translation (silent); `href` has no EN value so it warns
+    // once. Non-localizable fields still emit the warning — callers read via
+    // `.ja`, so the empty `en` is harmless, but editors still get a signal.
     const warnings = await captureWarnings(() => {
       mergeBlockData(
         { href: "/pricing", label: "料金" },
@@ -253,7 +253,9 @@ async function main() {
         "site/nav-item",
       );
     });
-    assert.deepEqual(warnings, []);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /\[cms:unexpected-content\]/);
+    assert.match(warnings[0], /"href"/);
   });
 
   test("mergeBlockData stays silent when there is nothing meaningful to mirror (all ja fields empty)", async () => {

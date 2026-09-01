@@ -51,7 +51,6 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fallbackOgImage } from "@/constants/seo";
 import type * as PageMetadataModule from "./pageMetadata.ts";
 
 const pageMetadataPath = "./pageMetadata" + ".ts";
@@ -61,7 +60,6 @@ async function main() {
     routeAlternates,
     titleTemplate,
     withBrandSuffix,
-    resolveOgImage,
     buildPageMetadataFields,
     titleContainsBrand,
     TITLE_BRAND_SEPARATOR,
@@ -249,24 +247,20 @@ async function main() {
   });
 
   // ---------------------------------------------------------------------
-  // resolveOgImage: the CMS-empty fallback, isolated from any Atlas call.
+  // No-fallback: missing/empty ogImage is passed through as "" into
+  // openGraph.images — never a constants/seo.ts card path.
   // ---------------------------------------------------------------------
 
-  test("resolveOgImage: CMS value wins when present", () => {
-    assert.equal(
-      resolveOgImage("/images/cms-provided.png", "ja"),
-      "/images/cms-provided.png",
-    );
-  });
-
-  test("resolveOgImage: falls back to constants/seo.ts#fallbackOgImage when the CMS value is empty", () => {
-    assert.equal(resolveOgImage("", "ja"), fallbackOgImage.ja);
-    assert.equal(resolveOgImage("", "en"), fallbackOgImage.en);
-  });
-
-  test("resolveOgImage: falls back to constants/seo.ts#fallbackOgImage when the CMS value is undefined", () => {
-    assert.equal(resolveOgImage(undefined, "ja"), fallbackOgImage.ja);
-    assert.equal(resolveOgImage(undefined, "en"), fallbackOgImage.en);
+  test("buildPageMetadataFields: empty ogImage is passed through (no constants fallback)", () => {
+    const meta = buildPageMetadataFields({
+      route: "/pricing",
+      lang: "ja",
+      title: "Pricing for users",
+      description: "desc",
+      ogImage: "",
+      brandName: BRAND,
+    });
+    assert.equal(meta.openGraph?.images, "");
   });
 }
 

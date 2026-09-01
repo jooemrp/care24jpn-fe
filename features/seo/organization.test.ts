@@ -96,26 +96,14 @@ const COMPANY_ROWS_RENAMED: OrganizationModule.CompanyRow[] = [
   { label: bi("創業", "Founded"), value: bi("いつか", "Someday") },
 ];
 
-const FALLBACK_COMPANY_ROWS: OrganizationModule.CompanyRow[] = [
-  {
-    label: bi("商号", "Trade name"),
-    value: bi(
-      "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
-      "MedicalInformatics Co.,Ltd.",
-    ),
-  },
-  {
-    label: bi("本社", "Head office"),
-    value: bi(
-      "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
-      "Meiji Seimei Building 4F, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005",
-    ),
-  },
-  {
-    label: bi("設立", "Established"),
-    value: bi("2002年10月18日", "October 18, 2002"),
-  },
-];
+const EMPTY_ADDRESS = {
+  "@type": "PostalAddress",
+  streetAddress: "",
+  addressLocality: "",
+  addressRegion: "",
+  postalCode: "",
+  addressCountry: "JP",
+};
 
 async function main() {
   const { buildOrganizationJsonLd } = (await import(organizationPath)) as typeof OrganizationModule;
@@ -124,7 +112,6 @@ async function main() {
     brandName: "Care 24 Japan",
     telephone: "0120-000-000",
     siteUrl: "https://care24jpn.vercel.app",
-    fallbackCompanyRows: FALLBACK_COMPANY_ROWS,
   };
 
   // ---------------------------------------------------------------------
@@ -218,12 +205,11 @@ async function main() {
   });
 
   // ---------------------------------------------------------------------
-  // The documented silent-failure mode: a renamed row label must WARN, not
-  // silently vanish, and must still fall back to the constants-backed row
-  // rather than regressing the output to nothing.
+  // No-fallback contract: a renamed/missing/unparseable row WARNs and emits
+  // an empty field — never a constants fallback.
   // ---------------------------------------------------------------------
 
-  test("a renamed 'Head office'/'Established'/'Trade name' label warns with [cms:unexpected-content] and falls back to fallbackCompanyRows, not to an empty value", () => {
+  test("a renamed 'Head office'/'Established'/'Trade name' label warns with [cms:unexpected-content] and emits empty fields", () => {
     const warnings: string[] = [];
     const originalWarn = console.warn;
     console.warn = (message?: unknown) => {
@@ -243,20 +229,12 @@ async function main() {
     for (const warning of warnings) {
       assert.match(warning, /\[cms:unexpected-content\]/);
     }
-    assert.equal(result.legalName, "MedicalInformatics Co.,Ltd.");
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
-    assert.equal(result.foundingDate, "2002-10-18");
-    assert.notEqual(result.legalName, "");
+    assert.equal(result.legalName, "");
+    assert.deepEqual(result.address, EMPTY_ADDRESS);
+    assert.equal(result.foundingDate, "");
   });
 
-  test("an unparseable Head office address string warns and falls back to fallbackCompanyRows' address", () => {
+  test("an unparseable Head office address string warns and emits an empty address", () => {
     const warnings: string[] = [];
     const originalWarn = console.warn;
     console.warn = (message?: unknown) => {
@@ -275,17 +253,10 @@ async function main() {
     }
 
     assert.ok(warnings.some((w) => w.includes("address-unparseable") || w.includes("does not match")));
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
+    assert.deepEqual(result.address, EMPTY_ADDRESS);
   });
 
-  test("an unparseable Established date string warns and falls back to fallbackCompanyRows' foundingDate", () => {
+  test("an unparseable Established date string warns and emits an empty foundingDate", () => {
     const originalWarn = console.warn;
     console.warn = () => {};
     let result: Record<string, unknown>;
@@ -298,20 +269,15 @@ async function main() {
       console.warn = originalWarn;
     }
 
-    assert.equal(result.foundingDate, "2002-10-18");
+    assert.equal(result.foundingDate, "");
   });
 
   // ---------------------------------------------------------------------
   // A company_row that EXISTS with a matching label but whose value.en is
-  // empty/whitespace must warn and fall back — never emit an empty
-  // legalName. "Head office"/"Established" already do this correctly as
-  // written (an empty string fails parseAddress/parseFoundingDate's regex,
-  // which routes through the existing "unparseable" warning path), so this
-  // block asserts both: legalName's own guard, and the pre-existing
-  // asymmetry it closes.
+  // empty/whitespace must warn and emit empty — never a constants value.
   // ---------------------------------------------------------------------
 
-  test("a 'Trade name' row that exists but has an empty/whitespace value.en warns and falls back, never emitting an empty legalName", () => {
+  test("a 'Trade name' row that exists but has an empty/whitespace value.en warns and emits an empty legalName", () => {
     const warnings: string[] = [];
     const originalWarn = console.warn;
     console.warn = (message?: unknown) => {
@@ -331,11 +297,10 @@ async function main() {
 
     assert.equal(warnings.length, 1);
     assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.equal(result.legalName, "MedicalInformatics Co.,Ltd.");
-    assert.notEqual(result.legalName, "");
+    assert.equal(result.legalName, "");
   });
 
-  test("an empty value.en for 'Head office'/'Established' already falls back correctly (asymmetry check — these two are green as written)", () => {
+  test("an empty value.en for 'Head office'/'Established' emits empty address/foundingDate", () => {
     const originalWarn = console.warn;
     console.warn = () => {};
     let result: Record<string, unknown>;
@@ -351,15 +316,8 @@ async function main() {
       console.warn = originalWarn;
     }
 
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
-    assert.equal(result.foundingDate, "2002-10-18");
+    assert.deepEqual(result.address, EMPTY_ADDRESS);
+    assert.equal(result.foundingDate, "");
   });
 
   // ---------------------------------------------------------------------
@@ -367,7 +325,7 @@ async function main() {
   // must be absolute).
   // ---------------------------------------------------------------------
 
-  test("a relative logoUrl (the bundled /images/logo.png fallback) is resolved against siteUrl", () => {
+  test("a relative logoUrl is resolved against siteUrl", () => {
     const result = buildOrganizationJsonLd({
       ...baseInput,
       logoUrl: "/images/logo.png",

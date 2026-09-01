@@ -16,35 +16,17 @@
  * `merge.ts` solved this for `client.ts` by extracting the pure transform
  * into its own dependency-free module; `site-map.ts` does the same for
  * `site.ts`'s block-to-`SiteContent` mapping (see that file's header). This
- * test file imports `mapSite`/`FALLBACK` from `./site-map` FOR REAL — nothing
- * below is a copy of production logic. If `site-map.ts#mapSite` regresses
- * (e.g. `use_legal_heading`'s default goes back to being indexed off
- * `FALLBACK.footer.legalLinks[i]`), these tests fail against the actual
- * code, not a mirror of it.
+ * test file imports `mapSite` from `./site-map` FOR REAL — nothing below is a
+ * copy of production logic. If `site-map.ts#mapSite` regresses (e.g.
+ * `use_legal_heading`'s default goes back to being indexed by array position),
+ * these tests fail against the actual code, not a mirror of it.
  *
  * WHY `npx tsx`, NOT PLAIN `node --test` (unlike fields.test.ts/
- * merge.test.ts). `fields.ts`/`merge.ts` are dependency-free at runtime —
- * their only imports are `type`-only, which TypeScript's type stripping
- * erases entirely, so Node's native loader never has to resolve them.
- * `site-map.ts` genuinely needs `./fields`'s pickers and `@/constants/copy`'s
- * fallback data AT RUNTIME (the whole point of extracting it — see that
- * file's header), and those stay ordinary extensionless/`@/`-aliased
- * specifiers so Next's bundler and `tsc` (`moduleResolution: "bundler"`, no
- * `allowImportingTsExtensions`) keep resolving them normally. Node's native
- * ESM loader has neither: no `@/` path-alias support and no
- * extensionless-relative-specifier resolution, so `node --test
- * features/cms/site.test.ts` fails immediately with `Cannot find module
- * '.../fields'` — verified directly against this checkout:
- *
- *   $ node --test features/cms/site.test.ts
- *   Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../features/cms/fields'
- *
- * `tsx` resolves both (path aliases via tsconfig, and extensions via esbuild),
- * so this file runs correctly only under `tsx` — the exact same split
- * `legal-html.test.ts` already documents and `package.json#test` already
- * uses for it (`node --test` for what it can reach, `npx tsx` for what
- * genuinely needs the bundler-shaped resolution). `package.json#test` runs
- * this file via `npx tsx`, after `legal-html.test.ts`.
+ * merge.test.ts). `site-map.ts` needs `./fields`'s pickers at runtime, and
+ * those stay ordinary extensionless/`@/`-aliased specifiers so Next's bundler
+ * and `tsc` keep resolving them. Node's native ESM loader has neither, so
+ * this file runs correctly only under `tsx`. `package.json#test` runs this
+ * file via `npx tsx`, after `legal-html.test.ts`.
  */
 
 import assert from "node:assert/strict";
@@ -99,14 +81,19 @@ function otherSiteBlocks(): CmsBlock[] {
       home_label: bi("nf-h"),
       meta_description: bi("nf-m"),
     }),
-    simple("nav-item", 6, { href: bi("/"), label: bi("Home") }),
-    simple("site-footer", 7, { description: bi("d"), legal: bi("c 2026") }),
+    simple("site-global-error-labels", 6, {
+      title: bi("ge-t"),
+      body: bi("ge-b"),
+      retry_label: bi("ge-r"),
+    }),
+    simple("nav-item", 7, { href: bi("/"), label: bi("Home") }),
+    simple("site-footer", 8, { description: bi("d"), legal: bi("c 2026") }),
   ];
 }
 
 async function main(): Promise<void> {
   const siteMap = (await import(siteMapPath)) as typeof SiteMapModule;
-  const { mapSite, FALLBACK } = siteMap;
+  const { mapSite } = siteMap;
   const noop = () => {};
 
   // ---------------------------------------------------------------------------
@@ -164,20 +151,9 @@ async function main(): Promise<void> {
   }
 
   // ---------------------------------------------------------------------------
-  // (a) CMS-off / missing-blocks parity: FALLBACK.footer.legalLinks itself is
-  // unaffected by anything in this file — mapSite() returns null (never
-  // reaches the legal-link mapping) when a declared block type is entirely
-  // absent, and site.ts's fetchSite() serves FALLBACK verbatim in that case.
+  // (a) No-fallback: mapSite() returns null when a declared block type is
+  // entirely absent — never substitutes constants.
   // ---------------------------------------------------------------------------
-
-  test("CMS-off path: FALLBACK.footer.legalLinks is untouched by this change", () => {
-    assert.equal(FALLBACK.footer.legalLinks.length, 5);
-    assert.deepEqual(FALLBACK.footer.legalLinks[2], { href: "/tokushoho", key: "tokushoho" });
-    assert.deepEqual(FALLBACK.footer.legalLinks[0], {
-      href: "/company",
-      label: { ja: "運営会社", en: "Operating Company" },
-    });
-  });
 
   test("mapSite() returns null (never builds legalLinks) when footer-legal-link blocks are entirely missing", () => {
     const result = mapSite(otherSiteBlocks(), noop);
@@ -204,8 +180,7 @@ async function main(): Promise<void> {
   // ---------------------------------------------------------------------------
   // (c) the regression this mapping guards against — proven against the real
   // `mapSite`, not a mirror. If `site-map.ts` ever reverts to indexing
-  // `use_legal_heading`'s default off `FALLBACK.footer.legalLinks[i]`, this
-  // test fails.
+  // `use_legal_heading` by array position, this test fails.
   // ---------------------------------------------------------------------------
 
   test("fix: reordering legal links in the dashboard changes no link's label or heading", () => {
@@ -231,15 +206,14 @@ async function main(): Promise<void> {
   });
 
   // ---------------------------------------------------------------------------
-  // (d) a legal link with no CMS `href`/`label` at all falls back to
-  // `constants/copy.ts` BY INDEX, same as before this task — only
-  // `use_legal_heading`'s default changed, not the href/label fallback.
+  // (d) No-fallback: a legal link with no CMS `href`/`label` renders empty —
+  // never a constants value by index.
   // ---------------------------------------------------------------------------
 
-  test("a legal link missing its own href/label falls back to constants/copy.ts by index", () => {
+  test("a legal link missing its own href/label renders empty fields, not constants", () => {
     const blocks = siteBlocks([legalBlock(9, {})]);
     const result = legalLinksOf(blocks);
-    assert.deepEqual(result[0], FALLBACK.footer.legalLinks[0]);
+    assert.deepEqual(result[0], { href: "", label: { ja: "", en: "" } });
   });
 
   // ---------------------------------------------------------------------------
@@ -282,20 +256,12 @@ async function main(): Promise<void> {
     });
   });
 
-  test("a site-error-labels block missing a field falls back to constants/copy.ts#errorPage for that field only", () => {
+  test("a site-error-labels block missing a field renders empty for that field only, not constants", () => {
     const result = mapSite(siteBlocksWithLegal({ body: undefined }), noop);
     assert.ok(result, "mapSite must succeed for a full set of site blocks");
     assert.deepEqual(result.errorPage.title, bi("エラー"));
-    assert.deepEqual(result.errorPage.body, FALLBACK.errorPage.body);
+    assert.deepEqual(result.errorPage.body, { ja: "", en: "" });
     assert.deepEqual(result.errorPage.retryLabel, bi("再試行"));
-  });
-
-  test("CMS-off path: FALLBACK.errorPage matches today's hardcoded error.tsx copy", () => {
-    assert.deepEqual(FALLBACK.errorPage, {
-      title: { ja: "エラーが発生しました", en: "Something went wrong" },
-      body: { ja: "しばらくしてから再度お試しください。", en: "Please try again in a moment." },
-      retryLabel: { ja: "再試行", en: "Try again" },
-    });
   });
 }
 

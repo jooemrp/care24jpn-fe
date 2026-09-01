@@ -255,7 +255,9 @@ async function main(): Promise<void> {
       { ja: "1", en: "one" },
       { ja: "2", en: "two" },
       { ja: "3", en: "three" },
-      { ja: "four", en: "four" },
+      // EN runs past the JA line count; the missing JA side is "", never a
+      // mirror of EN (no-fallback contract).
+      { ja: "", en: "four" },
     ]);
     assert.deepEqual(pickLines({}, "items"), []);
   });
@@ -263,7 +265,9 @@ async function main(): Promise<void> {
   test("pickLines fills a missing JA line from EN, and a missing EN line from JA", () => {
     assert.deepEqual(pickLines({ x: { ja: "a\nb", en: "A" } }, "x"), [
       { ja: "a", en: "A" },
-      { ja: "b", en: "b" },
+      // JA's second line has no EN counterpart — the EN side is "", never a
+      // mirror of JA (no-fallback contract).
+      { ja: "b", en: "" },
     ]);
   });
 
