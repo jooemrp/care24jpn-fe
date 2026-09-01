@@ -61,7 +61,9 @@ const MIN_BASELINE_FILES = 29;
 const PORT_CMS_ON = 4101;
 const PORT_CMS_OFF = 4102;
 
-/** 13 rute x {ja, en} = 26 URL. Nama slug cocok dengan pola file baseline
+/** 13 rute x {ja, en} = 26 URL (+ special not-found). Nama slug cocok dengan pola file baseline.
+ * `/faq` and `/contact` (Aug 2026) are intentionally omitted until baseline
+ * HTML snapshots for those routes are captured — see note near home-contact-hours.
  * (`ja.txt`, `en.txt`, `ja__pricing.txt`, `en__privacy.txt`, dst). */
 const ROUTES: { slug: string; path: string }[] = [
   { slug: "", path: "/" },
@@ -1191,11 +1193,15 @@ const ACCEPTED_RESIDUALS: AcceptedResidual[] = [
   },
   {
     id: "home-contact-hours",
-    side: "ditambah",
+    side: "dihapus",
     count: 2,
-    why: "ST-HOME / audit item contact.hours: jam operasional sungguhan kini dirender di bawah nomor telepon, 1x ja + 1x en.",
+    why: "Aug 2026 webpage revision: home.contact.hours removed from the homepage contact block (1x ja + 1x en). Spec #3 deletes reception hours UI.",
     matches: (line) => /<p class="mt-1 text-sm text-muted">/.test(line),
   },
+  // NOTE: /faq and /contact are live App Router pages (Aug 2026 revision) but
+  // are intentionally NOT in ROUTES yet — no committed baseline HTML exists
+  // for them. Add them here only after capturing ja__/faq.txt, en__/faq.txt,
+  // ja__/contact.txt, and en__/contact.txt into scripts/atlas/baseline/.
   // --- ST-F1 (area F): satu-satunya baseline spesial yang terukur -----
   {
     id: "st-f1-not-found-description",
