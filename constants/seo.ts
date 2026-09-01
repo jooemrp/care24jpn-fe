@@ -184,7 +184,7 @@ export const seoRoutes = {
     atlasSlug: "faq",
     title: {
       ja: "よくあるご質問",
-      en: "Frequently Asked Questions",
+      en: "FAQ",
     },
     description: {
       ja: "Care24Japanのサービス内容・ケアサポーター・料金・ご予約など、よくいただくご質問（Q1〜Q24）とご利用シーン（S1〜S5）をまとめました。",

@@ -7,7 +7,7 @@ import { pageMetadata } from "@/features/seo/pageMetadata";
 
 const faqHeroHeading = {
   ja: "よくあるご質問",
-  en: "Frequently Asked Questions",
+  en: "FAQ",
 };
 
 const faqHeroBody = {
