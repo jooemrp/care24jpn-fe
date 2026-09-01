@@ -72,7 +72,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="-z-20 object-cover object-[center_40%]"
+          className="-z-20 object-cover object-[70%_center] md:object-[center_35%]"
         />
 
         {/* Soft sakura glow + bottom fade into the next section */}
@@ -99,50 +99,22 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </p>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-col items-start gap-4">
               <Link
                 href={localizeHref(home.hero.ctaPrimaryHref, lang)}
                 className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
               >
                 {t(home.hero.ctaPrimary, lang)}
               </Link>
-              <Link
-                href={localizeHref(home.hero.ctaSecondaryHref, lang)}
-                className="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light"
-              >
-                {t(home.hero.ctaSecondary, lang)}
-              </Link>
+              <div className="rounded-2xl border border-border bg-surface/85 px-4 py-3 backdrop-blur-sm">
+                <p className="text-sm font-semibold text-heading">
+                  {t(home.hero.areaBadge.main, lang)}
+                </p>
+                <p className="mt-1 text-xs text-muted">
+                  {t(home.hero.areaBadge.sub, lang)}
+                </p>
+              </div>
             </div>
-
-            {/* Trust strip — the three reasons families choose us */}
-            <p className="mt-10 text-sm font-semibold text-body animate-fade-up">
-              {t(home.values.heading, lang)}
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-2.5">
-              {home.values.items.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex flex-col gap-0.5 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up"
-                  style={{ animationDelay: `${120 + i * 80}ms` }}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
-                      <svg viewBox="0 0 16 16" fill="none" className="h-2.5 w-2.5" aria-hidden="true">
-                        <path
-                          d="M3 8l3.5 3.5L13 4.5"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    {t(item.title, lang)}
-                  </span>
-                  <span className="pl-6 text-xs font-normal text-body">{t(item.body, lang)}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>

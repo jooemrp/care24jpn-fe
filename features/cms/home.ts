@@ -156,6 +156,10 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
     image: pickImage(heroBlock.data, "image", FALLBACK_IMAGES.hero, "home/hero"),
     ctaPrimaryHref: pickJa(heroBlock.data, "cta_primary_href", F.hero.ctaPrimaryHref),
     ctaSecondaryHref: pickJa(heroBlock.data, "cta_secondary_href", F.hero.ctaSecondaryHref),
+    areaBadge: {
+      main: pickBi(heroBlock.data, "area_badge_main", F.hero.areaBadge.main),
+      sub: pickBi(heroBlock.data, "area_badge_sub", F.hero.areaBadge.sub),
+    },
   };
 
   const valueTitles = pickLines(valuesBlock.data, "item_titles", F.values.items.map((i) => i.title));

@@ -168,6 +168,8 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "image", label: "Hero image", field_type: "image", localizable: false, required: false, sort_order: 8 },
       { name: "cta_primary_href", label: "CTA primary href", field_type: "text", localizable: false, required: false, sort_order: 9 },
       { name: "cta_secondary_href", label: "CTA secondary href", field_type: "text", localizable: false, required: false, sort_order: 10 },
+      { name: "area_badge_main", label: "Service area badge (main)", field_type: "text", localizable: true, required: false, sort_order: 11 },
+      { name: "area_badge_sub", label: "Service area badge (sub)", field_type: "text", localizable: true, required: false, sort_order: 12 },
     ],
   },
   {

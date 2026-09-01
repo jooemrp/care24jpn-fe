@@ -167,34 +167,32 @@ export const home = {
       en: "We will assist you with everything from housework to personal care, according to your needs.",
     } satisfies Bilingual,
     heading: {
-      ja: "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
-      en: "Care and nursing support services that do not utilize medical insurance or long-term care insurance.",
+      ja: "あなたのそばに、安心のサポートを",
+      en: "Reliable Support, Right by Your Side.",
     } satisfies Bilingual,
-    body: {
-      ja: "介護保険の「できない」を、家族の「当たり前」に変えていく。",
-      en: 'We\'re transforming the "impossible" aspects of long-term care insurance into "normal" for families.',
-    } satisfies Bilingual,
+    body: { ja: "", en: "" } satisfies Bilingual,
     /** Hero-only CTA labels — the shared `cta` block still drives the header. */
     ctaPrimary: {
-      ja: "お申込みはこちら",
-      en: "Apply here",
+      ja: "申込みはこちら",
+      en: "Sign Up / Apply Here",
     } satisfies Bilingual,
-    ctaSecondary: {
-      ja: "まずは無料登録",
-      en: "Register for free first.",
-    } satisfies Bilingual,
+    ctaSecondary: { ja: "", en: "" } satisfies Bilingual,
     imageAlt: {
       ja: "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
       en: "An elderly woman resting calmly by a window with a care professional",
     } satisfies Bilingual,
-    // Verbatim from app/[lang]/page.tsx:98,104 — non-localizable relative
-    // paths, resolved through `localizeHref()` at render time same as before.
-    // The audit flagged the primary CTA's destination as mismatched with its
-    // own label (お申込みはこちら points at the how-it-works page, not a
-    // registration form) — moving it to the CMS is the fix; changing WHERE it
-    // points is a content decision that belongs to the client, not this task.
-    ctaPrimaryHref: "/service-flow",
+    ctaPrimaryHref: "https://portal.care24.jp/register",
     ctaSecondaryHref: "/pricing",
+    areaBadge: {
+      main: {
+        ja: "対応エリア 世田谷区・港区からスタート！",
+        en: "Service Area: Starting from Setagaya & Minato Wards!",
+      } satisfies Bilingual,
+      sub: {
+        ja: "※対応エリアは順次拡大予定です。",
+        en: "*Service area will be expanded sequentially.",
+      } satisfies Bilingual,
+    },
   },
 
   values: {

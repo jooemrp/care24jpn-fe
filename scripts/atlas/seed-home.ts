@@ -167,6 +167,8 @@ async function main(): Promise<void> {
       body: home.hero.body,
       cta_primary: home.hero.ctaPrimary,
       cta_secondary: home.hero.ctaSecondary,
+      area_badge_main: home.hero.areaBadge.main,
+      area_badge_sub: home.hero.areaBadge.sub,
       image_alt: home.hero.imageAlt,
     });
     // `image` carries the Atlas MEDIA ID (not a URL, not a path): the
