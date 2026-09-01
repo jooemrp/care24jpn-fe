@@ -1,13 +1,14 @@
 /**
- * Seeds the "home" page — the 29 blocks that make up `app/[lang]/page.tsx` —
+ * Seeds the "home" page — the 31 blocks that make up `app/[lang]/page.tsx` —
  * from `constants/copy.ts#home` (single source of truth, never retyped by
  * hand) onto the live Atlas workspace, then publishes it.
  *
  * Order and field names (matching the block types declared in
- * scripts/atlas/schema.ts): home_hero, home_values, home_problems, home_nursing_course,
- * home_nursing_feature x6, home_care_course, home_care_course_fee x3,
- * home_care_course_card x4, home_examples, home_example_case x3, home_flow,
- * home_flow_step x4, home_apply, home_contact.
+ * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems,
+ * home_nursing_course, home_nursing_feature x6, home_care_course,
+ * home_care_course_fee x3, home_care_course_card x4, home_examples,
+ * home_example_case x3, home_flow, home_flow_step x4, home_apply,
+ * home_contact.
  *
  * Idempotent: safe to run twice. `ensurePublishedPage` (scripts/atlas/lib.ts)
  * updates first and only creates on a 404, so an existing page is updated in
@@ -15,7 +16,7 @@
  * never a second page under the same slug (page slugs are NOT unique at the
  * create endpoint on this backend; see that helper's doc comment).
  *
- * Requires the 30 block types to already exist — run `npm run atlas:schema`
+ * Requires the 31 block types to already exist — run `npm run atlas:schema`
  * first.
  *
  * Usage (from marketing-web/):
@@ -125,7 +126,9 @@ const CARE_COURSE_CARD_IMAGES = [
 const BLOCK_TYPE_SLUGS = [
   "home_hero",
   "home_values",
+  "home_about",
   "home_problems",
+  "home_pricing_summary",
   "home_nursing_course",
   "home_nursing_feature",
   "home_care_course",
@@ -167,6 +170,8 @@ async function main(): Promise<void> {
       body: home.hero.body,
       cta_primary: home.hero.ctaPrimary,
       cta_secondary: home.hero.ctaSecondary,
+      area_badge_main: home.hero.areaBadge.main,
+      area_badge_sub: home.hero.areaBadge.sub,
       image_alt: home.hero.imageAlt,
     });
     // `image` carries the Atlas MEDIA ID (not a URL, not a path): the
@@ -198,14 +203,65 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_values", next(), split.ja, split.en));
   }
 
-  // 2: home_problems (9 items)
+  // 2: home_about (3 cards + illustration + card icon images)
   {
-    const items = biJoin(home.problems.items);
-    const split = splitBilingual({ heading: home.problems.heading, items });
-    blocks.push(makeBlock(typeIds, "home_problems", next(), split.ja, split.en));
+    const cardTitles = biJoin(home.about.cards.map((c) => c.title));
+    const cardBodies = biJoin(home.about.cards.map((c) => c.body));
+    const split = splitBilingual({
+      heading: home.about.heading,
+      catchphrase: home.about.catchphrase,
+      body: home.about.body,
+      card_titles: cardTitles,
+      card_bodies: cardBodies,
+    });
+    const ja = {
+      ...split.ja,
+      illustration: mediaId(media, "about-family.png"),
+      card_image_1: mediaId(media, "icon-about-qualified.png"),
+      card_image_2: mediaId(media, "icon-about-flexible.png"),
+      card_image_3: mediaId(media, "icon-about-private.png"),
+    };
+    blocks.push(makeBlock(typeIds, "home_about", next(), ja, split.en));
   }
 
-  // 3: home_nursing_course
+  // 3: home_problems (5 illustrated concern cards)
+  {
+    const items = biJoin(home.problems.items.map((item) => item.title));
+    const split = splitBilingual({
+      heading: home.problems.heading,
+      closing: home.problems.closing,
+      items,
+    });
+    const ja = {
+      ...split.ja,
+      item_image_1: mediaId(media, "problem-discharge.png"),
+      item_image_2: mediaId(media, "problem-absence.png"),
+      item_image_3: mediaId(media, "problem-bathing.png"),
+      item_image_4: mediaId(media, "problem-hospital.png"),
+      item_image_5: mediaId(media, "problem-insurance.png"),
+    };
+    blocks.push(makeBlock(typeIds, "home_problems", next(), ja, split.en));
+  }
+
+  // 3b: home_pricing_summary — TOP baseline fees copy + payment brand logos
+  {
+    const split = splitBilingual({
+      heading: home.pricingSummary.heading,
+      payment_heading: home.pricingSummary.payment.heading,
+      payment_body: home.pricingSummary.payment.body,
+      payment_settle_note: home.pricingSummary.payment.settleNote,
+    });
+    const ja = {
+      ...split.ja,
+      payment_visa: mediaId(media, "payment-visa.png"),
+      payment_mastercard: mediaId(media, "payment-mastercard.png"),
+      payment_jcb: mediaId(media, "payment-jcb.png"),
+      payment_amex: mediaId(media, "payment-amex.png"),
+    };
+    blocks.push(makeBlock(typeIds, "home_pricing_summary", next(), ja, split.en));
+  }
+
+  // 4: home_nursing_course
   {
     const split = splitBilingual({
       lead_in: home.nursingCourse.leadIn,
@@ -308,33 +364,49 @@ async function main(): Promise<void> {
   }
 
   // 23-26: home_flow_step (4 steps) — number is non-localizable.
-  // `icon` is retired: the rail in app/[lang]/page.tsx renders each step as a
-  // numbered node on a dashed line — the number IS the visual, there is no
-  // icon slot. The Atlas management API has no delete-field endpoint, so the
-  // `select` field stays in the `home_flow_step` content type forever; this
-  // seed writes it as an explicit empty string rather than `step.icon`'s
-  // real value, matching this repo's convention for a retired-but-
-  // undeletable field (see `tab_switch_label` in seed-site.ts) — an explicit
-  // "" tells a dashboard editor the control was deliberately decommissioned,
-  // not forgotten. `step.icon` itself stays in constants/copy.ts untouched.
-  for (const step of home.flow.steps) {
+  // `icon` (select) is retired in favor of `image` (photo). The select field
+  // stays in the content type because Atlas has no delete-field endpoint; we
+  // write "" so dashboard editors see it as deliberately empty.
+  const FLOW_STEP_IMAGES = [
+    "flow-01-apply.webp",
+    "flow-02-confirm.webp",
+    "flow-03-visit.webp",
+    "flow-04-report.webp",
+  ] as const;
+  for (const [i, step] of home.flow.steps.entries()) {
     const split = splitBilingual({ title: step.title, body: step.body });
-    const ja = { number: step.number, icon: "", ...split.ja };
+    const imageFile = FLOW_STEP_IMAGES[i];
+    if (!imageFile) {
+      throw new Error(
+        `home.flow.steps[${i}] has no FLOW_STEP_IMAGES entry — add the photo to public/images/ and upload-media.ts.`,
+      );
+    }
+    const ja = {
+      number: step.number,
+      icon: "",
+      image: mediaId(media, imageFile),
+      ...split.ja,
+    };
     blocks.push(makeBlock(typeIds, "home_flow_step", next(), ja, split.en));
   }
 
-  // 27: home_apply — staff_href and user_href are non-localizable
+  // 27: home_apply — staff_href / user_href / consult_href are non-localizable
   {
     const split = splitBilingual({
       user_eyebrow: home.apply.user.eyebrow,
       user_label: home.apply.user.label,
       staff_eyebrow: home.apply.staff.eyebrow,
       staff_label: home.apply.staff.label,
+      consult_heading: home.apply.consult.heading,
+      consult_body: home.apply.consult.body,
+      consult_cta: home.apply.consult.cta,
     });
     const ja = {
       ...split.ja,
       staff_href: home.apply.staff.href,
       user_href: home.apply.user.href,
+      consult_href: home.apply.consult.href,
+      consult_illustration: mediaId(media, "consult-family.png"),
     };
     blocks.push(makeBlock(typeIds, "home_apply", next(), ja, split.en));
   }
@@ -373,8 +445,8 @@ async function main(): Promise<void> {
     );
   }
 
-  if (blocks.length !== 29) {
-    throw new Error(`Expected 29 blocks, built ${blocks.length} — check the block list above.`);
+  if (blocks.length !== 31) {
+    throw new Error(`Expected 31 blocks, built ${blocks.length} — check the block list above.`);
   }
 
   const pageSlug = "home";

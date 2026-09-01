@@ -111,6 +111,25 @@ const ASSETS: { file: string; usedBy: string }[] = [
   // deletes any manifest key NOT listed here.
   { file: "og-card.png", usedBy: "seo.og_image (ja) — via seed-og-image.ts" },
   { file: "og-card-en.png", usedBy: "seo_translations.en.seo.og_image — via seed-og-image.ts" },
+  { file: "payment-visa.png", usedBy: "home_pricing_summary.payment_visa" },
+  { file: "payment-mastercard.png", usedBy: "home_pricing_summary.payment_mastercard" },
+  { file: "payment-jcb.png", usedBy: "home_pricing_summary.payment_jcb" },
+  { file: "payment-amex.png", usedBy: "home_pricing_summary.payment_amex" },
+  // TOP revision visual assets (AI-generated drafts under public/images/)
+  { file: "about-family.png", usedBy: "home_about.illustration" },
+  { file: "consult-family.png", usedBy: "home_apply.consult_illustration" },
+  { file: "icon-about-qualified.png", usedBy: "home_about.card_image_1" },
+  { file: "icon-about-flexible.png", usedBy: "home_about.card_image_2" },
+  { file: "icon-about-private.png", usedBy: "home_about.card_image_3" },
+  { file: "problem-discharge.png", usedBy: "home_problems.item_image_1" },
+  { file: "problem-absence.png", usedBy: "home_problems.item_image_2" },
+  { file: "problem-bathing.png", usedBy: "home_problems.item_image_3" },
+  { file: "problem-hospital.png", usedBy: "home_problems.item_image_4" },
+  { file: "problem-insurance.png", usedBy: "home_problems.item_image_5" },
+  { file: "flow-01-apply.webp", usedBy: "home_flow_step[0].image" },
+  { file: "flow-02-confirm.webp", usedBy: "home_flow_step[1].image" },
+  { file: "flow-03-visit.webp", usedBy: "home_flow_step[2].image" },
+  { file: "flow-04-report.webp", usedBy: "home_flow_step[3].image" },
 ];
 
 const MIME_BY_EXT: Record<string, string> = {

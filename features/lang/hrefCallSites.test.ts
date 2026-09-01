@@ -81,16 +81,16 @@ type Binding = {
 const ALLOWLIST: Array<Binding & { reason: string }> = [
   {
     file: "app/[lang]/page.tsx",
-    line: 802,
+    line: 1030,
     content: "href",
     reason:
       "ApplyBanner's <a> branch. Its only caller wraps the value first: " +
-      "page.tsx:515 and :523 both pass href={localizeHref(...)} into this " +
+      "page.tsx staff banner passes href={localizeHref(...)} into this " +
       "component — see the comment above the ApplyBanner call site.",
   },
   {
     file: "app/[lang]/page.tsx",
-    line: 813,
+    line: 1041,
     content: "href",
     reason:
       "Same ApplyBanner component, the <Link> branch a few lines below " +
@@ -98,15 +98,15 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
   },
   {
     file: "components/Navbar.tsx",
-    line: 218,
+    line: 217,
     content: "homeHref",
     reason:
       "homeHref = localizeHref(\"/\", lang) is assigned earlier in the " +
-      "same component body (Navbar.tsx:175).",
+      "same component body (Navbar.tsx:174).",
   },
   {
     file: "components/Navbar.tsx",
-    line: 288,
+    line: 273,
     content: "href",
     reason:
       "const href = localizeHref(item.href, lang) is assigned on the " +
@@ -114,10 +114,10 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
   },
   {
     file: "components/Navbar.tsx",
-    line: 316,
+    line: 301,
     content: "href",
     reason:
-      "Same pattern as :288, one .map() callback below, in the mobile " +
+      "Same pattern as :273, one .map() callback below, in the mobile " +
       "nav menu.",
   },
 ];

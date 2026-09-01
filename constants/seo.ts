@@ -179,6 +179,27 @@ export const seoRoutes = {
     atlasSlug: "legal-cancellation-policy",
     titleFrom: "legal-heading",
   },
+  faq: {
+    route: "/faq",
+    atlasSlug: "faq",
+    title: {
+      ja: "よくあるご質問",
+      en: "FAQ",
+    },
+    description: {
+      ja: "Care24Japanのサービス内容・ケアサポーター・料金・ご予約など、よくいただくご質問（Q1〜Q24）とご利用シーン（S1〜S5）をまとめました。",
+      en: "Answers to common questions about Care24Japan's services, care supporters, pricing, and reservations — 24 questions plus 5 use-case scenarios.",
+    },
+  },
+  contact: {
+    route: "/contact",
+    atlasSlug: "contact",
+    title: { ja: "お問い合わせ", en: "Contact us" },
+    description: {
+      ja: "Care24Japanへのお問い合わせ。サービス・採用・その他のご相談を受け付けています。",
+      en: "Contact Care24Japan about services, care supporter recruitment, or other inquiries.",
+    },
+  },
 } satisfies Record<string, SeoRouteEntry>;
 
 export type SeoRouteKey = keyof typeof seoRoutes;

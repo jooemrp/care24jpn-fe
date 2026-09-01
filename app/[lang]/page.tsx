@@ -2,6 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import {
+  IconArrowDown,
+  IconArrowRight,
+  IconBuildingHospital,
+  IconClock,
+  IconHeartbeat,
+  IconHeartHandshake,
+  IconMapPin,
+  IconMessages,
+  IconNeedle,
+  IconPhone,
+  IconPill,
+  type Icon,
+} from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { getHome } from "@/features/cms/home";
 import { getSite } from "@/features/cms/site";
@@ -57,28 +71,35 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   // externality check gives the same answer whether it runs before or after
   // localization. Checking the raw value here just keeps this line next to
   // the CMS field it's actually describing.
-  const userHrefIsExternal = /^https?:\/\//.test(home.apply.user.href);
   const staffHrefIsExternal = /^https?:\/\//.test(home.apply.staff.href);
+  const heroCtaIsExternal = /^https?:\/\//.test(home.hero.ctaPrimaryHref);
 
   return (
     <>
       {/* Hero — full-bleed key visual */}
       <section className="relative isolate overflow-hidden">
-        {/* Key visual: spans the full viewport width behind the copy */}
-        <Image
-          src={home.hero.image}
-          alt={t(home.hero.imageAlt, lang)}
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          className="-z-20 object-cover object-[center_40%]"
-        />
+        {/* Key visual: absolute inset so the photo always edge-to-edges the viewport */}
+        <div className="absolute inset-0 -z-20">
+          <Image
+            src={home.hero.image}
+            alt={t(home.hero.imageAlt, lang)}
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover object-[62%_38%] md:object-[58%_32%]"
+          />
+        </div>
 
-        {/* Soft sakura glow + bottom fade into the next section */}
+        {/* Soft sakura glow + gentle left veil for headline contrast + bottom fade.
+            Keep the left veil soft so it never reads as a hard crop edge. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-40"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-30"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-linear-to-r from-bg/50 via-bg/15 to-transparent md:from-bg/40 md:via-bg/8"
         />
         <div
           aria-hidden="true"
@@ -99,71 +120,187 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </p>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href={localizeHref(home.hero.ctaPrimaryHref, lang)}
-                className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
-              >
-                {t(home.hero.ctaPrimary, lang)}
-              </Link>
-              <Link
-                href={localizeHref(home.hero.ctaSecondaryHref, lang)}
-                className="rounded-full border-2 border-primary bg-surface/70 px-8 py-3 font-medium text-primary backdrop-blur-sm transition hover:bg-primary-light"
-              >
-                {t(home.hero.ctaSecondary, lang)}
-              </Link>
-            </div>
-
-            {/* Trust strip — the three reasons families choose us */}
-            <p className="mt-10 text-sm font-semibold text-body animate-fade-up">
-              {t(home.values.heading, lang)}
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-2.5">
-              {home.values.items.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex flex-col gap-0.5 rounded-full border border-border bg-surface/80 py-2 pl-3 pr-4 text-sm font-medium text-heading shadow-sm backdrop-blur-sm animate-fade-up"
-                  style={{ animationDelay: `${120 + i * 80}ms` }}
+            <div className="mt-8 flex flex-col items-start gap-3">
+              {heroCtaIsExternal ? (
+                <a
+                  href={localizeHref(home.hero.ctaPrimaryHref, lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 font-medium text-white shadow-lg shadow-accent/25 transition hover:opacity-90"
                 >
-                  <span className="flex items-center gap-2">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
-                      <svg viewBox="0 0 16 16" fill="none" className="h-2.5 w-2.5" aria-hidden="true">
-                        <path
-                          d="M3 8l3.5 3.5L13 4.5"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    {t(item.title, lang)}
+                  {t(home.hero.ctaPrimary, lang)}
+                  <span
+                    aria-hidden="true"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
+                  >
+                    <ArrowRightIcon className="h-4 w-4" />
                   </span>
-                  <span className="pl-6 text-xs font-normal text-body">{t(item.body, lang)}</span>
-                </li>
-              ))}
-            </ul>
+                </a>
+              ) : (
+                <Link
+                  href={localizeHref(home.hero.ctaPrimaryHref, lang)}
+                  className="inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 font-medium text-white shadow-lg shadow-accent/25 transition hover:opacity-90"
+                >
+                  {t(home.hero.ctaPrimary, lang)}
+                  <span
+                    aria-hidden="true"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
+                  >
+                    <ArrowRightIcon className="h-4 w-4" />
+                  </span>
+                </Link>
+              )}
+              <div className="flex flex-col items-start gap-1.5">
+                <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/90 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
+                    aria-hidden="true"
+                  >
+                    <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
+                  </span>
+                  <p className="text-sm font-semibold text-heading">
+                    {t(home.hero.areaBadge.main, lang)}
+                  </p>
+                </div>
+                <p className="px-1 text-xs text-muted">
+                  {t(home.hero.areaBadge.sub, lang)}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Problems */}
+      {/* About — what Care24Japan is, before the problems grid */}
+      <Section heading={home.about.heading} lang={lang}>
+        <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
+          {t(home.about.catchphrase, lang)}
+        </p>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-body">
+          {t(home.about.body, lang)}
+        </p>
+        <ul className="mt-12 grid gap-8 sm:grid-cols-3">
+          {home.about.cards.map((card, i) => (
+              <li key={i} className="flex flex-col items-center text-center animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
+                <span className="flex h-24 w-24 items-center justify-center rounded-full border border-border bg-surface p-4 shadow-sm sm:h-28 sm:w-28">
+                  {card.image ? (
+                    <Image
+                      src={card.image}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-full w-full object-contain"
+                    />
+                  ) : null}
+                </span>
+                <h3 className="mt-5 text-lg font-bold text-heading">{t(card.title, lang)}</h3>
+                <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-body">{t(card.body, lang)}</p>
+              </li>
+            ))}
+        </ul>
+        <div className="mx-auto mt-12 max-w-xl animate-fade-up" aria-hidden="true">
+          <Image
+            src={home.about.illustration}
+            alt=""
+            width={960}
+            height={480}
+            className="mx-auto h-auto w-full max-w-md object-contain"
+          />
+        </div>
+      </Section>
+
+      {/* Problems — Visual Ref 3 illustrated concern cards */}
       <Section surface heading={home.problems.heading} lang={lang}>
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {home.problems.items.map((item, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up"
+              className="flex flex-col items-center rounded-2xl border border-border bg-surface px-4 py-6 text-center animate-fade-up"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
-                <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
-                  <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-light p-2.5 text-primary">
+                {item.image ? (
+                  <Image
+                    src={item.image}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-contain"
+                  />
+                ) : (
+                  <ProblemIcon name={item.icon} />
+                )}
               </span>
-              <p className="text-xl leading-relaxed text-body">{t(item, lang)}</p>
+              <h3 className="mt-4 text-base font-bold leading-snug text-heading">
+                {t(item.title, lang)}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-body">
+                {t(item.body, lang)}
+              </p>
             </div>
           ))}
+        </div>
+        <p className="mt-10 text-center text-lg font-semibold text-heading md:text-xl">
+          {t(home.problems.closing, lang)}
+        </p>
+      </Section>
+
+      {/* TOP baseline pricing + payment — Visual Ref 4 */}
+      <Section lang={lang}>
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
+          <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 sm:p-8">
+            <h2 className="text-xl font-bold text-heading md:text-2xl">
+              {t(home.pricingSummary.heading, lang)}
+            </h2>
+            <div className="mt-6 grid flex-1 gap-5 sm:grid-cols-2">
+              {([home.pricingSummary.care, home.pricingSummary.nursing] as const).map((course, i) => (
+                <div key={i} className="flex flex-col rounded-xl bg-primary-light/60 px-4 py-5">
+                  <p className="text-sm font-semibold text-primary">{t(course.label, lang)}</p>
+                  <p className="mt-2 text-2xl font-bold tabular-nums text-accent md:text-3xl">
+                    {t(course.amount, lang)}
+                  </p>
+                  <p className="mt-3 text-xs leading-relaxed text-muted">{t(course.minNote, lang)}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">{t(course.transportNote, lang)}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-sm text-muted">{t(home.pricingSummary.extensionNote, lang)}</p>
+            <p className="mt-5 text-base">
+              <Link
+                href={localizeHref("/pricing", lang)}
+                className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
+              >
+                {t(home.pricingDetailsLink, lang)}
+              </Link>
+            </p>
+          </div>
+
+          <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 sm:p-8">
+            <h2 className="text-xl font-bold text-heading md:text-2xl">
+              {t(home.pricingSummary.payment.heading, lang)}
+            </h2>
+            <p className="mt-3 text-base text-body">
+              {t(home.pricingSummary.payment.body, lang)}
+            </p>
+
+            {/*
+              Mirror the left fee card's visual weight: a filled inner panel
+              with a 2×2 logo grid (same rhythm as the two course tiles) so
+              the payment card does not read as empty whitespace.
+            */}
+            <div className="mt-6 flex flex-1 flex-col rounded-xl bg-primary-light/60 p-4 sm:p-5">
+              <ul className="grid flex-1 grid-cols-2 content-center gap-3 sm:gap-4">
+                {home.pricingSummary.payment.logos.map((logo) => (
+                  <li key={logo.mark} className="min-w-0">
+                    <PaymentBrand src={logo.src} alt={t(logo.alt, lang)} />
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
+                {t(home.pricingSummary.payment.settleNote, lang)}
+              </p>
+            </div>
+          </div>
         </div>
       </Section>
 
@@ -180,69 +317,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </p>
       </div>
 
-      {/* Nursing course — now leads the service block.
-          Reworked away from the competitor's signature: the course name is a
-          pill rather than a solid rectangle, the rate label sits above the
-          figure instead of in a colour block welded to its left, and the whole
-          offer is one tinted card rather than loose chips on the page. */}
-      <Section id="service-details" lang={lang}>
-        {/* Lead-in heading */}
-        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
-          {t(home.nursingCourse.leadIn, lang)}
-        </h2>
-
-        {/* The coverage list runs as one tall column, so the price card sticks
-            below the header (130px tall) and stays in view the whole way
-            down it. `items-start` is required — a stretched or centred grid
-            item can't stick. */}
-        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
-          {/* Left: the offer, as a single card */}
-          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
-            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
-              {t(home.nursingCourse.badge, lang)}
-            </span>
-
-            <p className="mt-6 text-lg font-medium text-body">
-              {t(home.nursingCourse.price.label, lang)}
-              {t(home.nursingCourse.price.hours, lang)}
-            </p>
-            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-              <span className="text-5xl font-bold tabular-nums text-heading">
-                {t(home.nursingCourse.price.amount, lang)}
-              </span>
-              <span className="text-lg text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
-              <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
-            </p>
-            <p className="mt-1 text-lg text-body">
-              {t(home.nursingCourse.price.taxIncluded, lang)}
-            </p>
-
-            <p className="mt-6 text-lg text-muted">{t(home.nursingCourse.note, lang)}</p>
-          </div>
-
-          {/* Right: what the course covers */}
-          <div className="animate-fade-up [animation-delay:120ms]">
-            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
-              {t(home.nursingCourse.panel.heading, lang)}
-            </h3>
-            {/* One column: each item gets the full width, so labels wrap at
-                most twice and the icons stay on a single vertical rhythm. */}
-            <ul className="mt-6 flex flex-col gap-5">
-              {home.nursingCourse.panel.items.map((item, i) => (
-                <li key={i} className="flex items-center gap-3.5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
-                    <NursingIcon name={item.icon} />
-                  </span>
-                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Section>
-
-      {/* Care course — second, after the nursing course */}
-      <Section surface lang={lang}>
+      {/* Care course — leads the service block (matches /pricing order: care, then nursing). */}
+      <Section id="service-details" surface lang={lang}>
         {/* Lead-in heading, with the course description directly under it —
             it explains the heading, so it belongs there rather than floating
             beside the price. */}
@@ -279,6 +355,14 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </p>
               <p className="mt-1 text-lg text-body">
                 {t(home.careCourse.price.taxIncluded, lang)}
+              </p>
+              <p className="mt-5 text-lg">
+                <Link
+                  href={localizeHref("/pricing", lang)}
+                  className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
+                >
+                  {t(home.pricingDetailsLink, lang)}
+                </Link>
               </p>
             </div>
 
@@ -331,6 +415,74 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </ul>
             </div>
           ))}
+        </div>
+      </Section>
+
+      {/* Nursing course — second, after the care course.
+          Reworked away from the competitor's signature: the course name is a
+          pill rather than a solid rectangle, the rate label sits above the
+          figure instead of in a colour block welded to its left, and the whole
+          offer is one tinted card rather than loose chips on the page. */}
+      <Section lang={lang}>
+        {/* Lead-in heading */}
+        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
+          {t(home.nursingCourse.leadIn, lang)}
+        </h2>
+
+        {/* The coverage list runs as one tall column, so the price card sticks
+            below the header (130px tall) and stays in view the whole way
+            down it. `items-start` is required — a stretched or centred grid
+            item can't stick. */}
+        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
+          {/* Left: the offer, as a single card */}
+          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
+            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
+              {t(home.nursingCourse.badge, lang)}
+            </span>
+
+            <p className="mt-6 text-lg font-medium text-body">
+              {t(home.nursingCourse.price.label, lang)}
+              {t(home.nursingCourse.price.hours, lang)}
+            </p>
+            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+              <span className="text-5xl font-bold tabular-nums text-heading">
+                {t(home.nursingCourse.price.amount, lang)}
+              </span>
+              <span className="text-lg text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
+              <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
+            </p>
+            <p className="mt-1 text-lg text-body">
+              {t(home.nursingCourse.price.taxIncluded, lang)}
+            </p>
+
+            <p className="mt-6 text-lg">
+              <Link
+                href={localizeHref("/pricing", lang)}
+                className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
+              >
+                {t(home.pricingDetailsLink, lang)}
+              </Link>
+            </p>
+          </div>
+
+          {/* Right: what the course covers */}
+          <div className="animate-fade-up [animation-delay:120ms]">
+            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
+              {t(home.nursingCourse.panel.heading, lang)}
+            </h3>
+            {/* One column: each item gets the full width, so labels wrap at
+                most twice and the icons stay on a single vertical rhythm. */}
+            <ul className="mt-6 flex flex-col gap-5">
+              {home.nursingCourse.panel.items.map((item, i) => (
+                <li key={i} className="flex items-center gap-3.5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+                    <NursingIcon name={item.icon} />
+                  </span>
+                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Section>
 
@@ -446,86 +598,95 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </div>
       </Section>
 
-      {/* Service flow — vertical timeline: numbered nodes on a dashed rail so
-          the sequence reads top-to-bottom in one glance; title sits beside the
-          node, description underneath. No per-step icon — `icon` is a CMS
-          select field with no icon set in this repo to render it against. */}
+      {/* Service flow — Visual Ref 5: circular icon steps with arrows */}
       <Section surface heading={home.flow.heading} lang={lang}>
-        <ol className="mx-auto max-w-2xl">
-          {home.flow.steps.map((step, i) => {
+        <ol className="mx-auto grid max-w-5xl grid-cols-1 gap-y-8 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start md:gap-x-1 lg:gap-x-2">
+          {home.flow.steps.flatMap((step, i) => {
             const last = i === home.flow.steps.length - 1;
-            return (
+            const nodes = [
               <li
                 key={step.number}
-                className="relative flex gap-6 pb-12 last:pb-0 animate-fade-up"
+                className="flex flex-col items-center text-center animate-fade-up"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                {/* Rail connecting this node to the next */}
-                {!last && (
-                  <span
-                    className="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
-                  <span className="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">
-                    {t(home.flow.stepLabel, lang)}
+                <span className="relative flex h-28 w-28 items-center justify-center md:h-32 md:w-32">
+                  <span className="absolute inset-0 overflow-hidden rounded-full border-4 border-primary/20 shadow-sm">
+                    <FlowStepIcon src={step.image} />
                   </span>
-                  <span className="mt-0.5 text-base font-bold leading-none tabular-nums">
+                  <span className="absolute -top-1 left-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-[11px] font-bold tracking-wide text-white shadow-sm">
                     {step.number}
                   </span>
                 </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="pt-3 text-lg font-bold leading-snug text-heading">
-                    {t(step.title, lang)}
-                  </h3>
-                  <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">
-                    {t(step.body, lang)}
-                  </p>
-                </div>
-              </li>
-            );
+                <h3 className="mt-5 text-lg font-bold leading-snug text-heading md:text-base lg:text-lg">
+                  {t(step.title, lang)}
+                </h3>
+                <p className="mt-2 max-w-[14rem] text-sm leading-relaxed text-body">
+                  {t(step.body, lang)}
+                </p>
+              </li>,
+            ];
+            if (!last) {
+              nodes.push(
+                <li
+                  key={`arrow-${step.number}`}
+                  className="flex items-center justify-center text-primary md:h-32"
+                  aria-hidden="true"
+                >
+                  <span className="md:hidden">
+                    <FlowDownArrowIcon />
+                  </span>
+                  <span className="hidden md:block">
+                    <FlowArrowIcon />
+                  </span>
+                </li>,
+              );
+            }
+            return nodes;
           })}
         </ol>
       </Section>
 
-      {/* Application banners — one for prospective users, one for nursing
-          staff recruitment. The staff banner's target/rel are conditional
-          because the client's real registration URL is still pending and may
-          end up pointing off-site.
-
-          `href` is passed through `localizeHref()` here, at the call site —
-          same as every other Link on this page — rather than inside
-          `ApplyBanner` itself. `ApplyBanner` decides its own external-vs-
-          internal rendering from the SAME href value it receives (external
-          checked above from the raw CMS field; `#anchor` checked inside
-          `ApplyBanner` itself), and `localizeHref()` is a no-op on both of
-          those shapes (scheme'd URLs and pure fragments), so localizing
-          before or after those checks is equivalent. Localizing here keeps
-          `ApplyBanner` a plain presentational component that takes whatever
-          href string it's given, instead of also needing a `lang` prop.
-
-          The two explicit rows are load-bearing, not decoration: each card
-          spans them via `grid-rows-subgrid`, which is what keeps the audience
-          lines and the action lines aligned across the pair. Removing them
-          leaves each card sizing its own rows again. */}
+      {/* Consultation CTA — Visual Ref 6 primary band; staff remains secondary */}
       <Section surface lang={lang}>
-        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
-          <ApplyBanner
-            href={localizeHref(home.apply.user.href, lang)}
-            eyebrow={t(home.apply.user.eyebrow, lang)}
-            label={t(home.apply.user.label, lang)}
-            tone="accent"
-            external={userHrefIsExternal}
-            delay={0}
-          />
+        <div className="overflow-hidden rounded-2xl border border-accent/20 bg-accent-light/70 px-5 py-8 sm:px-8 md:px-10 md:py-10">
+          <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+            <div className="hidden shrink-0 md:block" aria-hidden="true">
+              <FamilyIllustration src={home.apply.consult.illustration} />
+            </div>
+            <div className="min-w-0 flex-1 text-center md:text-left">
+              <h2 className="text-2xl font-bold text-heading md:text-3xl">
+                {t(home.apply.consult.heading, lang)}
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-body md:text-lg">
+                {t(home.apply.consult.body, lang)}
+              </p>
+            </div>
+            <a
+              href={localizeHref(home.apply.consult.href, lang)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-3 rounded-full bg-accent px-7 py-3.5 font-medium text-white shadow-lg shadow-accent/25 transition hover:opacity-90"
+            >
+              {t(home.apply.consult.cta, lang)}
+              <span
+                aria-hidden="true"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
+              >
+                <ArrowRightIcon className="h-4 w-4" />
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-4 max-w-xl">
           <ApplyBanner
             href={localizeHref(home.apply.staff.href, lang)}
             eyebrow={t(home.apply.staff.eyebrow, lang)}
             label={t(home.apply.staff.label, lang)}
             tone="primary"
+            emphasis="secondary"
             external={staffHrefIsExternal}
-            delay={100}
+            delay={80}
           />
         </div>
       </Section>
@@ -544,16 +705,13 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           </h2>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <div className="flex flex-col items-center sm:items-start">
-              <a
-                href={`tel:${home.contact.phone.replace(/-/g, "")}`}
-                className="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading"
-              >
-                <PhoneIcon />
-                {home.contact.phone}
-              </a>
-              <p className="mt-1 text-sm text-muted">{t(home.contact.hours, lang)}</p>
-            </div>
+            <a
+              href={`tel:${home.contact.phone.replace(/-/g, "")}`}
+              className="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading"
+            >
+              <PhoneIcon />
+              {home.contact.phone}
+            </a>
             <Link
               href={localizeHref(home.contact.ctaHref, lang)}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
@@ -565,15 +723,22 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           {/* Certification: mics logo + BSI ISO 27001 badge */}
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
             <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
-              <Image
-                src={home.contact.micsLogo}
-                alt={t(home.contact.micsLogoAlt, lang)}
-                width={401}
-                height={140}
-                className="h-auto max-h-12 w-auto"
-              />
+              <a
+                href="https://mics.tokyo/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition opacity-90 hover:opacity-100"
+              >
+                <Image
+                  src={home.contact.micsLogo}
+                  alt={t(home.contact.micsLogoAlt, lang)}
+                  width={401}
+                  height={140}
+                  className="h-auto max-h-12 w-auto"
+                />
+              </a>
             </div>
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+            <div className="flex h-16 w-32 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
               <Image
                 src={home.contact.isoLogo}
                 alt={t(home.contact.isoLogoAlt, lang)}
@@ -644,81 +809,87 @@ function PyramidStatement({ badge, resolve }: { badge: string; resolve: string }
   );
 }
 
-/** Line-art icons for the nursing-course coverage list. */
+/** Line-art icons for the nursing-course coverage list (Tabler). */
+const NURSING_ICONS: Record<string, Icon> = {
+  vitals: IconHeartbeat,
+  procedure: IconNeedle,
+  medication: IconPill,
+  consult: IconMessages,
+  palliative: IconHeartHandshake,
+  hospital: IconBuildingHospital,
+};
+
 function NursingIcon({ name }: { name: string }) {
-  const common = {
-    viewBox: "0 0 24 24",
-    fill: "none",
-    className: "h-5.5 w-5.5",
-    "aria-hidden": true,
-    stroke: "currentColor" as const,
-    strokeWidth: 1.6,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
+  const Comp = NURSING_ICONS[name] ?? IconBuildingHospital;
+  return <Comp className="h-[1.375rem] w-[1.375rem]" stroke={1.6} aria-hidden="true" />;
+}
 
-  if (name === "vitals") {
-    return (
-      <svg {...common}>
-        {/* Pulse line over a heart */}
-        <path d="M12 20.5C6.5 16.5 3.5 13 3.5 9.5a4.5 4.5 0 018.5-2 4.5 4.5 0 018.5 2c0 3.5-3 7-8.5 11z" />
-        <path d="M6.5 12h3l1.5-3 2 5 1.5-2.5h3" />
-      </svg>
-    );
-  }
+const PROBLEM_ICON_SRC: Record<string, string> = {
+  absence: "/images/problem-absence.png",
+  bathing: "/images/problem-bathing.png",
+  hospital: "/images/problem-hospital.png",
+  insurance: "/images/problem-insurance.png",
+  discharge: "/images/problem-discharge.png",
+};
 
-  if (name === "procedure") {
-    return (
-      <svg {...common}>
-        {/* Syringe angled down-left: barrel, needle, plunger, dose ticks */}
-        <path d="M16.5 5.5L6.5 15.5M18.5 7.5L8.5 17.5M16.5 5.5l2 2M6.5 15.5l2 2" />
-        <path d="M7.5 16.5L4 20" />
-        <path d="M17.5 6.5L20 4M18.6 2.6l2.8 2.8" />
-        <path d="M13.5 8.5l1.5 1.5M11 11l1.5 1.5" />
-      </svg>
-    );
-  }
-
-  if (name === "medication") {
-    return (
-      <svg {...common}>
-        {/* Pill bottle */}
-        <rect x="7" y="7.5" width="8" height="13" rx="1.5" />
-        <path d="M6.5 7.5h9M9 4.5h4v3H9zM9.5 13.5h3M11 12v3" />
-        <circle cx="18.5" cy="16.5" r="0.2" />
-      </svg>
-    );
-  }
-
-  if (name === "consult") {
-    return (
-      <svg {...common}>
-        {/* Two speech bubbles */}
-        <path d="M4 5.5h10a1.5 1.5 0 011.5 1.5v5a1.5 1.5 0 01-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 012.5 12V7A1.5 1.5 0 014 5.5z" />
-        <path d="M18.5 9.5h1.5A1.5 1.5 0 0121.5 11v4.5a1.5 1.5 0 01-1.5 1.5h-.5v2.5l-3-2.5h-3" />
-      </svg>
-    );
-  }
-
-  if (name === "palliative") {
-    return (
-      <svg {...common}>
-        {/* Heart resting on an open palm */}
-        <path d="M12 12.5c-2.8-2-4.3-3.8-4.3-5.7A2.55 2.55 0 0112 5.4a2.55 2.55 0 014.3 1.4c0 1.9-1.5 3.7-4.3 5.7z" />
-        <path d="M4.5 17c2-1.5 3.5-2 5-2h4a1.25 1.25 0 010 2.5H10" />
-        <path d="M13.5 17.5l4.5-1.5a1.3 1.3 0 011 2.4l-5.5 2.6c-1.5.7-3 .5-4.5-.2l-4.5-2" />
-      </svg>
-    );
-  }
-
-  // default: "hospital" — building with a cross
+function ProblemIcon({ name }: { name: string }) {
+  const src = PROBLEM_ICON_SRC[name] ?? PROBLEM_ICON_SRC.discharge!;
   return (
-    <svg {...common}>
-      <rect x="5" y="5.5" width="14" height="15" rx="1" />
-      <path d="M3.5 20.5h17" />
-      <path d="M12 8.5v4M10 10.5h4" />
-      <path d="M8.5 16h2v4.5h3V16h2" />
-    </svg>
+    <Image
+      src={src}
+      alt=""
+      width={64}
+      height={64}
+      className="h-full w-full object-contain"
+    />
+  );
+}
+
+function FlowStepIcon({ src }: { src: string }) {
+  if (!src) return null;
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={256}
+      height={256}
+      className="h-full w-full object-cover"
+    />
+  );
+}
+
+function FlowArrowIcon() {
+  return <IconArrowRight className="h-5 w-10" stroke={2} aria-hidden="true" />;
+}
+
+function FlowDownArrowIcon() {
+  return <IconArrowDown className="h-6 w-4" stroke={2} aria-hidden="true" />;
+}
+
+function PaymentBrand({ src, alt }: { src: string; alt: string }) {
+  return (
+    <span className="flex h-full min-h-20 w-full items-center justify-center rounded-xl border border-border/80 bg-surface px-4 py-4 sm:min-h-24 sm:px-5 sm:py-5">
+      <Image
+        src={src}
+        alt={alt}
+        width={240}
+        height={160}
+        className="h-10 w-auto max-w-[7.5rem] object-contain sm:h-12 sm:max-w-[9rem]"
+      />
+    </span>
+  );
+}
+
+function FamilyIllustration({ src }: { src: string }) {
+  if (!src) return null;
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={320}
+      height={240}
+      className="h-28 w-auto max-w-[14rem] object-contain"
+    />
   );
 }
 
@@ -729,6 +900,32 @@ function NursingIcon({ name }: { name: string }) {
  * carries the design is hierarchy, not ornament: the audience line is small
  * and slightly recessed, the action is large and pure white, and the arrow
  * lives in a chip that inverts on hover.
+ *
+ * `emphasis="primary"` is the user-facing application CTA (filled, prominent).
+ * `emphasis="secondary"` is the staff-recruitment path (outlined, quieter).
+ *
+ * Two things make the pair read as a set rather than two loose blocks:
+ *
+ * 1. `grid-rows-subgrid` — both cards borrow the *parent's* two rows, so the
+ *    audience lines share one row and the actions share another. The English
+ *    「For those who wish to use our service」 wraps to two lines while its
+ *    twin does not, and the two actions still land on the same line.
+ * 2. The deepened fills (see --color-*-deep in globals.css), which take white
+ *    past 4.5:1 at any size. On the undeepened brand colours every word here
+ *    would have to be 18.66px+ bold, which is what flattened the hierarchy.
+ */
+
+
+/**
+ * The two entry points off this page (book care / apply to work).
+ *
+ * Solid in the audience's own colour — no gradient, no glass, no glow. What
+ * carries the design is hierarchy, not ornament: the audience line is small
+ * and slightly recessed, the action is large and pure white, and the arrow
+ * lives in a chip that inverts on hover.
+ *
+ * `emphasis="primary"` is the user-facing application CTA (filled, prominent).
+ * `emphasis="secondary"` is the staff-recruitment path (outlined, quieter).
  *
  * Two things make the pair read as a set rather than two loose blocks:
  *
@@ -745,6 +942,7 @@ function ApplyBanner({
   eyebrow,
   label,
   tone,
+  emphasis = "primary",
   external = false,
   delay,
 }: {
@@ -752,34 +950,46 @@ function ApplyBanner({
   eyebrow: string;
   label: string;
   tone: "accent" | "primary";
+  emphasis?: "primary" | "secondary";
   external?: boolean;
   delay: number;
 }) {
   const accent = tone === "accent";
+  const isPrimary = emphasis === "primary";
 
   // The shadow is tinted from the fill rather than black — a grey shadow under
   // a saturated block reads as dirt.
-  const className = [
-    "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5",
-    "rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15",
-    "sm:row-span-2 sm:grid-rows-subgrid",
-    "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
-    "motion-reduce:transition-none",
-    "focus-visible:outline-2 focus-visible:outline-offset-3",
-    accent
-      ? "bg-accent-deep shadow-[0_2px_10px_-4px_rgba(122,32,68,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(122,32,68,0.7)] focus-visible:outline-accent-deep"
-      : "bg-primary-deep shadow-[0_2px_10px_-4px_rgba(16,66,105,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(16,66,105,0.7)] focus-visible:outline-primary-deep",
-  ].join(" ");
+  const className = isPrimary
+    ? [
+        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-5 gap-y-2",
+        "rounded-2xl px-7 py-8 text-white ring-1 ring-inset ring-white/15",
+        "sm:row-span-2 sm:grid-rows-subgrid",
+        "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
+        "motion-reduce:transition-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-3",
+        accent
+          ? "bg-accent-deep shadow-[0_4px_16px_-6px_rgba(122,32,68,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(122,32,68,0.65)] focus-visible:outline-accent-deep"
+          : "bg-primary-deep shadow-[0_4px_16px_-6px_rgba(16,66,105,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(16,66,105,0.65)] focus-visible:outline-primary-deep",
+      ].join(" ")
+    : [
+        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-1.5",
+        "rounded-xl border border-primary/25 bg-surface px-5 py-5 text-heading",
+        "sm:row-span-2 sm:grid-rows-subgrid",
+        "animate-fade-up transition duration-200",
+        "hover:border-primary/40 hover:bg-primary-light/50",
+        "motion-reduce:transition-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary",
+      ].join(" ");
 
   const style = { animationDelay: `${delay}ms` };
-  const content = (
+  const content = isPrimary ? (
     <>
       {/* white/90 rather than a lighter tint: it still reads as secondary but
           holds 4.8:1, so the line stays legible at 14px. */}
       <span className="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">
         {eyebrow}
       </span>
-      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">
+      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">
         {label}
       </span>
 
@@ -790,6 +1000,22 @@ function ApplyBanner({
         }`}
       >
         <ArrowRightIcon className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
+      </span>
+    </>
+  ) : (
+    <>
+      <span className="col-start-1 row-start-1 self-end text-xs font-medium leading-relaxed text-muted">
+        {eyebrow}
+      </span>
+      <span className="col-start-1 row-start-2 self-end text-lg font-semibold leading-snug text-heading md:text-xl">
+        {label}
+      </span>
+
+      <span
+        aria-hidden="true"
+        className="col-start-2 row-start-1 row-span-2 flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-primary/10 text-primary ring-1 ring-inset ring-primary/15 transition duration-200 group-hover:bg-primary group-hover:text-white group-hover:ring-primary motion-reduce:transition-none"
+      >
+        <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
       </span>
     </>
   );
@@ -817,42 +1043,15 @@ function ApplyBanner({
 }
 
 function ArrowRightIcon({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-  );
+  return <IconArrowRight className={className} stroke={2.5} aria-hidden="true" />;
 }
 
 /** Freephone receiver glyph shown beside the contact number. */
 function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 32 24" fill="none" className="h-7 w-9 text-primary" aria-hidden="true">
-      {/* Freephone-style handset over a bar */}
-      <path
-        d="M6 9c0-2.5 4-4.5 10-4.5S26 6.5 26 9c0 1.4-1 2.2-2.3 2.2-1.2 0-2-.7-2-1.8 0-.6.2-1-.3-1.4-.8-.5-2.3-.8-5.4-.8s-4.6.3-5.4.8c-.5.4-.3.8-.3 1.4 0 1.1-.8 1.8-2 1.8C7 11.2 6 10.4 6 9z"
-        fill="currentColor"
-      />
-      <rect x="4" y="16" width="24" height="3" rx="1.5" fill="currentColor" />
-    </svg>
-  );
+  return <IconPhone className="h-7 w-9 text-primary" stroke={1.6} aria-hidden="true" />;
 }
 
 /** Small clock glyph shown beside each timeline step's time. */
 function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-muted" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M12 7.5V12l3 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <IconClock className="h-4 w-4 text-muted" stroke={1.5} aria-hidden="true" />;
 }
