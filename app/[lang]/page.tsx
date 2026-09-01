@@ -466,40 +466,43 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </div>
       </Section>
 
-      {/* Service flow — vertical timeline: numbered nodes on a dashed rail so
-          the sequence reads top-to-bottom in one glance; title sits beside the
-          node, description underneath. No per-step icon — `icon` is a CMS
-          select field with no icon set in this repo to render it against. */}
+      {/* Service flow — vertical timeline on mobile, horizontal step row from md
+          up. Numbered nodes on a dashed rail; title beside/below the node,
+          description underneath. No per-step icon — `icon` is a CMS select
+          field with no icon set in this repo to render it against. */}
       <Section surface heading={home.flow.heading} lang={lang}>
-        <ol className="mx-auto max-w-2xl">
+        <ol className="mx-auto max-w-5xl md:grid md:grid-cols-4 md:gap-x-5 lg:gap-x-8">
           {home.flow.steps.map((step, i) => {
             const last = i === home.flow.steps.length - 1;
             return (
               <li
                 key={step.number}
-                className="relative flex gap-6 pb-12 last:pb-0 animate-fade-up"
+                className="relative flex gap-5 pb-16 last:pb-0 md:flex-col md:items-center md:gap-0 md:pb-0 md:text-center animate-fade-up"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                {/* Rail connecting this node to the next */}
+                {/* Vertical rail — mobile */}
                 {!last && (
                   <span
-                    className="absolute bottom-0 left-6 top-12 w-0 border-l-2 border-dashed border-primary/25"
+                    className="absolute bottom-0 left-7 top-16 w-0 border-l-2 border-dashed border-primary/30 md:hidden"
                     aria-hidden="true"
                   />
                 )}
-                <span className="z-10 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_12px_rgba(43,126,193,0.25)]">
-                  <span className="text-[8px] font-bold leading-none tracking-[0.18em] opacity-80">
-                    {t(home.flow.stepLabel, lang)}
-                  </span>
-                  <span className="mt-0.5 text-base font-bold leading-none tabular-nums">
-                    {step.number}
-                  </span>
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="pt-3 text-lg font-bold leading-snug text-heading">
+                {/* Horizontal rail — md+ */}
+                {!last && (
+                  <span
+                    className="absolute left-[calc(50%+2.25rem)] top-8 hidden h-0 w-[calc(100%-4.5rem)] border-t-2 border-dashed border-primary/30 md:block lg:top-9"
+                    aria-hidden="true"
+                  />
+                )}
+                <FlowStepNode
+                  stepLabel={t(home.flow.stepLabel, lang)}
+                  number={step.number}
+                />
+                <div className="min-w-0 flex-1 md:mt-7 md:px-1">
+                  <h3 className="pt-1.5 text-xl font-bold leading-snug text-heading md:pt-0 md:text-lg lg:text-xl">
                     {t(step.title, lang)}
                   </h3>
-                  <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-body">
+                  <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-body md:mt-2.5 md:text-sm lg:text-base">
                     {t(step.body, lang)}
                   </p>
                 </div>
@@ -530,12 +533,13 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           lines and the action lines aligned across the pair. Removing them
           leaves each card sizing its own rows again. */}
       <Section surface lang={lang}>
-        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-5">
+        <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-[1.15fr_0.85fr] sm:grid-rows-[auto_auto] sm:gap-4">
           <ApplyBanner
             href={localizeHref(home.apply.user.href, lang)}
             eyebrow={t(home.apply.user.eyebrow, lang)}
             label={t(home.apply.user.label, lang)}
             tone="accent"
+            emphasis="primary"
             external={userHrefIsExternal}
             delay={0}
           />
@@ -544,6 +548,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             eyebrow={t(home.apply.staff.eyebrow, lang)}
             label={t(home.apply.staff.label, lang)}
             tone="primary"
+            emphasis="secondary"
             external={staffHrefIsExternal}
             delay={100}
           />
@@ -746,6 +751,20 @@ function NursingIcon({ name }: { name: string }) {
   );
 }
 
+/** Numbered node for the service-flow timeline. */
+function FlowStepNode({ stepLabel, number }: { stepLabel: string; number: string }) {
+  return (
+    <span className="relative z-10 flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border-2 border-white/25 bg-primary text-white shadow-md shadow-primary/30 md:h-16 md:w-16">
+      <span className="text-[9px] font-bold uppercase leading-none tracking-[0.2em] text-white/85 md:text-[10px]">
+        {stepLabel}
+      </span>
+      <span className="mt-1 text-lg font-bold leading-none tabular-nums md:text-xl">
+        {number}
+      </span>
+    </span>
+  );
+}
+
 /**
  * The two entry points off this page (book care / apply to work).
  *
@@ -753,6 +772,9 @@ function NursingIcon({ name }: { name: string }) {
  * carries the design is hierarchy, not ornament: the audience line is small
  * and slightly recessed, the action is large and pure white, and the arrow
  * lives in a chip that inverts on hover.
+ *
+ * `emphasis="primary"` is the user-facing application CTA (filled, prominent).
+ * `emphasis="secondary"` is the staff-recruitment path (outlined, quieter).
  *
  * Two things make the pair read as a set rather than two loose blocks:
  *
@@ -769,6 +791,7 @@ function ApplyBanner({
   eyebrow,
   label,
   tone,
+  emphasis = "primary",
   external = false,
   delay,
 }: {
@@ -776,34 +799,46 @@ function ApplyBanner({
   eyebrow: string;
   label: string;
   tone: "accent" | "primary";
+  emphasis?: "primary" | "secondary";
   external?: boolean;
   delay: number;
 }) {
   const accent = tone === "accent";
+  const isPrimary = emphasis === "primary";
 
   // The shadow is tinted from the fill rather than black — a grey shadow under
   // a saturated block reads as dirt.
-  const className = [
-    "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-2.5",
-    "rounded-2xl px-7 py-7 text-white ring-1 ring-inset ring-white/15",
-    "sm:row-span-2 sm:grid-rows-subgrid",
-    "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
-    "motion-reduce:transition-none",
-    "focus-visible:outline-2 focus-visible:outline-offset-3",
-    accent
-      ? "bg-accent-deep shadow-[0_2px_10px_-4px_rgba(122,32,68,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(122,32,68,0.7)] focus-visible:outline-accent-deep"
-      : "bg-primary-deep shadow-[0_2px_10px_-4px_rgba(16,66,105,0.45)] hover:shadow-[0_16px_30px_-16px_rgba(16,66,105,0.7)] focus-visible:outline-primary-deep",
-  ].join(" ");
+  const className = isPrimary
+    ? [
+        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-5 gap-y-2",
+        "rounded-2xl px-7 py-8 text-white ring-1 ring-inset ring-white/15",
+        "sm:row-span-2 sm:grid-rows-subgrid",
+        "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
+        "motion-reduce:transition-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-3",
+        accent
+          ? "bg-accent-deep shadow-[0_4px_16px_-6px_rgba(122,32,68,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(122,32,68,0.65)] focus-visible:outline-accent-deep"
+          : "bg-primary-deep shadow-[0_4px_16px_-6px_rgba(16,66,105,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(16,66,105,0.65)] focus-visible:outline-primary-deep",
+      ].join(" ")
+    : [
+        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-1.5",
+        "rounded-xl border border-primary/25 bg-surface px-5 py-5 text-heading",
+        "sm:row-span-2 sm:grid-rows-subgrid",
+        "animate-fade-up transition duration-200",
+        "hover:border-primary/40 hover:bg-primary-light/50",
+        "motion-reduce:transition-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary",
+      ].join(" ");
 
   const style = { animationDelay: `${delay}ms` };
-  const content = (
+  const content = isPrimary ? (
     <>
       {/* white/90 rather than a lighter tint: it still reads as secondary but
           holds 4.8:1, so the line stays legible at 14px. */}
       <span className="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">
         {eyebrow}
       </span>
-      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.75rem]">
+      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">
         {label}
       </span>
 
@@ -814,6 +849,22 @@ function ApplyBanner({
         }`}
       >
         <ArrowRightIcon className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
+      </span>
+    </>
+  ) : (
+    <>
+      <span className="col-start-1 row-start-1 self-end text-xs font-medium leading-relaxed text-muted">
+        {eyebrow}
+      </span>
+      <span className="col-start-1 row-start-2 self-end text-lg font-semibold leading-snug text-heading md:text-xl">
+        {label}
+      </span>
+
+      <span
+        aria-hidden="true"
+        className="col-start-2 row-start-1 row-span-2 flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-primary/10 text-primary ring-1 ring-inset ring-primary/15 transition duration-200 group-hover:bg-primary group-hover:text-white group-hover:ring-primary motion-reduce:transition-none"
+      >
+        <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
       </span>
     </>
   );
