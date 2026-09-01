@@ -62,6 +62,13 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "logo_alt", label: "Logo alt", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "tagline", label: "Tagline", field_type: "text", localizable: true, required: false, sort_order: 2 },
       { name: "logo", label: "Logo", field_type: "image", localizable: false, required: false, sort_order: 3 },
+      // Intrinsic `next/image` dimensions for the chrome logo. Navbar and
+      // Footer previously hardcoded 427x160 / 320x120 from the original PNG
+      // (constants/copy.ts carries no image props); an editor who swaps the
+      // file for another ratio would stretch it. Storing the real width/
+      // height keeps the two surfaces agreeing via CMS. Non-localizable.
+      { name: "logo_width", label: "Logo width (px)", field_type: "number", localizable: false, required: false, sort_order: 4 },
+      { name: "logo_height", label: "Logo height (px)", field_type: "number", localizable: false, required: false, sort_order: 5 },
     ],
   },
   {
@@ -211,6 +218,15 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "item_image_3", label: "Item 3 image", field_type: "image", localizable: false, required: false, sort_order: 5 },
       { name: "item_image_4", label: "Item 4 image", field_type: "image", localizable: false, required: false, sort_order: 6 },
       { name: "item_image_5", label: "Item 5 image", field_type: "image", localizable: false, required: false, sort_order: 7 },
+      // Per-item body copy + icon key, previously filled from
+      // constants/copy.ts#home.problems.items[].body/.icon when the CMS did
+      // not expose them — no-fallback sweep: the rendered card body/icon must
+      // come from the CMS, so both get fields here. `item_bodies` is one
+      // localizable line per item (mirrors `items`); `item_icons` is one
+      // non-localizable key per item (absent/`""` -> rendered without the
+      // bundled icon fallback).
+      { name: "item_bodies", label: "Item bodies (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 8 },
+      { name: "item_icons", label: "Item icon keys (satu per baris: absence/bathing/hospital/insurance/discharge)", field_type: "textarea", localizable: false, required: false, sort_order: 9 },
     ],
   },
   {
@@ -219,13 +235,38 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     is_block: true,
     fields: [
       { name: "heading", label: "Fees heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
-      { name: "payment_heading", label: "Payment heading", field_type: "text", localizable: true, required: false, sort_order: 1 },
-      { name: "payment_body", label: "Payment body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
-      { name: "payment_settle_note", label: "Payment settle note", field_type: "text", localizable: true, required: false, sort_order: 3 },
-      { name: "payment_visa", label: "Logo Visa", field_type: "image", localizable: false, required: false, sort_order: 4 },
-      { name: "payment_mastercard", label: "Logo Mastercard", field_type: "image", localizable: false, required: false, sort_order: 5 },
-      { name: "payment_jcb", label: "Logo JCB", field_type: "image", localizable: false, required: false, sort_order: 6 },
-      { name: "payment_amex", label: "Logo American Express", field_type: "image", localizable: false, required: false, sort_order: 7 },
+      // The two baseline course tiles (care/nursing) + the extension note —
+      // previously spread across constants/copy.ts#home.pricingSummary.{care,
+      // nursing, extensionNote}; no-fallback sweep puts them on the CMS block
+      // so the rendered amounts/notes are never constants values.
+      { name: "care_label", label: "Care course label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "care_amount", label: "Care amount", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "care_min_note", label: "Care min. note", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "care_transport_note", label: "Care transport note", field_type: "text", localizable: true, required: false, sort_order: 4 },
+      { name: "nursing_label", label: "Nursing label", field_type: "text", localizable: true, required: false, sort_order: 5 },
+      { name: "nursing_amount", label: "Nursing amount", field_type: "text", localizable: true, required: false, sort_order: 6 },
+      { name: "nursing_min_note", label: "Nursing min. note", field_type: "text", localizable: true, required: false, sort_order: 7 },
+      { name: "nursing_transport_note", label: "Nursing transport note", field_type: "text", localizable: true, required: false, sort_order: 8 },
+      { name: "extension_note", label: "Extension note", field_type: "text", localizable: true, required: false, sort_order: 9 },
+      { name: "payment_heading", label: "Payment heading", field_type: "text", localizable: true, required: false, sort_order: 10 },
+      { name: "payment_body", label: "Payment body", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
+      { name: "payment_settle_note", label: "Payment settle note", field_type: "text", localizable: true, required: false, sort_order: 12 },
+      { name: "payment_visa", label: "Logo Visa", field_type: "image", localizable: false, required: false, sort_order: 13 },
+      { name: "payment_mastercard", label: "Logo Mastercard", field_type: "image", localizable: false, required: false, sort_order: 14 },
+      { name: "payment_jcb", label: "Logo JCB", field_type: "image", localizable: false, required: false, sort_order: 15 },
+      { name: "payment_amex", label: "Logo American Express", field_type: "image", localizable: false, required: false, sort_order: 16 },
+      // Alt text per payment brand mark — previously verbatim in
+      // constants/copy.ts#home.pricingSummary.payment.logos[].alt. Non-empty
+      // so `next/image` never renders a mark without accessible text.
+      { name: "payment_visa_alt", label: "Alt: Visa", field_type: "text", localizable: true, required: false, sort_order: 17 },
+      { name: "payment_mastercard_alt", label: "Alt: Mastercard", field_type: "text", localizable: true, required: false, sort_order: 18 },
+      { name: "payment_jcb_alt", label: "Alt: JCB", field_type: "text", localizable: true, required: false, sort_order: 19 },
+      { name: "payment_amex_alt", label: "Alt: American Express", field_type: "text", localizable: true, required: false, sort_order: 20 },
+      // The "full pricing details" link under the summary —
+      // constants/copy.ts#home.pricingDetailsLink. Label is copy; the href
+      // (relative path to /pricing) is non-localizable.
+      { name: "pricing_details_label", label: "Pricing details label", field_type: "text", localizable: true, required: false, sort_order: 21 },
+      { name: "pricing_details_href", label: "Pricing details href", field_type: "text", localizable: false, required: false, sort_order: 22 },
     ],
   },
   {
@@ -405,6 +446,11 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "highlights", label: "Highlights (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 0 },
       { name: "note", label: "Note", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      // The cancellation-policy link shown under the note — was
+      // constants/pricing.ts#cancellationLinkLabel. Label is localizable;
+      // the href (relative path) is not.
+      { name: "cancellation_label", label: "Cancellation policy link label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "cancellation_href", label: "Cancellation policy href", field_type: "text", localizable: false, required: false, sort_order: 3 },
     ],
   },
   {
@@ -476,6 +522,108 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "body", label: "Body", field_type: "richtext", localizable: true, required: false, sort_order: 1 },
+    ],
+  },
+  // -------------------------------------------------------------------------
+  // FAQ page (app/[lang]/faq). Previously entirely hardcoded in
+  // constants/faq.ts — a CMS-driven sweep must move every Q/A and its
+  // category grouping into Atlas. The page hero copy (heading/body) reuses
+  // the shared `page_hero` block type, so only TWO content types are new:
+  // one per category (6: "01".."05" + "scenarios") and one per item (Q1..Q24,
+  // S1..S5). `id`/`category` are identifiers, not copy — non-localizable.
+  // -------------------------------------------------------------------------
+  {
+    slug: "faq_category",
+    name: "FAQ — Category",
+    is_block: true,
+    fields: [
+      { name: "id", label: "Category id (01-05 / scenarios)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+    ],
+  },
+  {
+    slug: "faq_item",
+    name: "FAQ — Item",
+    is_block: true,
+    fields: [
+      { name: "id", label: "Item id (Q1..Q24, S1..S5)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "category", label: "Category id (01-05 / scenarios)", field_type: "text", localizable: false, required: false, sort_order: 1 },
+      { name: "question", label: "Question", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "answer", label: "Answer", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+    ],
+  },
+  // -------------------------------------------------------------------------
+  // Contact page (app/[lang]/contact). Previously entirely hardcoded in
+  // constants/contact.ts. Rendered as two cards (phone / form) + the page
+  // hero + the form's field labels + the inquiry-category options + the
+  // mailto destination. Blocks carry the full copy; `mailto`/category
+  // `value`/phone `number` are non-localizable.
+  // -------------------------------------------------------------------------
+  {
+    slug: "contact_phone_card",
+    name: "Contact — Phone card",
+    is_block: true,
+    fields: [
+      { name: "badge", label: "Badge", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "tel_label", label: "TEL label", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "number", label: "Phone number", field_type: "text", localizable: false, required: false, sort_order: 4 },
+      { name: "hours", label: "Reception hours", field_type: "text", localizable: true, required: false, sort_order: 5 },
+      { name: "bullets", label: "Bullets (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 6 },
+    ],
+  },
+  {
+    slug: "contact_form_card",
+    name: "Contact — Form card",
+    is_block: true,
+    fields: [
+      { name: "badge", label: "Badge", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "body", label: "Body", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "bullets", label: "Bullets (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "follow_up", label: "Follow-up note", field_type: "textarea", localizable: true, required: false, sort_order: 4 },
+      { name: "required_note", label: "Required-field note", field_type: "textarea", localizable: true, required: false, sort_order: 5 },
+    ],
+  },
+  {
+    slug: "contact_form_fields",
+    name: "Contact — Form fields",
+    is_block: true,
+    fields: [
+      { name: "mailto", label: "mailto destination", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "category", label: "Category label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "name", label: "Name label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "phone", label: "Phone label", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "email", label: "Email label", field_type: "text", localizable: true, required: false, sort_order: 4 },
+      { name: "message", label: "Message label", field_type: "text", localizable: true, required: false, sort_order: 5 },
+      { name: "submit", label: "Submit label", field_type: "text", localizable: true, required: false, sort_order: 6 },
+    ],
+  },
+  {
+    slug: "contact_category",
+    name: "Contact — Inquiry category option",
+    is_block: true,
+    fields: [
+      { name: "value", label: "Value (services / recruitment / other)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+    ],
+  },
+  // -------------------------------------------------------------------------
+  // Global error page (app/global-error.tsx). Distinct from `site_error_labels`
+  // (the route-segment error boundary) and `site_not_found_labels` (the 404):
+  // this is the root-layout error surface. It renders a Client Component that
+  // cannot await getSite() — but it CAN read a build-friendly source once the
+  // copy is also surfaced through a loader. See app/global-error.tsx.
+  // -------------------------------------------------------------------------
+  {
+    slug: "site_global_error_labels",
+    name: "Site — Global error page labels",
+    is_block: true,
+    fields: [
+      { name: "title", label: "Error heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "body", label: "Error body", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "retry_label", label: "Retry button label", field_type: "text", localizable: true, required: false, sort_order: 2 },
     ],
   },
 ];

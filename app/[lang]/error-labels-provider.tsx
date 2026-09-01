@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import { errorPage as fallbackErrorPage } from "@/constants/copy";
 import type { SiteContent } from "@/features/cms/site";
 
 /**
@@ -31,15 +30,21 @@ import type { SiteContent } from "@/features/cms/site";
  * it renders around `children` — already ran to completion, and the context
  * value below is never the default.
  *
- * The default export is `constants/copy.ts#errorPage` — the FALLBACK layer,
- * not a placeholder. `getSite()` itself already returns that exact object
- * when Atlas is unreachable (`features/cms/site-map.ts#FALLBACK.errorPage`),
- * so this default only matters for a component that renders
- * `useErrorLabels()` with no `<ErrorLabelsProvider>` ancestor at all (e.g. a
- * future test) — not for the CMS-down path, which already flows through the
- * Provider with fallback data as its `value`.
+ * The default value is EMPTY strings — there is no constants fallback
+ * anymore. `getSite()` throws when the CMS is unreachable, and the layout
+ * that renders this Provider can only complete (and mount that Provider)
+ * when `getSite()` succeeded — so `useErrorLabels()` only ever sees a
+ * CMS-sourced value in practice. The empty default covers only a component
+ * rendering `useErrorLabels()` with no Provider ancestor at all (e.g. a
+ * future test).
  */
-const ErrorLabelsContext = createContext<SiteContent["errorPage"]>(fallbackErrorPage);
+const EMPTY_ERROR_PAGE: SiteContent["errorPage"] = {
+  title: { ja: "", en: "" },
+  body: { ja: "", en: "" },
+  retryLabel: { ja: "", en: "" },
+};
+
+const ErrorLabelsContext = createContext<SiteContent["errorPage"]>(EMPTY_ERROR_PAGE);
 
 export function ErrorLabelsProvider({
   value,

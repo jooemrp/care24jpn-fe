@@ -94,6 +94,8 @@ const SEED_STAGES = [
   { name: "seed-legal", file: "seed-legal.ts" },
   { name: "seed-rates", file: "seed-rates.ts" },
   { name: "seed-pages", file: "seed-pages.ts" },
+  { name: "seed-faq", file: "seed-faq.ts" },
+  { name: "seed-contact", file: "seed-contact.ts" },
 ];
 
 /**

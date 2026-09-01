@@ -227,10 +227,12 @@ async function main(): Promise<void> {
   // 3: home_problems (5 illustrated concern cards)
   {
     const items = biJoin(home.problems.items.map((item) => item.title));
+    const itemBodies = biJoin(home.problems.items.map((item) => item.body ?? item.title));
     const split = splitBilingual({
       heading: home.problems.heading,
       closing: home.problems.closing,
       items,
+      item_bodies: itemBodies,
     });
     const ja = {
       ...split.ja,
@@ -239,6 +241,9 @@ async function main(): Promise<void> {
       item_image_3: mediaId(media, "problem-bathing.png"),
       item_image_4: mediaId(media, "problem-hospital.png"),
       item_image_5: mediaId(media, "problem-insurance.png"),
+      // Non-localizable icon key per item, one per line — read as
+      // `pickJaLines` in features/cms/home.ts.
+      item_icons: home.problems.items.map((item) => item.icon ?? "").join("\n"),
     };
     blocks.push(makeBlock(typeIds, "home_problems", next(), ja, split.en));
   }
@@ -247,9 +252,23 @@ async function main(): Promise<void> {
   {
     const split = splitBilingual({
       heading: home.pricingSummary.heading,
+      care_label: home.pricingSummary.care.label,
+      care_amount: home.pricingSummary.care.amount,
+      care_min_note: home.pricingSummary.care.minNote,
+      care_transport_note: home.pricingSummary.care.transportNote,
+      nursing_label: home.pricingSummary.nursing.label,
+      nursing_amount: home.pricingSummary.nursing.amount,
+      nursing_min_note: home.pricingSummary.nursing.minNote,
+      nursing_transport_note: home.pricingSummary.nursing.transportNote,
+      extension_note: home.pricingSummary.extensionNote,
       payment_heading: home.pricingSummary.payment.heading,
       payment_body: home.pricingSummary.payment.body,
       payment_settle_note: home.pricingSummary.payment.settleNote,
+      payment_visa_alt: home.pricingSummary.payment.logos[0]?.alt,
+      payment_mastercard_alt: home.pricingSummary.payment.logos[1]?.alt,
+      payment_jcb_alt: home.pricingSummary.payment.logos[2]?.alt,
+      payment_amex_alt: home.pricingSummary.payment.logos[3]?.alt,
+      pricing_details_label: home.pricingDetailsLink,
     });
     const ja = {
       ...split.ja,
@@ -257,6 +276,9 @@ async function main(): Promise<void> {
       payment_mastercard: mediaId(media, "payment-mastercard.png"),
       payment_jcb: mediaId(media, "payment-jcb.png"),
       payment_amex: mediaId(media, "payment-amex.png"),
+      // Non-localizable relative path to the pricing page — resolved via
+      // localizeHref() at render time, same as home_hero CTA hrefs.
+      pricing_details_href: "/pricing",
     };
     blocks.push(makeBlock(typeIds, "home_pricing_summary", next(), ja, split.en));
   }

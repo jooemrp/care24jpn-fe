@@ -47,7 +47,7 @@ import {
   type AtlasScriptEnv,
 } from "./lib";
 import { ogImageForSlug } from "./og-image";
-import { supporterRates, type SupporterRateRow } from "../../constants/pricing";
+import { supporterRates, cancellationLinkLabel, type SupporterRateRow } from "../../constants/pricing";
 import { pricing as pricingCopy, actionPlan as feesCopy, type Bilingual } from "../../constants/copy";
 
 interface BlockInput {
@@ -141,6 +141,8 @@ function pricingMetaBlock(
   position: number,
   highlights: Bilingual[],
   note: Bilingual,
+  cancellationLabel: Bilingual,
+  cancellationHref: string,
 ): BlockInput {
   // textarea field, one line per highlight — features/cms/rates.ts#pickLines
   // splits this back into `highlights: Bilingual[]` by index.
@@ -151,8 +153,22 @@ function pricingMetaBlock(
     block_type_id: blockTypeId,
     parent_id: null,
     position,
-    data: { highlights: highlightsJa, note: note.ja },
-    translations: { en: { data: { highlights: highlightsEn, note: note.en } } },
+    // `cancellation_href` is non-localizable — rides in JA `data` only.
+    data: {
+      highlights: highlightsJa,
+      note: note.ja,
+      cancellation_label: cancellationLabel.ja,
+      cancellation_href: cancellationHref,
+    },
+    translations: {
+      en: {
+        data: {
+          highlights: highlightsEn,
+          note: note.en,
+          cancellation_label: cancellationLabel.en,
+        },
+      },
+    },
   };
 }
 
@@ -234,7 +250,14 @@ function buildPricingPage(heroId: string, metaId: string): PageInput {
     seo: { title: "ご利用者様向け料金" },
     blocks: [
       pageHeroBlock(heroId, 0, pricingCopy.hero.heading, pricingCopy.hero.body),
-      pricingMetaBlock(metaId, 1, pricingCopy.highlights, pricingCopy.note),
+      pricingMetaBlock(
+        metaId,
+        1,
+        pricingCopy.highlights,
+        pricingCopy.note,
+        cancellationLinkLabel,
+        "/cancellation-policy",
+      ),
     ],
   };
 }

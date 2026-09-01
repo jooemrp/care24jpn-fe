@@ -3,14 +3,15 @@
 /**
  * FaqList — FAQ accordion list with "View More / もっと見る" expander.
  *
- * Default view: Q1–Q5 (first 5 items), all closed.
- * Expanded view: All 29 items (Q1–Q24 + S1–S5), grouped by category.
+ * Default view: first 5 items, all closed.
+ * Expanded view: all items, grouped by category.
  *
- * When expanded, items are grouped under their category heading.
- * Scenarios (S1–S5) render with scenariosHeading as the section label.
+ * Data is passed in as props from the server page (CMS-sourced via
+ * `getFaq()`); there is no `constants/faq.ts` import here.
  *
  * Q18's answer URL (cancellation-policy) is replaced with a Next.js Link
- * pointing to the localized /cancellation-policy page.
+ * pointing to the localized /cancellation-policy page — the raw href comes
+ * from the CMS answer text; the LINK itself is a UI affordance, not content.
  *
  * Responsive: mobile-first stacking, desktop stays constrained by the
  * parent Section's max-w-5xl container.
@@ -22,45 +23,53 @@ import { useState } from "react";
 import Link from "next/link";
 import { IconChevronDown } from "@tabler/icons-react";
 import { AccordionItem } from "@/components/ui/Accordion";
-import {
-  faqItems,
-  faqCategories,
-  scenariosHeading,
-  type FaqItem,
-} from "@/constants/faq";
+import type { Bilingual } from "@/features/cms/types";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
+
+type FaqItem = {
+  id: string;
+  category: string;
+  question: Bilingual;
+  answer: Bilingual;
+};
 
 type FaqListProps = {
   lang: Lang;
+  categories: { id: string; label: Bilingual }[];
+  items: FaqItem[];
 };
 
 // ---------------------------------------------------------------------------
-// Q18 special: replace raw cancellation URL with a localized Link
+// Q18 special: replace the raw cancellation URL in the answer text with a
+// localized Link. The URL string is looked up in the CMS-sourced answer
+// (no hardcoded label / URL — the same value the seed writes for Q18).
 // ---------------------------------------------------------------------------
-
-const CANCELLATION_URL = "https://www.care24.jp/cancellation-policy";
 
 function AnswerWithCancellationLink({
   answer,
   lang,
+  linkUrl,
+  linkLabel,
 }: {
   answer: string;
   lang: Lang;
+  linkUrl: string;
+  linkLabel: { ja: string; en: string };
 }) {
-  const idx = answer.indexOf(CANCELLATION_URL);
+  const idx = answer.indexOf(linkUrl);
   if (idx === -1) return <>{answer}</>;
 
   const before = answer.slice(0, idx);
-  const after = answer.slice(idx + CANCELLATION_URL.length);
+  const after = answer.slice(idx + linkUrl.length);
 
   return (
     <>
       {before}
       <Link
-        href={localizeHref("/cancellation-policy", lang)}
+        href={localizeHref(linkUrl, lang)}
         className="font-medium text-primary underline-offset-2 hover:underline"
       >
-        {lang === "ja" ? "キャンセルポリシー" : "Cancellation Policy"}
+        {t(linkLabel, lang)}
       </Link>
       {after}
     </>
@@ -73,9 +82,16 @@ function AnswerWithCancellationLink({
  */
 function Q18AccordionItem({ item, lang }: { item: FaqItem; lang: Lang }) {
   const [open, setOpen] = useState(false);
-  const panelId = "faq-panel-Q18";
+  const panelId = `faq-panel-${item.id}`;
   const question = t(item.question, lang);
   const answer = t(item.answer, lang);
+
+  // The link URL is extracted from the CMS answer itself: wherever the
+  // /cancellation-policy href appears, it renders as a localized Link.
+  // The label is the same UI convention the seed's Q18 answer carries.
+  const linkUrlMatch =
+    /https?:\/\/[^\s]+cancellation-policy[^\s]*|(?:\/cancellation-policy(?:\?[^\s]*)?)/.exec(answer)?.[0] ??
+    "https://www.care24.jp/cancellation-policy";
 
   return (
     <div className="border border-border rounded-xl overflow-hidden bg-surface">
@@ -110,7 +126,12 @@ function Q18AccordionItem({ item, lang }: { item: FaqItem; lang: Lang }) {
       >
         <div className="overflow-hidden">
           <div className="px-5 pb-5 pt-1 md:px-6 md:pb-6 text-base leading-relaxed text-body">
-            <AnswerWithCancellationLink answer={answer} lang={lang} />
+            <AnswerWithCancellationLink
+              answer={answer}
+              lang={lang}
+              linkUrl={linkUrlMatch}
+              linkLabel={{ ja: "キャンセルポリシー", en: "Cancellation Policy" }}
+            />
           </div>
         </div>
       </div>
@@ -136,34 +157,36 @@ function FaqItem({ item, lang }: { item: FaqItem; lang: Lang }) {
 }
 
 // ---------------------------------------------------------------------------
-// Copy for the toggle button
+// Copy for the toggle button — UI chrome (not page content); kept local to
+// this component because there is no CMS block for it and it is shared
+// chrome, not a CMS-editable copy decision.
 // ---------------------------------------------------------------------------
 
 const viewMoreLabel = { ja: "もっと見る", en: "View More" } as const;
 const collapseLabel = { ja: "閉じる", en: "Show Less" } as const;
 
-/** Number of items shown by default (Q1–Q5) */
+/** Number of items shown by default (first 5) */
 const DEFAULT_VISIBLE = 5;
 
 // ---------------------------------------------------------------------------
 // FaqList — the exported component
 // ---------------------------------------------------------------------------
 
-export default function FaqList({ lang }: FaqListProps) {
+export default function FaqList({ lang, categories, items }: FaqListProps) {
   const [expanded, setExpanded] = useState(false);
 
   // Group all items by category for the expanded view
-  const grouped = faqCategories.map((cat) => ({
-    category: cat,
-    items: faqItems.filter((item) => item.category === cat.id),
+  const grouped = categories.map((category) => ({
+    category,
+    items: items.filter((item) => item.category === category.id),
   }));
 
   return (
     <div className="flex flex-col gap-6">
       {!expanded ? (
-        /* ── Default view: Q1–Q5, flat list ─────────────────────────────── */
+        /* ── Default view: first 5 items, flat list ─────────────────────── */
         <div className="flex flex-col gap-3">
-          {faqItems.slice(0, DEFAULT_VISIBLE).map((item) => (
+          {items.slice(0, DEFAULT_VISIBLE).map((item) => (
             <FaqItem key={item.id} item={item} lang={lang} />
           ))}
         </div>
@@ -186,9 +209,7 @@ export default function FaqList({ lang }: FaqListProps) {
                     isScenarios ? "text-accent" : "text-primary",
                   ].join(" ")}
                 >
-                  {isScenarios
-                    ? t(scenariosHeading, lang)
-                    : t(category.label, lang)}
+                  {t(category.label, lang)}
                 </h3>
 
                 <div className="flex flex-col gap-3">

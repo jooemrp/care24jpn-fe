@@ -123,20 +123,21 @@ async function main() {
     });
   });
 
-  test("mergeBlockData: a missing EN overlay mirrors ja into en", () => {
+  test("mergeBlockData: a missing EN overlay leaves en empty (no JA mirroring)", () => {
     // This is how NON-localizable strings (href, course_key, icon, tone, tel)
-    // arrive — there is no EN row for them at all. Callers read `.ja`.
+    // arrive — there is no EN row for them at all. Callers read `.ja`; the
+    // `en` side is `""` (the no-fallback sweep removed the JA->EN mirror).
     assert.deepEqual(mergeBlockData({ href: "/pricing" }, {}), {
-      href: { ja: "/pricing", en: "/pricing" },
+      href: { ja: "/pricing", en: "" },
     });
   });
 
-  test("mergeBlockData: a non-string EN value is ignored, ja is mirrored", () => {
+  test("mergeBlockData: a non-string EN value is ignored, en stays empty", () => {
     // Defensive: an EN overlay is supposed to carry only strings. If it ever
-    // carries something else, mirroring ja beats emitting `{ja:"x",en:5}`
-    // into a `Bilingual`-typed slot.
+    // carries something else, `en` stays empty rather than emitting
+    // {ja:"x",en:5} into a `Bilingual`-typed slot.
     assert.deepEqual(mergeBlockData({ label: "料金" }, { label: 5 }), {
-      label: { ja: "料金", en: "料金" },
+      label: { ja: "料金", en: "" },
     });
   });
 
@@ -221,15 +222,17 @@ async function main() {
     });
 
     assert.deepEqual(first, {
-      heading: { ja: "特定商取引法", en: "特定商取引法" },
-      body: { ja: "本文です", en: "本文です" },
+      heading: { ja: "特定商取引法", en: "" },
+      body: { ja: "本文です", en: "" },
     });
     assert.deepEqual(second, first);
-    assert.equal(warnings.length, 1, "one warning per page+block-type per process");
+    // Per-field: one warning per missing-EN KEY (heading + body), deduped per
+    // key per process — the second identical call adds none.
+    assert.equal(warnings.length, 2, "one warning per missing-EN field key per process");
     assert.match(warnings[0], /\[cms:unexpected-content\]/);
     assert.match(warnings[0], /legal-tokushoho\/legal-doc/);
     assert.match(warnings[0], /"heading"/);
-    assert.match(warnings[0], /"body"/);
+    assert.match(warnings[1], /"body"/);
   });
 
   test("mergeBlockData stays silent without a context (backward compatible with scripts/atlas/drift-check.ts)", async () => {
@@ -427,8 +430,9 @@ async function main() {
       });
     });
 
-    assert.equal(warnings.length, 1);
+    assert.equal(warnings.length, 2);
     assert.match(warnings[0], /company\/company-row/);
+    assert.match(warnings[1], /company\/company-row/);
   });
 
   test("shapePageBlocks: a page with zero blocks is [] — a fetch that worked", () => {

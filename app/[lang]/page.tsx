@@ -6,7 +6,9 @@ import {
   IconArrowDown,
   IconArrowRight,
   IconBuildingHospital,
+  IconCalendarOff,
   IconClock,
+  IconDroplet,
   IconHeartbeat,
   IconHeartHandshake,
   IconMapPin,
@@ -14,6 +16,7 @@ import {
   IconNeedle,
   IconPhone,
   IconPill,
+  IconShieldCheck,
   type Icon,
 } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
@@ -26,11 +29,10 @@ import { t, localizeHref, isLang } from "@/features/lang/i18n";
 // this — it inherited app/[lang]/layout.tsx's `title.default` (brand name +
 // tagline only), so it never carried a per-page description or the
 // og:image/og:url/og:locale:alternate every other route gets from
-// `pageMetadata()` (audit finding #15). `constants/seo.ts#home`'s
-// title/description are copied VERBATIM from what the layout renders today
-// (`${brand.name} — ${brand.tagline[lang]}` / `brand.tagline[lang]`), so
-// this call is additive: it fills in alternates/openGraph without moving
-// the rendered title or description.
+// `pageMetadata()` (audit finding #15). The home title/description now come
+// from Atlas CMS via `getPageMeta("home")` (pageMetadata.ts), with the same
+// `title.absolute` contract below; there is no `constants/seo.ts` value
+// anymore (that file is route structure only).
 //
 // `title.absolute` is required here, not a plain string: the root layout
 // sets `title.template = "%s | ${brand.name}"`, and `home.title` already
@@ -267,10 +269,10 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             <p className="mt-4 text-sm text-muted">{t(home.pricingSummary.extensionNote, lang)}</p>
             <p className="mt-5 text-base">
               <Link
-                href={localizeHref("/pricing", lang)}
+                href={localizeHref(home.pricingSummary.pricingDetails.href, lang)}
                 className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
               >
-                {t(home.pricingDetailsLink, lang)}
+                {t(home.pricingSummary.pricingDetails.label, lang)}
               </Link>
             </p>
           </div>
@@ -358,10 +360,10 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </p>
               <p className="mt-5 text-lg">
                 <Link
-                  href={localizeHref("/pricing", lang)}
+                  href={localizeHref(home.pricingSummary.pricingDetails.href, lang)}
                   className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
                 >
-                  {t(home.pricingDetailsLink, lang)}
+                  {t(home.pricingSummary.pricingDetails.label, lang)}
                 </Link>
               </p>
             </div>
@@ -457,10 +459,10 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
             <p className="mt-6 text-lg">
               <Link
-                href={localizeHref("/pricing", lang)}
+                href={localizeHref(home.pricingSummary.pricingDetails.href, lang)}
                 className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
               >
-                {t(home.pricingDetailsLink, lang)}
+                {t(home.pricingSummary.pricingDetails.label, lang)}
               </Link>
             </p>
           </div>
@@ -824,25 +826,23 @@ function NursingIcon({ name }: { name: string }) {
   return <Comp className="h-[1.375rem] w-[1.375rem]" stroke={1.6} aria-hidden="true" />;
 }
 
-const PROBLEM_ICON_SRC: Record<string, string> = {
-  absence: "/images/problem-absence.png",
-  bathing: "/images/problem-bathing.png",
-  hospital: "/images/problem-hospital.png",
-  insurance: "/images/problem-insurance.png",
-  discharge: "/images/problem-discharge.png",
+/** Line-art icons for the concern cards' fallback visual (Tabler). The
+ * concern card's primary visual is `item.image` — an Atlas media URL from the
+ * CMS (`home_problems.item_image_1..5`). This icon set only renders when that
+ * image is empty, keyed by the CMS `item_icons` value; it is UI chrome (like
+ * the nursing-course icons), not a content image, so no bundled file path
+ * lives here. */
+const PROBLEM_ICONS: Record<string, Icon> = {
+  absence: IconCalendarOff,
+  bathing: IconDroplet,
+  hospital: IconBuildingHospital,
+  insurance: IconShieldCheck,
+  discharge: IconHeartbeat,
 };
 
 function ProblemIcon({ name }: { name: string }) {
-  const src = PROBLEM_ICON_SRC[name] ?? PROBLEM_ICON_SRC.discharge!;
-  return (
-    <Image
-      src={src}
-      alt=""
-      width={64}
-      height={64}
-      className="h-full w-full object-contain"
-    />
-  );
+  const Comp = PROBLEM_ICONS[name] ?? IconHeartbeat;
+  return <Comp className="h-8 w-8" stroke={1.8} aria-hidden="true" />;
 }
 
 function FlowStepIcon({ src }: { src: string }) {

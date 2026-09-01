@@ -63,6 +63,7 @@ const BLOCK_TYPE_SLUGS = [
   "site_ui_labels",
   "site_error_labels",
   "site_not_found_labels",
+  "site_global_error_labels",
   "nav_item",
   "site_footer",
   "footer_legal_link",
@@ -112,6 +113,8 @@ function buildBlocks(
       logo_alt: brand.logoAlt.ja,
       tagline: brand.tagline.ja,
       logo: mediaId(media, "logo.png"),
+      logo_width: media.assets["logo.png"]?.width ?? 5600,
+      logo_height: media.assets["logo.png"]?.height ?? 2101,
     },
     translations: en({ logo_alt: brand.logoAlt.en, tagline: brand.tagline.en }),
   });
@@ -242,10 +245,35 @@ function buildBlocks(
     }),
   });
 
+  // position 6 — site_global_error_labels: title / body / retry_label.
+  //
+  // `app/global-error.tsx`'s copy, same underlying strings as
+  // `site_error_labels` (both come from constants/copy.ts#errorPage) — but
+  // it is a DISTINCT surface: the root-layout error page, a Client Component
+  // that cannot `await getSite()`. Seeding it as its own block keeps the
+  // global-error page's renderer source-of-truth in Atlas just like every
+  // other surface; the loader surfaces it the same way, and the build
+  // friendly read path consumes it. (See app/global-error.tsx.)
+  blocks.push({
+    block_type_id: blockTypeIds.site_global_error_labels,
+    parent_id: null,
+    position: 6,
+    data: {
+      title: errorPage.title.ja,
+      body: errorPage.body.ja,
+      retry_label: errorPage.retryLabel.ja,
+    },
+    translations: en({
+      title: errorPage.title.en,
+      body: errorPage.body.en,
+      retry_label: errorPage.retryLabel.en,
+    }),
+  });
+
   // nav_item — one block per constants/copy.ts#nav entry, in array order
   // (href is the scroll-spy / routing contract — non-localizable, JA/EN
   // share the same value).
-  const navStartPosition = 6;
+  const navStartPosition = 7;
   nav.forEach((item, i) => {
     blocks.push({
       block_type_id: blockTypeIds.nav_item,

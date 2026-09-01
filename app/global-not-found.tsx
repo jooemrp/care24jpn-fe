@@ -38,9 +38,10 @@ import { localizeHref } from "@/features/lang/i18n";
 // for the same reason the body shows both: no `[lang]` param to choose
 // with.
 //
-// `getSite()` never throws (features/cms/site.ts) — it returns
-// `constants/copy.ts#notFoundPage` when Atlas is unreachable — so the 404
-// page cannot itself 500 because the CMS is down.
+// NO FALLBACK: `getSite()` throws when the CMS data is unavailable, and
+// this page then surfaces an error rather than serving stale constants
+// copy (the no-fallback sweep removed `constants/copy.ts#notFoundPage`
+// from the render path entirely).
 /** Same reason as `app/manifest.ts`'s: without this, Next's static pass
  * trips `getSite()`'s `no-store` fetch, and the resulting
  * `DynamicServerError` is caught and logged by

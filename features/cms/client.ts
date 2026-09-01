@@ -97,7 +97,7 @@ function getAtlasClient(): AtlasClient<Record<string, unknown>> | null {
       .filter(Boolean)
       .join(", ");
     console.warn(
-      `[cms:fallback:failure] Atlas not configured (missing ${missing}) — serving constants/*.ts fallback content for all pages.`,
+      `[cms:fallback:failure] Atlas not configured (missing ${missing}) — pages will be unavailable (no fallback content).`,
     );
     atlasClient = null;
     return atlasClient;
@@ -109,7 +109,7 @@ function getAtlasClient(): AtlasClient<Record<string, unknown>> | null {
     // `createClient` throws synchronously (AtlasError / ManagementConfigError)
     // on invalid config — treat exactly like "missing" above.
     console.warn(
-      "[cms:fallback:failure] Atlas client failed to initialize — serving constants/*.ts fallback content for all pages.",
+      "[cms:fallback:failure] Atlas client failed to initialize — pages will be unavailable (no fallback content).",
       error,
     );
     atlasClient = null;
@@ -121,9 +121,10 @@ function getAtlasClient(): AtlasClient<Record<string, unknown>> | null {
 /**
  * Fetches the raw `GET /pages/<slug>` body ONCE, shared by both
  * `getPageBlocks` and `getPageMeta` below. Returns `null` on ANY failure
- * (network error, non-2xx, malformed page, page not found) — never throws —
- * so both callers fall back to `constants/*.ts` unconditionally via the same
- * signal.
+ * (network error, non-2xx, malformed page, page not found) — never throws.
+ * Callers treat `null` as "this page's data is unavailable": the route
+ * renders an error / 404 rather than substituting constants fallback
+ * content — there is no fallback layer anymore.
  */
 async function fetchRawPage(slug: string): Promise<RawPageResponse | null> {
   const atlas = getAtlasClient();
@@ -134,10 +135,10 @@ async function fetchRawPage(slug: string): Promise<RawPageResponse | null> {
     return page;
   } catch (error) {
     // Atlas down / key misconfigured / timed out (see NO_STORE_FETCH_TIMEOUT_MS)
-    // / page not yet created — never throw out of a loader; callers fall back
-    // to constants/*.ts. Tagged "failure" (not "unexpected-content" — see
+    // / page not yet created — never throw out of a loader; callers surface
+    // the unavailability. Tagged "failure" (not "unexpected-content" — see
     // reportUnexpectedContent below) because the fetch itself didn't succeed.
-    console.error(`[cms:fallback:failure] getRawPage("${slug}") failed, falling back:`, error);
+    console.error(`[cms:fallback:failure] getRawPage("${slug}") failed:`, error);
     return null;
   }
 }
@@ -192,19 +193,15 @@ const reportedUnexpectedContentSlugs = new Set<string>();
 /**
  * Call this from a `features/cms/*.ts` loader when `getPageBlocks(slug)`
  * returned an array (the fetch SUCCEEDED — this is not the `null`/failure
- * path above) but the loader is discarding it and falling back to
- * `constants/*.ts` anyway because the content didn't look like what it
- * expected — today that means `fields.ts#mapBlocksByType` found no block at
- * all of a type the page is built from (every loader passes this function in
- * as its `reportFallback`).
+ * path above) but the loader is discarding it anyway because the content
+ * didn't look like what it expected — today that means
+ * `fields.ts#mapBlocksByType` found no block at all of a type the page is
+ * built from (every loader passes this function in as its `reportFallback`).
  *
- * This is the audit's "silent regression" case: an editor adds one nav
- * item in the dashboard, a loader's exact-count guard stops matching, and
- * the entire page's chrome quietly reverts to `constants/*.ts` with zero
- * signal. Tagged `[cms:fallback:unexpected-content]` — deliberately NOT the
+ * Tagged `[cms:fallback:unexpected-content]` — deliberately NOT the
  * `[cms:fallback:failure]` tag used above — because nothing failed here:
- * Atlas answered fine, a human just needs to know their edit didn't take
- * effect and why.
+ * Atlas answered fine, a human just needs to know the page's content was
+ * not used and why.
  *
  * `detail` should name the mismatch concretely (expected vs. received) so
  * the log is actionable without attaching a debugger —
@@ -218,6 +215,6 @@ export function reportUnexpectedContent(slug: string, detail: string): void {
   if (reportedUnexpectedContentSlugs.has(slug)) return;
   reportedUnexpectedContentSlugs.add(slug);
   console.warn(
-    `[cms:fallback:unexpected-content] getPageBlocks("${slug}") succeeded but its content was not used (${detail}) — falling back to constants/*.ts for "${slug}" only. Atlas is reachable; the response shape didn't match what the loader expected (e.g. a block was added/removed/reordered in the dashboard). This warning only prints once per slug per process.`,
+    `[cms:fallback:unexpected-content] getPageBlocks("${slug}") succeeded but its content was not used (${detail}) — the page will render as unavailable (no constants fallback). Atlas is reachable; the response shape didn't match what the loader expected (e.g. a block was added/removed/reordered in the dashboard). This warning only prints once per slug per process.`,
   );
 }

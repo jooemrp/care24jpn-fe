@@ -14,118 +14,158 @@ import {
   type BlockTypeList,
 } from "./fields";
 import type { Bilingual, CmsBlock } from "./types";
-import { home as fallbackHome } from "@/constants/copy";
-
-type Home = typeof fallbackHome;
-type Fee = Home["careCourse"]["fees"][number];
-type Card = Home["careCourse"]["cards"][number];
 
 /**
- * `constants/copy.ts` carries no image paths — every `<Image src>` on this
- * page used to be a literal in JSX, and the care-course cards derived theirs
- * from the LOOP INDEX (`/images/use-case-${i + 1}.webp`), which meant a 5th
- * card added in the dashboard rendered a guaranteed 404. So the home content
- * this loader returns is the constants shape PLUS one image URL per rendered
- * image, and the card's image is now a property OF THE CARD.
+ * The home page content, CMS-sourced, self-contained — no longer derived
+ * from `constants/copy.ts` (the fallback layer is gone). Every rendered
+ * string, number, href and image URL below comes straight from Atlas; an
+ * empty CMS field renders empty.
+ *
+ * The shape matches what `app/[lang]/page.tsx` consumes — if a field is
+ * present here, it is rendered there, and it has a CMS block field backing
+ * it (see scripts/atlas/schema.ts + seed-home.ts for the field lists).
  */
-export type HomeContent = Omit<Home, "hero" | "careCourse" | "contact" | "flow" | "about" | "problems" | "apply"> & {
-  hero: Home["hero"] & { image: string };
-  careCourse: Omit<Home["careCourse"], "cards"> & {
-    cards: (Card & { image: string })[];
+export type HomeContent = {
+  hero: {
+    badge: Bilingual;
+    resolve: Bilingual;
+    assist: Bilingual;
+    heading: Bilingual;
+    body: Bilingual;
+    ctaPrimary: Bilingual;
+    ctaSecondary: Bilingual;
+    imageAlt: Bilingual;
+    image: string;
+    ctaPrimaryHref: string;
+    ctaSecondaryHref: string;
+    areaBadge: { main: Bilingual; sub: Bilingual };
   };
-  contact: Home["contact"] & { micsLogo: string; isoLogo: string };
-  about: Omit<Home["about"], "cards"> & {
+  values: {
+    heading: Bilingual;
+    items: { title: Bilingual; body: Bilingual }[];
+  };
+  about: {
+    heading: Bilingual;
+    catchphrase: Bilingual;
+    body: Bilingual;
     illustration: string;
-    cards: (Home["about"]["cards"][number] & { image: string })[];
+    cards: { title: Bilingual; body: Bilingual; image: string }[];
   };
-  problems: Omit<Home["problems"], "items"> & {
-    items: (Home["problems"]["items"][number] & { image: string })[];
+  problems: {
+    heading: Bilingual;
+    closing: Bilingual;
+    items: { title: Bilingual; body: Bilingual; icon: string; image: string }[];
   };
-  apply: Omit<Home["apply"], "consult"> & {
-    consult: Home["apply"]["consult"] & { illustration: string };
+  pricingSummary: {
+    heading: Bilingual;
+    care: {
+      label: Bilingual;
+      amount: Bilingual;
+      minNote: Bilingual;
+      transportNote: Bilingual;
+    };
+    nursing: {
+      label: Bilingual;
+      amount: Bilingual;
+      minNote: Bilingual;
+      transportNote: Bilingual;
+    };
+    extensionNote: Bilingual;
+    payment: {
+      heading: Bilingual;
+      body: Bilingual;
+      settleNote: Bilingual;
+      logos: { mark: string; src: string; alt: Bilingual }[];
+    };
+    pricingDetails: { label: Bilingual; href: string };
   };
-  // `steps[].icon` is dropped — see the `FlowStep` comment above.
-  flow: Omit<Home["flow"], "steps"> & { steps: FlowStep[] };
+  nursingCourse: {
+    leadIn: Bilingual;
+    badge: Bilingual;
+    price: {
+      label: Bilingual;
+      hours: Bilingual;
+      amount: Bilingual;
+      unit: Bilingual;
+      taxNote: Bilingual;
+      taxIncluded: Bilingual;
+    };
+    note: Bilingual;
+    panel: { heading: Bilingual; items: { icon: string; label: Bilingual }[] };
+  };
+  careCourse: {
+    leadIn: Bilingual;
+    badge: Bilingual;
+    tagline: Bilingual;
+    taglineSub: Bilingual;
+    price: {
+      label: Bilingual;
+      hours: Bilingual;
+      amount: Bilingual;
+      unit: Bilingual;
+      taxNote: Bilingual;
+      taxIncluded: Bilingual;
+    };
+    fees: { label: Bilingual; value: Bilingual; note?: Bilingual }[];
+    cards: { title: Bilingual; imageAlt: Bilingual; items: Bilingual[]; image: string }[];
+  };
+  examples: {
+    leadIn: Bilingual;
+    heading: Bilingual;
+    hoursLabel: Bilingual;
+    servicesLabel: Bilingual;
+    scheduleLabel: Bilingual;
+    cases: {
+      label: Bilingual;
+      tone: string;
+      title: Bilingual;
+      request: Bilingual;
+      services: Bilingual[];
+      hours: Bilingual;
+      schedule: { time: string; activity: Bilingual }[];
+    }[];
+  };
+  flow: {
+    heading: Bilingual;
+    stepLabel: Bilingual;
+    steps: { number: string; title: Bilingual; body: Bilingual; image: string }[];
+  };
+  apply: {
+    consult: {
+      heading: Bilingual;
+      body: Bilingual;
+      cta: Bilingual;
+      href: string;
+      illustration: string;
+    };
+    user: { eyebrow: Bilingual; label: Bilingual; href: string };
+    staff: { eyebrow: Bilingual; label: Bilingual; href: string };
+  };
+  contact: {
+    leadIn: Bilingual;
+    heading: Bilingual;
+    phone: string;
+    hours: Bilingual;
+    isms: Bilingual;
+    micsLogo: string;
+    isoLogo: string;
+    micsLogoAlt: Bilingual;
+    isoLogoAlt: Bilingual;
+    ctaHref: string;
+    leadInOrnamentStart: Bilingual;
+    leadInOrnamentEnd: Bilingual;
+  };
 };
 
-type NursingFeature = Home["nursingCourse"]["panel"]["items"][number];
-type ExampleCase = Home["examples"]["cases"][number];
-type ScheduleRow = ExampleCase["schedule"][number];
-/**
- * `icon` is dropped, permanently: it is a `select` field of icon KEYS (see
- * scripts/atlas/schema.ts, `home_flow_step.icon`), but the flow rail in
- * app/[lang]/page.tsx renders each step as a numbered node on a dashed
- * line — the number IS the visual, there is no icon slot to fill. This is
- * a retired-but-undeletable field (same status as `tab_switch_label`, see
- * seed-site.ts): scripts/atlas/seed-home.ts now writes it as an explicit
- * "" rather than a real value, so the dashboard control is inert by
- * design, not merely unread. The key stays untouched in
- * `constants/copy.ts` so this file never contends with ST-K1 for that
- * entry; it is just never read here.
- */
-/**
- * `icon` (select of icon keys) is retired in favor of `image` (Atlas media
- * URL). The select field stays on the content type because Atlas has no
- * delete-field endpoint; seed writes it as "".
- */
-type FlowStep = Omit<Home["flow"]["steps"][number], "icon"> & { image: string };
+const EMPTY: Bilingual = { ja: "", en: "" };
 
 /**
- * The files bundled in `public/images/` — the safety net for when Atlas is
- * down, or answered without expanding a media id into a URL. They are NOT
- * deleted from the repo; `pickImage` falls back to them per field.
+ * The content types scripts/atlas/seed-home.ts writes. Neither the block
+ * COUNT nor the ORDER is part of the contract: a 5th service card or a 7th
+ * nursing feature added in the dashboard renders as itself — and, because
+ * there is no fallback layer anymore, a missing required block type surfaces
+ * the page as unavailable instead of reverting to constants.
  */
-const FALLBACK_IMAGES = {
-  hero: "/images/hero.webp",
-  micsLogo: "/images/mics-logo.png",
-  isoLogo: "/images/iso27001-bsi.png",
-  aboutIllustration: "/images/about-family.png",
-  aboutCards: [
-    "/images/icon-about-qualified.png",
-    "/images/icon-about-flexible.png",
-    "/images/icon-about-private.png",
-  ],
-  problemItems: [
-    "/images/problem-discharge.png",
-    "/images/problem-absence.png",
-    "/images/problem-bathing.png",
-    "/images/problem-hospital.png",
-    "/images/problem-insurance.png",
-  ],
-  flowSteps: [
-    "/images/flow-01-apply.webp",
-    "/images/flow-02-confirm.webp",
-    "/images/flow-03-visit.webp",
-    "/images/flow-04-report.webp",
-  ],
-  consultIllustration: "/images/consult-family.png",
-  /**
-   * One per card in `constants/copy.ts#home.careCourse.cards`, in that order
-   * — the exact files the old index-derived `src` produced, so the CMS-OFF
-   * render is unchanged. A card BEYOND this list has no bundled counterpart
-   * and falls back to `""`, which `page.tsx` renders as a card with no image
-   * rather than as a broken one. That case can only arise from a dashboard
-   * card whose `image` field was also left empty.
-   */
-  cards: [
-    "/images/use-case-1.webp",
-    "/images/use-case-2.webp",
-    "/images/use-case-3.webp",
-    "/images/use-case-4.webp",
-  ],
-} as const;
-
-// ---------------------------------------------------------------------------
-// Assembly — the content types scripts/atlas/seed-home.ts writes. 10 section
-// types + 4 repeated item types; the seed currently produces 30 blocks, but
-// neither the COUNT nor the ORDER is part of the contract any more: a 5th
-// service card or a 7th nursing feature added in the dashboard renders as
-// itself instead of reverting the entire home page to constants/copy.ts.
-//
-// Each entry is a content-type slug, checked against the generated
-// `atlas.types.ts` at compile time (see `fields.ts#BlockTypeList`).
-// ---------------------------------------------------------------------------
-
 const HOME_TYPES = [
   "home-hero",
   "home-values",
@@ -154,6 +194,26 @@ interface MappedHome {
   contactData: CmsBlock["data"];
 }
 
+/** Reads one image field and returns "" when absent — no bundled file
+ * fallback (see fields.ts#pickImage). */
+function img(data: CmsBlock["data"], key: string, context: string): string {
+  return pickImage(data, key, context);
+}
+
+/** Maps one `payment` logo block field: mark/alt from CMS, src from CMS. */
+function paymentLogo(
+  data: CmsBlock["data"],
+  mark: string,
+  imgKey: string,
+  altKey: string,
+): HomeContent["pricingSummary"]["payment"]["logos"][number] {
+  return {
+    mark,
+    src: img(data, imgKey, `home/pricing-summary/${mark}`),
+    alt: pickBi(data, altKey),
+  };
+}
+
 function mapHome(blocks: CmsBlock[]): MappedHome | null {
   const groups = mapBlocksByType("home", blocks, HOME_TYPES, reportUnexpectedContent);
   if (!groups) return null;
@@ -176,279 +236,208 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   const caseBlocks = groups["home-example-case"];
   const stepBlocks = groups["home-flow-step"];
 
-  const F = fallbackHome;
-
-  // Every `F.<...>[i]` below is indexed defensively: a repeated block type may
-  // now hold more items than `constants/copy.ts` declares, in which case there
-  // is no constants entry at that index to fall back to.
-  const EMPTY: Bilingual = { ja: "", en: "" };
-
   const hero: HomeContent["hero"] = {
-    badge: pickBi(heroBlock.data, "badge", F.hero.badge),
-    resolve: pickBi(heroBlock.data, "resolve", F.hero.resolve),
-    assist: pickBi(heroBlock.data, "assist", F.hero.assist),
-    heading: pickBi(heroBlock.data, "heading", F.hero.heading),
-    body: pickBi(heroBlock.data, "body", F.hero.body),
-    ctaPrimary: pickBi(heroBlock.data, "cta_primary", F.hero.ctaPrimary),
-    ctaSecondary: pickBi(heroBlock.data, "cta_secondary", F.hero.ctaSecondary),
-    imageAlt: pickBi(heroBlock.data, "image_alt", F.hero.imageAlt),
-    image: pickImage(heroBlock.data, "image", FALLBACK_IMAGES.hero, "home/hero"),
-    ctaPrimaryHref: pickJa(heroBlock.data, "cta_primary_href", F.hero.ctaPrimaryHref),
-    ctaSecondaryHref: pickJa(heroBlock.data, "cta_secondary_href", F.hero.ctaSecondaryHref),
+    badge: pickBi(heroBlock.data, "badge"),
+    resolve: pickBi(heroBlock.data, "resolve"),
+    assist: pickBi(heroBlock.data, "assist"),
+    heading: pickBi(heroBlock.data, "heading"),
+    body: pickBi(heroBlock.data, "body"),
+    ctaPrimary: pickBi(heroBlock.data, "cta_primary"),
+    ctaSecondary: pickBi(heroBlock.data, "cta_secondary"),
+    imageAlt: pickBi(heroBlock.data, "image_alt"),
+    image: img(heroBlock.data, "image", "home/hero"),
+    ctaPrimaryHref: pickJa(heroBlock.data, "cta_primary_href"),
+    ctaSecondaryHref: pickJa(heroBlock.data, "cta_secondary_href"),
     areaBadge: {
-      main: pickBi(heroBlock.data, "area_badge_main", F.hero.areaBadge.main),
-      sub: pickBi(heroBlock.data, "area_badge_sub", F.hero.areaBadge.sub),
+      main: pickBi(heroBlock.data, "area_badge_main"),
+      sub: pickBi(heroBlock.data, "area_badge_sub"),
     },
   };
 
-  const valueTitles = pickLines(valuesBlock.data, "item_titles", F.values.items.map((i) => i.title));
-  const valueBodies = pickLines(valuesBlock.data, "item_bodies", F.values.items.map((i) => i.body));
-  const values: Home["values"] = {
-    heading: pickBi(valuesBlock.data, "heading", F.values.heading),
+  const valueTitles = pickLines(valuesBlock.data, "item_titles");
+  const valueBodies = pickLines(valuesBlock.data, "item_bodies");
+  const values: HomeContent["values"] = {
+    heading: pickBi(valuesBlock.data, "heading"),
     items: valueTitles.map((title, i) => ({
       title,
-      body: valueBodies[i] ?? F.values.items[i]?.body ?? title,
+      body: valueBodies[i] ?? EMPTY,
     })),
   };
 
-  const cardTitles = pickLines(aboutBlock.data, "card_titles", F.about.cards.map((c) => c.title));
-  const cardBodies = pickLines(aboutBlock.data, "card_bodies", F.about.cards.map((c) => c.body));
-  const aboutCardImages = [
-    pickImage(aboutBlock.data, "card_image_1", FALLBACK_IMAGES.aboutCards[0], "home/about/card[0]"),
-    pickImage(aboutBlock.data, "card_image_2", FALLBACK_IMAGES.aboutCards[1], "home/about/card[1]"),
-    pickImage(aboutBlock.data, "card_image_3", FALLBACK_IMAGES.aboutCards[2], "home/about/card[2]"),
-  ];
+  const cardTitles = pickLines(aboutBlock.data, "card_titles");
+  const cardBodies = pickLines(aboutBlock.data, "card_bodies");
   const about: HomeContent["about"] = {
-    heading: pickBi(aboutBlock.data, "heading", F.about.heading),
-    catchphrase: pickBi(aboutBlock.data, "catchphrase", F.about.catchphrase),
-    body: pickBi(aboutBlock.data, "body", F.about.body),
-    illustration: pickImage(
-      aboutBlock.data,
-      "illustration",
-      FALLBACK_IMAGES.aboutIllustration,
-      "home/about/illustration",
-    ),
+    heading: pickBi(aboutBlock.data, "heading"),
+    catchphrase: pickBi(aboutBlock.data, "catchphrase"),
+    body: pickBi(aboutBlock.data, "body"),
+    illustration: img(aboutBlock.data, "illustration", "home/about/illustration"),
     cards: cardTitles.map((title, i) => ({
       title,
-      body: cardBodies[i] ?? F.about.cards[i]?.body ?? title,
-      image: aboutCardImages[i] ?? FALLBACK_IMAGES.aboutCards[i] ?? "",
+      body: cardBodies[i] ?? EMPTY,
+      image: img(aboutBlock.data, `card_image_${i + 1}`, `home/about/card[${i}]`),
     })),
   };
 
-  const problemTitles = pickLines(
-    problemsBlock.data,
-    "items",
-    F.problems.items.map((item) => item.title),
-  );
-  const problemImages = [
-    pickImage(problemsBlock.data, "item_image_1", FALLBACK_IMAGES.problemItems[0], "home/problems[0]"),
-    pickImage(problemsBlock.data, "item_image_2", FALLBACK_IMAGES.problemItems[1], "home/problems[1]"),
-    pickImage(problemsBlock.data, "item_image_3", FALLBACK_IMAGES.problemItems[2], "home/problems[2]"),
-    pickImage(problemsBlock.data, "item_image_4", FALLBACK_IMAGES.problemItems[3], "home/problems[3]"),
-    pickImage(problemsBlock.data, "item_image_5", FALLBACK_IMAGES.problemItems[4], "home/problems[4]"),
-  ];
+  const problemTitles = pickLines(problemsBlock.data, "items");
+  const problemBodies = pickLines(problemsBlock.data, "item_bodies");
+  const problemIcons = pickJaLines(problemsBlock.data, "item_icons");
   const problems: HomeContent["problems"] = {
-    heading: pickBi(problemsBlock.data, "heading", F.problems.heading),
-    closing: pickBi(problemsBlock.data, "closing", F.problems.closing),
+    heading: pickBi(problemsBlock.data, "heading"),
+    closing: pickBi(problemsBlock.data, "closing"),
     items: problemTitles.map((title, i) => ({
       title,
-      body: F.problems.items[i]?.body ?? title,
-      icon: F.problems.items[i]?.icon ?? "insurance",
-      image: problemImages[i] ?? FALLBACK_IMAGES.problemItems[i] ?? "",
+      body: problemBodies[i] ?? EMPTY,
+      icon: problemIcons[i] ?? "",
+      image: img(problemsBlock.data, `item_image_${i + 1}`, `home/problems[${i}]`),
     })),
   };
 
-  const paymentLogoFallbacks = F.pricingSummary.payment.logos;
-  const pricingSummary: Home["pricingSummary"] = {
-    ...F.pricingSummary,
-    heading: pickBi(pricingSummaryBlock.data, "heading", F.pricingSummary.heading),
+  const pricingSummary: HomeContent["pricingSummary"] = {
+    heading: pickBi(pricingSummaryBlock.data, "heading"),
+    care: {
+      label: pickBi(pricingSummaryBlock.data, "care_label"),
+      amount: pickBi(pricingSummaryBlock.data, "care_amount"),
+      minNote: pickBi(pricingSummaryBlock.data, "care_min_note"),
+      transportNote: pickBi(pricingSummaryBlock.data, "care_transport_note"),
+    },
+    nursing: {
+      label: pickBi(pricingSummaryBlock.data, "nursing_label"),
+      amount: pickBi(pricingSummaryBlock.data, "nursing_amount"),
+      minNote: pickBi(pricingSummaryBlock.data, "nursing_min_note"),
+      transportNote: pickBi(pricingSummaryBlock.data, "nursing_transport_note"),
+    },
+    extensionNote: pickBi(pricingSummaryBlock.data, "extension_note"),
     payment: {
-      heading: pickBi(
-        pricingSummaryBlock.data,
-        "payment_heading",
-        F.pricingSummary.payment.heading,
-      ),
-      body: pickBi(pricingSummaryBlock.data, "payment_body", F.pricingSummary.payment.body),
-      settleNote: pickBi(
-        pricingSummaryBlock.data,
-        "payment_settle_note",
-        F.pricingSummary.payment.settleNote,
-      ),
+      heading: pickBi(pricingSummaryBlock.data, "payment_heading"),
+      body: pickBi(pricingSummaryBlock.data, "payment_body"),
+      settleNote: pickBi(pricingSummaryBlock.data, "payment_settle_note"),
       logos: [
-        {
-          ...paymentLogoFallbacks[0],
-          src: pickImage(
-            pricingSummaryBlock.data,
-            "payment_visa",
-            paymentLogoFallbacks[0].src,
-            "home/pricing-summary/visa",
-          ),
-        },
-        {
-          ...paymentLogoFallbacks[1],
-          src: pickImage(
-            pricingSummaryBlock.data,
-            "payment_mastercard",
-            paymentLogoFallbacks[1].src,
-            "home/pricing-summary/mastercard",
-          ),
-        },
-        {
-          ...paymentLogoFallbacks[2],
-          src: pickImage(
-            pricingSummaryBlock.data,
-            "payment_jcb",
-            paymentLogoFallbacks[2].src,
-            "home/pricing-summary/jcb",
-          ),
-        },
-        {
-          ...paymentLogoFallbacks[3],
-          src: pickImage(
-            pricingSummaryBlock.data,
-            "payment_amex",
-            paymentLogoFallbacks[3].src,
-            "home/pricing-summary/amex",
-          ),
-        },
+        paymentLogo(pricingSummaryBlock.data, "visa", "payment_visa", "payment_visa_alt"),
+        paymentLogo(pricingSummaryBlock.data, "mastercard", "payment_mastercard", "payment_mastercard_alt"),
+        paymentLogo(pricingSummaryBlock.data, "jcb", "payment_jcb", "payment_jcb_alt"),
+        paymentLogo(pricingSummaryBlock.data, "amex", "payment_amex", "payment_amex_alt"),
       ],
+    },
+    pricingDetails: {
+      label: pickBi(pricingSummaryBlock.data, "pricing_details_label"),
+      href: pickJa(pricingSummaryBlock.data, "pricing_details_href"),
     },
   };
 
-  const nursingItems: NursingFeature[] = nursingFeatureBlocks.map((block, i) => ({
-    icon: pickJa(block.data, "icon", F.nursingCourse.panel.items[i]?.icon ?? ""),
-    label: pickBi(block.data, "label", F.nursingCourse.panel.items[i]?.label ?? EMPTY),
-  }));
+  const nursingItems: HomeContent["nursingCourse"]["panel"]["items"] = nursingFeatureBlocks.map(
+    (block) => ({
+      // `icon` is a non-localizable select key — read via pickJa.
+      icon: pickJa(block.data, "icon"),
+      label: pickBi(block.data, "label"),
+    }),
+  );
 
-  const nursingCourse: Home["nursingCourse"] = {
-    leadIn: pickBi(nursingCourseBlock.data, "lead_in", F.nursingCourse.leadIn),
-    badge: pickBi(nursingCourseBlock.data, "badge", F.nursingCourse.badge),
+  const nursingCourse: HomeContent["nursingCourse"] = {
+    leadIn: pickBi(nursingCourseBlock.data, "lead_in"),
+    badge: pickBi(nursingCourseBlock.data, "badge"),
     price: {
-      label: pickBi(nursingCourseBlock.data, "price_label", F.nursingCourse.price.label),
-      hours: pickBi(nursingCourseBlock.data, "price_hours", F.nursingCourse.price.hours),
-      amount: pickBi(nursingCourseBlock.data, "price_amount", F.nursingCourse.price.amount),
-      unit: pickBi(nursingCourseBlock.data, "price_unit", F.nursingCourse.price.unit),
-      taxNote: pickBi(nursingCourseBlock.data, "price_tax_note", F.nursingCourse.price.taxNote),
-      taxIncluded: pickBi(nursingCourseBlock.data, "price_tax_included", F.nursingCourse.price.taxIncluded),
+      label: pickBi(nursingCourseBlock.data, "price_label"),
+      hours: pickBi(nursingCourseBlock.data, "price_hours"),
+      amount: pickBi(nursingCourseBlock.data, "price_amount"),
+      unit: pickBi(nursingCourseBlock.data, "price_unit"),
+      taxNote: pickBi(nursingCourseBlock.data, "price_tax_note"),
+      taxIncluded: pickBi(nursingCourseBlock.data, "price_tax_included"),
     },
-    note: pickBi(nursingCourseBlock.data, "note", F.nursingCourse.note),
+    note: pickBi(nursingCourseBlock.data, "note"),
     panel: {
-      heading: pickBi(nursingCourseBlock.data, "panel_heading", F.nursingCourse.panel.heading),
+      heading: pickBi(nursingCourseBlock.data, "panel_heading"),
       items: nursingItems,
     },
   };
 
-  const fees: Fee[] = feeBlocks.map((block, i) => ({
-    label: pickBi(block.data, "label", F.careCourse.fees[i]?.label ?? EMPTY),
-    value: pickBi(block.data, "value", F.careCourse.fees[i]?.value ?? EMPTY),
+  const fees: HomeContent["careCourse"]["fees"] = feeBlocks.map((block) => ({
+    label: pickBi(block.data, "label"),
+    value: pickBi(block.data, "value"),
     note: pickBiOptional(block.data, "note"),
   }));
 
   const cards: HomeContent["careCourse"]["cards"] = cardBlocks.map((block, i) => ({
-    title: pickBi(block.data, "title", F.careCourse.cards[i]?.title ?? EMPTY),
-    imageAlt: pickBi(block.data, "image_alt", F.careCourse.cards[i]?.imageAlt ?? EMPTY),
-    items: pickLines(block.data, "items", F.careCourse.cards[i]?.items ?? []),
-    // The card's own image — no longer `/images/use-case-${i + 1}.webp`. The
-    // index survives only in the FALLBACK, where it addresses the four files
-    // that ship with the repo.
-    image: pickImage(block.data, "image", FALLBACK_IMAGES.cards[i] ?? "", `home/care-course-card[${i}]`),
+    title: pickBi(block.data, "title"),
+    imageAlt: pickBi(block.data, "image_alt"),
+    items: pickLines(block.data, "items"),
+    image: img(block.data, "image", `home/care-course-card[${i}]`),
   }));
 
   const careCourse: HomeContent["careCourse"] = {
-    leadIn: pickBi(careCourseBlock.data, "lead_in", F.careCourse.leadIn),
-    badge: pickBi(careCourseBlock.data, "badge", F.careCourse.badge),
-    tagline: pickBi(careCourseBlock.data, "tagline", F.careCourse.tagline),
-    taglineSub: pickBi(careCourseBlock.data, "tagline_sub", F.careCourse.taglineSub),
+    leadIn: pickBi(careCourseBlock.data, "lead_in"),
+    badge: pickBi(careCourseBlock.data, "badge"),
+    tagline: pickBi(careCourseBlock.data, "tagline"),
+    taglineSub: pickBi(careCourseBlock.data, "tagline_sub"),
     price: {
-      label: pickBi(careCourseBlock.data, "price_label", F.careCourse.price.label),
-      hours: pickBi(careCourseBlock.data, "price_hours", F.careCourse.price.hours),
-      amount: pickBi(careCourseBlock.data, "price_amount", F.careCourse.price.amount),
-      unit: pickBi(careCourseBlock.data, "price_unit", F.careCourse.price.unit),
-      taxNote: pickBi(careCourseBlock.data, "price_tax_note", F.careCourse.price.taxNote),
-      taxIncluded: pickBi(careCourseBlock.data, "price_tax_included", F.careCourse.price.taxIncluded),
+      label: pickBi(careCourseBlock.data, "price_label"),
+      hours: pickBi(careCourseBlock.data, "price_hours"),
+      amount: pickBi(careCourseBlock.data, "price_amount"),
+      unit: pickBi(careCourseBlock.data, "price_unit"),
+      taxNote: pickBi(careCourseBlock.data, "price_tax_note"),
+      taxIncluded: pickBi(careCourseBlock.data, "price_tax_included"),
     },
     fees,
     cards,
   };
 
-  const cases: ExampleCase[] = caseBlocks.map((block, i) => {
-    const fallbackCase: (typeof F.examples.cases)[number] | undefined = F.examples.cases[i];
-    const fallbackSchedule = fallbackCase?.schedule ?? [];
-    const times = pickJaLines(
-      block.data,
-      "schedule_times",
-      fallbackSchedule.map((row) => row.time),
-    );
-    const activities = pickLines(
-      block.data,
-      "schedule_activities",
-      fallbackSchedule.map((row) => row.activity),
-    );
-    const schedule: ScheduleRow[] = times.map((time, ri) => ({
+  const cases: HomeContent["examples"]["cases"] = caseBlocks.map((block) => {
+    const times = pickJaLines(block.data, "schedule_times");
+    const activities = pickLines(block.data, "schedule_activities");
+    const schedule = times.map((time, ri) => ({
       time,
-      activity: activities[ri] ?? fallbackSchedule[ri]?.activity ?? EMPTY,
+      activity: activities[ri] ?? EMPTY,
     }));
 
     return {
-      label: pickBi(block.data, "label", fallbackCase?.label ?? EMPTY),
-      tone: pickJa(block.data, "tone", fallbackCase?.tone ?? ""),
-      title: pickBi(block.data, "title", fallbackCase?.title ?? EMPTY),
-      request: pickBi(block.data, "request", fallbackCase?.request ?? EMPTY),
-      services: pickLines(block.data, "services", fallbackCase?.services ?? []),
-      hours: pickBi(block.data, "hours", fallbackCase?.hours ?? EMPTY),
+      label: pickBi(block.data, "label"),
+      tone: pickJa(block.data, "tone"),
+      title: pickBi(block.data, "title"),
+      request: pickBi(block.data, "request"),
+      services: pickLines(block.data, "services"),
+      hours: pickBi(block.data, "hours"),
       schedule,
     };
   });
 
-  const examples: Home["examples"] = {
-    leadIn: pickBi(examplesBlock.data, "lead_in", F.examples.leadIn),
-    heading: pickBi(examplesBlock.data, "heading", F.examples.heading),
-    hoursLabel: pickBi(examplesBlock.data, "hours_label", F.examples.hoursLabel),
-    servicesLabel: pickBi(examplesBlock.data, "services_label", F.examples.servicesLabel),
-    scheduleLabel: pickBi(examplesBlock.data, "schedule_label", F.examples.scheduleLabel),
+  const examples: HomeContent["examples"] = {
+    leadIn: pickBi(examplesBlock.data, "lead_in"),
+    heading: pickBi(examplesBlock.data, "heading"),
+    hoursLabel: pickBi(examplesBlock.data, "hours_label"),
+    servicesLabel: pickBi(examplesBlock.data, "services_label"),
+    scheduleLabel: pickBi(examplesBlock.data, "schedule_label"),
     cases,
   };
 
-  const steps: FlowStep[] = stepBlocks.map((block, i) => ({
-    number: pickJa(block.data, "number", F.flow.steps[i]?.number ?? ""),
-    title: pickBi(block.data, "title", F.flow.steps[i]?.title ?? EMPTY),
-    body: pickBi(block.data, "body", F.flow.steps[i]?.body ?? EMPTY),
-    image: pickImage(
-      block.data,
-      "image",
-      FALLBACK_IMAGES.flowSteps[i] ?? "",
-      `home/flow-step[${i}]`,
-    ),
+  const steps: HomeContent["flow"]["steps"] = stepBlocks.map((block, i) => ({
+    number: pickJa(block.data, "number"),
+    title: pickBi(block.data, "title"),
+    body: pickBi(block.data, "body"),
+    image: img(block.data, "image", `home/flow-step[${i}]`),
   }));
 
   const flow: HomeContent["flow"] = {
-    heading: pickBi(flowBlock.data, "heading", F.flow.heading),
-    stepLabel: pickBi(flowBlock.data, "step_label", F.flow.stepLabel),
+    heading: pickBi(flowBlock.data, "heading"),
+    stepLabel: pickBi(flowBlock.data, "step_label"),
     steps,
   };
 
   const apply: HomeContent["apply"] = {
     consult: {
-      heading: pickBi(applyBlock.data, "consult_heading", F.apply.consult.heading),
-      body: pickBi(applyBlock.data, "consult_body", F.apply.consult.body),
-      cta: pickBi(applyBlock.data, "consult_cta", F.apply.consult.cta),
-      href: pickJa(applyBlock.data, "consult_href", F.apply.consult.href),
-      illustration: pickImage(
-        applyBlock.data,
-        "consult_illustration",
-        FALLBACK_IMAGES.consultIllustration,
-        "home/apply/consult",
-      ),
+      heading: pickBi(applyBlock.data, "consult_heading"),
+      body: pickBi(applyBlock.data, "consult_body"),
+      cta: pickBi(applyBlock.data, "consult_cta"),
+      href: pickJa(applyBlock.data, "consult_href"),
+      illustration: img(applyBlock.data, "consult_illustration", "home/apply/consult"),
     },
     user: {
-      eyebrow: pickBi(applyBlock.data, "user_eyebrow", F.apply.user.eyebrow),
-      label: pickBi(applyBlock.data, "user_label", F.apply.user.label),
-      href: pickJa(applyBlock.data, "user_href", F.apply.user.href),
+      eyebrow: pickBi(applyBlock.data, "user_eyebrow"),
+      label: pickBi(applyBlock.data, "user_label"),
+      href: pickJa(applyBlock.data, "user_href"),
     },
     staff: {
-      eyebrow: pickBi(applyBlock.data, "staff_eyebrow", F.apply.staff.eyebrow),
-      label: pickBi(applyBlock.data, "staff_label", F.apply.staff.label),
-      href: pickJa(applyBlock.data, "staff_href", F.apply.staff.href),
+      eyebrow: pickBi(applyBlock.data, "staff_eyebrow"),
+      label: pickBi(applyBlock.data, "staff_label"),
+      href: pickJa(applyBlock.data, "staff_href"),
     },
   };
 
@@ -462,98 +451,52 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
       values,
       about,
       problems,
+      pricingSummary,
       nursingCourse,
       careCourse,
       examples,
       flow,
       apply,
-      // Not a CMS block — always sourced from constants/copy.ts#home.
-      pricingDetailsLink: F.pricingDetailsLink,
-      pricingSummary,
     },
     contactData: contactBlock.data,
   };
 }
 
 function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact"] {
-  const F = fallbackHome;
   return {
-    leadIn: pickBi(data, "lead_in", F.contact.leadIn),
-    heading: pickBi(data, "heading", F.contact.heading),
+    leadIn: pickBi(data, "lead_in"),
+    heading: pickBi(data, "heading"),
     phone,
-    hours: pickBi(data, "hours", F.contact.hours),
-    isms: pickBi(data, "isms", F.contact.isms),
-    micsLogo: pickImage(data, "mics_logo", FALLBACK_IMAGES.micsLogo, "home/contact"),
-    isoLogo: pickImage(data, "iso_logo", FALLBACK_IMAGES.isoLogo, "home/contact"),
-    micsLogoAlt: pickBi(data, "mics_logo_alt", F.contact.micsLogoAlt),
-    isoLogoAlt: pickBi(data, "iso_logo_alt", F.contact.isoLogoAlt),
-    ctaHref: pickJa(data, "contact_cta_href", F.contact.ctaHref),
-    leadInOrnamentStart: pickBi(data, "lead_in_ornament_start", F.contact.leadInOrnamentStart),
-    leadInOrnamentEnd: pickBi(data, "lead_in_ornament_end", F.contact.leadInOrnamentEnd),
+    hours: pickBi(data, "hours"),
+    isms: pickBi(data, "isms"),
+    micsLogo: img(data, "mics_logo", "home/contact"),
+    isoLogo: img(data, "iso_logo", "home/contact"),
+    micsLogoAlt: pickBi(data, "mics_logo_alt"),
+    isoLogoAlt: pickBi(data, "iso_logo_alt"),
+    ctaHref: pickJa(data, "contact_cta_href"),
+    leadInOrnamentStart: pickBi(data, "lead_in_ornament_start"),
+    leadInOrnamentEnd: pickBi(data, "lead_in_ornament_end"),
   };
 }
 
-/** `constants/copy.ts#home` plus the bundled image paths — what every fallback
- * path in this file returns, so a CMS-less render is byte-identical to the
- * pre-CMS page. */
-const FALLBACK_HOME: HomeContent = {
-  ...fallbackHome,
-  hero: { ...fallbackHome.hero, image: FALLBACK_IMAGES.hero },
-  about: {
-    ...fallbackHome.about,
-    illustration: FALLBACK_IMAGES.aboutIllustration,
-    cards: fallbackHome.about.cards.map((card, i) => ({
-      ...card,
-      image: FALLBACK_IMAGES.aboutCards[i] ?? "",
-    })),
-  },
-  problems: {
-    ...fallbackHome.problems,
-    items: fallbackHome.problems.items.map((item, i) => ({
-      ...item,
-      image: FALLBACK_IMAGES.problemItems[i] ?? "",
-    })),
-  },
-  apply: {
-    ...fallbackHome.apply,
-    consult: {
-      ...fallbackHome.apply.consult,
-      illustration: FALLBACK_IMAGES.consultIllustration,
-    },
-  },
-  flow: {
-    ...fallbackHome.flow,
-    steps: fallbackHome.flow.steps.map((step, i) => ({
-      number: step.number,
-      title: step.title,
-      body: step.body,
-      image: FALLBACK_IMAGES.flowSteps[i] ?? "",
-    })),
-  },
-  careCourse: {
-    ...fallbackHome.careCourse,
-    cards: fallbackHome.careCourse.cards.map((card, i) => ({
-      ...card,
-      image: FALLBACK_IMAGES.cards[i] ?? "",
-    })),
-  },
-  contact: {
-    ...fallbackHome.contact,
-    micsLogo: FALLBACK_IMAGES.micsLogo,
-    isoLogo: FALLBACK_IMAGES.isoLogo,
-  },
-};
-
 async function fetchHome(): Promise<HomeContent> {
   const blocks = await getPageBlocks("home");
-  if (!blocks) return FALLBACK_HOME;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getHome("home"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the home page is unavailable.',
+    );
+  }
 
   const mapped = mapHome(blocks);
-  if (!mapped) return FALLBACK_HOME;
+  if (!mapped) {
+    throw new Error(
+      '[cms] getHome("home"): page data did not match the expected block shape — no fallback content exists; the home page is unavailable.',
+    );
+  }
 
   // contact.phone is deliberately NOT a field on home_contact — it comes from
-  // the shared site chrome, exactly like constants/copy.ts:560
-  // (`phone: contactPhone.display`).
+  // the shared site chrome, exactly like the days when constants/copy.ts
+  // declared `phone: contactPhone.display` once and reused it everywhere.
   const { contactPhone } = await getSite();
   const contact = mapContact(mapped.contactData, contactPhone.display);
 

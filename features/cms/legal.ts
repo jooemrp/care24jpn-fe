@@ -1,43 +1,46 @@
 import "server-only";
 
 import { cache } from "react";
-import { legalDocs, type LegalDoc } from "@/constants/legal";
+import type { Bilingual } from "./types";
 import { getPageBlocks, reportUnexpectedContent } from "./client";
 import { htmlToBlocks } from "./legal-html";
 import { selectLegalFields, type RawLegalFields } from "./legal-select";
 
-/** Atlas page slug -> key into constants/legal.ts#legalDocs. One entry per
- * "legal-*" page seeded in Atlas (see scripts/atlas/seed-legal.ts) — the 7
- * keys below are exhaustive, not a subset. */
-const LEGAL_SLUG_TO_KEY = {
-  "legal-privacy": "privacy",
-  "legal-tokushoho": "tokushoho",
-  "legal-terms-for-care-supporters": "terms",
-  "legal-terms-for-users": "termsForUsers",
-  "legal-cancellation-policy": "cancellationPolicy",
-  "legal-compensation": "compensation",
-  "legal-quasi-mandate": "quasiMandate",
-} as const satisfies Record<string, keyof typeof legalDocs>;
+/** Atlas page slug -> one of the 7 "legal-*" pages seeded in Atlas (see
+ * scripts/atlas/seed-legal.ts). */
+const LEGAL_SLUGS = [
+  "legal-privacy",
+  "legal-tokushoho",
+  "legal-terms-for-care-supporters",
+  "legal-terms-for-users",
+  "legal-cancellation-policy",
+  "legal-compensation",
+  "legal-quasi-mandate",
+] as const;
 
-export type LegalSlug = keyof typeof LEGAL_SLUG_TO_KEY;
+export type LegalSlug = (typeof LEGAL_SLUGS)[number];
+
+/**
+ * The parsed shape a legal document's loader returns: the bilingual heading
+ * plus the richtext body parsed back into block form per locale.
+ */
+export type LegalDoc = {
+  heading: Bilingual;
+  body: { ja: ReturnType<typeof htmlToBlocks>; en: ReturnType<typeof htmlToBlocks> };
+};
 
 /**
  * Everything both readers below need from Atlas, and nothing more: one
  * `getPageBlocks` call plus `./legal-select`'s pure field-shape guards
- * (extracted there so `pages-map.test.ts`'s sibling, `legal-select.test.ts`,
- * can import and exercise them for real — `legal.ts` itself opens with
- * `import "server-only"`, which cannot be loaded outside Next's bundler; see
- * `./legal-select`'s header). Deliberately stops BEFORE `htmlToBlocks` so the
- * heading-only reader never pays for parsing a body it is going to throw
- * away.
+ * (extracted there so `legal-select.test.ts` can import and exercise them —
+ * `legal.ts` itself opens with `import "server-only"`, which cannot be
+ * loaded outside Next's bundler). Deliberately stops BEFORE `htmlToBlocks`
+ * so the heading-only reader never pays for parsing a body it is going to
+ * throw away.
  *
- * `getPageBlocks` is `cache()`-ed, so a page that calls both readers for the
- * same slug (every `legal-*` route does — the route renders the document and
- * the footer resolves the tokushoho label) still issues exactly one HTTP
- * request per render.
- *
- * Returns `null` for "use the constants fallback", after warning with the
- * caller's own name so the log still says which entry point gave up.
+ * Returns `null` for "the page data is unavailable" — the caller throws /
+ * surfaces an error rather than substituting `constants/legal.ts` (the
+ * no-fallback sweep removes the legal fallback layer wholesale).
  */
 async function readLegalFields(
   slug: LegalSlug,
@@ -45,7 +48,7 @@ async function readLegalFields(
 ): Promise<RawLegalFields | null> {
   const blocks = await getPageBlocks(slug);
   if (!blocks) {
-    console.warn(`[cms] ${caller}("${slug}"): no page/block found, using constants fallback`);
+    console.warn(`[cms] ${caller}("${slug}"): no page/block found — page unavailable (no fallback)`);
     return null;
   }
 
@@ -53,51 +56,33 @@ async function readLegalFields(
 }
 
 /**
- * Reads one legal document from Atlas and returns it in the exact shape of
- * `constants/legal.ts#legalDocs[key]` — the return type is `LegalDoc`, so
- * `LegalDocPage.tsx` / `TableOfContents.tsx` never need to know whether the
- * document came from Atlas or the fallback constant.
+ * Reads one legal document from Atlas and returns the parsed bilingual
+ * document. `body` is a single richtext field per locale — JA and EN block
+ * structures are not parallel, so one Atlas block cannot map to one block;
+ * `htmlToBlocks` is the exact inverse of the `blocksToHtml` serializer
+ * `scripts/atlas/seed-legal.ts` used to write it.
  *
- * `body` is a single richtext field per locale — JA and EN block structures
- * are not parallel, so one Atlas block cannot map to one `LegalBlock`.
- * `htmlToBlocks` is the exact inverse of the
- * `blocksToHtml` serializer `scripts/atlas/seed-legal.ts` used to write it,
- * so a successful parse reproduces the original block order — which is what
- * keeps `LegalDocPage`'s index-based `sec-${i}` TOC anchors correct.
- *
- * Falls back to `constants/legal.ts` (with a warning) on ANY failure:
- * the page fetch failing, the page having no blocks, the heading/body
- * fields being empty in either locale, or the richtext parsing to zero
- * blocks (a sign the stored HTML doesn't match what the parser expects).
+ * No fallback to `constants/legal.ts`: on ANY failure (page fetch failing,
+ * fields empty, richtext parsing to zero blocks) this throws, and the route
+ * surfaces an error/404 rather than serving stale constants content.
  */
 async function fetchLegalDoc(slug: LegalSlug): Promise<LegalDoc> {
-  const fallback = legalDocs[LEGAL_SLUG_TO_KEY[slug]];
-
-  try {
-    const fields = await readLegalFields(slug, "getLegalDoc");
-    if (!fields) return fallback;
-
-    const ja = htmlToBlocks(fields.body.ja);
-    const en = htmlToBlocks(fields.body.en);
-    if (ja.length === 0 || en.length === 0) {
-      console.warn(
-        `[cms] getLegalDoc("${slug}"): richtext parsed to 0 blocks, using constants fallback`,
-      );
-      return fallback;
-    }
-
-    return { heading: fields.heading, body: { ja, en } };
-  } catch (error) {
-    // See the note on `fetchLegalHeading`'s catch: this is a blast-radius
-    // guard, not a guard against a throw we know about. `htmlToBlocks` is a
-    // hand-rolled parser fed editor-authored markup — the one input on this
-    // path a developer does not control.
-    console.error(
-      `[cms:fallback:failure] getLegalDoc("${slug}") threw, using constants fallback:`,
-      error,
+  const fields = await readLegalFields(slug, "getLegalDoc");
+  if (!fields) {
+    throw new Error(
+      `[cms] getLegalDoc("${slug}"): legal page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists.`,
     );
-    return fallback;
   }
+
+  const ja = htmlToBlocks(fields.body.ja);
+  const en = htmlToBlocks(fields.body.en);
+  if (ja.length === 0 || en.length === 0) {
+    throw new Error(
+      `[cms] getLegalDoc("${slug}"): richtext parsed to 0 blocks in one or both locales — the stored HTML does not match what the parser expects; the page is unavailable instead of serving stale constants content.`,
+    );
+  }
+
+  return { heading: fields.heading, body: { ja, en } };
 }
 
 /**
@@ -111,61 +96,26 @@ async function fetchLegalDoc(slug: LegalSlug): Promise<LegalDoc> {
  * stays, but calling `getLegalDoc` for it made every single page parse the
  * whole tokushoho body twice (ja + en) and discard the result.
  *
- * FALLBACK PARITY WITH `getLegalDoc` — deliberate, and deliberately not
- * total. This reader applies every guard `fetchLegalDoc` applies except the
- * one it cannot afford: it cannot know that a body would have parsed to zero
- * blocks without parsing it. The empty-body check below closes the part of
- * that gap that costs nothing (an empty/whitespace-only body parses to zero
- * blocks by definition, so falling back here matches `getLegalDoc` exactly).
- *
- * What remains, stated rather than hidden: a body that is non-empty in both
- * locales but still parses to zero blocks (e.g. content that is nothing but
- * a `<script>` block, or markup the parser drops entirely) makes
- * `getLegalDoc` serve the constants document while this reader serves the
- * CMS heading — so the footer link would show the CMS title while
- * `/tokushoho` shows the constants title. Accepted because the alternative
- * is parsing the entire body on every route to guard a case that requires
- * Atlas to hold body markup the seeder cannot produce, and because the
- * divergence is cosmetic (a title, on a link that still points at the right
- * page) and self-announcing: `getLegalDoc`'s "parsed to 0 blocks" warning
- * fires on the very same render.
+ * No fallback to `constants/legal.ts`: on failure this throws. The empty-body
+ * check below closes the gap where a body that is non-empty but parses to
+ * zero blocks would make `getLegalDoc` throw while this reader returned a
+ * heading — now both throw, so the two surfaces cannot diverge.
  */
-async function fetchLegalHeading(slug: LegalSlug): Promise<LegalDoc["heading"]> {
-  const fallback = legalDocs[LEGAL_SLUG_TO_KEY[slug]].heading;
-
-  try {
-    const fields = await readLegalFields(slug, "getLegalHeading");
-    if (!fields) return fallback;
-
-    if (fields.body.ja.trim() === "" || fields.body.en.trim() === "") {
-      console.warn(
-        `[cms] getLegalHeading("${slug}"): empty richtext body, using constants fallback`,
-      );
-      return fallback;
-    }
-
-    return fields.heading;
-  } catch (error) {
-    // NOT guarding a throw that exists today — `getPageBlocks` catches its
-    // own network/timeout/shape errors and returns `null`, and every guard
-    // above is pure. This catch guards the BLAST RADIUS if that ever stops
-    // being true.
-    //
-    // `app/[lang]/layout.tsx` starts this read inside a `Promise.all`, which
-    // rejects the moment any input does. That layout wraps EVERY route, so a
-    // rejection here would not degrade one footer link — it would 500 the
-    // entire site, in both locales, for a string. The layout currently
-    // documents that it is safe by ARGUING about this function's internals;
-    // an argument holds only until someone edits `pick`, `htmlToBlocks` or
-    // `getPageBlocks` without reading a comment two files away. Costing one
-    // try/catch to convert that argument into a guarantee is obviously worth
-    // it at a ratio of "one label" to "the whole site".
-    console.error(
-      `[cms:fallback:failure] getLegalHeading("${slug}") threw, using constants fallback:`,
-      error,
+async function fetchLegalHeading(slug: LegalSlug): Promise<Bilingual> {
+  const fields = await readLegalFields(slug, "getLegalHeading");
+  if (!fields) {
+    throw new Error(
+      `[cms] getLegalHeading("${slug}"): legal page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists.`,
     );
-    return fallback;
   }
+
+  if (fields.body.ja.trim() === "" || fields.body.en.trim() === "") {
+    throw new Error(
+      `[cms] getLegalHeading("${slug}"): empty richtext body in one or both locales — the page is unavailable instead of serving stale constants content.`,
+    );
+  }
+
+  return fields.heading;
 }
 
 /** Deduped per-render: `generateMetadata` and the page component both call
@@ -173,6 +123,5 @@ async function fetchLegalHeading(slug: LegalSlug): Promise<LegalDoc["heading"]> 
 export const getLegalDoc = cache(fetchLegalDoc);
 
 /** Deduped per-render, and shares `getPageBlocks`' per-render cache with
- * `getLegalDoc` — on a `legal-*` route, where both are called for the same
- * slug, this adds no HTTP request at all. */
+ * `getLegalDoc` — on a `legal-*` route this adds no HTTP request at all. */
 export const getLegalHeading = cache(fetchLegalHeading);

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import "../styles/globals.css";
 import { notoSansJP } from "./fonts";
-import { brand, errorPage } from "@/constants/copy";
+import { GLOBAL_ERROR_LABELS, GLOBAL_BRAND_NAME } from "@/features/cms/global-error-labels.generated";
 
 // Next.js convention (app/global-error.tsx, node_modules/next/dist/docs/
 // 01-app/03-api-reference/03-file-conventions/error.md:161-188): this file
@@ -22,27 +22,23 @@ import { brand, errorPage } from "@/constants/copy";
 // visitor wanted, exactly as global-not-found.tsx already concluded for the
 // same reason.
 //
-// WHY THIS ONE SURFACE CANNOT READ THE CMS, and what is done instead.
-// Every other user-visible string on this site resolves through a
+// WHY THIS ONE SURFACE CANNOT READ THE CMS AT RUNTIME, and what is done
+// instead. Every other user-visible string on this site resolves through a
 // `features/cms/` loader. This file cannot: error.md:170 requires it to be
 // a Client Component, so it can neither `await getSite()` nor reach the
 // `ErrorLabelsProvider` that feeds the sibling `app/[lang]/error.tsx` —
 // and by the time it renders, the root layout that would have supplied
 // that data is precisely the thing that threw. There is no request-time
-// path to Atlas from here, and inventing one (baking the copy into a
-// generated module at build time) would only move the staleness, the way
-// `public/images/og-card*.png` already bakes the tagline.
+// path to Atlas from here.
 //
-// So the words below come from `constants/copy.ts#errorPage` — the SAME
-// export that (a) `features/cms/site-map.ts` uses as the fallback for the
-// `site-error-labels` block and (b) `scripts/atlas/seed-site.ts` seeds that
-// block FROM. That makes this page one edit away from the dashboard rather
-// than a second, independent copy of the text: previously these six
-// strings were retyped inline here, so an editor who rewrote the error
-// copy in the dashboard changed `app/[lang]/error.tsx` and silently did
-// NOT change this file. Now the two agree by construction whenever the CMS
-// and its seed agree, and the only remaining gap is an un-seeded dashboard
-// edit — which `scripts/atlas/drift-check.ts` is there to surface.
+// So the words below come from `GLOBAL_ERROR_LABELS` /
+// `GLOBAL_BRAND_NAME` in `features/cms/global-error-labels.generated.ts` —
+// a module GENERATED from the LIVE CMS (`site_global_error_labels` /
+// `site-brand` blocks on the "site" page, via
+// scripts/atlas/generate-global-error-labels.ts after each seed). No
+// `constants/*.ts` import lives in any render path any more: the copy is
+// CMS-sourced, baked at seed time like the generated `atlas.types.ts`, and
+// this page stays one `npm run atlas:seed` away from the dashboard.
 //
 // Both languages are still shown side by side here (unlike the per-locale
 // `app/[lang]/error.tsx`) for the reason the header comment gives: this
@@ -67,21 +63,23 @@ export default function GlobalError({
     console.error(error);
   }, [error]);
 
+  const labels = GLOBAL_ERROR_LABELS;
+
   return (
     <html lang="ja" className={`${notoSansJP.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col items-center justify-center bg-bg px-6 py-24 text-center text-body">
-        <title>{`Error | ${brand.name}`}</title>
+        <title>{`Error | ${GLOBAL_BRAND_NAME}`}</title>
         <div className="max-w-md">
           <h1 className="text-2xl font-bold text-heading mb-2">
-            {errorPage.title.ja}
+            {labels.title.ja}
           </h1>
-          <p className="text-body mb-8">{errorPage.body.ja}</p>
+          <p className="text-body mb-8">{labels.body.ja}</p>
 
           <div lang="en">
             <h2 className="text-2xl font-bold text-heading mb-2">
-              {errorPage.title.en}
+              {labels.title.en}
             </h2>
-            <p className="text-body mb-10">{errorPage.body.en}</p>
+            <p className="text-body mb-10">{labels.body.en}</p>
           </div>
 
           <button
@@ -89,7 +87,7 @@ export default function GlobalError({
             onClick={() => retry()}
             className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
           >
-            {`${errorPage.retryLabel.ja} / ${errorPage.retryLabel.en}`}
+            {`${labels.retryLabel.ja} / ${labels.retryLabel.en}`}
           </button>
         </div>
       </body>

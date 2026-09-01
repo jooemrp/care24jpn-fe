@@ -36,7 +36,8 @@ export type RawLegalFields = { heading: Bilingual; body: { ja: string; en: strin
  * Selects and validates the one `legal-doc` block a `legal-*` page's blocks
  * must contain, and returns `null` — after warning with the caller's own
  * name, so the log still says which entry point gave up — for either of two
- * distinct "use the constants fallback" reasons:
+ * distinct "the page is unavailable" reasons (there is no constants
+ * fallback anymore; `null` means the caller throws / surfaces an error):
  *
  * - the page's blocks don't contain a `legal-doc` block at all (matched by
  *   content-type SLUG via `mapBlocksByType`, not `blocks[0]` — a legal page
@@ -67,7 +68,7 @@ export function selectLegalFields(
   const groups = mapBlocksByType(slug, blocks, LEGAL_TYPES, reportFallback);
   const block = groups?.["legal-doc"][0];
   if (!block) {
-    console.warn(`[cms] ${caller}("${slug}"): no page/block found, using constants fallback`);
+    console.warn(`[cms] ${caller}("${slug}"): no page/block found — page unavailable`);
     return null;
   }
 
@@ -78,9 +79,7 @@ export function selectLegalFields(
   const heading = pick(block.data, "heading");
   const body = pick(block.data, "body");
   if (!heading || !body || heading.ja.trim() === "" || heading.en.trim() === "") {
-    console.warn(
-      `[cms] ${caller}("${slug}"): missing or empty heading/body field, using constants fallback`,
-    );
+    console.warn(`[cms] ${caller}("${slug}"): missing or empty heading/body field — page unavailable`);
     return null;
   }
 

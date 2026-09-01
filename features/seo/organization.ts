@@ -24,12 +24,13 @@
  *   `Bilingual` instead of importing it.
  *
  * `components/JsonLd.tsx#organizationJsonLd` is the only caller. It awaits
- * `getCompany()` (CMS-backed, already falls back to `constants/copy.ts`
- * internally when Atlas is unreachable or the page shape doesn't match) and
- * passes `company.rows` in as `companyRows`, plus `constants/copy.ts#company`
- * itself, UNTRANSFORMED, as `fallbackCompanyRows` — so this module never
- * needs to import `constants/copy.ts`, and there is exactly one fallback
- * path below, not a second hand-copied one.
+ * `getCompany()` (CMS-backed; the no-fallback sweep removed the
+ * `constants/copy.ts` fallback it used to carry internally, so when Atlas is
+ * unreachable or the page shape doesn't match, `getCompany()` now THROWS and
+ * the route surfaces an error instead of serving stale constants) and passes
+ * `company.rows` in as `companyRows`. There is no `fallbackCompanyRows`
+ * parameter anymore — a row that is missing or unparseable renders empty in
+ * the JSON-LD, never a constants value.
  */
 
 type Bi = { ja: string; en: string };
@@ -55,21 +56,13 @@ export type BuildOrganizationJsonLdInput = {
   brandName: string;
   telephone: string;
   /** `site.brand.logo` (see `features/cms/site.ts`) — a full URL when Atlas
-   * answers, or the bundled `/images/logo.png` fallback when it doesn't.
-   * Relative values are resolved against `siteUrl` (schema.org `logo`/
+   * answers. Relative values are resolved against `siteUrl` (schema.org `logo`/
    * `image` expect an absolute URL). Falsy/empty omits both `logo` and
    * `image` entirely. */
   logoUrl?: string;
   siteUrl: string;
-  /** CMS-sourced rows from `getCompany().rows` — may equal
-   * `fallbackCompanyRows` already, if `getCompany()` itself fell back. */
+  /** CMS-sourced rows from `getCompany().rows` — the ONLY data source. */
   companyRows: CompanyRow[];
-  /** `constants/copy.ts#company.rows`, passed through untransformed. Used
-   * ONLY when a lookup or parse against `companyRows` fails (a row label
-   * renamed in the dashboard, a free-text address that no longer matches the
-   * expected shape, ...), so the emitted field never regresses to entirely
-   * missing. This is the one fallback path in this module. */
-  fallbackCompanyRows: CompanyRow[];
 };
 
 // ---------------------------------------------------------------------------
@@ -122,8 +115,7 @@ const LEGACY_LABEL_EN: Record<string, string> = {
  * against a workspace that has not been re-seeded since `company_row.row_key`
  * was added, where every row's key is `""` (`features/cms/pages-map.ts`
  * falls back to the empty string rather than guessing from position). It
- * also covers `fallbackCompanyRows`, which always carries real keys, so the
- * fallback path never depends on the label either.
+ * also covers rows whose keys are missing entirely.
  *
  * A row whose key matches wins outright, even if some other row happens to
  * carry the legacy label — the key is the identity, the label is not.
@@ -159,8 +151,8 @@ function findRow(rows: CompanyRow[], rowKey: string): CompanyRow | undefined {
  * only one this business has ever operated a registered office in.
  *
  * Returns `null` on anything that doesn't match the known 4-segment,
- * "<region> <postal-code>"-suffixed shape, so a malformed edit falls back
- * rather than emitting a wrong or partially-empty PostalAddress.
+ * "<region> <postal-code>"-suffixed shape, so a malformed edit renders
+ * empty rather than emitting a wrong or partially-empty PostalAddress.
  */
 function parseAddress(value: string): PostalAddress | null {
   const parts = value
@@ -221,12 +213,11 @@ function toAbsoluteUrl(url: string, siteUrl: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Field resolution — CMS row, else the matching constants fallback row,
-// else an empty default (never expected to trigger: constants/copy.ts's
-// rows are well-formed by construction).
+// Field resolution — CMS row, else an empty default. No constants fallback:
+// a missing/unparseable row renders as an empty field, never stale data.
 // ---------------------------------------------------------------------------
 
-function resolveLegalName(companyRows: CompanyRow[], fallbackCompanyRows: CompanyRow[]): string {
+function resolveLegalName(companyRows: CompanyRow[]): string {
   const row = findRow(companyRows, TRADE_NAME_ROW_KEY);
   if (row && row.value.en.trim() !== "") return row.value.en;
 
@@ -235,10 +226,10 @@ function resolveLegalName(companyRows: CompanyRow[], fallbackCompanyRows: Compan
       ? "organization:legal-name-empty"
       : `organization:row-miss:${TRADE_NAME_ROW_KEY}`,
     row
-      ? `[cms:unexpected-content] organization: company_row "${TRADE_NAME_ROW_KEY}" has an empty/whitespace value.en — using the constants/copy.ts fallback company row for JSON-LD legalName instead, rather than emitting an empty legalName. Check for a cleared field in the dashboard. This warning only prints once per process.`
-        : `[cms:unexpected-content] organization: no company_row with row_key "${TRADE_NAME_ROW_KEY}" (and none carrying the legacy label "Trade name") — using the constants/copy.ts fallback company row for JSON-LD legalName instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
+      ? `[cms:unexpected-content] organization: company_row "${TRADE_NAME_ROW_KEY}" has an empty/whitespace value.en — emitting an empty legalName rather than substituting a constants fallback. Check for a cleared field in the dashboard. This warning only prints once per process.`
+      : `[cms:unexpected-content] organization: no company_row with row_key "${TRADE_NAME_ROW_KEY}" (and none carrying the legacy label "Trade name") — emitting an empty legalName rather than a constants fallback. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
   );
-  return findRow(fallbackCompanyRows, TRADE_NAME_ROW_KEY)?.value.en ?? "";
+  return "";
 }
 
 const EMPTY_ADDRESS: PostalAddress = {
@@ -249,52 +240,40 @@ const EMPTY_ADDRESS: PostalAddress = {
   addressCountry: "JP",
 };
 
-function resolveAddress(
-  companyRows: CompanyRow[],
-  fallbackCompanyRows: CompanyRow[],
-): PostalAddress {
+function resolveAddress(companyRows: CompanyRow[]): PostalAddress {
   const row = findRow(companyRows, HEAD_OFFICE_ROW_KEY);
   if (row) {
     const parsed = parseAddress(row.value.en);
     if (parsed) return parsed;
     warnOnce(
       "organization:address-unparseable",
-      `[cms:unexpected-content] organization: company_row "${HEAD_OFFICE_ROW_KEY}" value "${row.value.en}" does not match the expected "<building>, <street>, <ward>, <region> <postal>" shape — using the constants/copy.ts fallback address for JSON-LD instead. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: company_row "${HEAD_OFFICE_ROW_KEY}" value "${row.value.en}" does not match the expected "<building>, <street>, <ward>, <region> <postal>" shape — emitting an empty address in the JSON-LD rather than a constants fallback. This warning only prints once per process.`,
     );
   } else {
     warnOnce(
       `organization:row-miss:${HEAD_OFFICE_ROW_KEY}`,
-      `[cms:unexpected-content] organization: no company_row with row_key "${HEAD_OFFICE_ROW_KEY}" (and none carrying the legacy label "Head office") — using the constants/copy.ts fallback address for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: no company_row with row_key "${HEAD_OFFICE_ROW_KEY}" (and none carrying the legacy label "Head office") — emitting an empty address in the JSON-LD rather than a constants fallback. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
     );
   }
-
-  const fallbackRow = findRow(fallbackCompanyRows, HEAD_OFFICE_ROW_KEY);
-  const fallbackParsed = fallbackRow ? parseAddress(fallbackRow.value.en) : null;
-  return fallbackParsed ?? EMPTY_ADDRESS;
+  return EMPTY_ADDRESS;
 }
 
-function resolveFoundingDate(
-  companyRows: CompanyRow[],
-  fallbackCompanyRows: CompanyRow[],
-): string {
+function resolveFoundingDate(companyRows: CompanyRow[]): string {
   const row = findRow(companyRows, ESTABLISHED_ROW_KEY);
   if (row) {
     const parsed = parseFoundingDate(row.value.en);
     if (parsed) return parsed;
     warnOnce(
       "organization:founding-date-unparseable",
-      `[cms:unexpected-content] organization: company_row "${ESTABLISHED_ROW_KEY}" value "${row.value.en}" does not match the expected "<Month> <day>, <year>" shape — using the constants/copy.ts fallback founding date for JSON-LD instead. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: company_row "${ESTABLISHED_ROW_KEY}" value "${row.value.en}" does not match the expected "<Month> <day>, <year>" shape — emitting an empty foundingDate in the JSON-LD rather than a constants fallback. This warning only prints once per process.`,
     );
   } else {
     warnOnce(
       `organization:row-miss:${ESTABLISHED_ROW_KEY}`,
-      `[cms:unexpected-content] organization: no company_row with row_key "${ESTABLISHED_ROW_KEY}" (and none carrying the legacy label "Established") — using the constants/copy.ts fallback founding date for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
+      `[cms:unexpected-content] organization: no company_row with row_key "${ESTABLISHED_ROW_KEY}" (and none carrying the legacy label "Established") — emitting an empty foundingDate in the JSON-LD rather than a constants fallback. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
     );
   }
-
-  const fallbackRow = findRow(fallbackCompanyRows, ESTABLISHED_ROW_KEY);
-  const fallbackParsed = fallbackRow ? parseFoundingDate(fallbackRow.value.en) : null;
-  return fallbackParsed ?? "";
+  return "";
 }
 
 // ---------------------------------------------------------------------------
@@ -310,18 +289,18 @@ function resolveFoundingDate(
  * `features/seo/organization.test.ts` asserts it exactly:
  *   @context, @type, name, legalName, url, logo, image, telephone, address,
  *   foundingDate
- * `logo`/`image` are omitted as a pair when `logoUrl` is falsy/empty; every
- * other key is always present (using the constants fallback rather than
- * being omitted, per `fallbackCompanyRows` above).
+ * `logo`/`image` are omitted as a pair when `logoUrl` is falsy/empty; a
+ * missing/unparseable `company_row` renders as an empty-string field, not a
+ * constants fallback.
  */
 export function buildOrganizationJsonLd(
   input: BuildOrganizationJsonLdInput,
 ): Record<string, unknown> {
-  const { brandName, telephone, logoUrl, siteUrl, companyRows, fallbackCompanyRows } = input;
+  const { brandName, telephone, logoUrl, siteUrl, companyRows } = input;
 
-  const legalName = resolveLegalName(companyRows, fallbackCompanyRows);
-  const address = resolveAddress(companyRows, fallbackCompanyRows);
-  const foundingDate = resolveFoundingDate(companyRows, fallbackCompanyRows);
+  const legalName = resolveLegalName(companyRows);
+  const address = resolveAddress(companyRows);
+  const foundingDate = resolveFoundingDate(companyRows);
   const absoluteLogoUrl = logoUrl ? toAbsoluteUrl(logoUrl, siteUrl) : undefined;
 
   return {

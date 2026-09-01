@@ -4,6 +4,105 @@
 
 export type Locale = "ja" | "en";
 
+/** Site — Global error page labels (content type: "site-global-error-labels") */
+export interface SiteGlobalErrorLabels {
+  title?: string; // localizable
+  body?: string; // localizable
+  retry_label?: string; // localizable
+}
+
+/** Contact — Inquiry category option (content type: "contact-category") */
+export interface ContactCategory {
+  value?: string;
+  label?: string; // localizable
+}
+
+/** Contact — Form fields (content type: "contact-form-fields") */
+export interface ContactFormFields {
+  mailto?: string;
+  category?: string; // localizable
+  name?: string; // localizable
+  phone?: string; // localizable
+  email?: string; // localizable
+  message?: string; // localizable
+  submit?: string; // localizable
+}
+
+/** Contact — Form card (content type: "contact-form-card") */
+export interface ContactFormCard {
+  badge?: string; // localizable
+  title?: string; // localizable
+  body?: string; // localizable
+  bullets?: string; // localizable
+  follow_up?: string; // localizable
+  required_note?: string; // localizable
+}
+
+/** Contact — Phone card (content type: "contact-phone-card") */
+export interface ContactPhoneCard {
+  badge?: string; // localizable
+  title?: string; // localizable
+  body?: string; // localizable
+  tel_label?: string; // localizable
+  number?: string;
+  hours?: string; // localizable
+  bullets?: string; // localizable
+}
+
+/** FAQ — Item (content type: "faq-item") */
+export interface FaqItem {
+  id?: string;
+  category?: string;
+  question?: string; // localizable
+  answer?: string; // localizable
+}
+
+/** FAQ — Category (content type: "faq-category") */
+export interface FaqCategory {
+  id?: string;
+  label?: string; // localizable
+}
+
+/** Home — Pricing summary + payment logos (content type: "home-pricing-summary") */
+export interface HomePricingSummary {
+  heading?: string; // localizable
+  care_label?: string; // localizable
+  payment_heading?: string; // localizable
+  payment_body?: string; // localizable
+  care_amount?: string; // localizable
+  payment_settle_note?: string; // localizable
+  care_min_note?: string; // localizable
+  care_transport_note?: string; // localizable
+  payment_visa?: string;
+  nursing_label?: string; // localizable
+  payment_mastercard?: string;
+  nursing_amount?: string; // localizable
+  payment_jcb?: string;
+  payment_amex?: string;
+  nursing_min_note?: string; // localizable
+  nursing_transport_note?: string; // localizable
+  extension_note?: string; // localizable
+  payment_visa_alt?: string; // localizable
+  payment_mastercard_alt?: string; // localizable
+  payment_jcb_alt?: string; // localizable
+  payment_amex_alt?: string; // localizable
+  pricing_details_label?: string; // localizable
+  pricing_details_href?: string;
+}
+
+/** Home — About (Care24Japanとは) (content type: "home-about") */
+export interface HomeAbout {
+  heading?: string; // localizable
+  catchphrase?: string; // localizable
+  body?: string; // localizable
+  card_titles?: string; // localizable
+  card_bodies?: string; // localizable
+  illustration?: string;
+  card_image_1?: string;
+  card_image_2?: string;
+  card_image_3?: string;
+}
+
 /** Site — 404 page labels (content type: "site-not-found-labels") */
 export interface SiteNotFoundLabels {
   eyebrow?: string;
@@ -64,6 +163,8 @@ export interface FeesMeta {
 export interface PricingMeta {
   highlights?: string; // localizable
   note?: string; // localizable
+  cancellation_label?: string; // localizable
+  cancellation_href?: string;
 }
 
 /** Rates — Row (content type: "rate-row") */
@@ -105,6 +206,11 @@ export interface HomeApply {
   staff_label?: string; // localizable
   staff_href?: string;
   user_href?: string;
+  consult_heading?: string; // localizable
+  consult_body?: string; // localizable
+  consult_cta?: string; // localizable
+  consult_href?: string;
+  consult_illustration?: string;
 }
 
 /** Home — Flow step (content type: "home-flow-step") */
@@ -113,6 +219,7 @@ export interface HomeFlowStep {
   icon?: string;
   title?: string; // localizable
   body?: string; // localizable
+  image?: string;
 }
 
 /** Home — Flow header (content type: "home-flow") */
@@ -191,31 +298,18 @@ export interface HomeCareCourse {
   price_tax_included?: string; // localizable
 }
 
-/** Home — About (Care24Japanとは) (content type: "home-about") */
-export interface HomeAbout {
-  heading?: string; // localizable
-  catchphrase?: string; // localizable
-  body?: string; // localizable
-  card_titles?: string; // localizable
-  card_bodies?: string; // localizable
-}
-
 /** Home — Problems (content type: "home-problems") */
 export interface HomeProblems {
   heading?: string; // localizable
   items?: string; // localizable
-}
-
-/** Home — Pricing summary + payment logos (content type: "home-pricing-summary") */
-export interface HomePricingSummary {
-  heading?: string; // localizable
-  payment_heading?: string; // localizable
-  payment_body?: string; // localizable
-  payment_settle_note?: string; // localizable
-  payment_visa?: string;
-  payment_mastercard?: string;
-  payment_jcb?: string;
-  payment_amex?: string;
+  closing?: string; // localizable
+  item_image_1?: string;
+  item_image_2?: string;
+  item_image_3?: string;
+  item_image_4?: string;
+  item_image_5?: string;
+  item_bodies?: string; // localizable
+  item_icons?: string;
 }
 
 /** Home — Values (trust strip) (content type: "home-values") */
@@ -238,6 +332,8 @@ export interface HomeHero {
   image?: string;
   cta_primary_href?: string;
   cta_secondary_href?: string;
+  area_badge_main?: string; // localizable
+  area_badge_sub?: string; // localizable
 }
 
 /** Footer Legal Link (content type: "footer-legal-link") */
@@ -289,6 +385,8 @@ export interface SiteBrand {
   logo_alt?: string; // localizable
   tagline?: string; // localizable
   logo?: string;
+  logo_width?: number;
+  logo_height?: number;
 }
 
 /** Page Hero (content type: "page-hero") */
@@ -300,6 +398,15 @@ export interface PageHero {
 
 /** Maps each content-type slug to its entry interface. */
 export interface AtlasContentTypes {
+  "site-global-error-labels": SiteGlobalErrorLabels;
+  "contact-category": ContactCategory;
+  "contact-form-fields": ContactFormFields;
+  "contact-form-card": ContactFormCard;
+  "contact-phone-card": ContactPhoneCard;
+  "faq-item": FaqItem;
+  "faq-category": FaqCategory;
+  "home-pricing-summary": HomePricingSummary;
+  "home-about": HomeAbout;
   "site-not-found-labels": SiteNotFoundLabels;
   "site-error-labels": SiteErrorLabels;
   "legal-doc": LegalDoc;
@@ -322,8 +429,6 @@ export interface AtlasContentTypes {
   "home-care-course-fee": HomeCareCourseFee;
   "home-care-course": HomeCareCourse;
   "home-problems": HomeProblems;
-  "home-pricing-summary": HomePricingSummary;
-  "home-about": HomeAbout;
   "home-values": HomeValues;
   "home-hero": HomeHero;
   "footer-legal-link": FooterLegalLink;

@@ -13,17 +13,7 @@ import {
   type BlockTypeList,
 } from "./fields";
 import type { Bilingual, CmsBlock } from "./types";
-import {
-  supporterRates as fallbackSupporterRates,
-  type CourseRates,
-  type CourseRateRow,
-  type SupporterRates,
-  type SupporterRateRow,
-} from "@/constants/pricing";
-import { pricing as fallbackPricing, actionPlan as fallbackFees } from "@/constants/copy";
-
-type PricingCopy = typeof fallbackPricing;
-type FeesCopy = typeof fallbackFees;
+import type { CourseRates, SupporterRates } from "@/constants/pricing";
 
 // ---------------------------------------------------------------------------
 // Rates table — "rates" page (rate_course xN + rate_row xN), the
@@ -38,7 +28,9 @@ type FeesCopy = typeof fallbackFees;
 // `course_key` field both block types carry — the same key
 // `constants/pricing.ts` uses ("care" / "nursing"). Reordering the table in
 // the dashboard, or adding a 5th row to one course, no longer silently
-// reverts every yen figure on the site to constants/pricing.ts.
+// reverts every yen figure on the site to constants/pricing.ts — actually,
+// there IS no fallback anymore: if the CMS table is unavailable or malformed,
+// the rates pages surface an error rather than stale constants figures.
 // ---------------------------------------------------------------------------
 
 const RATES_TYPES = ["rate-course", "rate-row"] as const satisfies BlockTypeList;
@@ -59,49 +51,30 @@ type RateCourseTable = {
   rows: RateRow[];
 };
 
-const FALLBACK_TABLE: RateCourseTable[] = fallbackSupporterRates.map((course) => ({
-  key: course.key,
-  name: course.name,
-  rows: course.rows.map((row) => ({
-    key: row.key,
-    label: row.label,
-    detail: row.detail,
-    customer: row.customer,
-    supporter: row.supporter,
-  })),
-}));
-
-function mapRateRow(block: CmsBlock, courseKey: string, fallback: RateRow | undefined): RateRow {
-  const key = pickJa(block.data, "row_key", fallback?.key ?? "");
+function mapRateRow(block: CmsBlock, courseKey: string): RateRow {
+  const key = pickJa(block.data, "row_key");
   const context = `rates/${courseKey}/${key || "unknown-row"}`;
   return {
     key,
-    label: pickBi(block.data, "label", fallback?.label ?? EMPTY),
+    label: pickBi(block.data, "label"),
     detail: pickBiOptional(block.data, "detail"),
-    customer: pickNumber(block.data, "customer_price", fallback?.customer ?? 0, context),
-    supporter: pickNumber(block.data, "supporter_pay", fallback?.supporter ?? 0, context),
+    customer: pickNumber(block.data, "customer_price", context),
+    supporter: pickNumber(block.data, "supporter_pay", context),
   };
 }
 
 function mapRateCourse(courseBlock: CmsBlock, rowBlocks: CmsBlock[]): RateCourseTable {
-  // The course key comes first: it is what pairs this block with both its rows
-  // and its constants fallback, so it must be resolved before either is read.
-  const key = pickJa(courseBlock.data, "course_key", "");
-  const fallback = FALLBACK_TABLE.find((course) => course.key === key);
+  // The course key comes first: it is what pairs this block with its rows, so
+  // it must be resolved before any row is read.
+  const key = pickJa(courseBlock.data, "course_key");
 
   const rows = rowBlocks
-    .filter((block) => pickJa(block.data, "course_key", "") === key)
-    .map((block) =>
-      mapRateRow(
-        block,
-        key,
-        fallback?.rows.find((row) => row.key === pickJa(block.data, "row_key", "")),
-      ),
-    );
+    .filter((block) => pickJa(block.data, "course_key") === key)
+    .map((block) => mapRateRow(block, key));
 
   return {
     key,
-    name: pickBi(courseBlock.data, "name", fallback?.name ?? EMPTY),
+    name: pickBi(courseBlock.data, "name"),
     rows,
   };
 }
@@ -130,8 +103,18 @@ function mapRatesTable(blocks: CmsBlock[]): RateCourseTable[] | null {
 
 async function fetchRatesTable(): Promise<RateCourseTable[]> {
   const blocks = await getPageBlocks("rates");
-  if (!blocks) return FALLBACK_TABLE;
-  return mapRatesTable(blocks) ?? FALLBACK_TABLE;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getCourseRates/getSupporterRates("rates"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the rates pages are unavailable.',
+    );
+  }
+  const table = mapRatesTable(blocks);
+  if (!table) {
+    throw new Error(
+      '[cms] getCourseRates/getSupporterRates("rates"): page data did not match the expected block shape — no fallback content exists; the rates pages are unavailable.',
+    );
+  }
+  return table;
 }
 
 /** Deduped per-render (React `cache()`): every server component reading
@@ -157,7 +140,7 @@ export async function getCourseRates(): Promise<CourseRates[]> {
     key: course.key,
     name: course.name,
     rows: course.rows.map((row) =>
-      withOptionalDetail<CourseRateRow>({
+      withOptionalDetail<CourseRates["rows"][number]>({
         key: row.key,
         label: row.label,
         detail: row.detail,
@@ -175,7 +158,7 @@ export async function getSupporterRates(): Promise<SupporterRates[]> {
     key: course.key,
     name: course.name,
     rows: course.rows.map((row) =>
-      withOptionalDetail<SupporterRateRow>({
+      withOptionalDetail<SupporterRates["rows"][number]>({
         key: row.key,
         label: row.label,
         detail: row.detail,
@@ -192,6 +175,25 @@ export async function getSupporterRates(): Promise<SupporterRates[]> {
 
 const PRICING_TYPES = ["page-hero", "pricing-meta"] as const satisfies BlockTypeList;
 
+/**
+ * The CMS-sourced "pricing" page copy. Self-contained shape (the old
+ * `PricingCopy` was derived from `constants/copy.ts#pricing` — the shape is
+ * kept identical so consumers don't change), with the cancellation link now
+ * included as CMS fields instead of `constants/pricing.ts#cancellationLinkLabel`.
+ */
+export type PricingCopy = {
+  hero: {
+    heading: Bilingual;
+    body: Bilingual;
+  };
+  highlights: Bilingual[];
+  note: Bilingual;
+  cancellation: {
+    label: Bilingual;
+    href: string;
+  };
+};
+
 function mapPricingCopy(blocks: CmsBlock[]): PricingCopy | null {
   const groups = mapBlocksByType("pricing", blocks, PRICING_TYPES, reportUnexpectedContent);
   if (!groups) return null;
@@ -201,18 +203,32 @@ function mapPricingCopy(blocks: CmsBlock[]): PricingCopy | null {
 
   return {
     hero: {
-      heading: pickBi(heroBlock.data, "heading", fallbackPricing.hero.heading),
-      body: pickBi(heroBlock.data, "body", fallbackPricing.hero.body),
+      heading: pickBi(heroBlock.data, "heading"),
+      body: pickBi(heroBlock.data, "body"),
     },
-    highlights: pickLines(metaBlock.data, "highlights", fallbackPricing.highlights),
-    note: pickBi(metaBlock.data, "note", fallbackPricing.note),
+    highlights: pickLines(metaBlock.data, "highlights"),
+    note: pickBi(metaBlock.data, "note"),
+    cancellation: {
+      label: pickBi(metaBlock.data, "cancellation_label"),
+      href: pickJa(metaBlock.data, "cancellation_href"),
+    },
   };
 }
 
 async function fetchPricingCopy(): Promise<PricingCopy> {
   const blocks = await getPageBlocks("pricing");
-  if (!blocks) return fallbackPricing;
-  return mapPricingCopy(blocks) ?? fallbackPricing;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getPricingCopy("pricing"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the pricing page is unavailable.',
+    );
+  }
+  const copy = mapPricingCopy(blocks);
+  if (!copy) {
+    throw new Error(
+      '[cms] getPricingCopy("pricing"): page data did not match the expected block shape — no fallback content exists; the pricing page is unavailable.',
+    );
+  }
+  return copy;
 }
 
 /** Deduped per-render (React `cache()`). */
@@ -224,6 +240,22 @@ export const getPricingCopy = cache(fetchPricingCopy);
 
 const FEES_TYPES = ["page-hero", "fees-meta"] as const satisfies BlockTypeList;
 
+/** CMS-sourced "fees" page copy — shape identical to the old
+ * `typeof constants/copy.ts#actionPlan`. */
+export type FeesCopy = {
+  hero: {
+    heading: Bilingual;
+    body: Bilingual;
+  };
+  columns: {
+    service: Bilingual;
+    customer: Bilingual;
+    supporter: Bilingual;
+  };
+  note: Bilingual;
+  ctaHref: string;
+};
+
 function mapFeesCopy(blocks: CmsBlock[]): FeesCopy | null {
   const groups = mapBlocksByType("fees", blocks, FEES_TYPES, reportUnexpectedContent);
   if (!groups) return null;
@@ -233,23 +265,33 @@ function mapFeesCopy(blocks: CmsBlock[]): FeesCopy | null {
 
   return {
     hero: {
-      heading: pickBi(heroBlock.data, "heading", fallbackFees.hero.heading),
-      body: pickBi(heroBlock.data, "body", fallbackFees.hero.body),
+      heading: pickBi(heroBlock.data, "heading"),
+      body: pickBi(heroBlock.data, "body"),
     },
     columns: {
-      service: pickBi(metaBlock.data, "column_service", fallbackFees.columns.service),
-      customer: pickBi(metaBlock.data, "column_customer", fallbackFees.columns.customer),
-      supporter: pickBi(metaBlock.data, "column_supporter", fallbackFees.columns.supporter),
+      service: pickBi(metaBlock.data, "column_service"),
+      customer: pickBi(metaBlock.data, "column_customer"),
+      supporter: pickBi(metaBlock.data, "column_supporter"),
     },
-    note: pickBi(metaBlock.data, "note", fallbackFees.note),
-    ctaHref: pickJa(metaBlock.data, "cta_href", fallbackFees.ctaHref),
+    note: pickBi(metaBlock.data, "note"),
+    ctaHref: pickJa(metaBlock.data, "cta_href"),
   };
 }
 
 async function fetchFeesCopy(): Promise<FeesCopy> {
   const blocks = await getPageBlocks("fees");
-  if (!blocks) return fallbackFees;
-  return mapFeesCopy(blocks) ?? fallbackFees;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getFeesCopy("fees"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the fees page is unavailable.',
+    );
+  }
+  const copy = mapFeesCopy(blocks);
+  if (!copy) {
+    throw new Error(
+      '[cms] getFeesCopy("fees"): page data did not match the expected block shape — no fallback content exists; the fees page is unavailable.',
+    );
+  }
+  return copy;
 }
 
 /** Deduped per-render (React `cache()`). */

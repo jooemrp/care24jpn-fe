@@ -96,43 +96,15 @@ export function parseData(raw: string | undefined | null): Record<string, unknow
  *   `{ ja: "", en: "" }`.** An empty object is truthy — three call sites
  *   (`careCourse.fees[].note`, `rate_row.detail`, `hero.body`) render
  *   conditionally on a field's presence, so a stray empty object silently
- *   changes layout. This is the #1 risk flagged for this migration, and
- *   `merge.test.ts` pins it against all four ja/en emptiness combinations.
- *
- * J2: a MISSING `en` mirrors `ja` on purpose (see this function's block
- * comment above) — for the 7 legal documents in particular, JA text on
- * `/en/*` beats a blank page. What was missing is that it did so SILENTLY:
- * nothing logged when an entire page's content was quietly serving Japanese
- * on the English site.
+ *   changes layout.
+ * - **A MISSING `en` does NOT mirror `ja`.** No-fallback sweep: text on an
+ *   `/en/*` page is exactly what the API's EN translation carries. For a
+ *   field that has no EN translation row, `en` is `""` — the EN page renders
+ *   empty rather than Japanese copy. Non-localizable fields are the (safe)
+ *   exception: their value is seeded into base data only and read via `.ja`,
+ *   so an empty `en` never affects them.
  * `context` (optional 3rd arg, `"<slug>/<blockType>"`, set by
- * `shapePageBlocks` below) makes that observable — with one deliberate
- * scoping decision:
- *
- * This function CANNOT tell a genuinely-untranslated localizable field
- * (heading, body, label — should have gotten an EN value and didn't) apart
- * from a non-localizable field that legitimately has no translation row EVER
- * (href, icon, tone, course_key, tel, ...) — see this file's own "Contract"
- * note above: every string field is wrapped the same way regardless of which
- * kind it is. Warning per FIELD whenever `en` mirrors `ja` would therefore
- * warn on essentially every block, every render, for fields that are working
- * exactly as designed — which is precisely the kind of guessing-from-shape
- * this codebase already tried once and reversed (see `fields.ts#mapBlocksByType`'s
- * header comment on the field-signature heuristic it replaced).
- *
- * So the warning fires only at the BLOCK level, when `enData` (the block's
- * ENTIRE translation payload) is completely empty — meaning no EN
- * translation row exists for this block at all, not just one field. That is
- * a fact available from the wire with no schema knowledge required, and it
- * is exactly the shape of the H8 legal-document regression (a document
- * translator never created the EN row, so every field on that block mirrors
- * JA at once). Any block that has SOME EN data is assumed to be a normal mix
- * of localizable fields (translated) and non-localizable fields (never
- * translated by design) and stays silent, even though individual fields
- * within it may still be mirroring — narrowing false positives to zero at
- * the cost of not catching a single missed field inside an otherwise
- * translated block. `mirroredFields` lists every non-empty JA field name
- * affected, so the one warning per block still names the field(s), as
- * required.
+ * `shapePageBlocks`) labels any warning below.
  */
 export function mergeBlockData(
   baseData: Record<string, unknown>,
@@ -140,7 +112,6 @@ export function mergeBlockData(
   context?: string,
 ): ParsedBlockData {
   const merged: ParsedBlockData = {};
-  const mirroredFields: string[] = [];
 
   for (const key of Object.keys(baseData)) {
     const jaRaw = baseData[key];
@@ -153,9 +124,14 @@ export function mergeBlockData(
 
     const enRaw = enData[key];
     const ja = jaRaw;
-    const en = typeof enRaw === "string" ? enRaw : ja;
+    const en = typeof enRaw === "string" ? enRaw : "";
 
-    if (typeof enRaw !== "string" && ja !== "") mirroredFields.push(key);
+    if (en === "" && ja !== "" && context) {
+      warnOnce(
+        `mirror:${context}:${key}`,
+        `[cms:unexpected-content] ${context}: field "${key}" has no EN translation value — the /en/* page will render it EMPTY (no more JA mirroring). Add the EN value in the dashboard if the field is meant to be localizable; if it is non-localizable (href, icon, tone, ...), its value lives in base data only and is read via .ja, so this is harmless. This warning only prints once per key per process.`,
+      );
+    }
 
     merged[key] = ja === "" && en === "" ? undefined : ({ ja, en } satisfies Bilingual);
   }
@@ -168,13 +144,6 @@ export function mergeBlockData(
     const enRaw = enData[key];
     if (typeof enRaw !== "string") continue;
     merged[key] = enRaw === "" ? undefined : ({ ja: "", en: enRaw } satisfies Bilingual);
-  }
-
-  if (context && mirroredFields.length > 0 && Object.keys(enData).length === 0) {
-    warnOnce(
-      `mirror:${context}`,
-      `[cms:unexpected-content] ${context}: no EN translation row exists for this block at all — field(s) ${mirroredFields.map((f) => JSON.stringify(f)).join(", ")} are serving the JA text on /en/* pages with no visible difference. This is expected, working-as-designed behavior for fields that are never translated by nature (href, icon, tone, ...); if any of the field(s) named above are meant to carry real English copy, add the missing EN translation for this block in the dashboard. This warning only prints once per page+block-type per process.`,
-    );
   }
 
   return merged;

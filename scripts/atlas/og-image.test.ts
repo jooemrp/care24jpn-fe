@@ -5,16 +5,14 @@
  * `og:image`. `site` is page chrome and `rates` is internal price data; a card
  * on either would be a field in the dashboard that nothing ever reads.
  *
- * The second is a drift rule: the card filenames come from
- * `constants/seo.ts#fallbackOgImage`, so the picture Atlas serves is by
- * construction the picture the local fallback serves. A rename on one side
- * without the other must fail loudly here rather than quietly seed the old
- * card forever.
+ * The second is a drift rule: the card filenames live in `og-image.ts` itself
+ * (`CARD_FILE`), so the picture Atlas serves is the one the seed script
+ * uploads. A rename on one side without the other must fail loudly here
+ * rather than quietly seed the old card forever.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { ogImageForSlug, ogImageUrl } from "./og-image";
-import { fallbackOgImage } from "../../constants/seo";
 import type { MediaManifest } from "./lib";
 
 const manifest = {
@@ -48,9 +46,9 @@ test("an unknown slug gets nothing rather than a card by default", () => {
   assert.equal(ogImageForSlug("not-a-page", manifest), null);
 });
 
-test("the card filenames are the ones constants/seo.ts points at", () => {
-  assert.ok(fallbackOgImage.ja.endsWith("/og-card.png"));
-  assert.ok(fallbackOgImage.en.endsWith("/og-card-en.png"));
+test("the card filenames are the ones og-image.ts resolves", () => {
+  assert.ok(ogImageUrl(manifest, "ja").endsWith("/ja.png"));
+  assert.ok(ogImageUrl(manifest, "en").endsWith("/en.png"));
 });
 
 test("a card missing from the manifest fails loudly, with the fix in the message", () => {

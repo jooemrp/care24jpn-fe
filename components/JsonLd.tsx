@@ -1,5 +1,4 @@
 import { SITE_URL } from "@/constants/site";
-import { company as fallbackCompany } from "@/constants/copy";
 import { getCompany } from "@/features/cms/pages";
 import type { SiteContent } from "@/features/cms/site";
 import { escapeJsonForScript } from "@/features/seo/jsonLdEscape";
@@ -49,17 +48,14 @@ export default async function JsonLd({ data }: JsonLdProps) {
  * function is a thin wrapper that awaits the two CMS loaders and hands their
  * results across.
  *
- * `getCompany()` already falls back to `constants/copy.ts`'s `company`
- * internally when Atlas is unreachable or the page shape doesn't match.
- * `fallbackCompany` is passed through UNTRANSFORMED as a second, explicit
- * fallback: `features/seo/organization.ts#buildOrganizationJsonLd` uses it
- * only when a specific row lookup on `company.rows` misses (e.g. "Head
- * office" renamed in the dashboard while the rest of the page still comes
- * from Atlas), so a live edit that renames one label cannot make the whole
- * address block vanish. See that file for the exact resolution order.
+ * `getCompany()` has NO fallback layer: when Atlas is unreachable or the
+ * page shape doesn't match, it throws and the route surfaces an error, so
+ * `features/seo/organization.ts#buildOrganizationJsonLd` only ever sees
+ * CMS-sourced rows. A specific row lookup that misses (e.g. "Head office"
+ * renamed in the dashboard) resolves to an empty field, not a constants
+ * value — see that file for the exact resolution order.
  *
- * Fields intentionally OMITTED because the data isn't in constants/ or the
- * CMS:
+ * Fields intentionally OMITTED because the data isn't in the CMS:
  * - sameAs (social profiles) — no social links exist in the codebase.
  * - founder / employee — not tracked in constants.
  * - openingHours — contactPhone.note mentions 24/7 support, but that's a
@@ -70,9 +66,8 @@ export default async function JsonLd({ data }: JsonLdProps) {
  * `@type`, `name`, `legalName`, `url`, `logo`, `image`, `telephone`,
  * `address`, `foundingDate`, with `logo`/`image` omitted as a pair when no
  * logo URL is available). The output is NOT required to be byte-identical to
- * the pre-CMS version — that was true only while this function ignored the
- * CMS and emitted literals; now `legalName`, `address` and `foundingDate`
- * are expected to change the moment an editor changes the corresponding
+ * the pre-CMS version — `legalName`, `address` and `foundingDate` are
+ * expected to change the moment an editor changes the corresponding
  * `company_row` in the dashboard, and `logo`/`image` are new fields entirely.
  */
 export async function organizationJsonLd(site: SiteContent): Promise<Record<string, unknown>> {
@@ -84,6 +79,5 @@ export async function organizationJsonLd(site: SiteContent): Promise<Record<stri
     logoUrl: site.brand.logo,
     siteUrl: SITE_URL,
     companyRows: company.rows,
-    fallbackCompanyRows: fallbackCompany.rows,
   });
 }

@@ -4,12 +4,11 @@
  * languages: { ja, en, "x-default" } }, openGraph: { title, description,
  * url, siteName, locale, alternateLocale, images } }`.
  *
- * CMS-driven per decision D-3 (ST-05): awaits `getPageMeta(entry.atlasSlug)`
- * (ST-03) and, for each of title/description/og:image, uses the CMS value
- * when present, else the `constants/seo.ts` literal (title/description) or
- * the per-locale local fallback card (og:image,
- * `constants/seo.ts#fallbackOgImage` — see ST-OG). Every field still has
- * exactly one winner; there is no dual-source churn.
+ * Fully CMS-driven (no fallback layer): awaits `getPageMeta(entry.atlasSlug)`
+ * (features/cms/client.ts) and uses the CMS `seo.title`/`seo.description`/
+ * `seo.og_image` values for the route. There is NO `constants/seo.ts` literal
+ * and NO `fallbackOgImage` card anymore — a missing/empty CMS field renders
+ * as empty (no title uses the route's `seo` value only when present).
  *
  * `route` must be an absolute, unprefixed path ("/pricing", not "pricing"
  * or "/en/pricing") — the same shape `app/[lang]/layout.tsx` uses for its
@@ -30,7 +29,7 @@
 import type { Metadata } from "next";
 import type { Bilingual } from "@/constants/copy";
 import { SITE_URL } from "@/constants/site";
-import { fallbackOgImage, seoRoutes, type SeoRouteKey } from "@/constants/seo";
+import { seoRoutes, type SeoRouteKey } from "@/constants/seo";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
 // `getPageMeta` (features/cms/client.ts) and `getSite` (features/cms/site.ts)
@@ -137,8 +136,8 @@ export function withBrandSuffix(title: string, brandName: string): string {
  * `title.absolute` instead of a plain string — see that function's own
  * comment for why a plain string is the wrong shape once this is true.
  * Deliberately NOT a hardcoded route list: any route whose resolved title
- * (CMS-or-fallback) starts carrying the brand name gets this treatment
- * automatically, the same way any route that DROPS it stops getting it.
+ * (CMS) starts carrying the brand name gets this treatment automatically,
+ * the same way any route that DROPS it stops getting it.
  */
 export function titleContainsBrand(title: string, brandName: string): boolean {
   const normalize = (s: string) => s.replace(/\s+/g, "").toLowerCase();
@@ -146,27 +145,10 @@ export function titleContainsBrand(title: string, brandName: string): boolean {
 }
 
 /**
- * The `og:image`/`twitter:image` selection rule `pageMetadata()` applies:
- * the CMS value when present, else the per-locale local fallback card
- * (`constants/seo.ts#fallbackOgImage` — see ST-OG). Pulled out to its own
- * function, not left inlined in `pageMetadata()`, so `pageMetadata.test.ts`
- * can prove the fallback actually fires on an empty/missing CMS value
- * without a live Atlas read — `pageMetadata()` itself cannot be imported
- * outside Next's bundler (see the dynamic `import()` comment on its body).
- */
-export function resolveOgImage(
-  cmsOgImage: string | undefined,
-  lang: Lang,
-): string {
-  return cmsOgImage || fallbackOgImage[lang];
-}
-
-/**
  * Plain-data input to `buildPageMetadataFields` below: everything the final
- * `Metadata` object needs, already resolved (CMS-or-fallback title/
- * description/og-image, and the brand name off `getSite()`). Kept separate
- * from `pageMetadata()`'s CMS reads on purpose — see `buildPageMetadataFields`'s
- * own comment for why.
+ * `Metadata` object needs, already resolved (CMS title/description/og-image,
+ * and the brand name off `getSite()`). Kept separate from `pageMetadata()`'s
+ * CMS reads on purpose — see `buildPageMetadataFields`'s own comment for why.
  */
 type PageMetadataFieldsInput = {
   route: string;
@@ -222,15 +204,14 @@ export function buildPageMetadataFields({
   //
   // `brandAlreadyInTitle` is the second exception (CMS audit 0820, finding
   // N-brand-double / ST-U2 Tugas 2): some non-home routes' resolved title
-  // (CMS `page.seo.title`, which wins over the `constants/seo.ts` literal
-  // per D-3 above) already carries the brand name by itself — verified live
-  // for `terms-for-users`, `terms-for-care-supporters`, `compensation`,
-  // `cancellation-policy` (their Atlas titles are literal legal-document
-  // names starting with "Care24Japan"). Templating those would print the
-  // brand a second time, spelled a second way ("Care24Japan ... | Care 24
-  // Japan"). This is intentionally NOT a hardcoded route check — see
-  // `titleContainsBrand`'s own comment — so it also protects any OTHER
-  // route whose title starts carrying the brand later.
+  // (CMS `page.seo.title`) already carries the brand name by itself —
+  // verified live for `terms-for-users`, `terms-for-care-supporters`,
+  // `compensation`, `cancellation-policy` (their Atlas titles are literal
+  // legal-document names starting with "Care24Japan"). Templating those
+  // would print the brand a second time, spelled a second way ("Care24Japan
+  // ... | Care 24 Japan"). This is intentionally NOT a hardcoded route check
+  // — see `titleContainsBrand`'s own comment — so it also protects any
+  // OTHER route whose title starts carrying the brand later.
   const brandAlreadyInTitle = route !== "/" && titleContainsBrand(title, brandName);
   const ogTitle = route === "/" || brandAlreadyInTitle ? title : withBrandSuffix(title, brandName);
 
@@ -295,6 +276,10 @@ export async function pageMetadata({
   const entry = seoRoutes[key];
   const { route, atlasSlug } = entry;
 
+  // Resolve the page's own title/description. For legal routes the title IS
+  // the legal-document heading (from the CMS `legal-doc.heading` rich text —
+  // no `seo.title` literal exists for those routes); for every other route
+  // the title/description come from `getPageMeta` below.
   let title: string;
   let description: string;
 
@@ -310,15 +295,10 @@ export async function pageMetadata({
         ? `${legal.heading.ja} | ${legal.heading.en} — ${legal.brandName}`
         : `${legal.heading.en} — ${legal.brandName}`;
   } else {
-    title = entry.title[lang];
-    description = entry.description[lang];
+    title = "";
+    description = "";
   }
 
-  // D-3: CMS `page.seo` wins when present, else the literal above.
-  // `getPageMeta`/`getSite` never throw (see features/cms/client.ts /
-  // features/cms/site.ts) — both fall back to `constants/*.ts` on any
-  // failure, so this call cannot take a route's metadata down.
-  //
   // Dynamic, not static: both route through `features/cms/client.ts`/
   // `features/cms/site.ts`, which open with `import "server-only"` — a
   // package Next.js aliases only inside its own bundler and that is not
@@ -342,9 +322,16 @@ export async function pageMetadata({
     import("@/features/cms/site"),
   ]);
   const [cmsMeta, site] = await Promise.all([getPageMeta(atlasSlug), getSite()]);
-  if (cmsMeta?.title?.[lang]) title = cmsMeta.title[lang];
-  if (cmsMeta?.description?.[lang]) description = cmsMeta.description[lang];
-  const ogImage = resolveOgImage(cmsMeta?.ogImage?.[lang], lang);
+
+  // Route's own title/description: pure CMS. Legal routes keep their
+  // heading-based title (their route entry has no `seo.title` literal); the
+  // other routes use `getPageMeta` — a missing/empty CMS `seo.title` renders
+  // as an empty title, never stale constants text.
+  if (!("titleFrom" in entry)) {
+    if (cmsMeta?.title?.[lang]) title = cmsMeta.title[lang];
+    if (cmsMeta?.description?.[lang]) description = cmsMeta.description[lang];
+  }
+  const ogImage = cmsMeta?.ogImage?.[lang] ?? "";
 
   return buildPageMetadataFields({
     route,

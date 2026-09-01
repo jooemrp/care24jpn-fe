@@ -31,21 +31,22 @@
  * is. It is what renders when Atlas is unreachable, and what a brand-new page
  * gets before anyone sets its own.
  */
-import { basename } from "node:path";
-import { fallbackOgImage, seoRoutes } from "../../constants/seo";
+import { seoRoutes } from "../../constants/seo";
 import { requireMediaManifest, type MediaManifest } from "./lib";
 
 export type OgLang = "ja" | "en";
 
 /**
- * Card filenames come from `fallbackOgImage` rather than being typed again,
- * so the picture Atlas serves can never drift away from the picture the local
- * fallback serves. Rename the card in `constants/seo.ts` and this looks for
- * the new name and fails loudly, instead of silently seeding the old one.
+ * Card filenames, defined here rather than imported from a constants file:
+ * this is a SEED-TIME tool (not a render path), and the no-fallback sweep
+ * removed the `constants/seo.ts#fallbackOgImage` value it used to read.
+ * The files themselves (`public/images/og-card.png` / `og-card-en.png`) are
+ * uploaded to Atlas by `upload-media.ts`; assets that are actually media in
+ * the CMS may stay in public/images.
  */
 const CARD_FILE: Record<OgLang, string> = {
-  ja: basename(fallbackOgImage.ja),
-  en: basename(fallbackOgImage.en),
+  ja: "og-card.png",
+  en: "og-card-en.png",
 };
 
 export function ogImageUrl(manifest: MediaManifest, lang: OgLang): string {

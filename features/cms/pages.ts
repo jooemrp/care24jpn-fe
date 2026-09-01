@@ -6,22 +6,25 @@ import {
   mapCompany,
   mapServiceFlow,
   mapUseCase,
-  FALLBACK_USE_CASE,
+  type CompanyContent,
+  type ServiceFlowContent,
   type UseCaseContent,
 } from "./pages-map";
-import { serviceFlow as fallbackServiceFlow, company as fallbackCompany } from "@/constants/copy";
 
 /**
  * The blocks -> content mapping for "use-case"/"service-flow"/"company"
  * lives in `./pages-map` — a dependency-free module `pages-map.test.ts` can
  * actually import and exercise directly (no `server-only`, no bundler). This
  * file stays the thin server-only wrapper per page: fetch the page's blocks,
- * hand them to the pure mapping, fall back to `constants/copy.ts` when Atlas
- * is unreachable or the shape doesn't match, and dedupe the fetch per-request
- * with React's `cache()`. See `./pages-map` for the mappings themselves and
- * their full rationale.
+ * hand them to the pure mapping, dedupe the fetch per-request with React's
+ * `cache()`.
+ *
+ * No fallback layer: when a page is unreachable or its shape doesn't match,
+ * the loader throws — the route surfaces an error/404 instead of serving
+ * stale `constants/copy.ts` content. See `./pages-map` for the mappings
+ * themselves and their full rationale.
  */
-export type { UseCaseContent };
+export type { UseCaseContent, ServiceFlowContent, CompanyContent };
 
 // ---------------------------------------------------------------------------
 // use-case
@@ -29,8 +32,18 @@ export type { UseCaseContent };
 
 async function fetchUseCase(): Promise<UseCaseContent> {
   const blocks = await getPageBlocks("use-case");
-  if (!blocks) return FALLBACK_USE_CASE;
-  return mapUseCase(blocks, reportUnexpectedContent) ?? FALLBACK_USE_CASE;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getUseCase("use-case"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the page is unavailable.',
+    );
+  }
+  const mapped = mapUseCase(blocks, reportUnexpectedContent);
+  if (!mapped) {
+    throw new Error(
+      '[cms] getUseCase("use-case"): page data did not match the expected block shape — no fallback content exists; the page is unavailable.',
+    );
+  }
+  return mapped;
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls
@@ -41,10 +54,20 @@ export const getUseCase = cache(fetchUseCase);
 // service-flow
 // ---------------------------------------------------------------------------
 
-async function fetchServiceFlow(): Promise<typeof fallbackServiceFlow> {
+async function fetchServiceFlow(): Promise<ServiceFlowContent> {
   const blocks = await getPageBlocks("service-flow");
-  if (!blocks) return fallbackServiceFlow;
-  return mapServiceFlow(blocks, reportUnexpectedContent) ?? fallbackServiceFlow;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getServiceFlow("service-flow"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the page is unavailable.',
+    );
+  }
+  const mapped = mapServiceFlow(blocks, reportUnexpectedContent);
+  if (!mapped) {
+    throw new Error(
+      '[cms] getServiceFlow("service-flow"): page data did not match the expected block shape — no fallback content exists; the page is unavailable.',
+    );
+  }
+  return mapped;
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls
@@ -55,10 +78,20 @@ export const getServiceFlow = cache(fetchServiceFlow);
 // company
 // ---------------------------------------------------------------------------
 
-async function fetchCompany(): Promise<typeof fallbackCompany> {
+async function fetchCompany(): Promise<CompanyContent> {
   const blocks = await getPageBlocks("company");
-  if (!blocks) return fallbackCompany;
-  return mapCompany(blocks, reportUnexpectedContent) ?? fallbackCompany;
+  if (!blocks) {
+    throw new Error(
+      '[cms] getCompany("company"): page data unavailable (Atlas unreachable, not configured, or page missing) — no fallback content exists; the page is unavailable.',
+    );
+  }
+  const mapped = mapCompany(blocks, reportUnexpectedContent);
+  if (!mapped) {
+    throw new Error(
+      '[cms] getCompany("company"): page data did not match the expected block shape — no fallback content exists; the page is unavailable.',
+    );
+  }
+  return mapped;
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls
