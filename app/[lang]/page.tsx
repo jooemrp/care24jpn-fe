@@ -59,6 +59,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   // the CMS field it's actually describing.
   const userHrefIsExternal = /^https?:\/\//.test(home.apply.user.href);
   const staffHrefIsExternal = /^https?:\/\//.test(home.apply.staff.href);
+  const heroCtaIsExternal = /^https?:\/\//.test(home.hero.ctaPrimaryHref);
 
   return (
     <>
@@ -100,12 +101,23 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             )}
 
             <div className="mt-8 flex flex-col items-start gap-4">
-              <Link
-                href={localizeHref(home.hero.ctaPrimaryHref, lang)}
-                className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
-              >
-                {t(home.hero.ctaPrimary, lang)}
-              </Link>
+              {heroCtaIsExternal ? (
+                <a
+                  href={localizeHref(home.hero.ctaPrimaryHref, lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
+                >
+                  {t(home.hero.ctaPrimary, lang)}
+                </a>
+              ) : (
+                <Link
+                  href={localizeHref(home.hero.ctaPrimaryHref, lang)}
+                  className="rounded-full bg-primary px-8 py-3 font-medium text-white shadow-lg shadow-primary/20 transition hover:bg-primary-mid"
+                >
+                  {t(home.hero.ctaPrimary, lang)}
+                </Link>
+              )}
               <div className="rounded-2xl border border-border bg-surface/85 px-4 py-3 backdrop-blur-sm">
                 <p className="text-sm font-semibold text-heading">
                   {t(home.hero.areaBadge.main, lang)}
@@ -142,11 +154,11 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
       {/* Problems */}
       <Section surface heading={home.problems.heading} lang={lang}>
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
           {home.problems.items.map((item, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-white px-6 py-5 animate-fade-up"
+              className="flex min-h-[7rem] items-center gap-4 rounded-2xl border border-border bg-surface px-6 py-7 animate-fade-up"
               style={{ animationDelay: `${i * 60}ms` }}
             >
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
@@ -173,69 +185,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         </p>
       </div>
 
-      {/* Nursing course — now leads the service block.
-          Reworked away from the competitor's signature: the course name is a
-          pill rather than a solid rectangle, the rate label sits above the
-          figure instead of in a colour block welded to its left, and the whole
-          offer is one tinted card rather than loose chips on the page. */}
-      <Section id="service-details" lang={lang}>
-        {/* Lead-in heading */}
-        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
-          {t(home.nursingCourse.leadIn, lang)}
-        </h2>
-
-        {/* The coverage list runs as one tall column, so the price card sticks
-            below the header (130px tall) and stays in view the whole way
-            down it. `items-start` is required — a stretched or centred grid
-            item can't stick. */}
-        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
-          {/* Left: the offer, as a single card */}
-          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
-            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
-              {t(home.nursingCourse.badge, lang)}
-            </span>
-
-            <p className="mt-6 text-lg font-medium text-body">
-              {t(home.nursingCourse.price.label, lang)}
-              {t(home.nursingCourse.price.hours, lang)}
-            </p>
-            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-              <span className="text-5xl font-bold tabular-nums text-heading">
-                {t(home.nursingCourse.price.amount, lang)}
-              </span>
-              <span className="text-lg text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
-              <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
-            </p>
-            <p className="mt-1 text-lg text-body">
-              {t(home.nursingCourse.price.taxIncluded, lang)}
-            </p>
-
-            <p className="mt-6 text-lg text-muted">{t(home.nursingCourse.note, lang)}</p>
-          </div>
-
-          {/* Right: what the course covers */}
-          <div className="animate-fade-up [animation-delay:120ms]">
-            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
-              {t(home.nursingCourse.panel.heading, lang)}
-            </h3>
-            {/* One column: each item gets the full width, so labels wrap at
-                most twice and the icons stay on a single vertical rhythm. */}
-            <ul className="mt-6 flex flex-col gap-5">
-              {home.nursingCourse.panel.items.map((item, i) => (
-                <li key={i} className="flex items-center gap-3.5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
-                    <NursingIcon name={item.icon} />
-                  </span>
-                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Section>
-
-      {/* Care course — second, after the nursing course */}
-      <Section surface lang={lang}>
+      {/* Care course — leads the service block (matches /pricing order: care, then nursing). */}
+      <Section id="service-details" surface lang={lang}>
         {/* Lead-in heading, with the course description directly under it —
             it explains the heading, so it belongs there rather than floating
             beside the price. */}
@@ -272,6 +223,14 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </p>
               <p className="mt-1 text-lg text-body">
                 {t(home.careCourse.price.taxIncluded, lang)}
+              </p>
+              <p className="mt-5 text-lg">
+                <Link
+                  href={localizeHref("/pricing", lang)}
+                  className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
+                >
+                  {t(home.pricingDetailsLink, lang)}
+                </Link>
               </p>
             </div>
 
@@ -324,6 +283,74 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </ul>
             </div>
           ))}
+        </div>
+      </Section>
+
+      {/* Nursing course — second, after the care course.
+          Reworked away from the competitor's signature: the course name is a
+          pill rather than a solid rectangle, the rate label sits above the
+          figure instead of in a colour block welded to its left, and the whole
+          offer is one tinted card rather than loose chips on the page. */}
+      <Section lang={lang}>
+        {/* Lead-in heading */}
+        <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
+          {t(home.nursingCourse.leadIn, lang)}
+        </h2>
+
+        {/* The coverage list runs as one tall column, so the price card sticks
+            below the header (130px tall) and stays in view the whole way
+            down it. `items-start` is required — a stretched or centred grid
+            item can't stick. */}
+        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
+          {/* Left: the offer, as a single card */}
+          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
+            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
+              {t(home.nursingCourse.badge, lang)}
+            </span>
+
+            <p className="mt-6 text-lg font-medium text-body">
+              {t(home.nursingCourse.price.label, lang)}
+              {t(home.nursingCourse.price.hours, lang)}
+            </p>
+            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+              <span className="text-5xl font-bold tabular-nums text-heading">
+                {t(home.nursingCourse.price.amount, lang)}
+              </span>
+              <span className="text-lg text-muted">{t(home.nursingCourse.price.taxNote, lang)}</span>
+              <span className="text-lg font-medium text-body">{t(home.nursingCourse.price.unit, lang)}</span>
+            </p>
+            <p className="mt-1 text-lg text-body">
+              {t(home.nursingCourse.price.taxIncluded, lang)}
+            </p>
+
+            <p className="mt-6 text-lg">
+              <Link
+                href={localizeHref("/pricing", lang)}
+                className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
+              >
+                {t(home.pricingDetailsLink, lang)}
+              </Link>
+            </p>
+          </div>
+
+          {/* Right: what the course covers */}
+          <div className="animate-fade-up [animation-delay:120ms]">
+            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
+              {t(home.nursingCourse.panel.heading, lang)}
+            </h3>
+            {/* One column: each item gets the full width, so labels wrap at
+                most twice and the icons stay on a single vertical rhythm. */}
+            <ul className="mt-6 flex flex-col gap-5">
+              {home.nursingCourse.panel.items.map((item, i) => (
+                <li key={i} className="flex items-center gap-3.5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+                    <NursingIcon name={item.icon} />
+                  </span>
+                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Section>
 
@@ -537,16 +564,13 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           </h2>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <div className="flex flex-col items-center sm:items-start">
-              <a
-                href={`tel:${home.contact.phone.replace(/-/g, "")}`}
-                className="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading"
-              >
-                <PhoneIcon />
-                {home.contact.phone}
-              </a>
-              <p className="mt-1 text-sm text-muted">{t(home.contact.hours, lang)}</p>
-            </div>
+            <a
+              href={`tel:${home.contact.phone.replace(/-/g, "")}`}
+              className="flex items-center gap-2 text-3xl md:text-4xl font-bold text-heading"
+            >
+              <PhoneIcon />
+              {home.contact.phone}
+            </a>
             <Link
               href={localizeHref(home.contact.ctaHref, lang)}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
@@ -558,15 +582,22 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           {/* Certification: mics logo + BSI ISO 27001 badge */}
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
             <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
-              <Image
-                src={home.contact.micsLogo}
-                alt={t(home.contact.micsLogoAlt, lang)}
-                width={401}
-                height={140}
-                className="h-auto max-h-12 w-auto"
-              />
+              <a
+                href="https://mics.tokyo/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition opacity-90 hover:opacity-100"
+              >
+                <Image
+                  src={home.contact.micsLogo}
+                  alt={t(home.contact.micsLogoAlt, lang)}
+                  width={401}
+                  height={140}
+                  className="h-auto max-h-12 w-auto"
+                />
+              </a>
             </div>
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+            <div className="flex h-16 w-32 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
               <Image
                 src={home.contact.isoLogo}
                 alt={t(home.contact.isoLogoAlt, lang)}

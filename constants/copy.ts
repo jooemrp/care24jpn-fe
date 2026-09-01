@@ -413,8 +413,8 @@ export const home = {
     } satisfies Bilingual,
     panel: {
       heading: {
-        ja: "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\nなにかあったときに安心のコースです。",
-        en: "This course provides peace of mind, as staff with nursing qualifications will provide care when medical attention is needed and in case of any emergencies.",
+        ja: "スタッフによる医療ケアが必要な場合や、なにかあったときに安心のコースです。",
+        en: "When medical care by qualified staff is required — a course that gives peace of mind when something happens.",
       } satisfies Bilingual,
       items: [
         {
@@ -690,8 +690,13 @@ export const home = {
     } satisfies Bilingual,
     // Verbatim from app/[lang]/page.tsx:541 — non-localizable relative path,
     // resolved through `localizeHref()` at render time same as before.
-    ctaHref: "/service-flow",
+    ctaHref: "/contact",
   },
+
+  pricingDetailsLink: {
+    ja: "詳しくはこちら（料金ページ）をご確認ください。",
+    en: "For full pricing details, please click here.",
+  } satisfies Bilingual,
 };
 
 /* ------------------------------------------------------------------ */
