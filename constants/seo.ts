@@ -191,6 +191,15 @@ export const seoRoutes = {
       en: "Answers to common questions about Care24Japan's services, care supporters, pricing, and reservations — 24 questions plus 5 use-case scenarios.",
     },
   },
+  contact: {
+    route: "/contact",
+    atlasSlug: "contact",
+    title: { ja: "お問い合わせ", en: "Contact us" },
+    description: {
+      ja: "Care24Japanへのお問い合わせ。サービス・採用・その他のご相談を受け付けています。",
+      en: "Contact Care24Japan about services, care supporter recruitment, or other inquiries.",
+    },
+  },
 } satisfies Record<string, SeoRouteEntry>;
 
 export type SeoRouteKey = keyof typeof seoRoutes;
