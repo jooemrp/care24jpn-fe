@@ -1,12 +1,12 @@
 /**
- * Seeds the "site" page (15 blocks: chrome global — brand, contact phone,
- * shared CTA labels, UI chrome labels, error page labels, 4 nav items,
- * footer, 5 footer legal links) on the live Atlas workspace, sourced
- * verbatim from constants/copy.ts (`brand`, `nav`, `contactPhone`, `cta`,
- * `ui`, `footer`, `errorPage`).
+ * Seeds the "site" page (6 chrome blocks + nav items from
+ * constants/copy.ts#nav + footer + 5 footer legal links) on the live Atlas
+ * workspace, sourced verbatim from constants/copy.ts (`brand`, `nav`,
+ * `contactPhone`, `cta`, `ui`, `footer`, `errorPage`).
  *
- * Field <-> block-type mapping: the 15 blocks below (brand, contact_phone,
- * cta, ui, error_labels, nav_item x4, footer, footer_legal_link x5) are
+ * Field <-> block-type mapping: brand, contact_phone, cta, ui,
+ * error_labels, not_found_labels, nav_item (one per `nav` entry), footer,
+ * footer_legal_link x5 are
  * seeded with the exact field names declared for each block type in
  * scripts/atlas/schema.ts — that file is the authoritative field list per
  * block type, not this one. Block order (position 0..14) is NOT a
@@ -242,23 +242,27 @@ function buildBlocks(
     }),
   });
 
-  // positions 6..9 — nav_item x4, in array order (href is the scroll-spy /
-  // routing contract — non-localizable, JA/EN share the same value).
+  // nav_item — one block per constants/copy.ts#nav entry, in array order
+  // (href is the scroll-spy / routing contract — non-localizable, JA/EN
+  // share the same value).
+  const navStartPosition = 6;
   nav.forEach((item, i) => {
     blocks.push({
       block_type_id: blockTypeIds.nav_item,
       parent_id: null,
-      position: 6 + i,
+      position: navStartPosition + i,
       data: { href: item.href, label: item.label.ja },
       translations: en({ label: item.label.en }),
     });
   });
 
-  // position 10 — site_footer: description / legal
+  // site_footer: description / legal — empty strings when constants leave them
+  // blank (Aug 2026 revision removed the footer blurb).
+  const footerPosition = navStartPosition + nav.length;
   blocks.push({
     block_type_id: blockTypeIds.site_footer,
     parent_id: null,
-    position: 10,
+    position: footerPosition,
     data: {
       description: footer.description.ja,
       legal: footer.legal.ja,
@@ -266,7 +270,7 @@ function buildBlocks(
     translations: en({ description: footer.description.en, legal: footer.legal.en }),
   });
 
-  // positions 11..15 — footer_legal_link x5. The tokushoho entry (index 2,
+  // footer_legal_link x5. The tokushoho entry (index 2,
   // href "/tokushoho") carries use_legal_heading="tokushoho" and an empty
   // label in both locales — matching the `{ href, key: "tokushoho" }` union
   // member in constants/copy.ts#footer.legalLinks with no `label` at all.
@@ -275,7 +279,7 @@ function buildBlocks(
     blocks.push({
       block_type_id: blockTypeIds.footer_legal_link,
       parent_id: null,
-      position: 11 + i,
+      position: footerPosition + 1 + i,
       data: {
         href: link.href,
         label: isTokushoho ? "" : link.label.ja,

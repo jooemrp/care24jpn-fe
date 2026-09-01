@@ -82,7 +82,7 @@ const FALLBACK_IMAGES = {
 
 // ---------------------------------------------------------------------------
 // Assembly — the content types scripts/atlas/seed-home.ts writes. 10 section
-// types + 4 repeated item types; the seed currently produces 29 blocks, but
+// types + 4 repeated item types; the seed currently produces 30 blocks, but
 // neither the COUNT nor the ORDER is part of the contract any more: a 5th
 // service card or a 7th nursing feature added in the dashboard renders as
 // itself instead of reverting the entire home page to constants/copy.ts.
@@ -315,7 +315,19 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   // block, because the phone number is a site-wide value (also used in the
   // navbar/footer), not something an editor would set per-page on `home`.
   return {
-    rest: { hero, values, about, problems, nursingCourse, careCourse, examples, flow, apply },
+    rest: {
+      hero,
+      values,
+      about,
+      problems,
+      nursingCourse,
+      careCourse,
+      examples,
+      flow,
+      apply,
+      // Not a CMS block — always sourced from constants/copy.ts#home.
+      pricingDetailsLink: F.pricingDetailsLink,
+    },
     contactData: contactBlock.data,
   };
 }

@@ -4,10 +4,11 @@
  * hand) onto the live Atlas workspace, then publishes it.
  *
  * Order and field names (matching the block types declared in
- * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems, home_nursing_course,
- * home_nursing_feature x6, home_care_course, home_care_course_fee x3,
- * home_care_course_card x4, home_examples, home_example_case x3, home_flow,
- * home_flow_step x4, home_apply, home_contact.
+ * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems,
+ * home_nursing_course, home_nursing_feature x6, home_care_course,
+ * home_care_course_fee x3, home_care_course_card x4, home_examples,
+ * home_example_case x3, home_flow, home_flow_step x4, home_apply,
+ * home_contact.
  *
  * Idempotent: safe to run twice. `ensurePublishedPage` (scripts/atlas/lib.ts)
  * updates first and only creates on a 404, so an existing page is updated in
@@ -390,8 +391,8 @@ async function main(): Promise<void> {
     );
   }
 
-  if (blocks.length !== 29) {
-    throw new Error(`Expected 29 blocks, built ${blocks.length} — check the block list above.`);
+  if (blocks.length !== 30) {
+    throw new Error(`Expected 30 blocks, built ${blocks.length} — check the block list above.`);
   }
 
   const pageSlug = "home";
