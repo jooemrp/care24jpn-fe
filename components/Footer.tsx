@@ -1,8 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
-import type { Bilingual } from "@/constants/copy";
+import { home as homeCopy, type Bilingual } from "@/constants/copy";
 import type { SiteContent } from "@/features/cms/site";
+
+/**
+ * ISO 27001 (BSI) certification mark shown in the footer — a visual trust
+ * badge enlarged to roughly 2x its home-page footprint (revision sheet,
+ * item 6). The path mirrors `features/cms/home.ts` FALLBACK_IMAGES.isoLogo,
+ * so both the footer and the home contact section render the SAME file.
+ */
+const ISO_LOGO_SRC = "/images/iso27001-bsi.png";
 /**
  * Reference `width`/`height` for `public/images/logo.png` — the file
  * `site_brand.logo` falls back to, and (today) the only file it resolves
@@ -84,6 +92,24 @@ export default function Footer({
             </li>
           ))}
         </ul>
+
+        {/* Certification — ISO 27001 badge enlarged to ≈2x the home-page
+            footprint (revision sheet, item 6). White tile matches the home
+            contact section; mobile stacks, desktop sits beside the note. */}
+        <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white p-2 sm:h-20 sm:w-56">
+            <Image
+              src={ISO_LOGO_SRC}
+              alt={t(homeCopy.contact.isoLogoAlt, lang)}
+              width={257}
+              height={182}
+              className="h-auto max-h-full w-auto"
+            />
+          </div>
+          <p className="max-w-xl text-xs leading-relaxed text-muted">
+            {t(homeCopy.contact.isms, lang)}
+          </p>
+        </div>
       </div>
 
       <div className="border-t border-border">
