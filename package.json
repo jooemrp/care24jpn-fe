@@ -19,10 +19,12 @@
   "dependencies": {
     "@latellu/atlas-sdk": "^0.3.0",
     "@tabler/icons-react": "^3.46.0",
+    "@tanstack/react-form": "^1.33.5",
     "next": "^16.3.0",
     "nextjs-toploader": "^3.9.17",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@latellu/atlas-cli": "^0.1.5",
