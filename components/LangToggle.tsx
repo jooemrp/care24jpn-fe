@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
 /**
@@ -10,6 +11,12 @@ import { localizeHref, type Lang } from "@/features/lang/i18n";
  * Stays a `<button>` (not a `<Link>`) so it can compute the sibling-language
  * path from the *current* pathname at click time via `localizeHref`, rather
  * than baking a static href.
+ *
+ * `useRouter` comes from `nextjs-toploader/app` (not `next/navigation`) so
+ * this programmatic push also drives the top progress bar mounted in
+ * `app/[lang]/layout.tsx` — its shim starts the bar when the pushed href
+ * differs from the current pathname, and completes it once the new path
+ * commits.
  *
  * `label`, `shortJa` and `shortEn` are pre-resolved by the Server Component
  * caller — Navbar/Footer hold `site` (CMS-backed, constants fallback), this

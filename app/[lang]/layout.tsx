@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import NextTopLoader from "nextjs-toploader";
 import "../../styles/globals.css";
 import { notoSansJP } from "../fonts";
 import AppShell from "@/components/AppShell";
@@ -144,6 +145,19 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
         <JsonLd data={organizationJsonLd(site)} />
+        {/* Thin top loading bar — feedback that a client-side navigation is
+            in flight. Every route under [lang] is force-dynamic and fetches
+            the CMS no-store, so a click can take a moment before the new
+            page commits; the bar makes that wait visible (nextjs-toploader
+            intercepts internal <Link>/anchor clicks itself, and LangToggle's
+            router.push is covered via nextjs-toploader/app's useRouter). */}
+        <NextTopLoader
+          color="#2b7ec1"
+          height={3}
+          showSpinner={false}
+          shadow="0 0 8px rgba(43,126,193,0.6)"
+          zIndex={60}
+        />
         {/* `AppShell` (a Server Component) survived by definition whenever
             this renders — see error-labels-provider.tsx's doc comment on why
             `app/[lang]/error.tsx` can never activate from a failure inside
