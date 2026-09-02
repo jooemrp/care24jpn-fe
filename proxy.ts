@@ -34,5 +34,8 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)"],
+  // `api` (route handlers under /api/*) must bypass the i18n rewrite: the
+  // contact proxy POSTs to the bare /api/contact and must not be rewritten
+  // to /ja/api/contact (which would also re-enter this middleware).
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

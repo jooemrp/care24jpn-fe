@@ -2,11 +2,13 @@
  * Care 24 Japan — Contact page copy & form configuration.
  *
  * Source: "【English explanation】Care 24 Japan Webpage revision 26th Aug 2026.pdf"
- * Section 6 — Contact page (mailto v1) + Image Ref 7 two-column layout.
+ * Section 6 — Contact page + Image Ref 7 two-column layout.
  *
  * RULES:
  * - Never hardcode contact form copy inside components — import from this file.
- * - `mailto` is the destination address for the mailto: handoff (no server endpoint).
+ * - `mailto` (below) is informational only: the form no longer hands off to
+ *   the visitor's mail client. Submissions POST to /api/contact, which the
+ *   backend's contact module delivers to `info@care24.jp` by SMTP.
  */
 
 import type { Bilingual } from "./copy";
@@ -24,6 +26,14 @@ export type ContactPageFields = {
   email: Bilingual;
   message: Bilingual;
   submit: Bilingual;
+};
+
+/** Copy for the inline submission status rendered inside ContactForm. */
+export type ContactFormStatus = {
+  sending: Bilingual;
+  success: Bilingual;
+  error: Bilingual;
+  rateLimited: Bilingual;
 };
 
 export const contactPage = {
@@ -89,10 +99,29 @@ export const contactPage = {
     phone: { ja: "電話番号", en: "Phone Number" },
     email: { ja: "メールアドレス", en: "Email Address" },
     message: { ja: "問い合わせ内容", en: "Message / Details" },
-    submit: { ja: "メールアプリで送信", en: "Send via email app" },
+    submit: { ja: "送信する", en: "Send" },
   } satisfies ContactPageFields,
+  // Submission status copy rendered inside the form after the user hits Send.
+  // The mailto wording is gone: submissions now POST to the site's contact
+  // proxy (/api/contact), which relays to the backend, which emails
+  // info@care24.jp by SMTP.
+  status: {
+    sending: { ja: "送信中…", en: "Sending…" } satisfies Bilingual,
+    success: {
+      ja: "お問い合わせを受け付けました。担当者より折り返しご連絡いたします。",
+      en: "Your inquiry was received. A representative will get back to you.",
+    } satisfies Bilingual,
+    error: {
+      ja: "送信に失敗しました。しばらくしてから再度お試しください。",
+      en: "Failed to send. Please try again in a moment.",
+    } satisfies Bilingual,
+    rateLimited: {
+      ja: "短時間に送信が多すぎます。しばらくしてから再度お試しください。",
+      en: "Too many submissions. Please try again later.",
+    } satisfies Bilingual,
+  },
   requiredNote: {
-    ja: "すべて必須項目です。送信するとメールアプリが開きます。",
-    en: "All fields are required. Submitting opens your email app.",
+    ja: "すべて必須項目です。",
+    en: "All fields are required.",
   } satisfies Bilingual,
 };
