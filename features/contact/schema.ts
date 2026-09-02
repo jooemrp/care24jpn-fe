@@ -13,7 +13,15 @@ export const contactCategories = ["services", "recruitment", "other"] as const;
 const phonePattern = /^[0-9+\-() \u3000]+$/;
 
 export const contactFormValuesSchema = z.object({
-  category: z.enum(contactCategories, { message: "category" }),
+  // Draft input may be "" (empty select); refine narrows output to the enum.
+  category: z
+    .string()
+    .min(1, { message: "category" })
+    .refine(
+      (value): value is (typeof contactCategories)[number] =>
+        (contactCategories as readonly string[]).includes(value),
+      { message: "category" },
+    ),
   name: z
     .string()
     .trim()
@@ -36,8 +44,9 @@ export const contactFormValuesSchema = z.object({
     .trim()
     .min(10, { message: "messageMin" })
     .max(4000, { message: "messageMax" }),
-  company: z.string().max(120).default(""),
-  company_name: z.string().max(120).default(""),
+  // Always required strings (forms send ""; API clients must send strings too).
+  company: z.string().max(120),
+  company_name: z.string().max(120),
 });
 
 export const contactPayloadSchema = contactFormValuesSchema.extend({
@@ -45,6 +54,8 @@ export const contactPayloadSchema = contactFormValuesSchema.extend({
 });
 
 export type ContactFormValues = z.infer<typeof contactFormValuesSchema>;
+/** Form draft / defaultValues shape (category may be empty before submit). */
+export type ContactFormInput = z.input<typeof contactFormValuesSchema>;
 export type ContactPayload = z.infer<typeof contactPayloadSchema>;
 
 export type ContactFieldErrorTable = {

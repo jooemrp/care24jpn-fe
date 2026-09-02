@@ -84,6 +84,18 @@ test("rejects API payload without form_load_at", () => {
   assert.equal(result.success, false);
 });
 
+test("rejects omitted company honeypot fields", () => {
+  const withoutHoneypots = {
+    category: validForm.category,
+    name: validForm.name,
+    phone: validForm.phone,
+    email: validForm.email,
+    message: validForm.message,
+  };
+  const result = contactFormValuesSchema.safeParse(withoutHoneypots);
+  assert.equal(result.success, false);
+});
+
 test("fieldErrorMessage maps keys for ja and en", () => {
   const table = {
     required: { ja: "必須", en: "Required" },

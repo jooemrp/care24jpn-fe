@@ -40,7 +40,7 @@ import { statusCopyFor, submitContact, type ContactSubmitResult } from "@/featur
 import {
   contactFormValuesSchema,
   fieldErrorMessage,
-  type ContactFormValues,
+  type ContactFormInput,
 } from "@/features/contact/schema";
 
 type ContactFormProps = {
@@ -64,7 +64,7 @@ const emptyFormValues = {
   message: "",
   company: "",
   company_name: "",
-} as unknown as ContactFormValues;
+} satisfies ContactFormInput;
 
 /** Event-time clock — kept module-level so React purity lint allows it in submit. */
 function nowMs(): number {
@@ -101,12 +101,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
   const form = useForm({
     defaultValues: emptyFormValues,
     validators: {
-      // Zod `.default()` makes company* optional on input; form values always provide strings.
-      onSubmit: contactFormValuesSchema as typeof contactFormValuesSchema & {
-        "~standard": {
-          types: { input: ContactFormValues; output: ContactFormValues };
-        };
-      },
+      onSubmit: contactFormValuesSchema,
     },
     onSubmit: async ({ value }) => {
       // Cooldown: ignore scripted resubmits within the same second.
@@ -123,8 +118,10 @@ export default function ContactForm({ lang }: ContactFormProps) {
 
       setStatus("sending");
 
+      // Re-parse so Zod trims/narrows output (TanStack keeps draft input values).
+      const parsed = contactFormValuesSchema.parse(value);
       const result = await submitContact({
-        ...value,
+        ...parsed,
         form_load_at: formLoadStartedAtRef.current!,
       });
 
@@ -144,6 +141,9 @@ export default function ContactForm({ lang }: ContactFormProps) {
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
+        // Clear stale success/error before validate+submit so a failed
+        // validation alone does not leave the previous status copy visible.
+        setStatus("idle");
         void form.handleSubmit();
       }}
       noValidate
@@ -204,7 +204,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
                 name={field.name}
                 value={field.state.value}
                 onBlur={field.handleBlur}
-                onChange={(event) => field.handleChange(event.target.value as ContactFormValues["category"])}
+                onChange={(event) => field.handleChange(event.target.value)}
                 className={fieldClassName}
                 aria-required="true"
                 aria-invalid={hasError}
