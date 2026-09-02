@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
   },
   images: {
+    // Bypass Vercel Image Optimization (`/_next/image`). That path returns
+    // 402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED once the plan quota is
+    // exhausted — blank hero/icons on prod, worse on mobile (uncached widths).
+    // With this flag, next/image still handles layout/sizes/priority but the
+    // browser fetches /images/* or Atlas S3 URLs directly.
+    unoptimized: true,
     // Every image on the site now comes from an Atlas `image` field, and Atlas
     // hands back the media's public S3 URL (its delivery API expands the media
     // id before responding). Without this allow-list `next/image` answers 400
