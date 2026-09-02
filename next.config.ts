@@ -51,6 +51,44 @@ const nextConfig: NextConfig = {
     // remotePatterns still bound what can be fetched.
     dangerouslyAllowLocalIP: true,
   },
+  // Domain-provider scan on www.care24.jp: X-Frame-Options / nosniff / CSP
+  // were missing, and /robots.txt shipped Access-Control-Allow-Origin: *.
+  // Applied here (Vercel/Next), not Apache/Nginx. CSP keeps 'unsafe-inline'
+  // for style + script because the app uses React style={{}} and inline
+  // JSON-LD; 'unsafe-eval' is intentionally omitted.
+  async headers() {
+    const contentSecurityPolicy = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+      "img-src 'self' data: blob: https://horizoon.s3.ap-southeast-1.amazonaws.com",
+      "font-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline'",
+      "connect-src 'self'",
+    ].join("; ");
+
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
+        ],
+      },
+    ];
+  },
   // /terms (Care Supporter doc) is retired but already indexed publicly —
   // send both locales to their new home instead of 404ing. `redirects()`
   // runs before proxy.ts's i18n rewrite (see docs), so this fires first and
