@@ -120,6 +120,36 @@ export const contactPage = {
       en: "Too many submissions. Please try again later.",
     } satisfies Bilingual,
   },
+  errors: {
+    required: {
+      ja: "必須項目です。",
+      en: "This field is required.",
+    },
+    category: {
+      ja: "問い合わせ種別を選択してください。",
+      en: "Please select an inquiry category.",
+    },
+    email: {
+      ja: "有効なメールアドレスを入力してください。",
+      en: "Please enter a valid email address.",
+    },
+    phone: {
+      ja: "電話番号は8〜24文字で、数字と一般的な記号のみ使用できます。",
+      en: "Phone must be 8–24 characters using digits and common symbols only.",
+    },
+    messageMin: {
+      ja: "問い合わせ内容は10文字以上で入力してください。",
+      en: "Please enter at least 10 characters.",
+    },
+    messageMax: {
+      ja: "問い合わせ内容が長すぎます。",
+      en: "Message is too long.",
+    },
+    nameMax: {
+      ja: "氏名が長すぎます。",
+      en: "Name is too long.",
+    },
+  },
   requiredNote: {
     ja: "すべて必須項目です。",
     en: "All fields are required.",
