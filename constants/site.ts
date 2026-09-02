@@ -2,7 +2,7 @@
  * Care 24 Japan — canonical site origin.
  *
  * Single source of truth for the deployed base URL. No trailing slash.
- * Used by metadata (metadataBase), sitemap.ts, robots.ts, and JSON-LD.
+ * Used by metadata (metadataBase), sitemap.ts, robots.txt/route, and JSON-LD.
  *
  * Read from `NEXT_PUBLIC_SITE_URL` so every environment can point at its
  * own domain. In production this is required: a missing value would mean
