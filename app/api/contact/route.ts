@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { contactPayloadSchema } from "@/features/contact/schema";
 
 /**
  * Route handler that receives the contact form's browser fetch (public site,
@@ -13,9 +14,10 @@ import type { NextRequest } from "next/server";
  * forces submissions through this same-origin proxy rather than calling the
  * Atlas API directly.
  *
- * This is a thin relay only: every security decision (honeypot, timing,
- * validation, rate limiting, origin gate, HTML-escaping, SMTP) lives in the
- * backend's contact usecase. This handler adds no caching and stores nothing.
+ * Shape validation (Zod) runs here so malformed bodies are rejected before
+ * relay; security gates (honeypot, timing, rate limiting, origin gate,
+ * HTML-escaping, SMTP) remain in the backend contact usecase. No caching and
+ * nothing is stored.
  */
 export const dynamic = "force-dynamic";
 
@@ -50,6 +52,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const parsed = contactPayloadSchema.safeParse(payload);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { success: false, message: "Invalid request body." },
+      { status: 400 },
+    );
+  }
+
   const origin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
 
   try {
@@ -60,7 +70,7 @@ export async function POST(request: NextRequest) {
         "X-API-Key": apiKey,
         ...(origin ? { Origin: origin } : {}),
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(parsed.data),
       // Never cache and never reuse a stale connection across visitors whose
       // Origin gate differs.
       cache: "no-store",

@@ -2,9 +2,8 @@
  * Client helper for the public contact form flow.
  *
  * Responsibilities:
- *  - `ContactPayload` — the exact JSON shape the backend contact usecase
- *    expects (see backend/internal/contact/dto/contact.go). Field names are
- *    fixed: they are the contract with the Go DTO.
+ *  - `ContactPayload` — inferred from `./schema` (Zod); mirrors the backend
+ *    contact DTO (backend/internal/contact/dto/contact.go).
  *  - `submitContact` — POSTs to the same-origin proxy (app/api/contact),
  *    which appends the server-side Atlas delivery key and relays to the
  *    backend's public contact endpoint. Returns a stable status for the UI;
@@ -18,23 +17,11 @@
  */
 import { contactPage } from "@/constants/contact";
 import type { Lang } from "@/features/lang/i18n";
+import type { ContactPayload } from "./schema";
 import { statusCopyFor as pureStatusCopyFor, type ContactSubmitResult } from "./status-copy";
 
 export type { ContactSubmitResult } from "./status-copy";
-
-export type ContactPayload = {
-  category: string;
-  name: string;
-  phone: string;
-  email: string;
-  message: string;
-  /** Honeypot — hidden input a human never fills; the backend rejects any submission carrying it. */
-  company: string;
-  /** Reserved — bots that spray every field trip the backend's reject path. */
-  company_name: string;
-  /** Epoch millis captured when the form finished rendering (timing trap). */
-  form_load_at: number;
-};
+export type { ContactPayload };
 
 /**
  * POSTs the submission to the same-origin proxy. Returns a stable status for
