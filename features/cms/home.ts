@@ -323,6 +323,8 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   const nursingCourse: Home["nursingCourse"] = {
     leadIn: pickBi(nursingCourseBlock.data, "lead_in", F.nursingCourse.leadIn),
     badge: pickBi(nursingCourseBlock.data, "badge", F.nursingCourse.badge),
+    tagline: pickBi(nursingCourseBlock.data, "tagline", F.nursingCourse.tagline),
+    taglineSub: pickBi(nursingCourseBlock.data, "tagline_sub", F.nursingCourse.taglineSub),
     price: {
       label: pickBi(nursingCourseBlock.data, "price_label", F.nursingCourse.price.label),
       hours: pickBi(nursingCourseBlock.data, "price_hours", F.nursingCourse.price.hours),

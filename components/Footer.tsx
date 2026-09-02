@@ -93,17 +93,16 @@ export default function Footer({
           ))}
         </ul>
 
-        {/* Certification — ISO 27001 badge enlarged to ≈2x the home-page
-            footprint (revision sheet, item 6). White tile matches the home
-            contact section; mobile stacks, desktop sits beside the note. */}
+        {/* Certification — ISO 27001 badge enlarged; white tile hugs the badge
+            so the padding does not read as a wide empty plate. */}
         <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white p-2 sm:h-20 sm:w-56">
+          <div className="flex h-24 w-auto shrink-0 items-center justify-center rounded-lg bg-white p-1">
             <Image
               src={ISO_LOGO_SRC}
               alt={t(homeCopy.contact.isoLogoAlt, lang)}
               width={257}
               height={182}
-              className="h-auto max-h-full w-auto"
+              className="h-[5.5rem] w-auto"
             />
           </div>
           <p className="max-w-xl text-xs leading-relaxed text-muted">

@@ -61,7 +61,7 @@ const ASSETS: Asset[] = [
     prompt:
       `${BRAND} Ultra-wide full-bleed website hero photograph, 3:2, edge-to-edge scene with NO blank white void. ` +
       `Continuous bright modern living room across the FULL frame (sofa, soft curtains, daylight). ` +
-      `Subjects (Japanese female caregiver in soft navy scrubs + elderly Japanese woman) sit toward the RIGHT half, ` +
+      `Subjects (Japanese female caregiver in CASUAL cream knit sweater — NO medical scrubs, NO nurse uniform — + elderly Japanese woman) sit toward the RIGHT half, ` +
       `smiling. LEFT third stays soft and uncluttered (out-of-focus room / curtain texture) but MUST still show ` +
       `photographic content — never a hard cut to empty white, never a vertical crop edge. ` +
       `Cool fresh daylight, natural exposure (not overexposed). Absolutely no written characters.`,

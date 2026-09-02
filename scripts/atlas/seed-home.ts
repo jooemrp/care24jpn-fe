@@ -266,6 +266,8 @@ async function main(): Promise<void> {
     const split = splitBilingual({
       lead_in: home.nursingCourse.leadIn,
       badge: home.nursingCourse.badge,
+      tagline: home.nursingCourse.tagline,
+      tagline_sub: home.nursingCourse.taglineSub,
       price_label: home.nursingCourse.price.label,
       price_hours: home.nursingCourse.price.hours,
       price_amount: home.nursingCourse.price.amount,

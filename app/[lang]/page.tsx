@@ -307,7 +307,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       {/* Answer to the problems above — inverted pyramid, redrawn as an
           original shape (softly concave "funnel" sides, rounded corners,
           sakura gradient) rather than the competitor's flat sharp triangle. */}
-      <div className="flex flex-col items-center bg-surface px-6 pb-12 pt-2 md:pb-16">
+      <div className="flex flex-col items-center bg-surface px-6 pb-8 pt-2 md:pb-10">
         <PyramidStatement
           badge={t(home.hero.badge, lang)}
           resolve={t(home.hero.resolve, lang)}
@@ -325,7 +325,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
           {t(home.careCourse.leadIn, lang)}
         </h2>
-        <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-body animate-fade-up">
+        <p className="mx-auto mt-5 max-w-3xl whitespace-pre-line text-center text-lg leading-relaxed text-body animate-fade-up">
           {t(home.careCourse.tagline, lang)}
           {t(home.careCourse.taglineSub, lang)}
         </p>
@@ -428,6 +428,10 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
         <h2 className="whitespace-pre-line text-center text-2xl md:text-3xl font-bold leading-snug text-heading animate-fade-up">
           {t(home.nursingCourse.leadIn, lang)}
         </h2>
+        <p className="mx-auto mt-5 max-w-3xl whitespace-pre-line text-center text-lg leading-relaxed text-body animate-fade-up">
+          {t(home.nursingCourse.tagline, lang)}
+          {t(home.nursingCourse.taglineSub, lang)}
+        </p>
 
         {/* The coverage list runs as one tall column, so the price card sticks
             below the header (130px tall) and stays in view the whole way
@@ -695,7 +699,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
       <Section surface lang={lang}>
         <div
           id="contact"
-          className="rounded-2xl bg-primary-light px-6 py-12 text-center md:py-16 animate-fade-up scroll-mt-36"
+          className="rounded-2xl bg-primary-light px-6 py-8 text-center md:py-12 animate-fade-up scroll-mt-36"
         >
           <p className="text-sm font-medium text-primary">
             {t(home.contact.leadInOrnamentStart, lang)} {t(home.contact.leadIn, lang)} {t(home.contact.leadInOrnamentEnd, lang)}
@@ -722,7 +726,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
           {/* Certification: mics logo + BSI ISO 27001 badge */}
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
-            <div className="flex h-16 w-40 shrink-0 items-center justify-center rounded-lg bg-white px-4 py-2">
+            <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2">
               <a
                 href="https://mics.tokyo/"
                 target="_blank"
@@ -734,17 +738,17 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
                   alt={t(home.contact.micsLogoAlt, lang)}
                   width={401}
                   height={140}
-                  className="h-auto max-h-12 w-auto"
+                  className="h-auto max-h-14 w-auto"
                 />
               </a>
             </div>
-            <div className="flex h-16 w-32 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+            <div className="flex h-20 w-auto shrink-0 items-center justify-center rounded-lg bg-white p-1">
               <Image
                 src={home.contact.isoLogo}
                 alt={t(home.contact.isoLogoAlt, lang)}
                 width={257}
                 height={182}
-                className="h-auto max-h-full w-auto"
+                className="h-[4.5rem] w-auto"
               />
             </div>
             <p className="text-left text-xs leading-relaxed text-muted">

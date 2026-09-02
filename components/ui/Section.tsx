@@ -22,11 +22,11 @@ export default function Section({ id, heading, children, surface = false, classN
     // underneath it.
     <section
       id={id}
-      className={`${surface ? "bg-surface" : ""} py-12 md:py-20 ${id ? "scroll-mt-36" : ""} ${className}`}
+      className={`${surface ? "bg-surface" : ""} py-8 md:py-12 ${id ? "scroll-mt-36" : ""} ${className}`}
     >
       <div className="max-w-5xl mx-auto px-6">
         {heading && (
-          <header className="mb-10 animate-fade-up">
+          <header className="mb-6 md:mb-8 animate-fade-up">
             <HeadingTag className="text-3xl font-bold text-heading mb-1">{t(heading, lang)}</HeadingTag>
           </header>
         )}

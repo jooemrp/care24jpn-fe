@@ -167,8 +167,8 @@ export const home = {
       en: "We will assist you with everything from housework to personal care, according to your needs.",
     } satisfies Bilingual,
     heading: {
-      ja: "あなたのそばに、安心のサポートを",
-      en: "Reliable Support, Right by Your Side.",
+      ja: "あなたのそばに、\n安心のサポートを",
+      en: "Reliable Support,\nRight by Your Side.",
     } satisfies Bilingual,
     body: { ja: "", en: "" } satisfies Bilingual,
     /** Hero-only CTA labels — the shared `cta` block still drives the header. */
@@ -333,12 +333,12 @@ export const home = {
     } satisfies Bilingual,
     badge: { ja: "介護コース", en: "Caregiving course" } satisfies Bilingual,
     tagline: {
-      ja: "介護士資格を保有したスタッフが身の回りのケアや見守り、外出の付き添いなど",
-      en: "Staff members holding caregiving qualifications provide personal care, supervision, and accompany residents on outings.",
+      ja: "介護士資格を保有したスタッフが身の回りのケアや見守り、\n",
+      en: "Staff members holding caregiving qualifications provide personal care, supervision,\n",
     } satisfies Bilingual,
     taglineSub: {
-      ja: "幅広くサポートするコースです。",
-      en: "This course provides comprehensive support.",
+      ja: "外出の付き添いなど幅広くサポートするコースです。",
+      en: "and accompany residents on outings. This course provides comprehensive support.",
     } satisfies Bilingual,
     // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en" —
     // matches `formatYen`'s EN output on the rates table, ST-U1). Synced
@@ -445,6 +445,14 @@ export const home = {
       en: "For those who require medical care, we can arrange a registered nurse.",
     } satisfies Bilingual,
     badge: { ja: "看護コース", en: "Nursing course" } satisfies Bilingual,
+    tagline: {
+      ja: "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\n",
+      en: "Staff with nursing qualifications provide care when medical attention is needed,\n",
+    } satisfies Bilingual,
+    taglineSub: {
+      ja: "なにかあったときに安心のコースです。",
+      en: "and peace of mind when something unexpected happens.",
+    } satisfies Bilingual,
     // ST-U2 Tugas 3: ¥ -> JPY for EN readers (same decision as
     // careCourse.price above). Synced with Atlas (home page,
     // home-nursing-course block, en.price_amount / en.price_tax_included).

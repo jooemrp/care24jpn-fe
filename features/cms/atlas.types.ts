@@ -152,6 +152,8 @@ export interface HomeNursingFeature {
 export interface HomeNursingCourse {
   lead_in?: string; // localizable
   badge?: string; // localizable
+  tagline?: string; // localizable
+  tagline_sub?: string; // localizable
   price_label?: string; // localizable
   price_hours?: string; // localizable
   price_amount?: string; // localizable

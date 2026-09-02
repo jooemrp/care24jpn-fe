@@ -334,8 +334,8 @@
               "en": "Top-class caregivers support the nursing and daily-living care that long-term care insurance cannot cover."
             },
             "tagline": {
-              "ja": "介護士資格を保有したスタッフが身の回りのケアや見守り、外出の付き添いなど",
-              "en": "Staff members holding caregiving qualifications provide personal care, supervision, and accompany residents on outings."
+              "ja": "介護士資格を保有したスタッフが身の回りのケアや見守り、\n",
+              "en": "Staff members holding caregiving qualifications provide personal care, supervision,\n"
             },
             "price_unit": {
               "ja": "/時間",
@@ -350,8 +350,8 @@
               "en": "Daytime base rate"
             },
             "tagline_sub": {
-              "ja": "幅広くサポートするコースです。",
-              "en": "This course provides comprehensive support."
+              "ja": "外出の付き添いなど幅広くサポートするコースです。",
+              "en": "and accompany residents on outings. This course provides comprehensive support."
             },
             "price_amount": {
               "ja": "3,400円",
@@ -792,8 +792,8 @@
               "en": "/pricing"
             },
             "heading": {
-              "ja": "医療保険や介護保険を利用しない、介護・看護のご支援サービス",
-              "en": "Care and nursing support services that do not utilize medical insurance or long-term care insurance."
+              "ja": "あなたのそばに、\n安心のサポートを",
+              "en": "Reliable Support,\nRight by Your Side."
             },
             "image": {
               "ja": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg",
@@ -824,6 +824,14 @@
               "ja": "医療行為が必要な方に対しては、\n看護師の手配が可能です",
               "en": "For those who require medical care, we can arrange a registered nurse."
             },
+            "tagline": {
+              "ja": "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\n",
+              "en": "Staff with nursing qualifications provide care when medical attention is needed,\n"
+            },
+            "tagline_sub": {
+              "ja": "なにかあったときに安心のコースです。",
+              "en": "and peace of mind when something unexpected happens."
+            },
             "price_unit": {
               "ja": "/時間",
               "en": "/hour"
@@ -841,8 +849,8 @@
               "en": "JPY 6,000"
             },
             "panel_heading": {
-              "ja": "看護師の資格を保有したスタッフが医療ケアが必要な場合のケアや\nなにかあったときに安心のコースです。",
-              "en": "This course provides peace of mind, as staff with nursing qualifications will provide care when medical attention is needed and in case of any emergencies."
+              "ja": "スタッフによる医療ケアが必要な場合や、なにかあったときに安心のコースです。",
+              "en": "When medical care by qualified staff is required — a course that gives peace of mind when something happens."
             },
             "price_tax_note": {
               "ja": "税抜",
