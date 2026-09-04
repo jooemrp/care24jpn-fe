@@ -23,6 +23,8 @@ async function main(): Promise<void> {
     if (!result.success) {
       assert.equal(result.error.code, "CMS_NOT_CONFIGURED");
       assert.equal(result.error.status, 503);
+      assert.match(result.error.message, /ATLAS_BASE_URL/);
+      assert.match(result.error.message, /ATLAS_API_KEY/);
     }
   });
 

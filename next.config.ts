@@ -1,5 +1,28 @@
 import type { NextConfig } from "next";
 
+function requireAtlasEnvOnVercel() {
+  if (!process.env.VERCEL) return;
+
+  const env = process.env;
+  const baseUrl = env.ATLAS_BASE_URL?.trim();
+  const apiKey = env.ATLAS_API_KEY?.trim();
+  if (baseUrl && apiKey) return;
+
+  const missing = [
+    !baseUrl ? "ATLAS_BASE_URL" : null,
+    !apiKey ? "ATLAS_API_KEY" : null,
+  ]
+    .filter((name): name is string => name !== null)
+    .join(" and ");
+
+  throw new Error(
+    `${missing} must be set in the Vercel project environment (Production and Preview). ` +
+      "Every page reads Atlas at request time and returns CMS_NOT_CONFIGURED without these values.",
+  );
+}
+
+requireAtlasEnvOnVercel();
+
 const nextConfig: NextConfig = {
   devIndicators: false,
   experimental: {

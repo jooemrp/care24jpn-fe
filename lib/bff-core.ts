@@ -116,7 +116,8 @@ export async function fetchPublicPage(
   if (!normalizedBaseUrl || !normalizedApiKey) {
     return apiFailure({
       code: "CMS_NOT_CONFIGURED",
-      message: "The CMS service is not configured.",
+      message:
+        "The CMS service is not configured. Set ATLAS_BASE_URL and ATLAS_API_KEY.",
       status: 503,
     });
   }
