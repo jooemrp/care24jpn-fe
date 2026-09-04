@@ -16,7 +16,7 @@ async function main(): Promise<void> {
       hero: {
         heading: { ja: "流れ", en: "How it works" },
         body: { ja: "本文", en: "Body" },
-        ctaHref: "/pricing",
+        ctaHref: "/contact",
       },
       steps: [
         {
@@ -38,9 +38,11 @@ async function main(): Promise<void> {
     assert.match(html, /How it works/);
     assert.match(html, />7</);
     assert.match(html, /Registration/);
+    assert.match(html, /href="\/en\/contact"/);
     assert.match(html, /md:py-12/);
     assert.match(html, /bg-surface/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
+    assert.doesNotMatch(html, /href="\/en\/pricing"/);
   });
 }
 

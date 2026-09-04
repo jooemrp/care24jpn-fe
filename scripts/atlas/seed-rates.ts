@@ -141,7 +141,9 @@ function pricingMetaBlock(
   position: number,
   highlights: Bilingual[],
   note: Bilingual,
+  paymentNote: Bilingual,
   cancellationLinkLabel: Bilingual,
+  cancellationHref: string,
 ): BlockInput {
   // textarea field, one line per highlight — features/cms/rates.ts#optionalLines
   // splits this back into `highlights: Bilingual[]` by index.
@@ -155,13 +157,17 @@ function pricingMetaBlock(
     data: {
       highlights: highlightsJa,
       note: note.ja,
+      payment_note: paymentNote.ja,
       cancellation_label: cancellationLinkLabel.ja,
+      // Non-localizable relative path — same contract as fees_meta.cta_href.
+      cancellation_href: cancellationHref,
     },
     translations: {
       en: {
         data: {
           highlights: highlightsEn,
           note: note.en,
+          payment_note: paymentNote.en,
           cancellation_label: cancellationLinkLabel.en,
         },
       },
@@ -252,7 +258,9 @@ function buildPricingPage(heroId: string, metaId: string): PageInput {
         1,
         pricingCopy.highlights,
         pricingCopy.note,
+        pricingCopy.paymentNote,
         pricingCopy.cancellationLinkLabel,
+        pricingCopy.cancellationHref,
       ),
     ],
   };
