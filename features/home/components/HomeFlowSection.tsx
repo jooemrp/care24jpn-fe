@@ -38,7 +38,7 @@ export function HomeFlowSection({
                 <h3 className="mt-5 text-lg font-bold leading-snug text-heading md:text-base lg:text-lg">
                   {t(step.title, lang)}
                 </h3>
-                <p className="mt-2 max-w-[14rem] text-sm leading-relaxed text-body">
+                <p className="mt-2 max-w-[14rem] whitespace-pre-line text-sm leading-relaxed text-body">
                   {t(step.body, lang)}
                 </p>
               </li>,

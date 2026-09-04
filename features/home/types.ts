@@ -1,14 +1,21 @@
 import type { Bilingual, home as homeCopy } from "@/constants/copy";
 
 type Home = typeof homeCopy;
-type Fee = Home["careCourse"]["fees"][number];
 type Card = Home["careCourse"]["cards"][number];
 type NursingFeature = Home["nursingCourse"]["panel"]["items"][number];
+
+/** Fee cell shared by care and nursing course blocks (note is optional). */
+export type HomeFee = {
+  label: Bilingual;
+  value: Bilingual;
+  note?: Bilingual;
+};
 
 export type HomeContent = Omit<
   Home,
   | "hero"
   | "careCourse"
+  | "nursingCourse"
   | "contact"
   | "flow"
   | "about"
@@ -22,8 +29,16 @@ export type HomeContent = Omit<
     ctaSecondary?: Bilingual;
     image: string;
   };
-  careCourse: Omit<Home["careCourse"], "cards"> & {
+  careCourse: Omit<Home["careCourse"], "cards" | "fees"> & {
+    fees: HomeFee[];
     cards: (Card & { image: string })[];
+  };
+  nursingCourse: Omit<Home["nursingCourse"], "panel" | "fees"> & {
+    fees: HomeFee[];
+    panel: {
+      heading?: Bilingual;
+      items: NursingFeature[];
+    };
   };
   contact: Home["contact"] & { micsLogo: string; isoLogo: string };
   about: Omit<Home["about"], "cards"> & {
@@ -48,7 +63,7 @@ export type HomeContent = Omit<
     payment: {
       heading: Bilingual;
       body: Bilingual;
-      settleNote: Bilingual;
+      settleNote?: Bilingual;
       logos: { mark: string; src: string; alt: Bilingual }[];
     };
   };
@@ -56,6 +71,6 @@ export type HomeContent = Omit<
   pricingDetailsHref: string;
 };
 
-export type HomeFee = Fee;
+export type HomeNursingFee = HomeFee;
 export type HomeCard = Card & { image: string };
 export type HomeNursingFeature = NursingFeature;
