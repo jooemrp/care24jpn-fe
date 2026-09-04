@@ -56,6 +56,17 @@ Routes are backed internally by a language segment, `app/[lang]/...`, where `lan
 
 See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for the visual design language (colors, logo usage, aesthetic direction).
 
+## Audits
+
+Point-in-time reviews, written in Indonesian. Each states its own scope and method; check the date before acting on one.
+
+- [PERFORMANCE-AUDIT.md](PERFORMANCE-AUDIT.md) — caching strategy, server/client component boundary, asset pipeline (2026-09-04, static analysis only — no runtime measurements yet)
+- [CMS-INTEGRATION-AUDIT.md](CMS-INTEGRATION-AUDIT.md) — Atlas CMS integration coverage, verified against 26 rendered routes (2026-08-20)
+- [UI-UX-AUDIT.md](UI-UX-AUDIT.md) — design consistency and accessibility across 12 routes × 2 locales (2026-08-13)
+- [SEO-AEO-AUDIT.md](SEO-AEO-AUDIT.md) — search/answer-engine readiness across 11 routes (2026-08-12; predates the CMS migration)
+- [SEO-AEO-COPY-PROPOSALS.md](SEO-AEO-COPY-PROPOSALS.md) — draft copy for the SEO/AEO fixes, never implemented (2026-08-12)
+- [ATLAS-CMS-STUDY.md](ATLAS-CMS-STUDY.md) — pre-implementation Atlas research (2026-08-19), carrying a post-implementation correction notice: three of its central conclusions were disproved
+
 ## Important Note for AI Agents
 
 This project pins a Next.js version with breaking changes relative to older conventions. Before writing Next.js code, read [AGENTS.md](AGENTS.md) and the relevant guide under `node_modules/next/dist/docs/`.
