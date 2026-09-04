@@ -30,6 +30,13 @@ const HIT_AREA =
   "relative before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-['']";
 
 /**
+ * SP bar shortcuts (0907 item 3): pick CMS nav items whose href matches these
+ * slots. Labels come from Atlas (short seed labels「サービス」「料金」) — never
+ * hardcoded in JSX. Home is intentionally absent from the bar.
+ */
+const SP_SHORTCUT_HREFS = ["/#service-details", "/pricing"] as const;
+
+/**
  * Watches a zero-cost sentinel sitting at the very top of the document.
  *
  * An IntersectionObserver only wakes up when the sentinel crosses the viewport
@@ -153,6 +160,48 @@ function PhoneBlock({
   );
 }
 
+function PrimaryCtaLink({
+  lang,
+  label,
+  primaryHref,
+  className,
+  onClick,
+}: {
+  lang: Lang;
+  label: SiteContent["cta"]["primary"];
+  primaryHref: SiteContent["cta"]["primaryHref"];
+  className: string;
+  onClick?: () => void;
+}) {
+  const external =
+    primaryHref.startsWith("http://") || primaryHref.startsWith("https://");
+  const text = t(label, lang);
+
+  if (external) {
+    return (
+      <a
+        href={localizeHref(primaryHref, lang)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
+        {text}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={localizeHref(primaryHref, lang)}
+      className={className}
+      onClick={onClick}
+    >
+      {text}
+    </Link>
+  );
+}
+
 export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -176,6 +225,15 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
     pathname === homeHref && activeSectionId
       ? `${homeHref}#${activeSectionId}`
       : pathname;
+
+  // SP bar shortcuts from CMS nav by href slot (order = SP_SHORTCUT_HREFS).
+  const spShortcuts = useMemo(
+    () =>
+      SP_SHORTCUT_HREFS.map((href) => site.nav.find((item) => item.href === href)).filter(
+        (item): item is SiteContent["nav"][number] => Boolean(item),
+      ),
+    [site.nav],
+  );
 
   return (
     <>
@@ -207,9 +265,10 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               : "bg-surface/45 shadow-none"
           }`}
         >
-        {/* Tier 1 — brand, contact, actions */}
+        {/* Tier 1 — brand, contact, actions.
+            SP (md:hidden): Logo | サービス | 料金 | ☰ (0907 item 3). */}
         <div
-          className={`max-w-6xl mx-auto px-6 flex items-center justify-between gap-6 ${MOTION} ${
+          className={`max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 ${MOTION} ${
             condensed ? "h-14" : "h-20"
           }`}
         >
@@ -225,23 +284,43 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               width={LOGO_INTRINSIC_WIDTH}
               height={LOGO_INTRINSIC_HEIGHT}
               priority
-              className={`h-auto w-36 origin-left ${MOTION} ${
+              className={`h-auto w-28 sm:w-36 origin-left ${MOTION} ${
                 condensed ? "scale-[0.78]" : "scale-100"
               }`}
             />
           </Link>
 
-          {/* No pricing button here: the tier-2 tab row already links to
-              /pricing, so a second control with the same destination is pure
-              duplication — and on /pricing itself it pointed at the page the
-              visitor was already on. The client update sheet (0727) specifies
-              this row as tabs + phone number only. */}
+          {/* Desktop: phone only in tier 1 (nav tabs are tier 2). */}
           <div className="hidden md:flex items-center gap-6">
             <PhoneBlock lang={lang} contactPhone={site.contactPhone} condensed={condensed} />
           </div>
 
-          {/* Mobile: hamburger */}
-          <div className="md:hidden flex items-center gap-3">
+          {/* Mobile: SP shortcuts + hamburger */}
+          <div className="md:hidden flex items-center gap-1 sm:gap-2">
+            <nav>
+              <ul className="flex items-center gap-1">
+                {spShortcuts.map((item) => {
+                  const href = localizeHref(item.href, lang);
+                  const active = href === activeHref;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`block rounded-full px-2.5 py-1.5 text-sm font-medium transition ${HIT_AREA} ${
+                          active
+                            ? "bg-primary-light text-primary"
+                            : "text-heading hover:bg-primary-light/60 hover:text-primary"
+                        }`}
+                      >
+                        {t(item.label, lang)}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
             <button
               type="button"
               className="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2"
@@ -256,7 +335,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
           </div>
         </div>
 
-        {/* Tier 2 — navigation tabs */}
+        {/* Tier 2 — navigation tabs (desktop) */}
         <div className="hidden md:block border-t border-border/70">
           <nav>
             <ul
@@ -287,7 +366,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
           </nav>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile hamburger sheet — full CMS nav + phone + primary CTA */}
         {open && (
           <div className="md:hidden border-t border-border bg-surface">
             <nav>
@@ -310,10 +389,18 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                     </li>
                   );
                 })}
-                {/* Dropped alongside the desktop one — /pricing is already the
-                    fourth item in the list directly above. */}
                 <li className="border-t border-border pt-4">
                   <PhoneBlock lang={lang} contactPhone={site.contactPhone} align="start" />
+                </li>
+                {/* 0907 item 4 sheet side-note: same primary CTA as sticky bar */}
+                <li className="pt-2">
+                  <PrimaryCtaLink
+                    lang={lang}
+                    label={site.cta.primary}
+                    primaryHref={site.cta.primaryHref}
+                    onClick={() => setOpen(false)}
+                    className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-primary px-8 py-3 text-base font-bold text-white transition hover:bg-primary-mid"
+                  />
                 </li>
               </ul>
             </nav>
