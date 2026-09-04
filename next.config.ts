@@ -124,6 +124,11 @@ const nextConfig: NextConfig = {
   // the browser's follow-up request to the destination goes through the
   // normal proxy pipeline. Sources are literal/exact paths (no wildcard), so
   // this cannot also match "/terms-for-users" or "/terms-for-care-supporters".
+  //
+  // Do NOT put `/ja` → `/` redirects here: Next applies them to the
+  // post-rewrite `/ja/...` destination and loops with proxy.ts's bare-path
+  // rewrite. Default-locale prefix stripping stays in proxy.ts with a
+  // rewrite-safe guard.
   async redirects() {
     return [
       {
