@@ -16,7 +16,7 @@
  * Ordering: two prerequisite stages run first, one after the other, then the
  * five seed-* scripts run concurrently.
  *
- *   1. schema.ts creates the 30 block content types every seed-* script
+ *   1. schema.ts creates the block content types every seed-* script
  *      depends on (they resolve block_type_id by slug).
  *   2. upload-media.ts uploads public/images/* into the Atlas media library
  *      and writes scripts/atlas/media-manifest.json. seed-site, seed-home and
@@ -31,11 +31,11 @@
  * seeding itself, and one failing prerequisite at a time is far easier to
  * read in the log than two interleaved ones. The seeds are the stages worth
  * parallelizing — they write to disjoint page slugs (site / home / legal-* /
- * rates+pricing+fees / service-flow+use-case+company) and share no other
+ * rates+pricing+fees / service-flow+use-case+company / faq) and share no other
  * mutable state — the slug-to-script mapping this assumes is: site ->
  * seed-site.ts, home -> seed-home.ts, the 7 legal-* slugs -> seed-legal.ts,
  * rates/pricing/fees -> seed-rates.ts, use-case/service-flow/company ->
- * seed-pages.ts.
+ * seed-pages.ts, faq -> seed-faq.ts.
  *
  * Idempotent end-to-end, with one deliberate exception spelled out below.
  * Every page write in every seed-*.ts goes through the single
@@ -81,7 +81,7 @@ const TSX_BIN = resolve(SCRIPTS_DIR, "..", "..", "node_modules", ".bin", "tsx");
 
 /** Both prerequisites must complete, in this order, before any seed script:
  * schema.ts creates the content types every seed resolves by slug, and
- * upload-media.ts writes the media manifest three of them read. The five
+ * upload-media.ts writes the media manifest three of them read. The six
  * seed-* scripts below write disjoint page slugs, so they're safe to run
  * concurrently — see the file-level comment. */
 const PREREQ_STAGES = [
@@ -94,6 +94,7 @@ const SEED_STAGES = [
   { name: "seed-legal", file: "seed-legal.ts" },
   { name: "seed-rates", file: "seed-rates.ts" },
   { name: "seed-pages", file: "seed-pages.ts" },
+  { name: "seed-faq", file: "seed-faq.ts" },
 ];
 
 /**
