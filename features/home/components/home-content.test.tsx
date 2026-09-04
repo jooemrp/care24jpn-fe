@@ -74,6 +74,16 @@ async function main(): Promise<void> {
     );
 
     assert.match(html, /Reliable Support,/);
+    assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
+    assert.doesNotMatch(html, /Credit card/);
+    assert.doesNotMatch(html, /クレジットカード/);
+    assert.match(html, /A doctor(?:'|&#x27;)s written instructions are strictly required/);
+    assert.doesNotMatch(html, /When medical care by qualified staff is required/);
+    assert.doesNotMatch(html, /Free for regular clients/);
+    assert.doesNotMatch(html, /指名無料/);
+    assert.match(html, /Nomination fee/);
+    assert.match(html, /bg-primary-deep/);
+    assert.doesNotMatch(html, /payment-visa/);
     assert.match(html, /Caregiving course/);
     assert.match(html, /About fees \(tax included\)/);
     assert.match(html, /JPY 3,740 \/ hour~/);
