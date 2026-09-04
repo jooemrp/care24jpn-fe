@@ -407,6 +407,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "highlights", label: "Highlights (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 0 },
       { name: "note", label: "Note", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "cancellation_label", label: "Cancellation policy link label", field_type: "text", localizable: true, required: false, sort_order: 2 },
     ],
   },
   {

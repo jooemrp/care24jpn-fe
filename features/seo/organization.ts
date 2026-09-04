@@ -24,15 +24,43 @@
  *   `Bilingual` instead of importing it.
  *
  * `components/JsonLd.tsx#organizationJsonLd` is the only caller. It awaits
- * `getCompany()` (CMS-backed, already falls back to `constants/copy.ts`
- * internally when Atlas is unreachable or the page shape doesn't match) and
- * passes `company.rows` in as `companyRows`, plus `constants/copy.ts#company`
- * itself, UNTRANSFORMED, as `fallbackCompanyRows` — so this module never
- * needs to import `constants/copy.ts`, and there is exactly one fallback
- * path below, not a second hand-copied one.
+ * the strict CMS company loader and passes the resulting rows in as
+ * `companyRows`. A missing or malformed row is a typed content error; this
+ * module never borrows values from the application bundle.
  */
 
 type Bi = { ja: string; en: string };
+
+type OrganizationContentErrorCode =
+  | "CMS_MISSING_REQUIRED_FIELD"
+  | "CMS_INVALID_REQUIRED_FIELD";
+
+/**
+ * The pure JSON-LD builder is also exercised by the repository's plain
+ * `node --test` suite, so it cannot import the server-only CMS module graph.
+ * Keep the same serializable error contract used by `CmsContentError`:
+ * callers and the route error boundary receive a named, coded error with
+ * actionable field paths.
+ */
+class OrganizationContentError extends Error {
+  readonly code: OrganizationContentErrorCode;
+  readonly fields: string[];
+  readonly slug: string;
+
+  constructor(
+    code: OrganizationContentErrorCode,
+    message: string,
+    fields: readonly string[],
+    slug: string,
+  ) {
+    super(message);
+    this.name = "CmsContentError";
+    this.code = code;
+    this.fields = [...fields];
+    this.slug = slug;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
 
 /** Matches `constants/copy.ts#company`'s row shape
  * (`Company["rows"][number]`), duplicated locally — see file header.
@@ -54,22 +82,11 @@ export type PostalAddress = {
 export type BuildOrganizationJsonLdInput = {
   brandName: string;
   telephone: string;
-  /** `site.brand.logo` (see `features/cms/site.ts`) — a full URL when Atlas
-   * answers, or the bundled `/images/logo.png` fallback when it doesn't.
-   * Relative values are resolved against `siteUrl` (schema.org `logo`/
-   * `image` expect an absolute URL). Falsy/empty omits both `logo` and
-   * `image` entirely. */
-  logoUrl?: string;
+  /** `site.brand.logo` (see `features/cms/site.ts`) — a full URL from Atlas. */
+  logoUrl: string;
   siteUrl: string;
-  /** CMS-sourced rows from `getCompany().rows` — may equal
-   * `fallbackCompanyRows` already, if `getCompany()` itself fell back. */
+  /** Strict CMS-sourced rows from `getCompanyContent().rows`. */
   companyRows: CompanyRow[];
-  /** `constants/copy.ts#company.rows`, passed through untransformed. Used
-   * ONLY when a lookup or parse against `companyRows` fails (a row label
-   * renamed in the dashboard, a free-text address that no longer matches the
-   * expected shape, ...), so the emitted field never regresses to entirely
-   * missing. This is the one fallback path in this module. */
-  fallbackCompanyRows: CompanyRow[];
 };
 
 // ---------------------------------------------------------------------------
@@ -118,12 +135,11 @@ const LEGACY_LABEL_EN: Record<string, string> = {
 /**
  * Key first, legacy English label second.
  *
- * The second pass is not belt-and-braces: it is what keeps this working
- * against a workspace that has not been re-seeded since `company_row.row_key`
- * was added, where every row's key is `""` (`features/cms/pages-map.ts`
- * falls back to the empty string rather than guessing from position). It
- * also covers `fallbackCompanyRows`, which always carries real keys, so the
- * fallback path never depends on the label either.
+ * The second pass keeps this compatible with a workspace that has not been
+ * re-seeded since `company_row.row_key` was added, where every row's key is
+ * `""` (`features/cms/pages-map.ts` preserves the empty value rather than
+ * guessing from position). It still uses the backend row itself; it never
+ * imports or substitutes bundled company copy.
  *
  * A row whose key matches wins outright, even if some other row happens to
  * carry the legacy label — the key is the identity, the label is not.
@@ -159,8 +175,9 @@ function findRow(rows: CompanyRow[], rowKey: string): CompanyRow | undefined {
  * only one this business has ever operated a registered office in.
  *
  * Returns `null` on anything that doesn't match the known 4-segment,
- * "<region> <postal-code>"-suffixed shape, so a malformed edit falls back
- * rather than emitting a wrong or partially-empty PostalAddress.
+ * "<region> <postal-code>"-suffixed shape, so a malformed edit can be
+ * surfaced as a typed content error rather than emitting a wrong or
+ * partially-empty PostalAddress.
  */
 function parseAddress(value: string): PostalAddress | null {
   const parts = value
@@ -216,85 +233,101 @@ function parseFoundingDate(value: string): string | null {
   return `${match[3]}-${month}-${match[2].padStart(2, "0")}`;
 }
 
-function toAbsoluteUrl(url: string, siteUrl: string): string {
-  return /^https?:\/\//.test(url) ? url : `${siteUrl}${url}`;
+function isAbsoluteHttpUrl(value: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
+  }
+  return parsed.protocol === "http:" || parsed.protocol === "https:";
 }
 
 // ---------------------------------------------------------------------------
-// Field resolution — CMS row, else the matching constants fallback row,
-// else an empty default (never expected to trigger: constants/copy.ts's
-// rows are well-formed by construction).
+// Field resolution — every value comes from the strict CMS rows.
 // ---------------------------------------------------------------------------
 
-function resolveLegalName(companyRows: CompanyRow[], fallbackCompanyRows: CompanyRow[]): string {
-  const row = findRow(companyRows, TRADE_NAME_ROW_KEY);
-  if (row && row.value.en.trim() !== "") return row.value.en;
+function companyRowFieldPath(rowKey: string, field?: string): string {
+  return `company.company-row[${rowKey}]${field ? `.${field}` : ""}`;
+}
 
-  warnOnce(
-    row
-      ? "organization:legal-name-empty"
-      : `organization:row-miss:${TRADE_NAME_ROW_KEY}`,
-    row
-      ? `[cms:unexpected-content] organization: company_row "${TRADE_NAME_ROW_KEY}" has an empty/whitespace value.en — using the constants/copy.ts fallback company row for JSON-LD legalName instead, rather than emitting an empty legalName. Check for a cleared field in the dashboard. This warning only prints once per process.`
-        : `[cms:unexpected-content] organization: no company_row with row_key "${TRADE_NAME_ROW_KEY}" (and none carrying the legacy label "Trade name") — using the constants/copy.ts fallback company row for JSON-LD legalName instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
+function missingCompanyRow(rowKey: string): never {
+  const field = companyRowFieldPath(rowKey);
+  throw new OrganizationContentError(
+    "CMS_MISSING_REQUIRED_FIELD",
+    `Required CMS company row "${rowKey}" is missing.`,
+    [field],
+    "company",
   );
-  return findRow(fallbackCompanyRows, TRADE_NAME_ROW_KEY)?.value.en ?? "";
 }
 
-const EMPTY_ADDRESS: PostalAddress = {
-  streetAddress: "",
-  addressLocality: "",
-  addressRegion: "",
-  postalCode: "",
-  addressCountry: "JP",
-};
-
-function resolveAddress(
-  companyRows: CompanyRow[],
-  fallbackCompanyRows: CompanyRow[],
-): PostalAddress {
-  const row = findRow(companyRows, HEAD_OFFICE_ROW_KEY);
-  if (row) {
-    const parsed = parseAddress(row.value.en);
-    if (parsed) return parsed;
-    warnOnce(
-      "organization:address-unparseable",
-      `[cms:unexpected-content] organization: company_row "${HEAD_OFFICE_ROW_KEY}" value "${row.value.en}" does not match the expected "<building>, <street>, <ward>, <region> <postal>" shape — using the constants/copy.ts fallback address for JSON-LD instead. This warning only prints once per process.`,
-    );
-  } else {
-    warnOnce(
-      `organization:row-miss:${HEAD_OFFICE_ROW_KEY}`,
-      `[cms:unexpected-content] organization: no company_row with row_key "${HEAD_OFFICE_ROW_KEY}" (and none carrying the legacy label "Head office") — using the constants/copy.ts fallback address for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
-    );
-  }
-
-  const fallbackRow = findRow(fallbackCompanyRows, HEAD_OFFICE_ROW_KEY);
-  const fallbackParsed = fallbackRow ? parseAddress(fallbackRow.value.en) : null;
-  return fallbackParsed ?? EMPTY_ADDRESS;
+function invalidCompanyRowValue(rowKey: string, detail: string): never {
+  const field = companyRowFieldPath(rowKey, "value.en");
+  throw new OrganizationContentError(
+    "CMS_INVALID_REQUIRED_FIELD",
+    `Required CMS company row value "${field}" is malformed: ${detail}`,
+    [field],
+    "company",
+  );
 }
 
-function resolveFoundingDate(
-  companyRows: CompanyRow[],
-  fallbackCompanyRows: CompanyRow[],
-): string {
-  const row = findRow(companyRows, ESTABLISHED_ROW_KEY);
-  if (row) {
-    const parsed = parseFoundingDate(row.value.en);
-    if (parsed) return parsed;
-    warnOnce(
-      "organization:founding-date-unparseable",
-      `[cms:unexpected-content] organization: company_row "${ESTABLISHED_ROW_KEY}" value "${row.value.en}" does not match the expected "<Month> <day>, <year>" shape — using the constants/copy.ts fallback founding date for JSON-LD instead. This warning only prints once per process.`,
-    );
-  } else {
-    warnOnce(
-      `organization:row-miss:${ESTABLISHED_ROW_KEY}`,
-      `[cms:unexpected-content] organization: no company_row with row_key "${ESTABLISHED_ROW_KEY}" (and none carrying the legacy label "Established") — using the constants/copy.ts fallback founding date for JSON-LD instead. Check for a deleted row in the dashboard, or re-run seed-pages.ts. This warning only prints once per process.`,
+function requiredCompanyValue(rows: CompanyRow[], rowKey: string): string {
+  const row = findRow(rows, rowKey);
+  if (!row) return missingCompanyRow(rowKey);
+
+  const value = row.value?.en;
+  if (typeof value !== "string" || value.trim() === "") {
+    return invalidCompanyRowValue(rowKey, "expected non-empty English text");
+  }
+  return value;
+}
+
+function resolveLegalName(companyRows: CompanyRow[]): string {
+  return requiredCompanyValue(companyRows, TRADE_NAME_ROW_KEY);
+}
+
+function resolveAddress(companyRows: CompanyRow[]): PostalAddress {
+  const rowKey = HEAD_OFFICE_ROW_KEY;
+  const value = requiredCompanyValue(companyRows, rowKey);
+  const parsed = parseAddress(value);
+  if (!parsed) {
+    return invalidCompanyRowValue(
+      rowKey,
+      'expected "<building>, <street>, <ward>, <region> <postal-code>"',
     );
   }
+  return parsed;
+}
 
-  const fallbackRow = findRow(fallbackCompanyRows, ESTABLISHED_ROW_KEY);
-  const fallbackParsed = fallbackRow ? parseFoundingDate(fallbackRow.value.en) : null;
-  return fallbackParsed ?? "";
+function resolveFoundingDate(companyRows: CompanyRow[]): string {
+  const rowKey = ESTABLISHED_ROW_KEY;
+  const value = requiredCompanyValue(companyRows, rowKey);
+  const parsed = parseFoundingDate(value);
+  if (!parsed) {
+    return invalidCompanyRowValue(rowKey, 'expected "<Month> <day>, <year>"');
+  }
+  return parsed;
+}
+
+function requiredLogoUrl(value: string): string {
+  const field = "site.site-brand.logo";
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new OrganizationContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      `Required CMS image "${field}" is missing.`,
+      [field],
+      "site",
+    );
+  }
+  if (!isAbsoluteHttpUrl(value)) {
+    throw new OrganizationContentError(
+      "CMS_INVALID_REQUIRED_FIELD",
+      `Required CMS image "${field}" is malformed.`,
+      [field],
+      "site",
+    );
+  }
+  return value;
 }
 
 // ---------------------------------------------------------------------------
@@ -310,19 +343,18 @@ function resolveFoundingDate(
  * `features/seo/organization.test.ts` asserts it exactly:
  *   @context, @type, name, legalName, url, logo, image, telephone, address,
  *   foundingDate
- * `logo`/`image` are omitted as a pair when `logoUrl` is falsy/empty; every
- * other key is always present (using the constants fallback rather than
- * being omitted, per `fallbackCompanyRows` above).
+ * `logo`/`image` are always present because `logoUrl` is a required,
+ * validated CMS image URL.
  */
 export function buildOrganizationJsonLd(
   input: BuildOrganizationJsonLdInput,
 ): Record<string, unknown> {
-  const { brandName, telephone, logoUrl, siteUrl, companyRows, fallbackCompanyRows } = input;
+  const { brandName, telephone, logoUrl, siteUrl, companyRows } = input;
 
-  const legalName = resolveLegalName(companyRows, fallbackCompanyRows);
-  const address = resolveAddress(companyRows, fallbackCompanyRows);
-  const foundingDate = resolveFoundingDate(companyRows, fallbackCompanyRows);
-  const absoluteLogoUrl = logoUrl ? toAbsoluteUrl(logoUrl, siteUrl) : undefined;
+  const legalName = resolveLegalName(companyRows);
+  const address = resolveAddress(companyRows);
+  const foundingDate = resolveFoundingDate(companyRows);
+  const absoluteLogoUrl = requiredLogoUrl(logoUrl);
 
   return {
     "@context": "https://schema.org",
@@ -330,7 +362,8 @@ export function buildOrganizationJsonLd(
     name: brandName,
     legalName,
     url: siteUrl,
-    ...(absoluteLogoUrl ? { logo: absoluteLogoUrl, image: absoluteLogoUrl } : {}),
+    logo: absoluteLogoUrl,
+    image: absoluteLogoUrl,
     telephone,
     address: { "@type": "PostalAddress", ...address },
     foundingDate,

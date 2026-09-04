@@ -5,17 +5,13 @@
  * answer/content panel.
  *
  * Design tokens used:
- *   bg-surface       — panel background (white in light mode, auto via CSS var)
+ *   bg-surface       — panel background
  *   border-border    — divider colour
  *   text-heading     — question text colour
  *   text-body        — answer text colour
  *
  * Responsive: full-width on mobile, max-width constrained by parent container.
- * Dark mode: relies on CSS custom-property tokens defined in globals.css.
- *   Since the project defines tokens via @theme, dark-mode overrides can be
- *   layered with `@media (prefers-color-scheme: dark)` in globals.css.
- *   Components consume only the semantic tokens (e.g. bg-surface, text-body)
- *   so they automatically adapt when those tokens change.
+ * Uses the light semantic tokens defined in globals.css.
  */
 
 import { useState, useId } from "react";

@@ -1,24 +1,29 @@
 import "server-only";
 
 import { cache } from "react";
-import { getPageBlocks, reportUnexpectedContent } from "./client";
+import { apiFailure, apiSuccess, unwrap, type ApiResult } from "@/lib/api";
+import { CmsContentError, cmsErrorToApiError } from "./errors";
+import {
+  getPageBlocksStrict,
+} from "./client";
 import { getSite } from "./site";
 import {
   mapBlocksByType,
-  pickBi,
-  pickBiOptional,
-  pickImage,
-  pickJa,
-  pickJaLines,
-  pickLines,
+  optionalBi,
+  optionalLines,
+  requiredBi,
+  requiredEnum,
+  requiredImageUrl,
+  requiredJa,
+  requiredUrl,
   type BlockTypeList,
 } from "./fields";
-import type { Bilingual, CmsBlock } from "./types";
-import { home as fallbackHome } from "@/constants/copy";
+import type { CmsBlock } from "./types";
+import type { home as HomeCopy } from "@/constants/copy";
+import type { HomeContent } from "@/features/home/types";
 
-type Home = typeof fallbackHome;
+type Home = typeof HomeCopy;
 type Fee = Home["careCourse"]["fees"][number];
-type Card = Home["careCourse"]["cards"][number];
 
 /**
  * `constants/copy.ts` carries no image paths — every `<Image src>` on this
@@ -28,25 +33,7 @@ type Card = Home["careCourse"]["cards"][number];
  * this loader returns is the constants shape PLUS one image URL per rendered
  * image, and the card's image is now a property OF THE CARD.
  */
-export type HomeContent = Omit<Home, "hero" | "careCourse" | "contact" | "flow" | "about" | "problems" | "apply"> & {
-  hero: Home["hero"] & { image: string };
-  careCourse: Omit<Home["careCourse"], "cards"> & {
-    cards: (Card & { image: string })[];
-  };
-  contact: Home["contact"] & { micsLogo: string; isoLogo: string };
-  about: Omit<Home["about"], "cards"> & {
-    illustration: string;
-    cards: (Home["about"]["cards"][number] & { image: string })[];
-  };
-  problems: Omit<Home["problems"], "items"> & {
-    items: (Home["problems"]["items"][number] & { image: string })[];
-  };
-  apply: Omit<Home["apply"], "consult"> & {
-    consult: Home["apply"]["consult"] & { illustration: string };
-  };
-  // `steps[].icon` is dropped — see the `FlowStep` comment above.
-  flow: Omit<Home["flow"], "steps"> & { steps: FlowStep[] };
-};
+export type { HomeContent } from "@/features/home/types";
 
 type NursingFeature = Home["nursingCourse"]["panel"]["items"][number];
 type ExampleCase = Home["examples"]["cases"][number];
@@ -70,50 +57,21 @@ type ScheduleRow = ExampleCase["schedule"][number];
  */
 type FlowStep = Omit<Home["flow"]["steps"][number], "icon"> & { image: string };
 
-/**
- * The files bundled in `public/images/` — the safety net for when Atlas is
- * down, or answered without expanding a media id into a URL. They are NOT
- * deleted from the repo; `pickImage` falls back to them per field.
- */
-const FALLBACK_IMAGES = {
-  hero: "/images/hero.webp",
-  micsLogo: "/images/mics-logo.png",
-  isoLogo: "/images/iso27001-bsi.png",
-  aboutIllustration: "/images/about-family.png",
-  aboutCards: [
-    "/images/icon-about-qualified.png",
-    "/images/icon-about-flexible.png",
-    "/images/icon-about-private.png",
-  ],
-  problemItems: [
-    "/images/problem-discharge.png",
-    "/images/problem-absence.png",
-    "/images/problem-bathing.png",
-    "/images/problem-hospital.png",
-    "/images/problem-insurance.png",
-  ],
-  flowSteps: [
-    "/images/flow-01-apply.webp",
-    "/images/flow-02-confirm.webp",
-    "/images/flow-03-visit.webp",
-    "/images/flow-04-report.webp",
-  ],
-  consultIllustration: "/images/consult-family.png",
-  /**
-   * One per card in `constants/copy.ts#home.careCourse.cards`, in that order
-   * — the exact files the old index-derived `src` produced, so the CMS-OFF
-   * render is unchanged. A card BEYOND this list has no bundled counterpart
-   * and falls back to `""`, which `page.tsx` renders as a card with no image
-   * rather than as a broken one. That case can only arise from a dashboard
-   * card whose `image` field was also left empty.
-   */
-  cards: [
-    "/images/use-case-1.webp",
-    "/images/use-case-2.webp",
-    "/images/use-case-3.webp",
-    "/images/use-case-4.webp",
-  ],
-} as const;
+function requireEqualLengths(
+  context: string,
+  firstKey: string,
+  first: readonly unknown[],
+  secondKey: string,
+  second: readonly unknown[],
+): void {
+  if (first.length === second.length) return;
+  throw new CmsContentError(
+    "CMS_INVALID_REQUIRED_FIELD",
+    `${context}: "${firstKey}" and "${secondKey}" must contain the same number of items.`,
+    [`${context}.${firstKey}`, `${context}.${secondKey}`],
+    context,
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Assembly — the content types scripts/atlas/seed-home.ts writes. 10 section
@@ -154,9 +112,8 @@ interface MappedHome {
   contactData: CmsBlock["data"];
 }
 
-function mapHome(blocks: CmsBlock[]): MappedHome | null {
-  const groups = mapBlocksByType("home", blocks, HOME_TYPES, reportUnexpectedContent);
-  if (!groups) return null;
+function mapHome(blocks: CmsBlock[]): MappedHome {
+  const groups = mapBlocksByType("home", blocks, HOME_TYPES);
 
   const [heroBlock] = groups["home-hero"];
   const [valuesBlock] = groups["home-values"];
@@ -176,139 +133,152 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   const caseBlocks = groups["home-example-case"];
   const stepBlocks = groups["home-flow-step"];
 
-  const F = fallbackHome;
-
-  // Every `F.<...>[i]` below is indexed defensively: a repeated block type may
-  // now hold more items than `constants/copy.ts` declares, in which case there
-  // is no constants entry at that index to fall back to.
-  const EMPTY: Bilingual = { ja: "", en: "" };
-
   const hero: HomeContent["hero"] = {
-    badge: pickBi(heroBlock.data, "badge", F.hero.badge),
-    resolve: pickBi(heroBlock.data, "resolve", F.hero.resolve),
-    assist: pickBi(heroBlock.data, "assist", F.hero.assist),
-    heading: pickBi(heroBlock.data, "heading", F.hero.heading),
-    body: pickBi(heroBlock.data, "body", F.hero.body),
-    ctaPrimary: pickBi(heroBlock.data, "cta_primary", F.hero.ctaPrimary),
-    ctaSecondary: pickBi(heroBlock.data, "cta_secondary", F.hero.ctaSecondary),
-    imageAlt: pickBi(heroBlock.data, "image_alt", F.hero.imageAlt),
-    image: pickImage(heroBlock.data, "image", FALLBACK_IMAGES.hero, "home/hero"),
-    ctaPrimaryHref: pickJa(heroBlock.data, "cta_primary_href", F.hero.ctaPrimaryHref),
-    ctaSecondaryHref: pickJa(heroBlock.data, "cta_secondary_href", F.hero.ctaSecondaryHref),
+    badge: requiredBi(heroBlock.data, "badge", "home/home-hero"),
+    resolve: requiredBi(heroBlock.data, "resolve", "home/home-hero"),
+    assist: requiredBi(heroBlock.data, "assist", "home/home-hero"),
+    heading: requiredBi(heroBlock.data, "heading", "home/home-hero"),
+    body: optionalBi(heroBlock.data, "body", "home/home-hero"),
+    ctaPrimary: requiredBi(heroBlock.data, "cta_primary", "home/home-hero"),
+    ctaSecondary: optionalBi(heroBlock.data, "cta_secondary", "home/home-hero"),
+    imageAlt: requiredBi(heroBlock.data, "image_alt", "home/home-hero"),
+    image: requiredImageUrl(heroBlock.data, "image", "home/home-hero"),
+    ctaPrimaryHref: requiredUrl(heroBlock.data, "cta_primary_href", "home/home-hero"),
+    ctaSecondaryHref: requiredUrl(heroBlock.data, "cta_secondary_href", "home/home-hero"),
     areaBadge: {
-      main: pickBi(heroBlock.data, "area_badge_main", F.hero.areaBadge.main),
-      sub: pickBi(heroBlock.data, "area_badge_sub", F.hero.areaBadge.sub),
+      main: requiredBi(heroBlock.data, "area_badge_main", "home/home-hero"),
+      sub: requiredBi(heroBlock.data, "area_badge_sub", "home/home-hero"),
     },
   };
 
-  const valueTitles = pickLines(valuesBlock.data, "item_titles", F.values.items.map((i) => i.title));
-  const valueBodies = pickLines(valuesBlock.data, "item_bodies", F.values.items.map((i) => i.body));
+  const valueTitles = optionalLines(valuesBlock.data, "item_titles", "home/home-values");
+  const valueBodies = optionalLines(valuesBlock.data, "item_bodies", "home/home-values");
+  requireEqualLengths(
+    "home/home-values",
+    "item_titles",
+    valueTitles,
+    "item_bodies",
+    valueBodies,
+  );
   const values: Home["values"] = {
-    heading: pickBi(valuesBlock.data, "heading", F.values.heading),
+    heading: requiredBi(valuesBlock.data, "heading", "home/home-values"),
     items: valueTitles.map((title, i) => ({
       title,
-      body: valueBodies[i] ?? F.values.items[i]?.body ?? title,
+      body: valueBodies[i]!,
     })),
   };
 
-  const cardTitles = pickLines(aboutBlock.data, "card_titles", F.about.cards.map((c) => c.title));
-  const cardBodies = pickLines(aboutBlock.data, "card_bodies", F.about.cards.map((c) => c.body));
+  const cardTitles = optionalLines(aboutBlock.data, "card_titles", "home/home-about");
+  const cardBodies = optionalLines(aboutBlock.data, "card_bodies", "home/home-about");
+  requireEqualLengths(
+    "home/home-about",
+    "card_titles",
+    cardTitles,
+    "card_bodies",
+    cardBodies,
+  );
   const aboutCardImages = [
-    pickImage(aboutBlock.data, "card_image_1", FALLBACK_IMAGES.aboutCards[0], "home/about/card[0]"),
-    pickImage(aboutBlock.data, "card_image_2", FALLBACK_IMAGES.aboutCards[1], "home/about/card[1]"),
-    pickImage(aboutBlock.data, "card_image_3", FALLBACK_IMAGES.aboutCards[2], "home/about/card[2]"),
+    requiredImageUrl(aboutBlock.data, "card_image_1", "home/home-about"),
+    requiredImageUrl(aboutBlock.data, "card_image_2", "home/home-about"),
+    requiredImageUrl(aboutBlock.data, "card_image_3", "home/home-about"),
   ];
+  requireEqualLengths(
+    "home/home-about",
+    "card_titles",
+    cardTitles,
+    "card_images",
+    aboutCardImages,
+  );
   const about: HomeContent["about"] = {
-    heading: pickBi(aboutBlock.data, "heading", F.about.heading),
-    catchphrase: pickBi(aboutBlock.data, "catchphrase", F.about.catchphrase),
-    body: pickBi(aboutBlock.data, "body", F.about.body),
-    illustration: pickImage(
-      aboutBlock.data,
-      "illustration",
-      FALLBACK_IMAGES.aboutIllustration,
-      "home/about/illustration",
-    ),
+    heading: requiredBi(aboutBlock.data, "heading", "home/home-about"),
+    catchphrase: requiredBi(aboutBlock.data, "catchphrase", "home/home-about"),
+    body: requiredBi(aboutBlock.data, "body", "home/home-about"),
+    illustration: requiredImageUrl(aboutBlock.data, "illustration", "home/home-about"),
     cards: cardTitles.map((title, i) => ({
       title,
-      body: cardBodies[i] ?? F.about.cards[i]?.body ?? title,
-      image: aboutCardImages[i] ?? FALLBACK_IMAGES.aboutCards[i] ?? "",
+        body: cardBodies[i]!,
+      image: aboutCardImages[i]!,
     })),
   };
 
-  const problemTitles = pickLines(
-    problemsBlock.data,
-    "items",
-    F.problems.items.map((item) => item.title),
-  );
+  const problemTitles = optionalLines(problemsBlock.data, "items", "home/home-problems");
   const problemImages = [
-    pickImage(problemsBlock.data, "item_image_1", FALLBACK_IMAGES.problemItems[0], "home/problems[0]"),
-    pickImage(problemsBlock.data, "item_image_2", FALLBACK_IMAGES.problemItems[1], "home/problems[1]"),
-    pickImage(problemsBlock.data, "item_image_3", FALLBACK_IMAGES.problemItems[2], "home/problems[2]"),
-    pickImage(problemsBlock.data, "item_image_4", FALLBACK_IMAGES.problemItems[3], "home/problems[3]"),
-    pickImage(problemsBlock.data, "item_image_5", FALLBACK_IMAGES.problemItems[4], "home/problems[4]"),
+    requiredImageUrl(problemsBlock.data, "item_image_1", "home/home-problems"),
+    requiredImageUrl(problemsBlock.data, "item_image_2", "home/home-problems"),
+    requiredImageUrl(problemsBlock.data, "item_image_3", "home/home-problems"),
+    requiredImageUrl(problemsBlock.data, "item_image_4", "home/home-problems"),
+    requiredImageUrl(problemsBlock.data, "item_image_5", "home/home-problems"),
   ];
+  requireEqualLengths(
+    "home/home-problems",
+    "items",
+    problemTitles,
+    "item_images",
+    problemImages,
+  );
   const problems: HomeContent["problems"] = {
-    heading: pickBi(problemsBlock.data, "heading", F.problems.heading),
-    closing: pickBi(problemsBlock.data, "closing", F.problems.closing),
+    heading: requiredBi(problemsBlock.data, "heading", "home/home-problems"),
+    closing: requiredBi(problemsBlock.data, "closing", "home/home-problems"),
     items: problemTitles.map((title, i) => ({
       title,
-      body: F.problems.items[i]?.body ?? title,
-      icon: F.problems.items[i]?.icon ?? "insurance",
-      image: problemImages[i] ?? FALLBACK_IMAGES.problemItems[i] ?? "",
+      body: title,
+      image: problemImages[i]!,
     })),
   };
 
-  const paymentLogoFallbacks = F.pricingSummary.payment.logos;
-  const pricingSummary: Home["pricingSummary"] = {
-    ...F.pricingSummary,
-    heading: pickBi(pricingSummaryBlock.data, "heading", F.pricingSummary.heading),
+  const pricingSummary: HomeContent["pricingSummary"] = {
+    heading: requiredBi(
+      pricingSummaryBlock.data,
+      "heading",
+      "home/home-pricing-summary",
+    ),
     payment: {
-      heading: pickBi(
+      heading: requiredBi(
         pricingSummaryBlock.data,
         "payment_heading",
-        F.pricingSummary.payment.heading,
+        "home/home-pricing-summary",
       ),
-      body: pickBi(pricingSummaryBlock.data, "payment_body", F.pricingSummary.payment.body),
-      settleNote: pickBi(
+      body: requiredBi(
+        pricingSummaryBlock.data,
+        "payment_body",
+        "home/home-pricing-summary",
+      ),
+      settleNote: requiredBi(
         pricingSummaryBlock.data,
         "payment_settle_note",
-        F.pricingSummary.payment.settleNote,
+        "home/home-pricing-summary",
       ),
       logos: [
         {
-          ...paymentLogoFallbacks[0],
-          src: pickImage(
+          mark: "visa",
+          src: requiredImageUrl(
             pricingSummaryBlock.data,
             "payment_visa",
-            paymentLogoFallbacks[0].src,
-            "home/pricing-summary/visa",
+            "home/home-pricing-summary",
           ),
         },
         {
-          ...paymentLogoFallbacks[1],
-          src: pickImage(
+          mark: "mastercard",
+          src: requiredImageUrl(
             pricingSummaryBlock.data,
             "payment_mastercard",
-            paymentLogoFallbacks[1].src,
-            "home/pricing-summary/mastercard",
+            "home/home-pricing-summary",
           ),
         },
         {
-          ...paymentLogoFallbacks[2],
-          src: pickImage(
+          mark: "jcb",
+          src: requiredImageUrl(
             pricingSummaryBlock.data,
             "payment_jcb",
-            paymentLogoFallbacks[2].src,
-            "home/pricing-summary/jcb",
+            "home/home-pricing-summary",
           ),
         },
         {
-          ...paymentLogoFallbacks[3],
-          src: pickImage(
+          mark: "amex",
+          src: requiredImageUrl(
             pricingSummaryBlock.data,
             "payment_amex",
-            paymentLogoFallbacks[3].src,
-            "home/pricing-summary/amex",
+            "home/home-pricing-summary",
           ),
         },
       ],
@@ -316,141 +286,132 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
   };
 
   const nursingItems: NursingFeature[] = nursingFeatureBlocks.map((block, i) => ({
-    icon: pickJa(block.data, "icon", F.nursingCourse.panel.items[i]?.icon ?? ""),
-    label: pickBi(block.data, "label", F.nursingCourse.panel.items[i]?.label ?? EMPTY),
+    icon: requiredEnum(
+      block.data,
+      "icon",
+      ["vitals", "procedure", "medication", "consult", "palliative", "hospital"],
+      `home/home-nursing-feature[${i}]`,
+    ),
+    label: requiredBi(block.data, "label", `home/home-nursing-feature[${i}]`),
   }));
 
   const nursingCourse: Home["nursingCourse"] = {
-    leadIn: pickBi(nursingCourseBlock.data, "lead_in", F.nursingCourse.leadIn),
-    badge: pickBi(nursingCourseBlock.data, "badge", F.nursingCourse.badge),
-    tagline: pickBi(nursingCourseBlock.data, "tagline", F.nursingCourse.tagline),
-    taglineSub: pickBi(nursingCourseBlock.data, "tagline_sub", F.nursingCourse.taglineSub),
+    leadIn: requiredBi(nursingCourseBlock.data, "lead_in", "home/home-nursing-course"),
+    badge: requiredBi(nursingCourseBlock.data, "badge", "home/home-nursing-course"),
+    tagline: requiredBi(nursingCourseBlock.data, "tagline", "home/home-nursing-course"),
+    taglineSub: requiredBi(nursingCourseBlock.data, "tagline_sub", "home/home-nursing-course"),
     price: {
-      label: pickBi(nursingCourseBlock.data, "price_label", F.nursingCourse.price.label),
-      hours: pickBi(nursingCourseBlock.data, "price_hours", F.nursingCourse.price.hours),
-      amount: pickBi(nursingCourseBlock.data, "price_amount", F.nursingCourse.price.amount),
-      unit: pickBi(nursingCourseBlock.data, "price_unit", F.nursingCourse.price.unit),
-      taxNote: pickBi(nursingCourseBlock.data, "price_tax_note", F.nursingCourse.price.taxNote),
-      taxIncluded: pickBi(nursingCourseBlock.data, "price_tax_included", F.nursingCourse.price.taxIncluded),
+      label: requiredBi(nursingCourseBlock.data, "price_label", "home/home-nursing-course"),
+      hours: requiredBi(nursingCourseBlock.data, "price_hours", "home/home-nursing-course"),
+      amount: requiredBi(nursingCourseBlock.data, "price_amount", "home/home-nursing-course"),
+      unit: requiredBi(nursingCourseBlock.data, "price_unit", "home/home-nursing-course"),
+      taxNote: requiredBi(nursingCourseBlock.data, "price_tax_note", "home/home-nursing-course"),
+      taxIncluded: requiredBi(
+        nursingCourseBlock.data,
+        "price_tax_included",
+        "home/home-nursing-course",
+      ),
     },
-    note: pickBi(nursingCourseBlock.data, "note", F.nursingCourse.note),
+    note: requiredBi(nursingCourseBlock.data, "note", "home/home-nursing-course"),
     panel: {
-      heading: pickBi(nursingCourseBlock.data, "panel_heading", F.nursingCourse.panel.heading),
+      heading: requiredBi(
+        nursingCourseBlock.data,
+        "panel_heading",
+        "home/home-nursing-course",
+      ),
       items: nursingItems,
     },
   };
 
   const fees: Fee[] = feeBlocks.map((block, i) => ({
-    label: pickBi(block.data, "label", F.careCourse.fees[i]?.label ?? EMPTY),
-    value: pickBi(block.data, "value", F.careCourse.fees[i]?.value ?? EMPTY),
-    note: pickBiOptional(block.data, "note"),
+    label: requiredBi(block.data, "label", `home/home-care-course-fee[${i}]`),
+    value: requiredBi(block.data, "value", `home/home-care-course-fee[${i}]`),
+    note: optionalBi(block.data, "note", `home/home-care-course-fee[${i}]`),
   }));
 
   const cards: HomeContent["careCourse"]["cards"] = cardBlocks.map((block, i) => ({
-    title: pickBi(block.data, "title", F.careCourse.cards[i]?.title ?? EMPTY),
-    imageAlt: pickBi(block.data, "image_alt", F.careCourse.cards[i]?.imageAlt ?? EMPTY),
-    items: pickLines(block.data, "items", F.careCourse.cards[i]?.items ?? []),
-    // The card's own image — no longer `/images/use-case-${i + 1}.webp`. The
-    // index survives only in the FALLBACK, where it addresses the four files
-    // that ship with the repo.
-    image: pickImage(block.data, "image", FALLBACK_IMAGES.cards[i] ?? "", `home/care-course-card[${i}]`),
+    title: requiredBi(block.data, "title", `home/home-care-course-card[${i}]`),
+    imageAlt: requiredBi(block.data, "image_alt", `home/home-care-course-card[${i}]`),
+    items: optionalLines(block.data, "items", `home/home-care-course-card[${i}]`),
+    image: requiredImageUrl(block.data, "image", `home/home-care-course-card[${i}]`),
   }));
 
   const careCourse: HomeContent["careCourse"] = {
-    leadIn: pickBi(careCourseBlock.data, "lead_in", F.careCourse.leadIn),
-    badge: pickBi(careCourseBlock.data, "badge", F.careCourse.badge),
-    tagline: pickBi(careCourseBlock.data, "tagline", F.careCourse.tagline),
-    taglineSub: pickBi(careCourseBlock.data, "tagline_sub", F.careCourse.taglineSub),
+    leadIn: requiredBi(careCourseBlock.data, "lead_in", "home/home-care-course"),
+    badge: requiredBi(careCourseBlock.data, "badge", "home/home-care-course"),
+    tagline: requiredBi(careCourseBlock.data, "tagline", "home/home-care-course"),
+    taglineSub: requiredBi(careCourseBlock.data, "tagline_sub", "home/home-care-course"),
     price: {
-      label: pickBi(careCourseBlock.data, "price_label", F.careCourse.price.label),
-      hours: pickBi(careCourseBlock.data, "price_hours", F.careCourse.price.hours),
-      amount: pickBi(careCourseBlock.data, "price_amount", F.careCourse.price.amount),
-      unit: pickBi(careCourseBlock.data, "price_unit", F.careCourse.price.unit),
-      taxNote: pickBi(careCourseBlock.data, "price_tax_note", F.careCourse.price.taxNote),
-      taxIncluded: pickBi(careCourseBlock.data, "price_tax_included", F.careCourse.price.taxIncluded),
+      label: requiredBi(careCourseBlock.data, "price_label", "home/home-care-course"),
+      hours: requiredBi(careCourseBlock.data, "price_hours", "home/home-care-course"),
+      amount: requiredBi(careCourseBlock.data, "price_amount", "home/home-care-course"),
+      unit: requiredBi(careCourseBlock.data, "price_unit", "home/home-care-course"),
+      taxNote: requiredBi(careCourseBlock.data, "price_tax_note", "home/home-care-course"),
+      taxIncluded: requiredBi(
+        careCourseBlock.data,
+        "price_tax_included",
+        "home/home-care-course",
+      ),
     },
     fees,
     cards,
   };
 
   const cases: ExampleCase[] = caseBlocks.map((block, i) => {
-    const fallbackCase: (typeof F.examples.cases)[number] | undefined = F.examples.cases[i];
-    const fallbackSchedule = fallbackCase?.schedule ?? [];
-    const times = pickJaLines(
-      block.data,
-      "schedule_times",
-      fallbackSchedule.map((row) => row.time),
-    );
-    const activities = pickLines(
-      block.data,
-      "schedule_activities",
-      fallbackSchedule.map((row) => row.activity),
-    );
+    const context = `home/home-example-case[${i}]`;
+    const times = optionalLines(block.data, "schedule_times", context).map((line) => line.ja);
+    const activities = optionalLines(block.data, "schedule_activities", context);
+    if (times.length !== activities.length) {
+      throw new Error(`${context}: schedule_times and schedule_activities must have equal lengths.`);
+    }
     const schedule: ScheduleRow[] = times.map((time, ri) => ({
       time,
-      activity: activities[ri] ?? fallbackSchedule[ri]?.activity ?? EMPTY,
+      activity: activities[ri]!,
     }));
 
     return {
-      label: pickBi(block.data, "label", fallbackCase?.label ?? EMPTY),
-      tone: pickJa(block.data, "tone", fallbackCase?.tone ?? ""),
-      title: pickBi(block.data, "title", fallbackCase?.title ?? EMPTY),
-      request: pickBi(block.data, "request", fallbackCase?.request ?? EMPTY),
-      services: pickLines(block.data, "services", fallbackCase?.services ?? []),
-      hours: pickBi(block.data, "hours", fallbackCase?.hours ?? EMPTY),
+      label: requiredBi(block.data, "label", context),
+      tone: requiredEnum(block.data, "tone", ["primary", "accent"], context),
+      title: requiredBi(block.data, "title", context),
+      request: requiredBi(block.data, "request", context),
+      services: optionalLines(block.data, "services", context),
+      hours: requiredBi(block.data, "hours", context),
       schedule,
     };
   });
 
   const examples: Home["examples"] = {
-    leadIn: pickBi(examplesBlock.data, "lead_in", F.examples.leadIn),
-    heading: pickBi(examplesBlock.data, "heading", F.examples.heading),
-    hoursLabel: pickBi(examplesBlock.data, "hours_label", F.examples.hoursLabel),
-    servicesLabel: pickBi(examplesBlock.data, "services_label", F.examples.servicesLabel),
-    scheduleLabel: pickBi(examplesBlock.data, "schedule_label", F.examples.scheduleLabel),
+    leadIn: requiredBi(examplesBlock.data, "lead_in", "home/home-examples"),
+    heading: requiredBi(examplesBlock.data, "heading", "home/home-examples"),
+    hoursLabel: requiredBi(examplesBlock.data, "hours_label", "home/home-examples"),
+    servicesLabel: requiredBi(examplesBlock.data, "services_label", "home/home-examples"),
+    scheduleLabel: requiredBi(examplesBlock.data, "schedule_label", "home/home-examples"),
     cases,
   };
 
   const steps: FlowStep[] = stepBlocks.map((block, i) => ({
-    number: pickJa(block.data, "number", F.flow.steps[i]?.number ?? ""),
-    title: pickBi(block.data, "title", F.flow.steps[i]?.title ?? EMPTY),
-    body: pickBi(block.data, "body", F.flow.steps[i]?.body ?? EMPTY),
-    image: pickImage(
-      block.data,
-      "image",
-      FALLBACK_IMAGES.flowSteps[i] ?? "",
-      `home/flow-step[${i}]`,
-    ),
+    number: requiredJa(block.data, "number", `home/home-flow-step[${i}]`),
+    title: requiredBi(block.data, "title", `home/home-flow-step[${i}]`),
+    body: requiredBi(block.data, "body", `home/home-flow-step[${i}]`),
+    image: requiredImageUrl(block.data, "image", `home/home-flow-step[${i}]`),
   }));
 
   const flow: HomeContent["flow"] = {
-    heading: pickBi(flowBlock.data, "heading", F.flow.heading),
-    stepLabel: pickBi(flowBlock.data, "step_label", F.flow.stepLabel),
+    heading: requiredBi(flowBlock.data, "heading", "home/home-flow"),
+    stepLabel: requiredBi(flowBlock.data, "step_label", "home/home-flow"),
     steps,
   };
 
   const apply: HomeContent["apply"] = {
-    consult: {
-      heading: pickBi(applyBlock.data, "consult_heading", F.apply.consult.heading),
-      body: pickBi(applyBlock.data, "consult_body", F.apply.consult.body),
-      cta: pickBi(applyBlock.data, "consult_cta", F.apply.consult.cta),
-      href: pickJa(applyBlock.data, "consult_href", F.apply.consult.href),
-      illustration: pickImage(
-        applyBlock.data,
-        "consult_illustration",
-        FALLBACK_IMAGES.consultIllustration,
-        "home/apply/consult",
-      ),
-    },
     user: {
-      eyebrow: pickBi(applyBlock.data, "user_eyebrow", F.apply.user.eyebrow),
-      label: pickBi(applyBlock.data, "user_label", F.apply.user.label),
-      href: pickJa(applyBlock.data, "user_href", F.apply.user.href),
+      eyebrow: requiredBi(applyBlock.data, "user_eyebrow", "home/home-apply"),
+      label: requiredBi(applyBlock.data, "user_label", "home/home-apply"),
+      href: requiredUrl(applyBlock.data, "user_href", "home/home-apply"),
     },
     staff: {
-      eyebrow: pickBi(applyBlock.data, "staff_eyebrow", F.apply.staff.eyebrow),
-      label: pickBi(applyBlock.data, "staff_label", F.apply.staff.label),
-      href: pickJa(applyBlock.data, "staff_href", F.apply.staff.href),
+      eyebrow: requiredBi(applyBlock.data, "staff_eyebrow", "home/home-apply"),
+      label: requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
+      href: requiredUrl(applyBlock.data, "staff_href", "home/home-apply"),
     },
   };
 
@@ -469,8 +430,6 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
       examples,
       flow,
       apply,
-      // Not a CMS block — always sourced from constants/copy.ts#home.
-      pricingDetailsLink: F.pricingDetailsLink,
       pricingSummary,
     },
     contactData: contactBlock.data,
@@ -478,90 +437,55 @@ function mapHome(blocks: CmsBlock[]): MappedHome | null {
 }
 
 function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact"] {
-  const F = fallbackHome;
   return {
-    leadIn: pickBi(data, "lead_in", F.contact.leadIn),
-    heading: pickBi(data, "heading", F.contact.heading),
+    leadIn: requiredBi(data, "lead_in", "home/home-contact"),
+    heading: requiredBi(data, "heading", "home/home-contact"),
     phone,
-    hours: pickBi(data, "hours", F.contact.hours),
-    isms: pickBi(data, "isms", F.contact.isms),
-    micsLogo: pickImage(data, "mics_logo", FALLBACK_IMAGES.micsLogo, "home/contact"),
-    isoLogo: pickImage(data, "iso_logo", FALLBACK_IMAGES.isoLogo, "home/contact"),
-    micsLogoAlt: pickBi(data, "mics_logo_alt", F.contact.micsLogoAlt),
-    isoLogoAlt: pickBi(data, "iso_logo_alt", F.contact.isoLogoAlt),
-    ctaHref: pickJa(data, "contact_cta_href", F.contact.ctaHref),
-    leadInOrnamentStart: pickBi(data, "lead_in_ornament_start", F.contact.leadInOrnamentStart),
-    leadInOrnamentEnd: pickBi(data, "lead_in_ornament_end", F.contact.leadInOrnamentEnd),
+    hours: requiredBi(data, "hours", "home/home-contact"),
+    isms: requiredBi(data, "isms", "home/home-contact"),
+    micsLogo: requiredImageUrl(data, "mics_logo", "home/home-contact"),
+    isoLogo: requiredImageUrl(data, "iso_logo", "home/home-contact"),
+    micsLogoAlt: requiredBi(data, "mics_logo_alt", "home/home-contact"),
+    isoLogoAlt: requiredBi(data, "iso_logo_alt", "home/home-contact"),
+    ctaHref: requiredUrl(data, "contact_cta_href", "home/home-contact"),
+    leadInOrnamentStart: requiredBi(
+      data,
+      "lead_in_ornament_start",
+      "home/home-contact",
+    ),
+    leadInOrnamentEnd: requiredBi(data, "lead_in_ornament_end", "home/home-contact"),
   };
 }
 
-/** `constants/copy.ts#home` plus the bundled image paths — what every fallback
- * path in this file returns, so a CMS-less render is byte-identical to the
- * pre-CMS page. */
-const FALLBACK_HOME: HomeContent = {
-  ...fallbackHome,
-  hero: { ...fallbackHome.hero, image: FALLBACK_IMAGES.hero },
-  about: {
-    ...fallbackHome.about,
-    illustration: FALLBACK_IMAGES.aboutIllustration,
-    cards: fallbackHome.about.cards.map((card, i) => ({
-      ...card,
-      image: FALLBACK_IMAGES.aboutCards[i] ?? "",
-    })),
-  },
-  problems: {
-    ...fallbackHome.problems,
-    items: fallbackHome.problems.items.map((item, i) => ({
-      ...item,
-      image: FALLBACK_IMAGES.problemItems[i] ?? "",
-    })),
-  },
-  apply: {
-    ...fallbackHome.apply,
-    consult: {
-      ...fallbackHome.apply.consult,
-      illustration: FALLBACK_IMAGES.consultIllustration,
-    },
-  },
-  flow: {
-    ...fallbackHome.flow,
-    steps: fallbackHome.flow.steps.map((step, i) => ({
-      number: step.number,
-      title: step.title,
-      body: step.body,
-      image: FALLBACK_IMAGES.flowSteps[i] ?? "",
-    })),
-  },
-  careCourse: {
-    ...fallbackHome.careCourse,
-    cards: fallbackHome.careCourse.cards.map((card, i) => ({
-      ...card,
-      image: FALLBACK_IMAGES.cards[i] ?? "",
-    })),
-  },
-  contact: {
-    ...fallbackHome.contact,
-    micsLogo: FALLBACK_IMAGES.micsLogo,
-    isoLogo: FALLBACK_IMAGES.isoLogo,
-  },
-};
-
 async function fetchHome(): Promise<HomeContent> {
-  const blocks = await getPageBlocks("home");
-  if (!blocks) return FALLBACK_HOME;
-
-  const mapped = mapHome(blocks);
-  if (!mapped) return FALLBACK_HOME;
-
-  // contact.phone is deliberately NOT a field on home_contact — it comes from
-  // the shared site chrome, exactly like constants/copy.ts:560
-  // (`phone: contactPhone.display`).
+  const mapped = mapHome(unwrap(await getPageBlocksStrict("home")));
   const { contactPhone } = await getSite();
-  const contact = mapContact(mapped.contactData, contactPhone.display);
-
-  return { ...mapped.rest, contact };
+  return { ...mapped.rest, contact: mapContact(mapped.contactData, contactPhone.display) };
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls
  * `getHome()` on the same request triggers at most one fetch. */
 export const getHome = cache(fetchHome);
+
+/**
+ * Strict home read for client navigation. Unlike `getHome()`, this path does
+ * not replace an Atlas failure or an incomplete page with constants.
+ */
+export async function getHomeStrict(): Promise<ApiResult<HomeContent>> {
+  try {
+    const result = await getPageBlocksStrict("home");
+    if (!result.success) return result;
+
+    const mapped = mapHome(result.data);
+    const { contactPhone } = await getSite();
+    return apiSuccess(
+      {
+        ...mapped.rest,
+        contact: mapContact(mapped.contactData, contactPhone.display),
+      },
+      result.traceId,
+    );
+  } catch (error) {
+    return apiFailure(cmsErrorToApiError(error, "The home content is unavailable."));
+  }
+}

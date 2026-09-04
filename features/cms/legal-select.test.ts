@@ -110,8 +110,6 @@ function legalDocBlock(position: number, data: Record<string, unknown>): CmsBloc
 async function main(): Promise<void> {
   const legalSelect = (await import(legalSelectPath)) as typeof LegalSelectModule;
   const { selectLegalFields } = legalSelect;
-  const noop = () => {};
-
   const wellFormedBody = () => bi("body-ja", "body-en");
 
   // ---------------------------------------------------------------------------
@@ -126,7 +124,7 @@ async function main(): Promise<void> {
         body: wellFormedBody(),
       }),
     ];
-    const result = selectLegalFields("legal-privacy", blocks, "getLegalDoc", noop);
+    const result = selectLegalFields("legal-privacy", blocks, "getLegalDoc");
     assert.deepEqual(result, {
       heading: bi("プライバシーポリシー", "Privacy Policy"),
       body: wellFormedBody(),
@@ -137,24 +135,21 @@ async function main(): Promise<void> {
     const blocks = [
       legalDocBlock(0, { heading: bi("", "Privacy Policy"), body: wellFormedBody() }),
     ];
-    const result = selectLegalFields("legal-privacy", blocks, "getLegalDoc", noop);
-    assert.equal(result, null);
+    assert.throws(() => selectLegalFields("legal-privacy", blocks, "getLegalDoc"));
   });
 
   test("empty EN heading is rejected, exactly like an empty body already is", () => {
     const blocks = [
       legalDocBlock(0, { heading: bi("プライバシーポリシー", ""), body: wellFormedBody() }),
     ];
-    const result = selectLegalFields("legal-privacy", blocks, "getLegalDoc", noop);
-    assert.equal(result, null);
+    assert.throws(() => selectLegalFields("legal-privacy", blocks, "getLegalDoc"));
   });
 
   test("whitespace-only JA heading is rejected the same way an empty one is", () => {
     const blocks = [
       legalDocBlock(0, { heading: bi("   ", "Privacy Policy"), body: wellFormedBody() }),
     ];
-    const result = selectLegalFields("legal-privacy", blocks, "getLegalDoc", noop);
-    assert.equal(result, null);
+    assert.throws(() => selectLegalFields("legal-privacy", blocks, "getLegalDoc"));
   });
 
   // ---------------------------------------------------------------------------
@@ -177,14 +172,14 @@ async function main(): Promise<void> {
       body: bi("real-body-ja", "real-body-en"),
     });
 
-    const result = selectLegalFields("legal-privacy", [decoy, real], "getLegalDoc", noop);
+    const result = selectLegalFields("legal-privacy", [decoy, real], "getLegalDoc");
     assert.deepEqual(result, {
       heading: bi("real-heading-ja", "real-heading-en"),
       body: bi("real-body-ja", "real-body-en"),
     });
   });
 
-  test("no legal-doc block at all -> null (constants fallback), with a fallback report", () => {
+  test("no legal-doc block at all is rejected", () => {
     const decoy: CmsBlock = {
       id: "decoy-0",
       type: "page-hero",
@@ -193,12 +188,7 @@ async function main(): Promise<void> {
       position: 0,
       data: { heading: bi("decoy-ja", "decoy-en") },
     };
-    let reported = false;
-    const result = selectLegalFields("legal-privacy", [decoy], "getLegalDoc", () => {
-      reported = true;
-    });
-    assert.equal(result, null);
-    assert.equal(reported, true, "mapBlocksByType must report the missing legal-doc block type");
+    assert.throws(() => selectLegalFields("legal-privacy", [decoy], "getLegalDoc"));
   });
 }
 

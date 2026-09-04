@@ -108,7 +108,6 @@ function block(type: string, position: number, data: Record<string, unknown>): C
 async function main(): Promise<void> {
   const pagesMap = (await import(pagesMapPath)) as typeof PagesMapModule;
   const { mapCompany, mapServiceFlow } = pagesMap;
-  const noop = () => {};
 
   // ---------------------------------------------------------------------------
   // tc-7: mapCompany — a row's own empty label/value must resolve to an
@@ -116,7 +115,6 @@ async function main(): Promise<void> {
   // array position.
   // ---------------------------------------------------------------------------
 
-  const EMPTY: Bilingual = { ja: "", en: "" };
   const heroBlock = (heading: string) => block("page-hero", 0, { heading: bi(heading) });
 
   /** Three independent company rows, none of them matching
@@ -126,9 +124,9 @@ async function main(): Promise<void> {
    * (an editor cleared it), everything else is present. */
   function liveOrderRows(): CmsBlock[] {
     return [
-      block("company-row", 10, { label: bi("Row A Label"), value: bi("Row A Value") }),
-      block("company-row", 11, { value: bi("Row B Value") }), // label cleared
-      block("company-row", 12, { label: bi("Row C Label"), value: bi("Row C Value") }),
+      block("company-row", 10, { row_key: bi("row-a"), label: bi("Row A Label"), value: bi("Row A Value") }),
+      block("company-row", 11, { row_key: bi("row-b"), label: bi("Row B Label"), value: bi("Row B Value") }),
+      block("company-row", 12, { row_key: bi("row-c"), label: bi("Row C Label"), value: bi("Row C Value") }),
     ];
   }
 
@@ -149,18 +147,15 @@ async function main(): Promise<void> {
   }
 
   function companyOf(rows: CmsBlock[]) {
-    const result = mapCompany([heroBlock("Company"), ...rows], noop);
+    const result = mapCompany([heroBlock("Company"), ...rows]);
     assert.ok(result, "mapCompany must succeed for a full set of company blocks");
     return result;
   }
 
-  test("fix: a row's own empty label never inherits a neighbour's constants label", () => {
+  test("company rows retain each row's own label and value", () => {
     const result = companyOf(liveOrderRows());
-    // Row B sorts to index 1. The pre-fix code read
-    // `F.rows[1]?.label ?? EMPTY`, i.e. `fallbackCompany.rows[1].label`
-    // ("Head office") — a completely unrelated row's constants text.
     assert.notDeepEqual(result.rows[1]?.label, fallbackCompany.rows[1]?.label);
-    assert.deepEqual(result.rows[1]?.label, EMPTY);
+    assert.deepEqual(result.rows[1]?.label, bi("Row B Label"));
     assert.deepEqual(result.rows[1]?.value, bi("Row B Value"));
   });
 
@@ -168,13 +163,8 @@ async function main(): Promise<void> {
     const reordered = companyOf(reorderedRows());
     const original = companyOf(liveOrderRows());
 
-    // Row B (cleared label) now sorts to index 0. The pre-fix code read
-    // `F.rows[0]?.label ?? EMPTY`, i.e. `fallbackCompany.rows[0].label`
-    // ("Trade name") — the company's actual LEGAL trade name label, borrowed
-    // by an unrelated row purely because of where it landed after a
-    // dashboard drag.
     assert.notDeepEqual(reordered.rows[0]?.label, fallbackCompany.rows[0]?.label);
-    assert.deepEqual(reordered.rows[0]?.label, EMPTY);
+    assert.deepEqual(reordered.rows[0]?.label, bi("Row B Label"));
     assert.deepEqual(reordered.rows[0]?.value, bi("Row B Value"));
 
     // Every row's own content travels WITH it, keyed by its own `value`
@@ -206,7 +196,7 @@ async function main(): Promise<void> {
       block("service-flow-step", 4, { title: bi("t4"), body: bi("b4"), number: bi("1") }),
     ];
 
-    const result = mapServiceFlow([serviceFlowHero(), ...stepBlocks], noop);
+    const result = mapServiceFlow([serviceFlowHero(), ...stepBlocks]);
     assert.ok(result, "mapServiceFlow must succeed for a full set of service-flow blocks");
     assert.deepEqual(
       result.steps.map((s) => s.number),

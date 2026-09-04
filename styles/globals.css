@@ -3,7 +3,8 @@
 /*
  * Care 24 Japan — global styles & design tokens.
  * Aesthetic: clean, friendly, trustworthy Japanese healthcare.
- * Blue-dominant with a sakura-pink accent. No serif, no dark mode, no beige.
+ * Blue-dominant with a sakura-pink accent and a light-only palette. No serif
+ * or beige.
  * Font (Noto Sans JP) is loaded via next/font in app/layout.tsx and exposed
  * as --font-sans.
  */
@@ -30,12 +31,21 @@
   --color-accent-deep: #b53a67; /* white on this: 5.58:1 */
   --color-border: #d8e4f0;
   --color-muted: #8a9bb0;
+  --color-danger-bg: #fff1f0;
+  --color-danger-border: #f2b8b5;
+  --color-danger-text: #8a1c1c;
+  --color-danger-hover: #ffe0dd;
 
   /* Typography — Noto Sans JP throughout (no serif) */
   --font-sans: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
 
   /* Staggered fade-up on page load */
   --animate-fade-up: fade-up 0.6s ease-out both;
+}
+
+/* Keep browser-native controls aligned with the site's single palette. */
+:root {
+  color-scheme: light;
 }
 
 @keyframes fade-up {

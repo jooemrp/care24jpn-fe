@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import Section from "@/components/ui/Section";
-import { getUseCase } from "@/features/cms/pages";
-import { getSite } from "@/features/cms/site";
-import { t, localizeHref, isLang } from "@/features/lang/i18n";
+import CmsQueryBoundary from "@/components/query/CmsQueryBoundary";
+import UseCaseView from "@/features/use-case/components/use-case-view";
+import { getUseCaseContent } from "@/features/cms/pages";
+import { isLang } from "@/features/lang/i18n";
 import { pageMetadata } from "@/features/seo/pageMetadata";
+import { queryKeys } from "@/lib/query-keys";
 
 export async function generateMetadata({
   params,
@@ -20,73 +19,13 @@ export async function generateMetadata({
 export default async function UseCasePage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
-  const [useCase, site] = await Promise.all([getUseCase(), getSite()]);
 
   return (
-    <>
-      <Section heading={useCase.hero.heading} level="h1" lang={lang}>
-        <p className="max-w-2xl text-base leading-relaxed text-body">
-          {t(useCase.hero.body, lang)}
-        </p>
-      </Section>
-
-      <Section surface lang={lang}>
-        <div className="flex flex-col gap-16">
-          {useCase.cases.map((c, i) => (
-            <article
-              key={c.slug}
-              id={c.slug}
-              className="grid gap-8 md:grid-cols-2 md:items-start animate-fade-up"
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              {/* The case's OWN image — not `/images/use-case-${i + 1}.webp`.
-                  A 5th case added in the dashboard used to render a 404; now
-                  it renders the media the editor picked. `c.image` is only
-                  empty for a case that has neither a CMS image nor a bundled
-                  counterpart, and an empty `src` throws in `next/image`. */}
-              {c.image && (
-                <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl border border-border">
-                  <Image
-                    src={c.image}
-                    alt={t(c.imageAlt, lang)}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                </div>
-              )}
-
-              <div>
-                <h2 className="text-2xl font-bold text-heading">{t(c.title, lang)}</h2>
-                <p className="mt-2 text-sm font-medium text-muted">{t(c.body, lang)}</p>
-                <p className="mt-4 text-base leading-relaxed text-body">{t(c.detail, lang)}</p>
-                <ul className="mt-6 flex flex-col gap-2">
-                  {c.highlights.map((h, hi) => (
-                    <li key={hi} className="flex items-start gap-2 text-sm text-body">
-                      <span
-                        className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary"
-                        aria-hidden="true"
-                      />
-                      {t(h, lang)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
-        </div>
-      </Section>
-
-      <Section lang={lang}>
-        <div className="animate-fade-up">
-          <Link
-            href={localizeHref(useCase.hero.ctaHref, lang)}
-            className="inline-flex bg-primary text-white px-8 py-3 rounded-full font-medium transition hover:bg-primary-mid"
-          >
-            {t(site.cta.primary, lang)}
-          </Link>
-        </div>
-      </Section>
-    </>
+    <CmsQueryBoundary
+      queryKey={queryKeys.useCase}
+      queryFn={() => getUseCaseContent()}
+    >
+      <UseCaseView lang={lang} />
+    </CmsQueryBoundary>
   );
 }

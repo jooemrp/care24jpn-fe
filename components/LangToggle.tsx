@@ -19,7 +19,7 @@ import { localizeHref, type Lang } from "@/features/lang/i18n";
  * commits.
  *
  * `label`, `shortJa` and `shortEn` are pre-resolved by the Server Component
- * caller — Navbar/Footer hold `site` (CMS-backed, constants fallback), this
+ * caller — Navbar/Footer hold the CMS-backed `site` content, this
  * Client Component does not fetch it itself. `shortJa`/`shortEn` are not run
  * through `t()`: they are the two options' own abbreviations (both shown at
  * once, one bold depending on `lang`), not a message translated per

@@ -55,9 +55,9 @@ import type {
 const warnedKeys = new Set<string>();
 
 /** `console.warn`, at most once per `key` per process. Mirrors
- * `fields.ts#warnOnce` exactly — see that file for the tag conventions
- * (`[cms:fallback:failure]` / `[cms:fallback:unexpected-content]` /
- * `[cms:unexpected-content]`) this module reuses below. */
+ * `fields.ts#warnOnce` exactly; this module uses the
+ * `[cms:unexpected-content]` tag for ignored extra blocks and missing
+ * translation diagnostics. */
 function warnOnce(key: string, message: string): void {
   if (warnedKeys.has(key)) return;
   warnedKeys.add(key);
@@ -194,8 +194,8 @@ export function findEnTranslationData(
  * the EN translation per block, and sort by `position`.
  *
  * Returns `null` for a body that isn't a usable page (missing, or `blocks`
- * not an array) so `client.ts` has one uniform "fall back to constants"
- * signal rather than two.
+ * not an array) so `results.ts` can turn the malformed response into a
+ * typed API failure.
  */
 /**
  * Merges one SEO field's ja/en pair. DELIBERATELY NOT the same rule as
@@ -208,33 +208,23 @@ export function findEnTranslationData(
  * rendering on an untranslated `/en/*` page beats rendering nothing.
  *
  * SEO metadata has neither excuse. `<title>`/`<meta description>` are
- * ALWAYS meant to differ by locale, and `pageMetadata()` already has a real
- * English fallback for every route (`constants/seo.ts`). Borrowing
- * `mergeBlockData`'s mirror rule here is what shipped the regression this
- * function first guarded against: Atlas has no `seo_translations` "en" row
- * for `pricing`/`fees`/`rates`, mirroring turned that ABSENCE into "en
- * equals ja", and `/en/pricing` rendered a Japanese `<title>`.
+ * ALWAYS meant to differ by locale. Borrowing `mergeBlockData`'s mirror rule
+ * here would turn a missing EN translation into a false CMS value and make
+ * `/en/pricing` render a Japanese `<title>`.
  *
- * The fix for THAT regression originally dropped the whole field (both ja
- * AND en) to `undefined` whenever no EN row existed, so `pageMetadata()`
- * fell through to `constants/seo.ts` for both locales. That over-corrected:
- * `pricing`/`fees`/`rates` DO have a real, CMS-authored ja title — an editor
- * changing it in the dashboard saw no effect, because the missing EN row
- * dragged the ja value down with it even though `pageMetadata()` resolves
- * title/description PER LOCALE (`cmsMeta.title?.[lang]`, see
- * features/seo/pageMetadata.ts).
+ * The per-locale result preserves any CMS-authored JA value so dashboard
+ * edits remain observable, while strict metadata readers reject the missing
+ * required EN value instead of substituting another source.
  *
  * So resolution is now per-locale, matching how the field is actually read:
  * - `en` is `undefined` — no EN translation row exists at all, the row
  *   failed to parse, or this field is simply absent from the parsed EN
  *   payload. EN is UNKNOWN, not "same as ja", so the `en` side is always
- *   `""` here (never `ja`'s value) — `pageMetadata()`'s truthy check on
- *   `cmsMeta.<field>.en` then falls through to `constants/seo.ts`'s real
- *   English copy for that locale, same as before. The `ja` side is still
- *   whatever the CMS has, if anything, so a JA-only edit keeps working.
+ *   `""` here (never `ja`'s value), so strict metadata readers can surface
+ *   the missing contract. The `ja` side is still whatever the CMS has, if
+ *   anything, so a JA-only edit remains observable before failure.
  *   Collapses to `undefined` (not `{ ja: "", en: "" }`) only when ja is ALSO
- *   empty/absent, so a page with no SEO content at all still falls through
- *   entirely on both locales.
+ *   empty/absent.
  * - `en` is `""` — a translation row exists and this field was explicitly
  *   left empty. Same collapse rule: empty in BOTH locales becomes
  *   `undefined` rather than `{ ja: "", en: "" }` (an empty-but-present
@@ -259,8 +249,8 @@ function mergeMetaField(ja: string | undefined, en: string | undefined): Bilingu
  * arrive in (see the type's doc comment in ./types for the live evidence):
  * an already-parsed OBJECT (the verified live shape — confirmed against
  * `home`, `company` and `use-case` on the live workspace) is used as-is; a
- * JSON STRING (the documented-but-unobserved shape, kept as a fallback
- * rather than assumed away) is `JSON.parse`d inside a try/catch, mirroring
+ * JSON STRING (the documented-but-unobserved shape, retained for wire
+ * compatibility) is `JSON.parse`d inside a try/catch, mirroring
  * `parseData`'s degrade-to-`{}` behaviour so one malformed SEO translation
  * never takes a page's metadata down. Treating a real object as "must be a
  * string" is exactly the silent-failure mode this guards against: coercing
@@ -308,9 +298,10 @@ function asString(value: unknown): string | undefined {
  * in.
  *
  * Returns `null` only when there is no page record at all (mirrors
- * `shapePageBlocks`'s "unusable body" contract, so `client.ts` has one
- * uniform fallback signal). A page that DOES exist but carries no `seo`
- * object is a normal, successful result — every field is simply `undefined`.
+ * `shapePageBlocks`'s "unusable body" contract, so `results.ts` can report
+ * an invalid payload). A page that DOES exist but carries no `seo` object is
+ * a normal parsed result; strict metadata readers decide which fields are
+ * required for rendering.
  */
 export function shapePageMeta(page: RawPageResponse | null | undefined): PageMeta | null {
   if (!page || !page.page) return null;
@@ -341,7 +332,7 @@ export function shapePageBlocks(page: RawPageResponse | null | undefined): CmsBl
 
   // Read once outside the loop; every block's mirror-warning context is
   // `"<slug>/<blockType>"`, same shape as the `"home/hero"`-style contexts
-  // `fields.ts#pickImage`/`pickNumber` already use. `undefined` (not "") when
+  // field validators use. `undefined` (not "") when
   // either half is missing, so `mergeBlockData` skips the warning path
   // entirely rather than logging an unlabeled context.
   const slug = page.page?.slug;
@@ -358,9 +349,8 @@ export function shapePageBlocks(page: RawPageResponse | null | undefined): CmsBl
         // match on; `blockTypeId` is the same type's UUID and is kept
         // because it is the only stable identifier if a slug is ever
         // renamed on the workspace. `?? ""` rather than a throw: a block
-        // with no slug simply matches no declared type, so it is ignored
-        // (or, if a page's required type is the missing one, the page
-        // falls back with a log) instead of taking the whole render down.
+        // with no slug simply matches no declared type; if it is required by
+        // a loader, that loader raises a typed missing-block error.
         type: block.type ?? "",
         blockTypeId: block.block_type_id,
         parentId: block.parent_id,

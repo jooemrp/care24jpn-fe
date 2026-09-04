@@ -51,7 +51,6 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fallbackOgImage } from "@/constants/seo";
 import type * as PageMetadataModule from "./pageMetadata.ts";
 
 const pageMetadataPath = "./pageMetadata" + ".ts";
@@ -252,21 +251,28 @@ async function main() {
   // resolveOgImage: the CMS-empty fallback, isolated from any Atlas call.
   // ---------------------------------------------------------------------
 
-  test("resolveOgImage: CMS value wins when present", () => {
+  test("resolveOgImage: a CMS absolute URL is returned unchanged", () => {
     assert.equal(
-      resolveOgImage("/images/cms-provided.png", "ja"),
-      "/images/cms-provided.png",
+      resolveOgImage("https://cdn.example.com/cms-provided.png", "ja"),
+      "https://cdn.example.com/cms-provided.png",
     );
   });
 
-  test("resolveOgImage: falls back to constants/seo.ts#fallbackOgImage when the CMS value is empty", () => {
-    assert.equal(resolveOgImage("", "ja"), fallbackOgImage.ja);
-    assert.equal(resolveOgImage("", "en"), fallbackOgImage.en);
-  });
-
-  test("resolveOgImage: falls back to constants/seo.ts#fallbackOgImage when the CMS value is undefined", () => {
-    assert.equal(resolveOgImage(undefined, "ja"), fallbackOgImage.ja);
-    assert.equal(resolveOgImage(undefined, "en"), fallbackOgImage.en);
+  test("resolveOgImage: missing or non-absolute CMS values throw a typed content error", () => {
+    for (const value of ["", "/images/cms-provided.png", undefined]) {
+      assert.throws(
+        () => resolveOgImage(value, "ja"),
+        (error: unknown) => {
+          const candidate = error as { name?: string; code?: string; fields?: string[] };
+          return (
+            candidate.name === "CmsContentError" &&
+            (candidate.code === "CMS_MISSING_REQUIRED_FIELD" ||
+              candidate.code === "CMS_INVALID_REQUIRED_FIELD") &&
+            candidate.fields?.includes("seo.og_image.ja") === true
+          );
+        },
+      );
+    }
   });
 }
 

@@ -4,7 +4,7 @@
  * DELIBERATELY IMPORT-FREE (no `@/` aliases, no imports at all): that keeps
  * this module loadable under plain `node --test` (status-copy.test.ts) as
  * well as inside Next's bundler. The copy table is passed in (the component
- * passes `contactPage.status`) rather than imported, so this file stays
+ * passes the CMS-provided status table rather than importing it, so this file stays
  * free of path aliases.
  */
 

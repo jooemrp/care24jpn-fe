@@ -47,8 +47,8 @@ const TYPE_UUID: Record<string, string> = {
   "footer-legal-link": "01a01d67-7a9b-70c1-a4fc-a595d3a577a0",
 };
 
-function bi(value: string): { ja: string; en: string } {
-  return { ja: value, en: `${value}-en` };
+function bi(value: string, en = `${value}-en`): { ja: string; en: string } {
+  return { ja: value, en };
 }
 
 function block(type: string, position: number, data: Record<string, unknown>): CmsBlock {
@@ -112,25 +112,21 @@ async function capturing<T>(run: () => T): Promise<{ result: T; warnings: string
   }
 }
 
-/** Captures `console.warn` for the duration of `run`. */
-async function captureWarnings(run: () => void | Promise<void>): Promise<string[]> {
-  const warnings: string[] = [];
-  const original = console.warn;
-  console.warn = (...args: unknown[]) => {
-    warnings.push(args.map(String).join(" "));
-  };
-  try {
-    await run();
-  } finally {
-    console.warn = original;
-  }
-  return warnings;
-}
-
 async function main(): Promise<void> {
   const fields = (await import(fieldsPath)) as typeof FieldsModule;
-  const { mapBlocksByType, pick, pickBi, pickImage, pickJa, pickLines, pickNumber } = fields;
-  const noop = () => {};
+  const {
+    mapBlocksByType,
+    pick,
+    optionalBi,
+    optionalJa,
+    optionalLines,
+    requiredBi,
+    requiredEnum,
+    requiredImageUrl,
+    requiredJa,
+    requiredNumber,
+    requiredUrl,
+  } = fields;
 
   // -------------------------------------------------------------------------
   // UI-PARITY PROOF: for the data that is in the CMS today, the slug-based
@@ -162,8 +158,7 @@ async function main(): Promise<void> {
       oldLegal4,
     ] = blocks;
 
-    const groups = mapBlocksByType("site", blocks, SITE_TYPES, noop);
-    assert.ok(groups, "site page must map");
+    const groups = mapBlocksByType("site", blocks, SITE_TYPES);
 
     assert.deepEqual(groups["site-brand"], [oldBrand]);
     assert.deepEqual(groups["site-contact-phone"], [oldPhone]);
@@ -188,10 +183,9 @@ async function main(): Promise<void> {
     const ordered = siteBlocks();
     const shuffled = [...ordered].reverse();
 
-    const fromOrdered = mapBlocksByType("site-a", ordered, SITE_TYPES, noop);
-    const fromShuffled = mapBlocksByType("site-b", shuffled, SITE_TYPES, noop);
+    const fromOrdered = mapBlocksByType("site-a", ordered, SITE_TYPES);
+    const fromShuffled = mapBlocksByType("site-b", shuffled, SITE_TYPES);
 
-    assert.ok(fromOrdered && fromShuffled);
     assert.deepEqual(fromShuffled, fromOrdered);
   });
 
@@ -204,8 +198,7 @@ async function main(): Promise<void> {
       return b;
     });
 
-    const groups = mapBlocksByType("site-drag", blocks, SITE_TYPES, noop);
-    assert.ok(groups);
+    const groups = mapBlocksByType("site-drag", blocks, SITE_TYPES);
     assert.equal(groups["nav-item"].length, 4);
     assert.equal(groups["footer-legal-link"].length, 5);
     for (const navBlock of groups["nav-item"]) {
@@ -246,13 +239,7 @@ async function main(): Promise<void> {
       block("site-footer", 10, { description: bi("d"), legal: bi("c 2026") }),
     ];
 
-    let fellBack = false;
-    const groups = mapBlocksByType("site-lookalike", blocks, SITE_TYPES, () => {
-      fellBack = true;
-    });
-
-    assert.equal(fellBack, false);
-    assert.ok(groups);
+    const groups = mapBlocksByType("site-lookalike", blocks, SITE_TYPES);
 
     // Navbar: only the nav items, in dashboard (position) order.
     assert.deepEqual(
@@ -286,10 +273,9 @@ async function main(): Promise<void> {
       block("site-footer", 8, { description: bi("d"), legal: bi("c") }),
     ];
 
-    const forward = mapBlocksByType("lookalike-fwd", blocks, SITE_TYPES, noop);
-    const reversed = mapBlocksByType("lookalike-rev", [...blocks].reverse(), SITE_TYPES, noop);
+    const forward = mapBlocksByType("lookalike-fwd", blocks, SITE_TYPES);
+    const reversed = mapBlocksByType("lookalike-rev", [...blocks].reverse(), SITE_TYPES);
 
-    assert.ok(forward && reversed);
     assert.deepEqual(reversed, forward);
   });
 
@@ -297,19 +283,13 @@ async function main(): Promise<void> {
   // (b) extra blocks are tolerated
   // -------------------------------------------------------------------------
 
-  test("a 5th nav item does not trigger the wholesale fallback", async () => {
+  test("a 5th nav item does not discard the CMS page", () => {
     const blocks = [
       ...siteBlocks(),
       block("nav-item", 14, { href: bi("/company"), label: bi("Company") }),
     ];
 
-    let fellBack = false;
-    const groups = mapBlocksByType("site-extra-nav", blocks, SITE_TYPES, () => {
-      fellBack = true;
-    });
-
-    assert.equal(fellBack, false, "adding a nav item must not discard the page");
-    assert.ok(groups);
+    const groups = mapBlocksByType("site-extra-nav", blocks, SITE_TYPES);
     assert.equal(groups["nav-item"].length, 5);
     assert.equal(groups["footer-legal-link"].length, 5);
     assert.deepEqual(pick(groups["nav-item"][4].data, "href"), bi("/company"));
@@ -319,19 +299,12 @@ async function main(): Promise<void> {
     const stranger = block("home-hero", 14, { unknown_field: bi("x") });
     const blocks = [...siteBlocks(), stranger];
 
-    let fellBack = false;
-
-    const { result: groups, warnings } = await capturing(() => {
-      const mapped = mapBlocksByType("site-stranger", blocks, SITE_TYPES, () => {
-        fellBack = true;
-      });
+    const { warnings } = await capturing(() => {
+      mapBlocksByType("site-stranger", blocks, SITE_TYPES);
       // Second call with the same slug must not log again.
-      mapBlocksByType("site-stranger", blocks, SITE_TYPES, () => {});
-      return mapped;
+      mapBlocksByType("site-stranger", blocks, SITE_TYPES);
     });
 
-    assert.equal(fellBack, false);
-    assert.ok(groups);
     assert.equal(warnings.length, 1, "one warning per page per process");
     assert.match(warnings[0], /\[cms:unexpected-content\]/);
     assert.match(warnings[0], /site-stranger/);
@@ -345,50 +318,38 @@ async function main(): Promise<void> {
     // not be able to stand in for a declared type.
     const blocks = [...siteBlocks(), block("", 14, { href: bi("/x"), label: bi("X") })];
 
-    let fellBack = false;
     const { result: groups, warnings } = await capturing(() =>
-      mapBlocksByType("site-untyped", blocks, SITE_TYPES, () => {
-        fellBack = true;
-      }),
+      mapBlocksByType("site-untyped", blocks, SITE_TYPES),
     );
 
-    assert.equal(fellBack, false);
-    assert.ok(groups);
     assert.equal(groups["nav-item"].length, 4, "the untyped block is not a nav item");
     assert.equal(warnings.length, 1);
     assert.match(warnings[0], /block with no type slug/);
   });
 
   // -------------------------------------------------------------------------
-  // (c) a genuinely missing block type falls back AND warns
+  // (c) a genuinely missing block type fails closed
   // -------------------------------------------------------------------------
 
-  test("a missing required block type falls back and reports slug, count and types", async () => {
+  test("a missing required block type throws a typed content error", () => {
     const blocks = siteBlocks().filter((b) => b.type !== "site-footer");
 
-    let detail = "";
-    let slug = "";
-    const groups = mapBlocksByType("site-no-footer", blocks, SITE_TYPES, (s, d) => {
-      slug = s;
-      detail = d;
-    });
-
-    assert.equal(groups, null, "the loader must fall back to constants");
-    assert.equal(slug, "site-no-footer");
-    assert.match(detail, /missing required block type\(s\) \[site-footer\]/);
-    assert.match(detail, /received 13 block\(s\)/);
-    // Received types are listed by slug — readable without a UUID lookup.
-    assert.match(detail, /nav-item \(x4, fields: href\/label\)/);
-    assert.match(detail, /footer-legal-link \(x5/);
+    assert.throws(
+      () => mapBlocksByType("site-no-footer", blocks, SITE_TYPES),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        "CMS_MISSING_REQUIRED_BLOCK" === (error as { code?: string }).code &&
+        (error as { fields?: string[] }).fields?.includes("site-no-footer.site-footer"),
+    );
   });
 
-  test("an empty page falls back rather than rendering a blank chrome", () => {
-    let called = 0;
-    const groups = mapBlocksByType("site-empty", [], SITE_TYPES, () => {
-      called++;
-    });
-    assert.equal(groups, null);
-    assert.equal(called, 1);
+  test("an empty page throws instead of rendering blank chrome", () => {
+    assert.throws(() => mapBlocksByType("site-empty", [], SITE_TYPES), (error: unknown) =>
+      error instanceof Error &&
+      error.name === "CmsContentError" &&
+      "CMS_MISSING_REQUIRED_BLOCK" === (error as { code?: string }).code,
+    );
   });
 
   // -------------------------------------------------------------------------
@@ -407,169 +368,8 @@ async function main(): Promise<void> {
     assert.equal(pick({ a: { ja: "x" } }, "a"), undefined);
   });
 
-  test("pickJa and pickBi fall back only when the field is empty or absent", () => {
-    assert.equal(pickJa({ href: { ja: "/x", en: "/x" } }, "href", "/fallback"), "/x");
-    assert.equal(pickJa({}, "href", "/fallback"), "/fallback");
-    assert.equal(pickJa({ href: { ja: "", en: "" } }, "href", "/fallback"), "/fallback");
-
-    const fb = { ja: "fb", en: "fb" };
-    assert.deepEqual(pickBi({ label: { ja: "a", en: "b" } }, "label", fb), { ja: "a", en: "b" });
-    assert.deepEqual(pickBi({}, "label", fb), fb);
-  });
-
   // -------------------------------------------------------------------------
-  // J1: pickJa/pickBi must WARN, not stay silent, when they resurrect the
-  // constants text — this is the case
-  // indistinguishable from an editor clearing the field in the dashboard.
-  // -------------------------------------------------------------------------
-
-  test("pickJa warns once when it falls back to a non-empty constants value", async () => {
-    let first = "";
-    let second = "";
-    const warnings = await captureWarnings(() => {
-      first = pickJa({}, "heading", "運営会社", "company/page-hero");
-      // Same field+context again -> still exactly one warning.
-      second = pickJa({ heading: { ja: "", en: "" } }, "heading", "運営会社", "company/page-hero");
-    });
-
-    assert.equal(first, "運営会社");
-    assert.equal(second, "運営会社");
-    assert.equal(warnings.length, 1, "one warning per field+context per process");
-    assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.match(warnings[0], /company\/page-hero/);
-    assert.match(warnings[0], /"heading"/);
-    assert.match(warnings[0], /運営会社/);
-  });
-
-  test("pickBi warns once when it falls back to a non-empty constants Bilingual", async () => {
-    const fb = { ja: "お申込みはこちら", en: "Apply now" };
-    let value: unknown;
-    const warnings = await captureWarnings(() => {
-      value = pickBi({}, "cta_primary", fb, "home/hero");
-    });
-
-    assert.deepEqual(value, fb);
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.match(warnings[0], /home\/hero/);
-    assert.match(warnings[0], /"cta_primary"/);
-  });
-
-  test("pickJa/pickBi stay silent when the fallback itself is empty — nothing would visibly change", async () => {
-    const warnings = await captureWarnings(() => {
-      assert.equal(pickJa({}, "number", "", "home/flow-step[0]"), "");
-      assert.deepEqual(pickBi({}, "note", { ja: "", en: "" }, "home/apply"), { ja: "", en: "" });
-    });
-    assert.deepEqual(warnings, [], "a same-as-empty fallback has nothing to resurrect");
-  });
-
-  test("pickJa/pickBi do NOT warn when a real CMS value is present", async () => {
-    const warnings = await captureWarnings(() => {
-      pickJa({ heading: { ja: "本文", en: "Body" } }, "heading", "fallback");
-      pickBi({ heading: { ja: "本文", en: "Body" } }, "heading", { ja: "fb", en: "fb" });
-    });
-    assert.deepEqual(warnings, []);
-  });
-
-  test("pickJa/pickBi still warn (deduped by key alone) when context is omitted", async () => {
-    const warnings = await captureWarnings(() => {
-      pickJa({}, "tagline", "見守り、寄り添う。");
-      pickJa({}, "tagline", "見守り、寄り添う。");
-    });
-    assert.equal(warnings.length, 1, "context-less calls still dedupe, just more coarsely");
-    assert.match(warnings[0], /"tagline"/);
-  });
-
-  // -------------------------------------------------------------------------
-  // (d) pickLines — EN longer than JA
-  // -------------------------------------------------------------------------
-
-  test("pickLines keeps EN lines that run past the JA line count", () => {
-    const data = { items: { ja: "1\n2\n3", en: "one\ntwo\nthree\nfour" } };
-    assert.deepEqual(pickLines(data, "items", []), [
-      { ja: "1", en: "one" },
-      { ja: "2", en: "two" },
-      { ja: "3", en: "three" },
-      { ja: "four", en: "four" },
-    ]);
-  });
-
-  test("pickLines does not collapse a multi-line EN value when JA is empty", () => {
-    const data = { items: { ja: "", en: "a\nb\nc" } };
-    assert.deepEqual(pickLines(data, "items", []), [
-      { ja: "a", en: "a" },
-      { ja: "b", en: "b" },
-      { ja: "c", en: "c" },
-    ]);
-  });
-
-  test("pickLines is unchanged when the two sides have equal line counts", () => {
-    // This is the shape of every pickLines field in the live workspace today,
-    // so this case is the one that guarantees the rendered HTML is identical.
-    const data = { items: { ja: "1\n2\n3", en: "one\ntwo\nthree" } };
-    assert.deepEqual(pickLines(data, "items", []), [
-      { ja: "1", en: "one" },
-      { ja: "2", en: "two" },
-      { ja: "3", en: "three" },
-    ]);
-    assert.deepEqual(pickLines({}, "items", [{ ja: "fb", en: "fb" }]), [{ ja: "fb", en: "fb" }]);
-  });
-
-  test("pickLines fills a missing JA line from EN, and a missing EN line from JA", () => {
-    assert.deepEqual(pickLines({ x: { ja: "a\nb", en: "A" } }, "x", []), [
-      { ja: "a", en: "A" },
-      { ja: "b", en: "b" },
-    ]);
-  });
-
-  // -------------------------------------------------------------------------
-  // (e) pickNumber — numeric strings and the warning path
-  // -------------------------------------------------------------------------
-
-  test("pickNumber accepts a real number unchanged", async () => {
-    const warnings = await captureWarnings(() => {
-      assert.equal(pickNumber({ customer_price: 3740 }, "customer_price", 1, "t1"), 3740);
-      assert.equal(pickNumber({ customer_price: 0 }, "customer_price", 1, "t1b"), 0);
-    });
-    assert.deepEqual(warnings, []);
-  });
-
-  test('pickNumber accepts a numeric string ("3500") instead of showing the old price', async () => {
-    const warnings = await captureWarnings(() => {
-      assert.equal(pickNumber({ customer_price: "3500" }, "customer_price", 3740, "t2"), 3500);
-      assert.equal(pickNumber({ customer_price: " 3500 " }, "customer_price", 3740, "t2b"), 3500);
-    });
-    assert.deepEqual(warnings, [], "a usable price must not warn");
-  });
-
-  test("pickNumber falls back with a warning when the value is unusable", async () => {
-    let value = 0;
-    const warnings = await captureWarnings(() => {
-      value = pickNumber({ customer_price: "free" }, "customer_price", 3740, "rates/care/x");
-      // Same field again -> still one warning.
-      pickNumber({ customer_price: "free" }, "customer_price", 3740, "rates/care/x");
-    });
-
-    assert.equal(value, 3740);
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.match(warnings[0], /customer_price/);
-    assert.match(warnings[0], /rates\/care\/x/);
-  });
-
-  test("pickNumber rejects NaN/Infinity and a Bilingual-wrapped value", async () => {
-    await captureWarnings(() => {
-      assert.equal(pickNumber({ p: Number.NaN }, "p", 100, "t3"), 100);
-      assert.equal(pickNumber({ p: Number.POSITIVE_INFINITY }, "p", 100, "t4"), 100);
-      assert.equal(pickNumber({ p: { ja: "3500", en: "3500" } }, "p", 100, "t5"), 100);
-      assert.equal(pickNumber({}, "p", 100, "t6"), 100);
-      assert.equal(pickNumber({ p: "" }, "p", 100, "t7"), 100);
-    });
-  });
-
-  // -------------------------------------------------------------------------
-  // (f) pickImage — the media URL vs the raw UUID the backend leaks when its
-  //     best-effort expansion fails
+  // Strict field pickers never borrow content from the application bundle.
   // -------------------------------------------------------------------------
 
   /** A real expanded URL from the live workspace — the shape a healthy
@@ -578,83 +378,106 @@ async function main(): Promise<void> {
   const S3_URL =
     "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg";
 
-  test("pickImage returns the expanded S3 URL and does not warn", async () => {
-    const warnings = await captureWarnings(() => {
-      assert.equal(
-        pickImage({ image: { ja: S3_URL, en: S3_URL } }, "image", "/images/hero.webp", "img/ok"),
-        S3_URL,
-      );
-      // http is accepted too (a self-hosted/dev media origin).
-      assert.equal(
-        pickImage(
-          { image: { ja: "http://localhost:9000/care-24/media/x.png", en: "" } },
-          "image",
-          "/images/hero.webp",
-          "img/ok2",
-        ),
-        "http://localhost:9000/care-24/media/x.png",
-      );
+  test("required bilingual and plain-text fields reject missing CMS values", () => {
+    assert.deepEqual(requiredBi({ title: { ja: "見出し", en: "Heading" } }, "title", "home/hero"), {
+      ja: "見出し",
+      en: "Heading",
     });
-    assert.deepEqual(warnings, [], "a usable URL must not warn");
+    assert.equal(requiredJa({ href: bi("/pricing", "/pricing") }, "href", "home/apply"), "/pricing");
+
+    for (const data of [
+      {},
+      { title: { ja: "", en: "Heading" } },
+      { title: { ja: "見出し", en: "   " } },
+    ]) {
+      assert.throws(
+        () => requiredBi(data, "title", "home/hero"),
+        (error: unknown) =>
+          error instanceof Error &&
+          error.name === "CmsContentError" &&
+          (error as { code?: string }).code === "CMS_MISSING_REQUIRED_FIELD",
+      );
+    }
+    assert.throws(() => requiredJa({}, "href", "home/apply"), (error: unknown) =>
+      error instanceof Error &&
+      error.name === "CmsContentError" &&
+      (error as { code?: string }).code === "CMS_MISSING_REQUIRED_FIELD",
+    );
   });
 
-  test("pickImage REJECTS a raw media UUID — the backend's best-effort expansion failing", async () => {
-    // `public_get_page.go#expandBlockMedia` is documented "best-effort: on
-    // error the stored data is returned unchanged", i.e. the media id reaches
-    // the loader verbatim. Handing that to next/image is a hard error, so it
-    // must degrade to the bundled file instead.
-    const uuid = "01a01e63-687a-79bd-a631-c689d4d63355";
-    let value = "";
-    const warnings = await captureWarnings(() => {
-      value = pickImage({ image: { ja: uuid, en: uuid } }, "image", "/images/hero.webp", "home/hero");
-      // Same field again -> still one warning.
-      pickImage({ image: { ja: uuid, en: uuid } }, "image", "/images/hero.webp", "home/hero");
+  test("optional fields preserve absence and reject malformed CMS values", () => {
+    assert.equal(optionalJa({}, "detail", "rates/row"), undefined);
+    assert.equal(optionalBi({ detail: { ja: "", en: "" } }, "detail", "rates/row"), undefined);
+    assert.deepEqual(optionalBi({ detail: { ja: "補足", en: "Note" } }, "detail", "rates/row"), {
+      ja: "補足",
+      en: "Note",
     });
-
-    assert.equal(value, "/images/hero.webp");
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.match(warnings[0], /"image"/);
-    assert.match(warnings[0], /home\/hero/);
+    assert.throws(
+      () => optionalBi({ detail: { ja: "補足", en: "" } }, "detail", "rates/row"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
   });
 
-  test("pickImage rejects an empty string, a non-string and any non-http scheme", async () => {
-    await captureWarnings(() => {
-      assert.equal(pickImage({ image: "" }, "image", "/images/logo.png", "e1"), "/images/logo.png");
-      assert.equal(pickImage({ image: 42 }, "image", "/images/logo.png", "e2"), "/images/logo.png");
-      assert.equal(pickImage({ image: true }, "image", "/images/logo.png", "e3"), "/images/logo.png");
-      assert.equal(
-        pickImage({ image: { ja: { url: S3_URL } } }, "image", "/images/logo.png", "e4"),
-        "/images/logo.png",
+  test("required URLs and images never substitute a bundled asset", () => {
+    assert.equal(
+      requiredUrl({ href: bi("https://example.com/app", "https://example.com/app") }, "href", "home/apply"),
+      "https://example.com/app",
+    );
+    assert.equal(requiredImageUrl({ image: bi(S3_URL, S3_URL) }, "image", "home/hero"), S3_URL);
+    for (const value of [undefined, bi("", ""), bi("portal/register", "portal/register")]) {
+      assert.throws(
+        () => requiredUrl({ href: value }, "href", "home/apply"),
+        (error: unknown) =>
+          error instanceof Error &&
+          error.name === "CmsContentError" &&
+          (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
       );
-      // A relative path is not a URL either: only absolute http(s) passes.
-      assert.equal(
-        pickImage({ image: { ja: "care-24/media/x.jpg", en: "" } }, "image", "/images/logo.png", "e5"),
-        "/images/logo.png",
-      );
-      assert.equal(
-        pickImage({ image: { ja: "javascript:alert(1)", en: "" } }, "image", "/images/logo.png", "e6"),
-        "/images/logo.png",
-      );
-      assert.equal(
-        pickImage({ image: { ja: `data:image/png;base64,AAA`, en: "" } }, "image", "/images/logo.png", "e7"),
-        "/images/logo.png",
-      );
-    });
+    }
+    assert.throws(
+      () => requiredImageUrl({ image: bi("01a01e63-raw-media-id", "01a01e63-raw-media-id") }, "image", "home/hero"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
   });
 
-  test("pickImage stays silent when the optional field is simply absent", async () => {
-    const warnings = await captureWarnings(() => {
-      // An unset image field, and a field both locales cleared (which
-      // `mergeBlockData` collapses to `undefined`) — content, not corruption.
-      assert.equal(pickImage({}, "image", "/images/hero.webp", "a1"), "/images/hero.webp");
-      assert.equal(
-        pickImage({ image: undefined }, "image", "/images/hero.webp", "a2"),
-        "/images/hero.webp",
-      );
-      assert.equal(pickImage({ image: null }, "image", "", "a3"), "");
-    });
-    assert.deepEqual(warnings, [], "an absent optional image must not warn");
+  test("required numbers and enums reject malformed CMS values", () => {
+    assert.equal(requiredNumber({ price: 3740 }, "price", "rates/care/day"), 3740);
+    assert.equal(requiredEnum({ kind: bi("care", "care") }, "kind", ["care", "nursing"], "rates/course"), "care");
+    assert.throws(() => requiredNumber({ price: "3740" }, "price", "rates/care/day"), (error: unknown) =>
+      error instanceof Error &&
+      error.name === "CmsContentError" &&
+      (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
+    assert.throws(
+      () => requiredEnum({ kind: bi("other", "other") }, "kind", ["care", "nursing"], "rates/course"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
+  });
+
+  test("optional lines require paired, non-empty locale lines", () => {
+    assert.deepEqual(
+      optionalLines({ items: { ja: "1\n2", en: "one\ntwo" } }, "items", "home/about"),
+      [
+        { ja: "1", en: "one" },
+        { ja: "2", en: "two" },
+      ],
+    );
+    assert.deepEqual(optionalLines({}, "items", "home/about"), []);
+    assert.throws(
+      () => optionalLines({ items: { ja: "1", en: "one\ntwo" } }, "items", "home/about"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
   });
 
   // -------------------------------------------------------------------------
@@ -669,10 +492,7 @@ async function main(): Promise<void> {
     const stray = block("page-hero", 0, { heading: bi("hero"), body: bi("b") });
     const types = ["home-flow"] as const;
 
-    const { result: groups } = await capturing(() =>
-      mapBlocksByType("home-stray", [stray, flow], types, () => {}),
-    );
-    assert.ok(groups);
+    const groups = mapBlocksByType("home-stray", [stray, flow], types);
     assert.deepEqual(groups["home-flow"], [flow]);
   });
 
@@ -698,13 +518,12 @@ async function main(): Promise<void> {
       }),
     ];
 
-    const groups = mapBlocksByType("rates-x", blocks, types, () => {});
-    assert.ok(groups);
+    const groups = mapBlocksByType("rates-x", blocks, types);
     assert.equal(groups["rate-course"].length, 2);
     assert.equal(groups["rate-row"].length, 2);
 
     const careRows = groups["rate-row"].filter(
-      (b) => pickJa(b.data, "course_key", "") === "care",
+      (b) => requiredJa(b.data, "course_key", "rates-x/rate-row") === "care",
     );
     assert.equal(careRows.length, 1);
     assert.equal(careRows[0].data.customer_price, 3740);

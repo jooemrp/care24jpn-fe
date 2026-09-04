@@ -95,6 +95,20 @@ export const ui = {
   langShortEn: "EN",
 };
 
+/** Shared copy for retryable client-owned CMS query states. */
+export const queryStates = {
+  loading: { ja: "読み込み中です", en: "Loading" } satisfies Bilingual,
+  error: {
+    ja: "コンテンツを読み込めませんでした。",
+    en: "We couldn't load this content.",
+  } satisfies Bilingual,
+  retry: { ja: "再試行", en: "Try again" } satisfies Bilingual,
+  empty: {
+    ja: "表示できるコンテンツがありません。",
+    en: "There is no content to display yet.",
+  } satisfies Bilingual,
+};
+
 /**
  * `app/[lang]/error.tsx`'s copy — the route-segment error boundary Next
  * renders when something below `app/[lang]/layout.tsx` throws (a Server or
@@ -1077,6 +1091,10 @@ export const pricing = {
   note: {
     ja: "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
     en: "All prices include tax and may vary based on care requirements.",
+  } satisfies Bilingual,
+  cancellationLinkLabel: {
+    ja: "詳しくはこちら（キャンセルポリシー）をご確認ください。",
+    en: "For cancellation terms, please click here.",
   } satisfies Bilingual,
 };
 

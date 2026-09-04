@@ -372,7 +372,13 @@ async function main(): Promise<void> {
     typeof import("react-dom/server");
 
   function renderDoc(doc: LegalDoc, lang: "ja" | "en"): string {
-    return renderToStaticMarkup(createElement(LegalDocPage, { doc, lang }));
+    return renderToStaticMarkup(
+      createElement(LegalDocPage, {
+        doc,
+        lang,
+        tocLabel: lang === "ja" ? "目次" : "Table of Contents",
+      }),
+    );
   }
 
   test("render proof: **bold**/_italic_/[link] marks become real <strong>/<em>/<a> in the rendered HTML", () => {
@@ -438,6 +444,38 @@ async function main(): Promise<void> {
     );
   });
 
+  test("render proof: an empty CMS table-of-contents label throws a typed content error", () => {
+    const doc: LegalDoc = {
+      heading: { ja: "Judul", en: "Title" },
+      body: {
+        ja: [
+          { type: "h2", text: "S1" },
+          { type: "h2", text: "S2" },
+          { type: "h2", text: "S3" },
+        ],
+        en: [
+          { type: "h2", text: "S1" },
+          { type: "h2", text: "S2" },
+          { type: "h2", text: "S3" },
+        ],
+      },
+    };
+
+    assert.throws(
+      () =>
+        renderToStaticMarkup(
+          createElement(LegalDocPage, { doc, lang: "en", tocLabel: "" }),
+        ),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
+  });
+
   test("render proof: <script>, onclick, and javascript: hrefs never reach the rendered HTML", () => {
     const maliciousHtml =
       '<p>Halo<script>document.write("pwned")</script> dunia</p>' +
@@ -460,10 +498,9 @@ async function main(): Promise<void> {
     assert.match(html, /tautan jahat/);
   });
 
-  test("render proof: fallback constants-style markdown links stay language-aware without going through htmlToBlocks", () => {
-    // This is the exact shape constants/legal.ts authors today (no Atlas, no
-    // htmlToBlocks involved at all) — proves the fallback path st-14's rule 4
-    // requires (Atlas down -> constants/) renders identically to the CMS path.
+  test("render proof: CMS-style markdown links stay language-aware without going through htmlToBlocks", () => {
+    // This fixture exercises the same parsed block shape that the CMS loader
+    // passes to LegalDocPage; it deliberately does not model a fallback path.
     const doc: LegalDoc = {
       heading: { ja: "Judul", en: "Title" },
       body: {
@@ -484,8 +521,8 @@ async function main(): Promise<void> {
 
     const enHtml = renderDoc(doc, "en");
     const jaHtml = renderDoc(doc, "ja");
-    assert.match(enHtml, /href="\/en\/pricing"/, "EN fallback link must be localized");
-    assert.match(jaHtml, /href="\/pricing"/, "JA fallback link keeps its bare href");
+    assert.match(enHtml, /href="\/en\/pricing"/, "EN CMS link must be localized");
+    assert.match(jaHtml, /href="\/pricing"/, "JA CMS link keeps its bare href");
     assert.doesNotMatch(jaHtml, /href="\/ja\/pricing"/, "ja is the default language: no /ja prefix");
   });
 }

@@ -4,6 +4,7 @@ import Section from "@/components/ui/Section";
 import TableOfContents, { type TocItem } from "@/components/TableOfContents";
 import type { LegalBlock, LegalDoc, LegalTableCell } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
+import { CmsContentError } from "@/features/cms/errors";
 
 /**
  * Renders a legal block's text, turning the small set of inline markers
@@ -11,8 +12,7 @@ import { localizeHref, type Lang } from "@/features/lang/i18n";
  *
  *   `[label](/path)`  -> a Next.js `<Link>`, its href always resolved
  *                        through `localizeHref()` so a link that came from
- *                        the CMS is just as language-aware as a fallback
- *                        link authored in constants/legal.ts (an `/en/...`
+ *                        the CMS remains language-aware (an `/en/...`
  *                        page must never point a reader at the `ja` URL).
  *   `**bold**`         -> `<strong>`
  *   `_italic_`          -> `<em>`
@@ -24,8 +24,7 @@ import { localizeHref, type Lang } from "@/features/lang/i18n";
  * `legal-html.ts#htmlToBlocks` as these markers and come back out here as
  * the same marks — never via `dangerouslySetInnerHTML`, so there is no
  * markup-injection surface: everything not one of these three patterns is
- * plain text, escaped by React like any other string. Plain text (the
- * common case, and the entirety of constants/legal.ts today) is returned
+ * plain text, escaped by React like any other string. Plain text is returned
  * as-is with no wrapper allocated.
  *
  * The regex is declared locally, not at module scope: a recursive call for
@@ -189,7 +188,7 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
 }
 
 /**
- * Renders a client-provided legal document (privacy policy, terms, etc.) in a
+ * Renders a CMS-provided legal document (privacy policy, terms, etc.) in a
  * long-form reading layout: pure typography (no boxes around the text) with a
  * table-of-contents card — above the document on mobile, sticky beside it on
  * desktop. Body styles live in `.legal-body` (globals.css) because they are
@@ -209,10 +208,9 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
  * cancellation-policy) already awaits `getSite()` for its own `brand`
  * metadata, so each now also resolves `t(site.ui.tocLabel, lang)` and hands
  * it down here — this component stays a plain sync function, and the CMS
- * field actually reaches the page. `tocLabel` defaults to the same literal
- * `constants/copy.ts#ui.tocLabel` carries (kept in sync by hand — this is
- * the resilience fallback for a caller that omits the prop, e.g. the test
- * above, not a second source of truth for real pages).
+ * field actually reaches the page. An empty label is rejected here as a
+ * defense-in-depth check so malformed backend content cannot silently render
+ * an unlabeled navigation landmark.
  */
 export default function LegalDocPage({
   doc,
@@ -221,14 +219,30 @@ export default function LegalDocPage({
 }: {
   doc: LegalDoc;
   lang: Lang;
-  tocLabel?: string;
+  tocLabel: string;
 }) {
+  if (typeof tocLabel !== "string") {
+    throw new CmsContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      'Required CMS field "site/site-ui-labels.toc_label" is missing.',
+      ["site/site-ui-labels.toc_label"],
+      "site",
+    );
+  }
+  if (tocLabel.trim() === "") {
+    throw new CmsContentError(
+      "CMS_INVALID_REQUIRED_FIELD",
+      'Required CMS field "site/site-ui-labels.toc_label" is malformed.',
+      ["site/site-ui-labels.toc_label"],
+      "site",
+    );
+  }
+
   const blocks = doc.body[lang];
 
   const tocItems: TocItem[] = blocks.flatMap((block, i) =>
     block.type === "h2" ? [{ id: `sec-${i}`, text: block.text }] : [],
   );
-  const resolvedTocLabel = tocLabel ?? (lang === "ja" ? "目次" : "Table of Contents");
   const showToc = tocItems.length > 2;
 
   return (
@@ -236,10 +250,10 @@ export default function LegalDocPage({
       {/* No items-start here: the aside must stretch to the article's full
           height, or the sticky TOC inside it has no room to travel. */}
       <div className="lg:flex lg:gap-12">
-        <div className="max-w-[42rem] lg:flex-1">
+        <div className="max-w-2xl lg:flex-1">
           {showToc && (
             <div className="mb-10 animate-fade-up lg:hidden">
-              <TableOfContents items={tocItems} label={resolvedTocLabel} />
+              <TableOfContents items={tocItems} label={tocLabel} />
             </div>
           )}
 
@@ -249,7 +263,7 @@ export default function LegalDocPage({
         {showToc && (
           <aside className="hidden w-72 shrink-0 lg:block">
             <div className="sticky top-40 max-h-[calc(100vh-12rem)] overflow-y-auto">
-              <TableOfContents items={tocItems} label={resolvedTocLabel} />
+              <TableOfContents items={tocItems} label={tocLabel} />
             </div>
           </aside>
         )}

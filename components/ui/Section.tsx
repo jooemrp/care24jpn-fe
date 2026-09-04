@@ -27,7 +27,9 @@ export default function Section({ id, heading, children, surface = false, classN
       <div className="max-w-5xl mx-auto px-6">
         {heading && (
           <header className="mb-6 md:mb-8 animate-fade-up">
-            <HeadingTag className="text-3xl font-bold text-heading mb-1">{t(heading, lang)}</HeadingTag>
+            <HeadingTag className="mb-1 text-3xl font-bold text-heading">
+              {t(heading, lang)}
+            </HeadingTag>
           </header>
         )}
         {children}

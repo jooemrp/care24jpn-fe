@@ -7,71 +7,66 @@
  * `site.ts` can be imported by `node --test`).
  *
  * DELIBERATELY DEPENDENCY-FREE OF THE SERVER RUNTIME: no `server-only`, no
- * `./client`, no `react` (in particular no `cache()`). This module MAY import
- * `./types`, `./fields` and `@/constants/*` — `site.ts` is a loader, and
- * loader-layer files are the ones allowed to read `constants/*.ts`
- * (`features/cms/fields.ts`'s header explains why `fields.ts` itself may
- * not). Keep it that way: adding `server-only`/`./client`/`react`'s `cache()`
- * here silently takes `site.test.ts` offline again.
+ * `./client`, no `react` (in particular no `cache()`), and no runtime
+ * `@/constants/*` imports. The CMS shape is declared here so this module can
+ * be tested without bundling or an Atlas connection. Keep it that way:
+ * adding `server-only`/`./client`/`react`'s `cache()` here silently takes
+ * `site.test.ts` offline again.
  *
  * `site.ts` keeps everything that genuinely needs the server: the
- * `getPageBlocks("site")` fetch, `reportUnexpectedContent`, and the
- * per-request `cache()` dedupe.
+ * `getPageBlocksStrict("site")` fetch and the per-request `cache()` dedupe.
  */
 
-import { mapBlocksByType, pickBi, pickImage, pickJa, type BlockTypeList } from "./fields";
-import type { CmsBlock } from "./types";
 import {
-  brand as fallbackBrand,
-  nav as fallbackNav,
-  contactPhone as fallbackContactPhone,
-  cta as fallbackCta,
-  ui as fallbackUi,
-  footer as fallbackFooter,
-  errorPage as fallbackErrorPage,
-  notFoundPage as fallbackNotFoundPage,
-  type Bilingual,
-} from "@/constants/copy";
+  mapBlocksByType,
+  optionalBi,
+  optionalJa,
+  requiredBi,
+  requiredImageUrl,
+  requiredJa,
+  requiredUrl,
+  type BlockTypeList,
+} from "./fields.ts";
+import type { Bilingual, CmsBlock } from "./types";
 
 /**
  * Chrome global — brand, nav, contact phone, shared CTA labels, UI chrome
- * labels, footer. Shape is byte-identical to the combined exports of
- * `constants/copy.ts` (`brand`/`nav`/`contactPhone`/`cta`/`ui`/`footer`) —
- * every field type below is derived with `typeof` from those exports, so
- * this type can never silently drift from the fallback shape components
- * already render against.
+ * labels, footer. This is the CMS contract for the shared shell, so rendered
+ * values cannot silently drift back to bundled copy.
  */
 export type SiteContent = {
-  brand: typeof fallbackBrand & { logo: string };
-  nav: typeof fallbackNav;
-  contactPhone: typeof fallbackContactPhone;
-  cta: typeof fallbackCta;
-  ui: typeof fallbackUi;
-  footer: typeof fallbackFooter;
-  errorPage: typeof fallbackErrorPage;
-  notFoundPage: typeof fallbackNotFoundPage;
-};
-
-/**
- * The logo file bundled in `public/images/`. `constants/copy.ts` holds no
- * image paths at all — until now every `<Image src>` was a literal in JSX —
- * so the literal lives here, next to the CMS field it backs up, and stays the
- * safety net when Atlas is down or its media expansion failed.
- *
- * Navbar and Footer render the SAME file, from the SAME field
- * (`site_brand.logo`), so they cannot drift apart.
- */
-export const FALLBACK_LOGO = "/images/logo.png";
-
-export const FALLBACK: SiteContent = {
-  brand: { ...fallbackBrand, logo: FALLBACK_LOGO },
-  nav: fallbackNav,
-  contactPhone: fallbackContactPhone,
-  cta: fallbackCta,
-  ui: fallbackUi,
-  footer: fallbackFooter,
-  errorPage: fallbackErrorPage,
-  notFoundPage: fallbackNotFoundPage,
+  brand: {
+    name: string;
+    logo: string;
+    logoAlt: Bilingual;
+    tagline: Bilingual;
+  };
+  nav: { href: string; label: Bilingual }[];
+  contactPhone: { display: string; tel: string; note: Bilingual };
+  cta: { primary: Bilingual; secondary: Bilingual; contact: Bilingual };
+  ui: {
+    menuToggleLabel: Bilingual;
+    langToggleLabel: Bilingual;
+    tocLabel: Bilingual;
+    langShortJa: string;
+    langShortEn: string;
+  };
+  footer: {
+    description?: Bilingual;
+    legalLinks: (
+      | { href: string; key: "tokushoho" }
+      | { href: string; label: Bilingual }
+    )[];
+    legal: Bilingual;
+  };
+  errorPage: { title: Bilingual; body: Bilingual; retryLabel: Bilingual };
+  notFoundPage: {
+    eyebrow: string;
+    title: Bilingual;
+    body: Bilingual;
+    homeLabel: Bilingual;
+    metaDescription: Bilingual;
+  };
 };
 
 /**
@@ -91,13 +86,10 @@ export const SITE_TYPES = [
   "site-cta",
   "site-ui-labels",
   "site-error-labels",
-  // DEPLOY ORDER MATTERS for this one, as it did when `site-error-labels`
-  // was added: a declared type with no matching block makes
-  // `mapBlocksByType` return `null`, which reverts the ENTIRE site chrome —
-  // brand, nav, footer, every page — to `constants/copy.ts`. A workspace
+  // A declared type with no matching block is a typed CMS error. A workspace
   // that has not been re-seeded since this line landed has no
-  // `site-not-found-labels` block. Run `npx tsx scripts/atlas/seed-site.ts`
-  // against an environment BEFORE deploying this code to it.
+  // `site-not-found-labels` block; run `npx tsx scripts/atlas/seed-site.ts`
+  // against the environment before deploying this code to it.
   "site-not-found-labels",
   "nav-item",
   "site-footer",
@@ -105,26 +97,41 @@ export const SITE_TYPES = [
 ] as const satisfies BlockTypeList;
 
 /**
+ * The manifest is a separate CMS surface from the rendered site chrome. It
+ * needs only the brand name and the Japanese tagline, so it deliberately
+ * filters the site page down to `site-brand` before mapping. In particular,
+ * an incomplete `site-footer` block must not make `/manifest.webmanifest`
+ * fail.
+ */
+const SITE_MANIFEST_TYPES = ["site-brand"] as const satisfies BlockTypeList;
+
+export type SiteManifestContent = {
+  name: string;
+  description: string;
+};
+
+export function mapSiteManifest(blocks: CmsBlock[]): SiteManifestContent {
+  const brandBlocks = blocks.filter((block) => block.type === "site-brand");
+  const groups = mapBlocksByType("site", brandBlocks, SITE_MANIFEST_TYPES);
+  const [brandBlock] = groups["site-brand"];
+
+  return {
+    name: requiredJa(brandBlock.data, "name", "site/site-brand"),
+    description: requiredJa(brandBlock.data, "tagline", "site/site-brand"),
+  };
+}
+
+/**
  * Maps the "site" page's blocks onto `SiteContent`, BY BLOCK TYPE — the
  * number of blocks and their order are no longer part of the contract.
  *
  * The old exact-count guard (`blocks.length !== 14`) meant that adding a
- * single nav item in the dashboard reverted the whole header, footer, brand,
- * phone number and CTA labels to `constants/copy.ts` at once, with no log.
- * Now a 5th nav item simply renders as a 5th nav item; only a genuinely
- * missing block TYPE forces the wholesale fallback, and that path warns.
- *
- * `reportFallback` is threaded through rather than imported (this module may
- * not import `./client`, see the file header) — `site.ts` passes
- * `client.ts#reportUnexpectedContent` in; tests pass a no-op or a capturing
- * stub, same as `fields.test.ts` already does for `mapBlocksByType` directly.
+ * single nav item in the dashboard could discard the whole page. A 5th nav
+ * item now renders as a 5th nav item; only a genuinely missing block type
+ * throws a typed CMS error.
  */
-export function mapSite(
-  blocks: CmsBlock[],
-  reportFallback: (slug: string, detail: string) => void,
-): SiteContent | null {
-  const groups = mapBlocksByType("site", blocks, SITE_TYPES, reportFallback);
-  if (!groups) return null;
+export function mapSite(blocks: CmsBlock[]): SiteContent {
+  const groups = mapBlocksByType("site", blocks, SITE_TYPES);
 
   const [brandBlock] = groups["site-brand"];
   const [contactPhoneBlock] = groups["site-contact-phone"];
@@ -137,101 +144,74 @@ export function mapSite(
   const legalBlocks = groups["footer-legal-link"];
 
   const brand: SiteContent["brand"] = {
-    name: pickJa(brandBlock.data, "name", FALLBACK.brand.name),
-    logo: pickImage(brandBlock.data, "logo", FALLBACK_LOGO, "site/brand"),
-    logoAlt: pickBi(brandBlock.data, "logo_alt", FALLBACK.brand.logoAlt),
-    tagline: pickBi(brandBlock.data, "tagline", FALLBACK.brand.tagline),
+    name: requiredJa(brandBlock.data, "name", "site/site-brand"),
+    logo: requiredImageUrl(brandBlock.data, "logo", "site/site-brand"),
+    logoAlt: requiredBi(brandBlock.data, "logo_alt", "site/site-brand"),
+    tagline: requiredBi(brandBlock.data, "tagline", "site/site-brand"),
   };
 
   const contactPhone: SiteContent["contactPhone"] = {
-    display: pickJa(contactPhoneBlock.data, "display", FALLBACK.contactPhone.display),
-    tel: pickJa(contactPhoneBlock.data, "tel", FALLBACK.contactPhone.tel),
-    note: pickBi(contactPhoneBlock.data, "note", FALLBACK.contactPhone.note),
+    display: requiredJa(contactPhoneBlock.data, "display", "site/site-contact-phone"),
+    tel: requiredJa(contactPhoneBlock.data, "tel", "site/site-contact-phone"),
+    note: requiredBi(contactPhoneBlock.data, "note", "site/site-contact-phone"),
   };
 
   const cta: SiteContent["cta"] = {
-    primary: pickBi(ctaBlock.data, "primary", FALLBACK.cta.primary),
-    secondary: pickBi(ctaBlock.data, "secondary", FALLBACK.cta.secondary),
-    contact: pickBi(ctaBlock.data, "contact", FALLBACK.cta.contact),
+    primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
+    secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
+    contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
   };
 
   const ui: SiteContent["ui"] = {
-    menuToggleLabel: pickBi(uiBlock.data, "menu_toggle_label", FALLBACK.ui.menuToggleLabel),
-    langToggleLabel: pickBi(uiBlock.data, "lang_toggle_label", FALLBACK.ui.langToggleLabel),
-    tocLabel: pickBi(uiBlock.data, "toc_label", FALLBACK.ui.tocLabel),
-    langShortJa: pickJa(uiBlock.data, "lang_short_ja", FALLBACK.ui.langShortJa),
-    langShortEn: pickJa(uiBlock.data, "lang_short_en", FALLBACK.ui.langShortEn),
+    menuToggleLabel: requiredBi(uiBlock.data, "menu_toggle_label", "site/site-ui-labels"),
+    langToggleLabel: requiredBi(uiBlock.data, "lang_toggle_label", "site/site-ui-labels"),
+    tocLabel: requiredBi(uiBlock.data, "toc_label", "site/site-ui-labels"),
+    langShortJa: requiredJa(uiBlock.data, "lang_short_ja", "site/site-ui-labels"),
+    langShortEn: requiredJa(uiBlock.data, "lang_short_en", "site/site-ui-labels"),
   };
 
   const errorPage: SiteContent["errorPage"] = {
-    title: pickBi(errorLabelsBlock.data, "title", FALLBACK.errorPage.title),
-    body: pickBi(errorLabelsBlock.data, "body", FALLBACK.errorPage.body),
-    retryLabel: pickBi(errorLabelsBlock.data, "retry_label", FALLBACK.errorPage.retryLabel),
+    title: requiredBi(errorLabelsBlock.data, "title", "site/site-error-labels"),
+    body: requiredBi(errorLabelsBlock.data, "body", "site/site-error-labels"),
+    retryLabel: requiredBi(errorLabelsBlock.data, "retry_label", "site/site-error-labels"),
   };
 
   const notFoundPage: SiteContent["notFoundPage"] = {
-    // `eyebrow` is `pickJa`, not `pickBi`: the field is non-localizable in
-    // `scripts/atlas/schema.ts` (the HTTP status "404" reads the same in
-    // both locales), so there is no EN translation to merge.
-    eyebrow: pickJa(notFoundLabelsBlock.data, "eyebrow", FALLBACK.notFoundPage.eyebrow),
-    title: pickBi(notFoundLabelsBlock.data, "title", FALLBACK.notFoundPage.title),
-    body: pickBi(notFoundLabelsBlock.data, "body", FALLBACK.notFoundPage.body),
-    homeLabel: pickBi(notFoundLabelsBlock.data, "home_label", FALLBACK.notFoundPage.homeLabel),
-    metaDescription: pickBi(
+    eyebrow: requiredJa(notFoundLabelsBlock.data, "eyebrow", "site/site-not-found-labels"),
+    title: requiredBi(notFoundLabelsBlock.data, "title", "site/site-not-found-labels"),
+    body: requiredBi(notFoundLabelsBlock.data, "body", "site/site-not-found-labels"),
+    homeLabel: requiredBi(notFoundLabelsBlock.data, "home_label", "site/site-not-found-labels"),
+    metaDescription: requiredBi(
       notFoundLabelsBlock.data,
       "meta_description",
-      FALLBACK.notFoundPage.metaDescription,
+      "site/site-not-found-labels",
     ),
   };
 
-  // `FALLBACK.nav[i]` / `FALLBACK.footer.legalLinks[i]` are indexed
-  // defensively from here down: an editor may now legitimately have MORE nav
-  // items or legal links in the CMS than `constants/copy.ts` declares, in
-  // which case there is no constants entry to fall back to for that index —
-  // and the CMS value is the one that should win anyway. That is safe for
-  // `href`/`label` (and every `nav[i]` field): the fallback only fills a gap
-  // when the block's OWN field is empty, it never changes what KIND of thing
-  // gets rendered. `use_legal_heading`'s default is different — see the
-  // comment on it below — because it decides whether a link renders as the
-  // tokushoho document heading at all, so an index-borrowed default there is
-  // an identity mix-up, not just a stale value.
   const nav: SiteContent["nav"] = navBlocks.map((block, i) => ({
-    href: pickJa(block.data, "href", FALLBACK.nav[i]?.href ?? ""),
-    label: pickBi(block.data, "label", FALLBACK.nav[i]?.label ?? { ja: "", en: "" }),
+    href: requiredUrl(block.data, "href", `site/nav-item[${i}]`),
+    label: requiredBi(block.data, "label", `site/nav-item[${i}]`),
   }));
 
   const legalLinks: SiteContent["footer"]["legalLinks"] = legalBlocks.map((block, i) => {
-    const fallbackLink: (typeof FALLBACK.footer.legalLinks)[number] | undefined =
-      FALLBACK.footer.legalLinks[i];
-    const href = pickJa(block.data, "href", fallbackLink?.href ?? "");
-    // Deliberately NOT `fallbackLink && "key" in fallbackLink ? "tokushoho" : ""`
-    // (what this used to read): that made the default depend on `i` lining up
-    // with FALLBACK.footer.legalLinks' own order, so reordering legal links in
-    // the dashboard could hand an unrelated link the "tokushoho" default and
-    // make it render the tokushoho DOCUMENT HEADING instead of its own label
-    // (Footer.tsx:99 branches its whole render on this value). The live
-    // workspace's one tokushoho block already carries
-    // `use_legal_heading: "tokushoho"` as real CMS data (verified in
-    // scripts/atlas/live-snapshot.json), so `pickJa` returns it from `block.data`
-    // directly and never reaches this default — the default only matters for
-    // every OTHER legal link, where it must never be "tokushoho".
-    const useLegalHeading = pickJa(block.data, "use_legal_heading", "");
+    const context = `site/footer-legal-link[${i}]`;
+    const href = requiredUrl(block.data, "href", context);
+    // `use_legal_heading` is optional because only the tokushoho block uses
+    // the document heading. Every other legal link must provide its own
+    // bilingual label.
+    const useLegalHeading = optionalJa(block.data, "use_legal_heading", context);
 
     if (useLegalHeading === "tokushoho") {
       return { href, key: "tokushoho" };
     }
 
-    const fallbackLabel: Bilingual =
-      fallbackLink && "label" in fallbackLink && fallbackLink.label !== undefined
-        ? fallbackLink.label
-        : { ja: "", en: "" };
-    return { href, label: pickBi(block.data, "label", fallbackLabel) };
+    return { href, label: requiredBi(block.data, "label", context) };
   });
 
   const footer: SiteContent["footer"] = {
-    description: pickBi(footerBlock.data, "description", FALLBACK.footer.description),
+    description: optionalBi(footerBlock.data, "description", "site/site-footer"),
     legalLinks,
-    legal: pickBi(footerBlock.data, "legal", FALLBACK.footer.legal),
+    legal: requiredBi(footerBlock.data, "legal", "site/site-footer"),
   };
 
   return { brand, nav, contactPhone, cta, ui, footer, errorPage, notFoundPage };

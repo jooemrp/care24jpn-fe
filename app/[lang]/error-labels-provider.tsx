@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import { errorPage as fallbackErrorPage } from "@/constants/copy";
+import { CmsContentError } from "@/features/cms/errors";
 import type { SiteContent } from "@/features/cms/site";
 
 /**
@@ -16,10 +16,10 @@ import type { SiteContent } from "@/features/cms/site";
  * "React context is not supported in Server Components. To use context,
  * create a Client Component that accepts children" — verbatim from
  * node_modules/next/dist/docs/01-app/01-getting-started/
- * 05-server-and-client-components.md:347-351, whose own worked example
- * (`ThemeProvider`, same file, lines 353-398) is the shape this file follows:
- * a `"use client"` module exporting a `createContext`-backed Provider,
- * imported and rendered from a Server Component layout.
+ * 05-server-and-client-components.md:347-351. This file follows that
+ * context-backed Provider pattern: a `"use client"` module exporting a
+ * `createContext`-backed Provider, imported and rendered from a Server
+ * Component layout.
  *
  * SAFE TO RENDER WHENEVER `app/[lang]/error.tsx` RENDERS. `error.md:96`
  * ("[error.js] does not wrap the layout.js ... above it in the same
@@ -31,15 +31,11 @@ import type { SiteContent } from "@/features/cms/site";
  * it renders around `children` — already ran to completion, and the context
  * value below is never the default.
  *
- * The default export is `constants/copy.ts#errorPage` — the FALLBACK layer,
- * not a placeholder. `getSite()` itself already returns that exact object
- * when Atlas is unreachable (`features/cms/site-map.ts#FALLBACK.errorPage`),
- * so this default only matters for a component that renders
- * `useErrorLabels()` with no `<ErrorLabelsProvider>` ancestor at all (e.g. a
- * future test) — not for the CMS-down path, which already flows through the
- * Provider with fallback data as its `value`.
+ * There is deliberately no default value. A missing provider is an invalid
+ * CMS boundary and throws a typed error instead of silently importing the
+ * old constants copy.
  */
-const ErrorLabelsContext = createContext<SiteContent["errorPage"]>(fallbackErrorPage);
+const ErrorLabelsContext = createContext<SiteContent["errorPage"] | undefined>(undefined);
 
 export function ErrorLabelsProvider({
   value,
@@ -52,5 +48,14 @@ export function ErrorLabelsProvider({
 }
 
 export function useErrorLabels(): SiteContent["errorPage"] {
-  return useContext(ErrorLabelsContext);
+  const value = useContext(ErrorLabelsContext);
+  if (!value) {
+    throw new CmsContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      'Required CMS field "site.error-page" is unavailable.',
+      ["site.error-page"],
+      "site",
+    );
+  }
+  return value;
 }

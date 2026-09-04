@@ -1,26 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
-import { home as homeCopy, type Bilingual } from "@/constants/copy";
 import type { SiteContent } from "@/features/cms/site";
-
+import type { HomeContent } from "@/features/home/types";
 /**
- * ISO 27001 (BSI) certification mark shown in the footer — a visual trust
- * badge enlarged to roughly 2x its home-page footprint (revision sheet,
- * item 6). The path mirrors `features/cms/home.ts` FALLBACK_IMAGES.isoLogo,
- * so both the footer and the home contact section render the SAME file.
- */
-const ISO_LOGO_SRC = "/images/iso27001-bsi.png";
-/**
- * Reference `width`/`height` for `public/images/logo.png` — the file
- * `site_brand.logo` falls back to, and (today) the only file it resolves
- * to. Navbar and Footer both render the SAME field, so both must pass
- * `next/image` the SAME numbers, sourced from here rather than two
- * independently-guessed pairs (this file's old 320×120, ratio 2.6667, and
- * Navbar.tsx's old 427×160, ratio 2.6688 — TWO DIFFERENT ratios for one
- * image). Exported from here rather than Navbar.tsx because this module
- * carries no `"use client"` boundary, so a plain numeric constant crosses
- * cleanly into either component; Navbar imports it back from here.
+ * Reference `width`/`height` for the backend-provided `site_brand.logo`.
+ * Navbar and Footer both render the same CMS field, so both must pass
+ * `next/image` the same presentation dimensions rather than independently
+ * guessing a ratio. Exported from here rather than Navbar.tsx because this
+ * module carries no `"use client"` boundary, so a plain numeric constant
+ * crosses cleanly into either component; Navbar imports it back from here.
  *
  * NOT the file's raw 5600×2101 (ratio 2.6654), on purpose. `next/image`
  * uses this `width` — not the caller's `w-*` display class — as the
@@ -49,19 +38,23 @@ export const LOGO_INTRINSIC_HEIGHT = 210;
 /**
  * `tokushohoHeading` resolves the tokushoho footer link's label — that
  * union member in `site.footer.legalLinks` carries `key: "tokushoho"`
- * instead of its own `label`, same as constants/copy.ts#footer.legalLinks,
- * so the label follows the document's own heading. `AppShell` reads it
+ * instead of its own `label`, so the label follows the document's own heading.
+ * `AppShell` reads it
  * (see the note there) and passes it down; this component stays synchronous.
  */
 export default function Footer({
   lang,
   site,
   tokushohoHeading,
+  homeContact,
 }: {
   lang: Lang;
   site: SiteContent;
-  tokushohoHeading: Bilingual;
+  tokushohoHeading: SiteContent["brand"]["logoAlt"];
+  homeContact: Pick<HomeContent["contact"], "isms" | "isoLogo" | "isoLogoAlt">;
 }) {
+  const footerDescription = site.footer.description;
+
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-6xl px-6 py-14">
@@ -73,9 +66,9 @@ export default function Footer({
           height={LOGO_INTRINSIC_HEIGHT}
           className="h-auto w-32"
         />
-        {t(site.footer.description, lang) ? (
+        {footerDescription ? (
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
-            {t(site.footer.description, lang)}
+            {t(footerDescription, lang)}
           </p>
         ) : null}
 
@@ -98,15 +91,15 @@ export default function Footer({
         <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <div className="flex h-24 w-auto shrink-0 items-center justify-center rounded-lg bg-white p-1">
             <Image
-              src={ISO_LOGO_SRC}
-              alt={t(homeCopy.contact.isoLogoAlt, lang)}
+              src={homeContact.isoLogo}
+              alt={t(homeContact.isoLogoAlt, lang)}
               width={257}
               height={182}
-              className="h-[5.5rem] w-auto"
+              className="h-22 w-auto"
             />
           </div>
           <p className="max-w-xl text-xs leading-relaxed text-muted">
-            {t(homeCopy.contact.isms, lang)}
+            {t(homeContact.isms, lang)}
           </p>
         </div>
       </div>

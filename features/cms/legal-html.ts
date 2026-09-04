@@ -329,8 +329,7 @@ function isSafeHref(href: string): boolean {
  *     `renderInlineText` already understands `[label](href)` — it's the
  *     pre-existing inline markup `LegalBlock.text` supports for links —
  *     and always resolves `href` through `localizeHref()` before handing it
- *     to `<Link>`, so an internal href from Atlas stays language-aware the
- *     same way a fallback link from constants/legal.ts already does.
+ *     to `<Link>`, so an internal href from Atlas stays language-aware.
  *     Must run before pass 5, which would otherwise strip the `href` along
  *     with the tag.
  *  3. `<strong>`/`<b>` -> `**`, `<em>`/`<i>` -> `_`. These are the other two

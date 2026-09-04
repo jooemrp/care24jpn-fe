@@ -80,23 +80,6 @@ type Binding = {
  */
 const ALLOWLIST: Array<Binding & { reason: string }> = [
   {
-    file: "app/[lang]/page.tsx",
-    line: 1030,
-    content: "href",
-    reason:
-      "ApplyBanner's <a> branch. Its only caller wraps the value first: " +
-      "page.tsx staff banner passes href={localizeHref(...)} into this " +
-      "component — see the comment above the ApplyBanner call site.",
-  },
-  {
-    file: "app/[lang]/page.tsx",
-    line: 1041,
-    content: "href",
-    reason:
-      "Same ApplyBanner component, the <Link> branch a few lines below " +
-      "the <a> branch above; same already-localized prop.",
-  },
-  {
     file: "components/Navbar.tsx",
     line: 217,
     content: "homeHref",

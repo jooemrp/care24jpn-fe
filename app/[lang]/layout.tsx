@@ -4,11 +4,13 @@ import NextTopLoader from "nextjs-toploader";
 import "../../styles/globals.css";
 import { notoSansJP } from "../fonts";
 import AppShell from "@/components/AppShell";
+import Providers from "@/components/providers";
 import JsonLd, { organizationJsonLd } from "@/components/JsonLd";
 import { SITE_URL } from "@/constants/site";
 import { isLang, LANGS } from "@/features/lang/i18n";
 import { getSite } from "@/features/cms/site";
 import { getLegalHeading } from "@/features/cms/legal";
+import { getHome } from "@/features/cms/home";
 import { routeAlternates, titleTemplate } from "@/features/seo/pageMetadata";
 import { ErrorLabelsProvider } from "./error-labels-provider";
 
@@ -114,29 +116,16 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
-  // Both reads are issued in the SAME tick, then awaited together.
-  //
-  // `AppShell` needs the tokushoho heading for the footer link label and asks
-  // for it with its own `Promise.all` — but it is only rendered once this
-  // function has returned, so by then `getSite()` has already resolved and
-  // that `Promise.all` had nothing left to overlap (measured: the legal fetch
-  // started 4ms AFTER the site fetch ended). Starting the heading read here
-  // puts it in the first wave alongside `site`; because `getLegalHeading` is
-  // React-`cache()`-ed, `AppShell` then picks up this very promise instead of
-  // issuing a second request. Its value is deliberately dropped here — this
-  // call exists to start the work, not to consume it.
-  //
-  // `getSite()` is deduped with the call in generateMetadata above (React
-  // cache() again, per request), so neither of these is a second fetch either.
-  //
-  // Safe to put in a `Promise.all`, which rejects as soon as any input does:
-  // `getLegalHeading` cannot reject. It is wrapped in its own try/catch and
-  // returns the `constants/legal.ts` heading on every path, including an
-  // unexpected throw (see the catch in features/cms/legal.ts, which explains
-  // why the guard is there rather than relying on reasoning about internals).
-  // So a footer link label cannot take this layout — i.e. every route, in
-  // both locales — down.
-  const [site] = await Promise.all([getSite(), getLegalHeading("legal-tokushoho")]);
+  // Fetch every value needed by the shared shell in the first request wave.
+  // These are strict CMS reads: a missing logo, certification asset, label or
+  // document heading reaches the route error boundary instead of falling
+  // back to bundled content. React cache() dedupes the site read with
+  // generateMetadata and any page-level CTA read.
+  const [site, tokushohoHeading, home] = await Promise.all([
+    getSite(),
+    getLegalHeading("legal-tokushoho"),
+    getHome(),
+  ]);
 
   return (
     <html
@@ -158,13 +147,19 @@ export default async function RootLayout({
           shadow="0 0 8px rgba(43,126,193,0.6)"
           zIndex={60}
         />
-        {/* `AppShell` (a Server Component) survived by definition whenever
-            this renders — see error-labels-provider.tsx's doc comment on why
-            `app/[lang]/error.tsx` can never activate from a failure inside
-            THIS layout. Wraps AppShell entirely (not just `children`) purely
-            for placement simplicity; Navbar/Footer ignore the context. */}
+        {/* `AppShell` remains a Server Component and receives all request-time
+            chrome data from this layout. */}
         <ErrorLabelsProvider value={site.errorPage}>
-          <AppShell lang={lang}>{children}</AppShell>
+          <Providers>
+            <AppShell
+              lang={lang}
+              site={site}
+              tokushohoHeading={tokushohoHeading}
+              homeContact={home.contact}
+            >
+              {children}
+            </AppShell>
+          </Providers>
         </ErrorLabelsProvider>
       </body>
     </html>

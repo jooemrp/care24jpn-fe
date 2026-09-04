@@ -87,10 +87,21 @@ function otherSiteBlocks(): CmsBlock[] {
     data,
   });
   return [
-    simple("site-brand", 0, { name: bi("Care 24"), logo_alt: bi("logo"), tagline: bi("tag") }),
+    simple("site-brand", 0, {
+      name: bi("Care 24"),
+      logo: "https://cdn.example.com/logo.png",
+      logo_alt: bi("logo"),
+      tagline: bi("tag"),
+    }),
     simple("site-contact-phone", 1, { display: bi("0120"), tel: bi("0120"), note: bi("note") }),
     simple("site-cta", 2, { primary: bi("p"), secondary: bi("s"), contact: bi("c") }),
-    simple("site-ui-labels", 3, { menu_toggle_label: bi("m"), lang_toggle_label: bi("l") }),
+    simple("site-ui-labels", 3, {
+      menu_toggle_label: bi("m"),
+      lang_toggle_label: bi("l"),
+      toc_label: bi("toc"),
+      lang_short_ja: bi("JA"),
+      lang_short_en: bi("EN"),
+    }),
     simple("site-error-labels", 4, { title: bi("t"), body: bi("b"), retry_label: bi("r") }),
     simple("site-not-found-labels", 5, {
       eyebrow: bi("404"),
@@ -106,8 +117,7 @@ function otherSiteBlocks(): CmsBlock[] {
 
 async function main(): Promise<void> {
   const siteMap = (await import(siteMapPath)) as typeof SiteMapModule;
-  const { mapSite, FALLBACK } = siteMap;
-  const noop = () => {};
+  const { mapSite } = siteMap;
 
   // ---------------------------------------------------------------------------
   // Fixtures — shaped like the live "site" page's 5 footer-legal-link blocks
@@ -158,30 +168,22 @@ async function main(): Promise<void> {
   type LegalLink = { href: string; key: "tokushoho" } | { href: string; label: Bilingual };
 
   function legalLinksOf(blocks: CmsBlock[]): LegalLink[] {
-    const result = mapSite(blocks, noop);
-    assert.ok(result, "mapSite must succeed for a full set of site blocks");
-    return result.footer.legalLinks;
+    return mapSite(blocks).footer.legalLinks;
   }
 
-  // ---------------------------------------------------------------------------
-  // (a) CMS-off / missing-blocks parity: FALLBACK.footer.legalLinks itself is
-  // unaffected by anything in this file — mapSite() returns null (never
-  // reaches the legal-link mapping) when a declared block type is entirely
-  // absent, and site.ts's fetchSite() serves FALLBACK verbatim in that case.
-  // ---------------------------------------------------------------------------
-
-  test("CMS-off path: FALLBACK.footer.legalLinks is untouched by this change", () => {
-    assert.equal(FALLBACK.footer.legalLinks.length, 5);
-    assert.deepEqual(FALLBACK.footer.legalLinks[2], { href: "/tokushoho", key: "tokushoho" });
-    assert.deepEqual(FALLBACK.footer.legalLinks[0], {
-      href: "/company",
-      label: { ja: "運営会社", en: "Operating Company" },
-    });
+  test("mapSite() rejects missing required block types", () => {
+    assert.throws(() => mapSite(otherSiteBlocks()));
   });
 
-  test("mapSite() returns null (never builds legalLinks) when footer-legal-link blocks are entirely missing", () => {
-    const result = mapSite(otherSiteBlocks(), noop);
-    assert.equal(result, null);
+  test("an intentionally empty footer description does not block site chrome", () => {
+    const blocks = siteBlocks(liveOrderLegalBlocks()).map((block) =>
+      block.type === "site-footer"
+        ? { ...block, data: { ...block.data, description: { ja: "", en: "" } } }
+        : block,
+    );
+
+    const result = mapSite(blocks);
+    assert.equal(result.footer.description, undefined);
   });
 
   // ---------------------------------------------------------------------------
@@ -236,10 +238,9 @@ async function main(): Promise<void> {
   // `use_legal_heading`'s default changed, not the href/label fallback.
   // ---------------------------------------------------------------------------
 
-  test("a legal link missing its own href/label falls back to constants/copy.ts by index", () => {
+  test("a legal link missing its own href/label is rejected", () => {
     const blocks = siteBlocks([legalBlock(9, {})]);
-    const result = legalLinksOf(blocks);
-    assert.deepEqual(result[0], FALLBACK.footer.legalLinks[0]);
+    assert.throws(() => mapSite(blocks));
   });
 
   // ---------------------------------------------------------------------------
@@ -265,16 +266,15 @@ async function main(): Promise<void> {
     return [...base, errorLabels, ...liveOrderLegalBlocks()];
   }
 
-  test("mapSite() returns null when the site-error-labels block type is entirely missing", () => {
+  test("mapSite() rejects a missing site-error-labels block type", () => {
     const blocks = otherSiteBlocks()
       .filter((b) => b.type !== "site-error-labels")
       .concat(liveOrderLegalBlocks());
-    assert.equal(mapSite(blocks, noop), null);
+    assert.throws(() => mapSite(blocks));
   });
 
   test("mapSite() reads title/body/retry_label off the site-error-labels block into errorPage.title/.body/.retryLabel", () => {
-    const result = mapSite(siteBlocksWithLegal(), noop);
-    assert.ok(result, "mapSite must succeed for a full set of site blocks");
+    const result = mapSite(siteBlocksWithLegal());
     assert.deepEqual(result.errorPage, {
       title: bi("エラー"),
       body: bi("本文"),
@@ -282,20 +282,8 @@ async function main(): Promise<void> {
     });
   });
 
-  test("a site-error-labels block missing a field falls back to constants/copy.ts#errorPage for that field only", () => {
-    const result = mapSite(siteBlocksWithLegal({ body: undefined }), noop);
-    assert.ok(result, "mapSite must succeed for a full set of site blocks");
-    assert.deepEqual(result.errorPage.title, bi("エラー"));
-    assert.deepEqual(result.errorPage.body, FALLBACK.errorPage.body);
-    assert.deepEqual(result.errorPage.retryLabel, bi("再試行"));
-  });
-
-  test("CMS-off path: FALLBACK.errorPage matches today's hardcoded error.tsx copy", () => {
-    assert.deepEqual(FALLBACK.errorPage, {
-      title: { ja: "エラーが発生しました", en: "Something went wrong" },
-      body: { ja: "しばらくしてから再度お試しください。", en: "Please try again in a moment." },
-      retryLabel: { ja: "再試行", en: "Try again" },
-    });
+  test("a site-error-labels block missing a field is rejected", () => {
+    assert.throws(() => mapSite(siteBlocksWithLegal({ body: undefined })));
   });
 }
 

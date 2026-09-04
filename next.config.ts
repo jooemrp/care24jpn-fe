@@ -24,8 +24,8 @@ const nextConfig: NextConfig = {
     // media uploaded next month lands under a new folder.
     //
     // Anything that is not an http(s) URL never reaches this config at all —
-    // `features/cms/fields.ts#pickImage` rejects it and serves the file
-    // bundled in `public/images/` instead.
+    // `features/cms/fields.ts#requiredImageUrl` rejects it as a typed CMS
+    // error instead of serving a bundled file from `public/images/`.
     remotePatterns: [
       {
         protocol: "https",

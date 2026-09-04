@@ -38,28 +38,22 @@ function localizedUrl(lang: Lang, route: string): string {
 
 /**
  * A route's real `lastmod`, from Atlas's `updated_at` for its page
- * (`getPageMeta`, ST-03) — falls back to build time (`new Date()`) per route,
- * inside its own try/catch, so one missing/malformed page or Atlas being
- * unreachable entirely (e.g. `ATLAS_API_KEY` unset) can never fail the whole
- * sitemap request or the build. `getPageMeta` itself already never throws
- * (see features/cms/client.ts), but the acceptance criteria for this route
- * ask for an explicit per-route guard rather than relying on that contract
- * alone.
+ * (`getPageMeta`, ST-03). If Atlas cannot provide a valid timestamp, omit
+ * `lastModified` rather than inventing a build-time value; upstream failures
+ * remain visible as typed CMS/API errors.
  */
-async function lastModifiedFor(entry: SeoRouteEntry): Promise<Date> {
-  try {
-    const meta = await getPageMeta(entry.atlasSlug);
-    if (meta?.updatedAt) {
-      const parsed = new Date(meta.updatedAt);
-      if (!Number.isNaN(parsed.getTime())) return parsed;
-    }
-  } catch (error) {
+async function lastModifiedFor(entry: SeoRouteEntry): Promise<Date | undefined> {
+  const meta = await getPageMeta(entry.atlasSlug);
+  if (!meta.updatedAt) return undefined;
+
+  const parsed = new Date(meta.updatedAt);
+  if (Number.isNaN(parsed.getTime())) {
     console.error(
-      `[sitemap] getPageMeta("${entry.atlasSlug}") failed, falling back to build time:`,
-      error,
+      `[sitemap] getPageMeta("${entry.atlasSlug}") returned an invalid updated_at value; omitting lastModified.`,
     );
+    return undefined;
   }
-  return new Date();
+  return parsed;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -86,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return LANGS.map((lang) => ({
       url: languages[lang],
-      lastModified,
+      ...(lastModified ? { lastModified } : {}),
       alternates,
     }));
   });

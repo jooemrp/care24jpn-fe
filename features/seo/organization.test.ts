@@ -19,22 +19,9 @@
  * the specifier is built at runtime and imported dynamically inside
  * `main()`.
  *
- * PROVEN RED (added together with the `resolveLegalName` fix below). Before
- * `organization.ts:179` gained the `row.value.en.trim() !== ""` guard (it
- * read only `if (row) return row.value.en;`), the test "a 'Trade name' row
- * that exists but has an empty/whitespace value.en warns and falls back,
- * never emitting an empty legalName" failed with:
- *
- *   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
- *   0 !== 1
- *
- * (raised by `assert.equal(warnings.length, 1)` — no warning fired, and
- * `result.legalName` came back `"   "` unchanged instead of falling back).
- * Every other test in this file, including the sibling "Head
- * office"/"Established" asymmetry check right after it, was already green
- * against the unguarded code — confirming the bug was isolated to
- * `resolveLegalName`. The guard was restored immediately after capturing
- * this output (`diff` confirmed byte-identical to the fixed file).
+ * Missing or malformed CMS rows must fail loudly. These tests deliberately
+ * avoid a constants-backed fixture so a passing assertion cannot conceal a
+ * bundled-content fallback.
  */
 
 import assert from "node:assert/strict";
@@ -53,10 +40,12 @@ function bi(ja: string, en: string): { ja: string; en: string } {
  * two different ones. */
 const COMPANY_ROWS_A: OrganizationModule.CompanyRow[] = [
   {
+    key: "trade-name",
     label: bi("商号", "Trade name"),
     value: bi("メディカルインフォマティクス株式会社", "MedicalInformatics Co.,Ltd."),
   },
   {
+    key: "head-office",
     label: bi("本社", "Head office"),
     value: bi(
       "〒100-0005 東京都千代田区丸の内二丁目1番1号 明治生命館4階",
@@ -64,6 +53,7 @@ const COMPANY_ROWS_A: OrganizationModule.CompanyRow[] = [
     ),
   },
   {
+    key: "established",
     label: bi("設立", "Established"),
     value: bi("2002年10月18日", "October 18, 2002"),
   },
@@ -71,10 +61,12 @@ const COMPANY_ROWS_A: OrganizationModule.CompanyRow[] = [
 
 const COMPANY_ROWS_B: OrganizationModule.CompanyRow[] = [
   {
+    key: "trade-name",
     label: bi("商号", "Trade name"),
     value: bi("サンプル株式会社", "Sample Care Holdings K.K."),
   },
   {
+    key: "head-office",
     label: bi("本社", "Head office"),
     value: bi(
       "〒530-0001 大阪府大阪市北区梅田三丁目1番1号 サンプルビル9階",
@@ -82,39 +74,18 @@ const COMPANY_ROWS_B: OrganizationModule.CompanyRow[] = [
     ),
   },
   {
+    key: "established",
     label: bi("設立", "Established"),
     value: bi("2015年4月1日", "April 1, 2015"),
   },
 ];
 
-/** company_rows carrying every OTHER field but missing "Head office" and
- * "Established" — the documented silent-failure mode: a renamed label in
- * the dashboard makes `.find()` miss. */
+/** company_rows carrying every OTHER field but missing the stable keys — a
+ * malformed backend response that must not be repaired from bundled copy. */
 const COMPANY_ROWS_RENAMED: OrganizationModule.CompanyRow[] = [
   { label: bi("会社名", "Company name"), value: bi("リネーム株式会社", "Renamed Co., Ltd.") },
   { label: bi("本社所在地", "Office location"), value: bi("どこか", "Somewhere") },
   { label: bi("創業", "Founded"), value: bi("いつか", "Someday") },
-];
-
-const FALLBACK_COMPANY_ROWS: OrganizationModule.CompanyRow[] = [
-  {
-    label: bi("商号", "Trade name"),
-    value: bi(
-      "メディカルインフォマティクス株式会社\nMedicalInformatics Co.,Ltd.",
-      "MedicalInformatics Co.,Ltd.",
-    ),
-  },
-  {
-    label: bi("本社", "Head office"),
-    value: bi(
-      "〒100-0005\n東京都千代田区丸の内二丁目1番1号 明治生命館4階",
-      "Meiji Seimei Building 4F, 2-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005",
-    ),
-  },
-  {
-    label: bi("設立", "Established"),
-    value: bi("2002年10月18日", "October 18, 2002"),
-  },
 ];
 
 async function main() {
@@ -123,8 +94,8 @@ async function main() {
   const baseInput = {
     brandName: "Care 24 Japan",
     telephone: "0120-000-000",
+    logoUrl: "https://cdn.example.com/logo.png",
     siteUrl: "https://care24jpn.vercel.app",
-    fallbackCompanyRows: FALLBACK_COMPANY_ROWS,
   };
 
   // ---------------------------------------------------------------------
@@ -152,21 +123,22 @@ async function main() {
     ]);
   });
 
-  test("logo/image are omitted as a pair when logoUrl is absent; key order for the rest is unchanged", () => {
-    const result = buildOrganizationJsonLd({
-      ...baseInput,
-      companyRows: COMPANY_ROWS_A,
-    });
-    assert.deepEqual(Object.keys(result), [
-      "@context",
-      "@type",
-      "name",
-      "legalName",
-      "url",
-      "telephone",
-      "address",
-      "foundingDate",
-    ]);
+  test("missing logoUrl is rejected instead of omitting the backend image", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          logoUrl: "",
+          companyRows: COMPANY_ROWS_A,
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_MISSING_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
   // ---------------------------------------------------------------------
@@ -218,163 +190,146 @@ async function main() {
   });
 
   // ---------------------------------------------------------------------
-  // The documented silent-failure mode: a renamed row label must WARN, not
-  // silently vanish, and must still fall back to the constants-backed row
-  // rather than regressing the output to nothing.
+  // A renamed row label is malformed backend content. It must surface as a
+  // typed error rather than silently borrowing a constants-backed row.
   // ---------------------------------------------------------------------
 
-  test("a renamed 'Head office'/'Established'/'Trade name' label warns with [cms:unexpected-content] and falls back to fallbackCompanyRows, not to an empty value", () => {
-    const warnings: string[] = [];
-    const originalWarn = console.warn;
-    console.warn = (message?: unknown) => {
-      warnings.push(String(message));
-    };
-    let result: Record<string, unknown>;
-    try {
-      result = buildOrganizationJsonLd({
-        ...baseInput,
-        companyRows: COMPANY_ROWS_RENAMED,
-      });
-    } finally {
-      console.warn = originalWarn;
-    }
-
-    assert.equal(warnings.length, 3);
-    for (const warning of warnings) {
-      assert.match(warning, /\[cms:unexpected-content\]/);
-    }
-    assert.equal(result.legalName, "MedicalInformatics Co.,Ltd.");
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
-    assert.equal(result.foundingDate, "2002-10-18");
-    assert.notEqual(result.legalName, "");
+  test("renamed company rows throw a typed content error instead of using constants", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          companyRows: COMPANY_ROWS_RENAMED,
+        }),
+      (error: unknown) => {
+        const candidate = error as {
+          name?: string;
+          code?: string;
+          fields?: string[];
+        };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_MISSING_REQUIRED_FIELD" &&
+          candidate.fields?.some((field) => field.includes("trade-name")) === true
+        );
+      },
+    );
   });
 
-  test("an unparseable Head office address string warns and falls back to fallbackCompanyRows' address", () => {
-    const warnings: string[] = [];
-    const originalWarn = console.warn;
-    console.warn = (message?: unknown) => {
-      warnings.push(String(message));
-    };
-    let result: Record<string, unknown>;
-    try {
-      result = buildOrganizationJsonLd({
-        ...baseInput,
-        companyRows: [
-          { label: bi("本社", "Head office"), value: bi("どこか", "not a parseable address") },
-        ],
-      });
-    } finally {
-      console.warn = originalWarn;
-    }
-
-    assert.ok(warnings.some((w) => w.includes("address-unparseable") || w.includes("does not match")));
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
+  test("an unparseable Head office address throws a typed content error", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          companyRows: [
+            COMPANY_ROWS_A[0]!,
+            {
+              ...COMPANY_ROWS_A[1]!,
+              value: bi("どこか", "not a parseable address"),
+            },
+            COMPANY_ROWS_A[2]!,
+          ],
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
-  test("an unparseable Established date string warns and falls back to fallbackCompanyRows' foundingDate", () => {
-    const originalWarn = console.warn;
-    console.warn = () => {};
-    let result: Record<string, unknown>;
-    try {
-      result = buildOrganizationJsonLd({
-        ...baseInput,
-        companyRows: [{ label: bi("設立", "Established"), value: bi("いつか", "not a date") }],
-      });
-    } finally {
-      console.warn = originalWarn;
-    }
-
-    assert.equal(result.foundingDate, "2002-10-18");
+  test("an unparseable Established date throws a typed content error", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          companyRows: [
+            COMPANY_ROWS_A[0]!,
+            COMPANY_ROWS_A[1]!,
+            {
+              ...COMPANY_ROWS_A[2]!,
+              value: bi("いつか", "not a date"),
+            },
+          ],
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
   // ---------------------------------------------------------------------
   // A company_row that EXISTS with a matching label but whose value.en is
-  // empty/whitespace must warn and fall back — never emit an empty
-  // legalName. "Head office"/"Established" already do this correctly as
-  // written (an empty string fails parseAddress/parseFoundingDate's regex,
-  // which routes through the existing "unparseable" warning path), so this
-  // block asserts both: legalName's own guard, and the pre-existing
-  // asymmetry it closes.
+  // empty/whitespace must throw — never emit an empty JSON-LD property.
   // ---------------------------------------------------------------------
 
-  test("a 'Trade name' row that exists but has an empty/whitespace value.en warns and falls back, never emitting an empty legalName", () => {
-    const warnings: string[] = [];
-    const originalWarn = console.warn;
-    console.warn = (message?: unknown) => {
-      warnings.push(String(message));
-    };
-    let result: Record<string, unknown>;
-    try {
-      result = buildOrganizationJsonLd({
-        ...baseInput,
-        companyRows: [
-          { label: bi("商号", "Trade name"), value: bi("空", "   ") },
-        ],
-      });
-    } finally {
-      console.warn = originalWarn;
-    }
-
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /\[cms:unexpected-content\]/);
-    assert.equal(result.legalName, "MedicalInformatics Co.,Ltd.");
-    assert.notEqual(result.legalName, "");
+  test("an empty Trade name value throws a typed content error", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          companyRows: [
+            { label: bi("商号", "Trade name"), value: bi("空", "   ") },
+          ],
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
-  test("an empty value.en for 'Head office'/'Established' already falls back correctly (asymmetry check — these two are green as written)", () => {
-    const originalWarn = console.warn;
-    console.warn = () => {};
-    let result: Record<string, unknown>;
-    try {
-      result = buildOrganizationJsonLd({
-        ...baseInput,
-        companyRows: [
-          { label: bi("本社", "Head office"), value: bi("空", "   ") },
-          { label: bi("設立", "Established"), value: bi("空", "   ") },
-        ],
-      });
-    } finally {
-      console.warn = originalWarn;
-    }
-
-    assert.deepEqual(result.address, {
-      "@type": "PostalAddress",
-      streetAddress: "2-1-1 Marunouchi, Meiji Seimei Building 4F",
-      addressLocality: "Chiyoda-ku",
-      addressRegion: "Tokyo",
-      postalCode: "100-0005",
-      addressCountry: "JP",
-    });
-    assert.equal(result.foundingDate, "2002-10-18");
+  test("empty Head office and Established values throw typed content errors", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          companyRows: [
+            COMPANY_ROWS_A[0]!,
+            { ...COMPANY_ROWS_A[1]!, value: bi("空", "   ") },
+            { ...COMPANY_ROWS_A[2]!, value: bi("空", "   ") },
+          ],
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
   // ---------------------------------------------------------------------
-  // Relative logoUrl is resolved against siteUrl (schema.org logo/image
-  // must be absolute).
+  // Relative logoUrl is malformed backend content and must not become a
+  // public-image fallback.
   // ---------------------------------------------------------------------
 
-  test("a relative logoUrl (the bundled /images/logo.png fallback) is resolved against siteUrl", () => {
-    const result = buildOrganizationJsonLd({
-      ...baseInput,
-      logoUrl: "/images/logo.png",
-      companyRows: COMPANY_ROWS_A,
-    });
-    assert.equal(result.logo, "https://care24jpn.vercel.app/images/logo.png");
-    assert.equal(result.image, "https://care24jpn.vercel.app/images/logo.png");
+  test("a relative logoUrl throws a typed content error", () => {
+    assert.throws(
+      () =>
+        buildOrganizationJsonLd({
+          ...baseInput,
+          logoUrl: "/images/logo.png",
+          companyRows: COMPANY_ROWS_A,
+        }),
+      (error: unknown) => {
+        const candidate = error as { name?: string; code?: string };
+        return (
+          candidate.name === "CmsContentError" &&
+          candidate.code === "CMS_INVALID_REQUIRED_FIELD"
+        );
+      },
+    );
   });
 
   test("an absolute logoUrl (a real S3 URL from site.brand.logo) is passed through unchanged", () => {

@@ -24,19 +24,22 @@
  *
  * Validation: TanStack Form + Zod (`contactFormValuesSchema`) on submit only —
  * no native `reportValidity`. Issue message keys map through `fieldErrorMessage`
- * + `contactPage.errors`.
+ * + CMS-provided contact error copy.
  *
- * Responsive + theme: the form is full-width on mobile (stacked, `max-w-2xl`)
- * and uses the site's semantic tokens (bg-surface/border-border/text-body/
- * text-heading) — the same tokens the rest of the site uses for light/dark
- * theming, so the form adapts wherever the site's palette adapts.
+ * Responsive + semantic tokens: the form is full-width on mobile (stacked,
+ * `max-w-2xl`) and uses the site's light palette (bg-surface/border-border/
+ * text-body/text-heading) consistently with the rest of the site.
  */
 
 import { useRef, useState, useId } from "react";
 import { useForm } from "@tanstack/react-form";
-import { contactPage } from "@/constants/contact";
+import type { ContactPageContent } from "@/features/contact/content-contract";
 import { t, type Lang } from "@/features/lang/i18n";
-import { statusCopyFor, submitContact, type ContactSubmitResult } from "@/features/contact/lib";
+import { useContactMutation } from "@/features/contact/hooks";
+import {
+  statusCopyFor,
+  type ContactSubmitResult,
+} from "@/features/contact/lib";
 import {
   contactFormValuesSchema,
   fieldErrorMessage,
@@ -45,6 +48,7 @@ import {
 
 type ContactFormProps = {
   lang: Lang;
+  content: ContactPageContent;
 };
 
 const fieldClassName =
@@ -54,7 +58,7 @@ const fieldClassName =
 
 const labelClassName = "block text-sm font-semibold text-heading";
 
-const errorClassName = "text-sm text-red-600 dark:text-red-400";
+const errorClassName = "text-sm text-red-600";
 
 const emptyFormValues = {
   category: "",
@@ -81,7 +85,7 @@ function issueKey(error: unknown): string {
   return "required";
 }
 
-export default function ContactForm({ lang }: ContactFormProps) {
+export default function ContactForm({ lang, content }: ContactFormProps) {
   const formId = useId();
   const categoryId = `${formId}-category`;
   const nameId = `${formId}-name`;
@@ -97,6 +101,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
 
   const [status, setStatus] = useState<ContactSubmitResult | "sending" | "idle">("idle");
   const [submitAttemptedAt, setSubmitAttemptedAt] = useState<number>(0);
+  const contactMutation = useContactMutation();
 
   const form = useForm({
     defaultValues: emptyFormValues,
@@ -120,21 +125,25 @@ export default function ContactForm({ lang }: ContactFormProps) {
 
       // Re-parse so Zod trims/narrows output (TanStack keeps draft input values).
       const parsed = contactFormValuesSchema.parse(value);
-      const result = await submitContact({
-        ...parsed,
-        form_load_at: formLoadStartedAtRef.current!,
-      });
+      try {
+        const result = await contactMutation.mutateAsync({
+          ...parsed,
+          form_load_at: formLoadStartedAtRef.current!,
+        });
 
-      setStatus(result);
-      if (result === "success") {
-        form.reset();
+        setStatus(result);
+        if (result === "success") {
+          form.reset();
+        }
+      } catch {
+        setStatus("error");
       }
     },
   });
 
-  const submitting = status === "sending";
-  const statusCopy = status === "idle" ? null : statusCopyFor(status, lang);
-  const categoryPlaceholder = lang === "ja" ? "選択してください" : "Please select";
+  const submitting = status === "sending" || contactMutation.isPending;
+  const statusCopy = status === "idle" ? null : statusCopyFor(status, lang, content.status);
+  const categoryPlaceholder = t(content.categoryPlaceholder, lang);
 
   return (
     <form
@@ -147,31 +156,28 @@ export default function ContactForm({ lang }: ContactFormProps) {
         void form.handleSubmit();
       }}
       noValidate
-      className="mx-auto flex w-full max-w-2xl flex-col gap-6"
+      className="mx-auto flex w-full max-w-2xl flex-col gap-6 md:gap-7"
       aria-describedby={noteId}
     >
       <p id={noteId} className="text-sm leading-relaxed text-muted">
-        {t(contactPage.requiredNote, lang)}
+        {t(content.requiredNote, lang)}
       </p>
 
       {/* Honeypot + reserved traps — hidden from humans and screen readers,
           only bots (and scripted tools) ever fill these. Never show errors. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
+      <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
         <form.Field name="company">
           {(field) => (
-            <>
-              <label htmlFor={`${formId}-company`}>Company</label>
-              <input
-                id={`${formId}-company`}
-                type="text"
-                name={field.name}
-                tabIndex={-1}
-                autoComplete="off"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </>
+            <input
+              id={`${formId}-company`}
+              type="text"
+              name={field.name}
+              tabIndex={-1}
+              autoComplete="off"
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+            />
           )}
         </form.Field>
         <form.Field name="company_name">
@@ -197,7 +203,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           return (
             <div className="flex flex-col gap-2">
               <label htmlFor={categoryId} className={labelClassName}>
-                {t(contactPage.fields.category, lang)}
+                {t(content.fields.category, lang)}
               </label>
               <select
                 id={categoryId}
@@ -213,7 +219,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
                 <option value="" disabled>
                   {categoryPlaceholder}
                 </option>
-                {contactPage.categories.map((item) => (
+                {content.categories.map((item) => (
                   <option key={item.value} value={item.value}>
                     {t(item.label, lang)}
                   </option>
@@ -221,7 +227,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
               </select>
               {hasError ? (
                 <p id={errorId} className={errorClassName}>
-                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, contactPage.errors)}
+                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, content.errors)}
                 </p>
               ) : null}
             </div>
@@ -236,7 +242,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           return (
             <div className="flex flex-col gap-2">
               <label htmlFor={nameId} className={labelClassName}>
-                {t(contactPage.fields.name, lang)}
+                {t(content.fields.name, lang)}
               </label>
               <input
                 id={nameId}
@@ -253,7 +259,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
               />
               {hasError ? (
                 <p id={errorId} className={errorClassName}>
-                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, contactPage.errors)}
+                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, content.errors)}
                 </p>
               ) : null}
             </div>
@@ -268,7 +274,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           return (
             <div className="flex flex-col gap-2">
               <label htmlFor={phoneId} className={labelClassName}>
-                {t(contactPage.fields.phone, lang)}
+                {t(content.fields.phone, lang)}
               </label>
               <input
                 id={phoneId}
@@ -285,7 +291,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
               />
               {hasError ? (
                 <p id={errorId} className={errorClassName}>
-                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, contactPage.errors)}
+                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, content.errors)}
                 </p>
               ) : null}
             </div>
@@ -300,7 +306,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           return (
             <div className="flex flex-col gap-2">
               <label htmlFor={emailId} className={labelClassName}>
-                {t(contactPage.fields.email, lang)}
+                {t(content.fields.email, lang)}
               </label>
               <input
                 id={emailId}
@@ -317,7 +323,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
               />
               {hasError ? (
                 <p id={errorId} className={errorClassName}>
-                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, contactPage.errors)}
+                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, content.errors)}
                 </p>
               ) : null}
             </div>
@@ -332,7 +338,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           return (
             <div className="flex flex-col gap-2">
               <label htmlFor={messageId} className={labelClassName}>
-                {t(contactPage.fields.message, lang)}
+                {t(content.fields.message, lang)}
               </label>
               <textarea
                 id={messageId}
@@ -348,7 +354,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
               />
               {hasError ? (
                 <p id={errorId} className={errorClassName}>
-                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, contactPage.errors)}
+                  {fieldErrorMessage(issueKey(field.state.meta.errors[0]), lang, content.errors)}
                 </p>
               ) : null}
             </div>
@@ -362,7 +368,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
           disabled={submitting}
           className="inline-flex w-full items-center justify-center rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid disabled:cursor-wait disabled:opacity-60 sm:w-auto"
         >
-          {submitting ? t(contactPage.status.sending, lang) : t(contactPage.fields.submit, lang)}
+          {submitting ? t(content.status.sending, lang) : t(content.fields.submit, lang)}
         </button>
 
         {/* Inline status — read out by assistive tech via aria-live. */}
@@ -372,9 +378,9 @@ export default function ContactForm({ lang }: ContactFormProps) {
           aria-live="polite"
           className={`min-h-5 text-sm leading-relaxed ${
             status === "error" || status === "rate_limited"
-              ? "text-red-600 dark:text-red-400"
+              ? "text-red-600"
               : status === "success"
-                ? "text-emerald-700 dark:text-emerald-400"
+                ? "text-emerald-700"
                 : "text-muted"
           }`}
         >

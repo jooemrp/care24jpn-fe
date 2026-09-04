@@ -4,12 +4,10 @@
  * languages: { ja, en, "x-default" } }, openGraph: { title, description,
  * url, siteName, locale, alternateLocale, images } }`.
  *
- * CMS-driven per decision D-3 (ST-05): awaits `getPageMeta(entry.atlasSlug)`
- * (ST-03) and, for each of title/description/og:image, uses the CMS value
- * when present, else the `constants/seo.ts` literal (title/description) or
- * the per-locale local fallback card (og:image,
- * `constants/seo.ts#fallbackOgImage` — see ST-OG). Every field still has
- * exactly one winner; there is no dual-source churn.
+ * CMS-driven: awaits the strict `getPageMetaStrict(entry.atlasSlug)` read and
+ * requires the CMS value for every SEO field this page emits. Missing or
+ * malformed backend metadata becomes a typed content error; no bundled
+ * title, description or image is substituted.
  *
  * `route` must be an absolute, unprefixed path ("/pricing", not "pricing"
  * or "/en/pricing") — the same shape `app/[lang]/layout.tsx` uses for its
@@ -28,12 +26,14 @@
  */
 
 import type { Metadata } from "next";
-import type { Bilingual } from "@/constants/copy";
 import { SITE_URL } from "@/constants/site";
-import { fallbackOgImage, seoRoutes, type SeoRouteKey } from "@/constants/seo";
+import { seoRoutes, type SeoRouteKey } from "@/constants/seo";
+import { CmsContentError } from "@/features/cms/errors";
+import type { Bilingual } from "@/features/cms/types";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
+import { unwrap } from "@/lib/api";
 
-// `getPageMeta` (features/cms/client.ts) and `getSite` (features/cms/site.ts)
+// `getPageMetaStrict` (features/cms/client.ts) and `getSite` (features/cms/site.ts)
 // are intentionally NOT imported here — see the dynamic `import()` at their
 // only call site, inside `pageMetadata()` below, for why.
 
@@ -137,7 +137,7 @@ export function withBrandSuffix(title: string, brandName: string): string {
  * `title.absolute` instead of a plain string — see that function's own
  * comment for why a plain string is the wrong shape once this is true.
  * Deliberately NOT a hardcoded route list: any route whose resolved title
- * (CMS-or-fallback) starts carrying the brand name gets this treatment
+ * (CMS-resolved) starts carrying the brand name gets this treatment
  * automatically, the same way any route that DROPS it stops getting it.
  */
 export function titleContainsBrand(title: string, brandName: string): boolean {
@@ -146,25 +146,51 @@ export function titleContainsBrand(title: string, brandName: string): boolean {
 }
 
 /**
- * The `og:image`/`twitter:image` selection rule `pageMetadata()` applies:
- * the CMS value when present, else the per-locale local fallback card
- * (`constants/seo.ts#fallbackOgImage` — see ST-OG). Pulled out to its own
- * function, not left inlined in `pageMetadata()`, so `pageMetadata.test.ts`
- * can prove the fallback actually fires on an empty/missing CMS value
- * without a live Atlas read — `pageMetadata()` itself cannot be imported
- * outside Next's bundler (see the dynamic `import()` comment on its body).
+ * The `og:image`/`twitter:image` value must be an absolute HTTP(S) URL
+ * authored by Atlas. Pulled out to its own function, not left inlined in
+ * `pageMetadata()`, so `pageMetadata.test.ts` can prove malformed and missing
+ * values fail without a live Atlas read — `pageMetadata()` itself cannot be
+ * imported outside Next's bundler (see the dynamic `import()` comment on its
+ * body).
  */
 export function resolveOgImage(
   cmsOgImage: string | undefined,
   lang: Lang,
 ): string {
-  return cmsOgImage || fallbackOgImage[lang];
+  if (!cmsOgImage || cmsOgImage.trim() === "") {
+    throw new CmsContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      `Required CMS metadata field "seo.og_image.${lang}" is missing or empty.`,
+      [`seo.og_image.${lang}`],
+      "seo",
+    );
+  }
+  let url: URL;
+  try {
+    url = new URL(cmsOgImage);
+  } catch {
+    throw new CmsContentError(
+      "CMS_INVALID_REQUIRED_FIELD",
+      `Required CMS metadata field "seo.og_image.${lang}" is malformed.`,
+      [`seo.og_image.${lang}`],
+      "seo",
+    );
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new CmsContentError(
+      "CMS_INVALID_REQUIRED_FIELD",
+      `Required CMS metadata field "seo.og_image.${lang}" is malformed.`,
+      [`seo.og_image.${lang}`],
+      "seo",
+    );
+  }
+  return cmsOgImage;
 }
 
 /**
  * Plain-data input to `buildPageMetadataFields` below: everything the final
- * `Metadata` object needs, already resolved (CMS-or-fallback title/
- * description/og-image, and the brand name off `getSite()`). Kept separate
+ * `Metadata` object needs, already resolved (CMS title/description/og-image
+ * and the brand name off `getSite()`). Kept separate
  * from `pageMetadata()`'s CMS reads on purpose — see `buildPageMetadataFields`'s
  * own comment for why.
  */
@@ -222,8 +248,8 @@ export function buildPageMetadataFields({
   //
   // `brandAlreadyInTitle` is the second exception (CMS audit 0820, finding
   // N-brand-double / ST-U2 Tugas 2): some non-home routes' resolved title
-  // (CMS `page.seo.title`, which wins over the `constants/seo.ts` literal
-  // per D-3 above) already carries the brand name by itself — verified live
+  // (CMS `page.seo.title`) already carries the brand name by itself — verified
+  // live
   // for `terms-for-users`, `terms-for-care-supporters`, `compensation`,
   // `cancellation-policy` (their Atlas titles are literal legal-document
   // names starting with "Care24Japan"). Templating those would print the
@@ -295,8 +321,7 @@ export async function pageMetadata({
   const entry = seoRoutes[key];
   const { route, atlasSlug } = entry;
 
-  let title: string;
-  let description: string;
+  let title = "";
 
   if ("titleFrom" in entry) {
     if (!legal) {
@@ -305,19 +330,9 @@ export async function pageMetadata({
       );
     }
     title = legal.heading[lang];
-    description =
-      lang === "ja"
-        ? `${legal.heading.ja} | ${legal.heading.en} — ${legal.brandName}`
-        : `${legal.heading.en} — ${legal.brandName}`;
-  } else {
-    title = entry.title[lang];
-    description = entry.description[lang];
   }
 
-  // D-3: CMS `page.seo` wins when present, else the literal above.
-  // `getPageMeta`/`getSite` never throw (see features/cms/client.ts /
-  // features/cms/site.ts) — both fall back to `constants/*.ts` on any
-  // failure, so this call cannot take a route's metadata down.
+  // CMS `page.seo` is authoritative for title, description, and og:image.
   //
   // Dynamic, not static: both route through `features/cms/client.ts`/
   // `features/cms/site.ts`, which open with `import "server-only"` — a
@@ -337,14 +352,38 @@ export async function pageMetadata({
   // WHERE this code runs changes). `pageMetadata.test.ts` exercises
   // `buildPageMetadataFields` directly and never calls `pageMetadata()`
   // itself, so it never reaches this line.
-  const [{ getPageMeta }, { getSite }] = await Promise.all([
+  const [{ getPageMetaStrict }, { getSite }] = await Promise.all([
     import("@/features/cms/client"),
     import("@/features/cms/site"),
   ]);
-  const [cmsMeta, site] = await Promise.all([getPageMeta(atlasSlug), getSite()]);
-  if (cmsMeta?.title?.[lang]) title = cmsMeta.title[lang];
-  if (cmsMeta?.description?.[lang]) description = cmsMeta.description[lang];
-  const ogImage = resolveOgImage(cmsMeta?.ogImage?.[lang], lang);
+  const [cmsMetaResult, site] = await Promise.all([
+    getPageMetaStrict(atlasSlug),
+    getSite(),
+  ]);
+  const cmsMeta = unwrap(cmsMetaResult);
+  const requiredMeta = (
+    value: Bilingual | undefined,
+    field: "title" | "description",
+  ): Bilingual => {
+    if (!value || value.ja.trim() === "" || value.en.trim() === "") {
+      throw new CmsContentError(
+        "CMS_MISSING_REQUIRED_FIELD",
+        `Required CMS metadata field "page.seo.${field}" is missing or incomplete.`,
+        [`${atlasSlug}.seo.${field}`],
+        atlasSlug,
+      );
+    }
+    return value;
+  };
+  if (!("titleFrom" in entry)) {
+    title = requiredMeta(cmsMeta.title, "title")[lang];
+  }
+  const description = requiredMeta(cmsMeta.description, "description")[lang];
+  const ogImageByLocale = {
+    ja: resolveOgImage(cmsMeta.ogImage?.ja, "ja"),
+    en: resolveOgImage(cmsMeta.ogImage?.en, "en"),
+  };
+  const ogImage = ogImageByLocale[lang];
 
   return buildPageMetadataFields({
     route,

@@ -4,7 +4,7 @@
  * Mirrors backend/internal/contact/dto/contact.go field rules so the browser
  * and app/api/contact reject the same shapes before the Go usecase. Message
  * strings on issues are stable *keys* (not user copy); map them with
- * `fieldErrorMessage` + `contactPage.errors`.
+ * `fieldErrorMessage` + CMS-provided contact error copy.
  */
 import { z } from "zod";
 

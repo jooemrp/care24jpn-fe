@@ -49,7 +49,7 @@ export default function TableOfContents({ items, label }: { items: TocItem[]; la
 
   return (
     <nav
-      className="w-full overflow-hidden rounded-2xl border border-border/60 bg-white"
+      className="w-full overflow-hidden rounded-2xl border border-border/60 bg-surface"
       aria-label={label}
     >
       <div className="border-b border-border/50 px-5 py-3.5">

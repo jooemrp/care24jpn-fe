@@ -137,19 +137,11 @@ export type CourseRateRow = {
 /**
  * `CourseRates`/`CourseRateRow` are still exported: `features/cms/rates.ts`
  * imports `CourseRates` for its `/pricing` projection (`getCourseRates()`).
- * The module-level fallback ARRAY that used to live here was dead code —
- * `getCourseRates()` derives its fallback from `supporterRates` above via
- * `features/cms/rates.ts`'s `FALLBACK_TABLE`, never from a second literal —
- * so it was deleted (ST-G2). Do not re-add a `courseRates` value here.
+ * The old module-level course-rate literal was removed so rendered pricing
+ * data cannot silently come from this seed-only constants module.
  */
 export type CourseRates = {
   key: string;
   name: Bilingual;
   rows: CourseRateRow[];
-};
-
-/** Link label below the pricing note — points to /cancellation-policy. */
-export const cancellationLinkLabel: Bilingual = {
-  ja: "詳しくはこちら（キャンセルポリシー）をご確認ください。",
-  en: "For cancellation terms, please click here.",
 };

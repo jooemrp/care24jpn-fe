@@ -1,10 +1,11 @@
 /**
  * Feature barrel for the public contact form flow:
- * - `lib.ts` (client-safe): submission payload type, the POST to /api/contact,
- *   and localized status copy lookup.
+ * - `actions.ts`: typed Server Action for submissions.
+ * - `hooks.ts`: client TanStack Query mutation boundary.
+ * - `service.ts`: server-only validation and upstream relay.
+ * - `lib.ts` (client-safe): payload/status types and localized status copy.
  *
- * Kept dependency-free like the rest of the app's client utilities — no
- * `server-only`, no React — so it can be imported from ContactForm.tsx ("use
- * client") without pulling server code into the browser bundle.
+ * The barrel stays empty so importing client helpers never pulls the Server
+ * Action or server-only service into the browser bundle.
  */
 export {};

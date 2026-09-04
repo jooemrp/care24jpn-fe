@@ -141,8 +141,9 @@ function pricingMetaBlock(
   position: number,
   highlights: Bilingual[],
   note: Bilingual,
+  cancellationLinkLabel: Bilingual,
 ): BlockInput {
-  // textarea field, one line per highlight — features/cms/rates.ts#pickLines
+  // textarea field, one line per highlight — features/cms/rates.ts#optionalLines
   // splits this back into `highlights: Bilingual[]` by index.
   const highlightsJa = highlights.map((h) => h.ja).join("\n");
   const highlightsEn = highlights.map((h) => h.en).join("\n");
@@ -151,8 +152,20 @@ function pricingMetaBlock(
     block_type_id: blockTypeId,
     parent_id: null,
     position,
-    data: { highlights: highlightsJa, note: note.ja },
-    translations: { en: { data: { highlights: highlightsEn, note: note.en } } },
+    data: {
+      highlights: highlightsJa,
+      note: note.ja,
+      cancellation_label: cancellationLinkLabel.ja,
+    },
+    translations: {
+      en: {
+        data: {
+          highlights: highlightsEn,
+          note: note.en,
+          cancellation_label: cancellationLinkLabel.en,
+        },
+      },
+    },
   };
 }
 
@@ -234,7 +247,13 @@ function buildPricingPage(heroId: string, metaId: string): PageInput {
     seo: { title: "ご利用者様向け料金" },
     blocks: [
       pageHeroBlock(heroId, 0, pricingCopy.hero.heading, pricingCopy.hero.body),
-      pricingMetaBlock(metaId, 1, pricingCopy.highlights, pricingCopy.note),
+      pricingMetaBlock(
+        metaId,
+        1,
+        pricingCopy.highlights,
+        pricingCopy.note,
+        pricingCopy.cancellationLinkLabel,
+      ),
     ],
   };
 }
