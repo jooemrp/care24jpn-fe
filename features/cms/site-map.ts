@@ -43,7 +43,7 @@ export type SiteContent = {
   };
   nav: { href: string; label: Bilingual }[];
   contactPhone: { display: string; tel: string; note: Bilingual };
-  cta: { primary: Bilingual; secondary: Bilingual; contact: Bilingual };
+  cta: { primary: Bilingual; primaryHref: string; secondary: Bilingual; contact: Bilingual };
   ui: {
     menuToggleLabel: Bilingual;
     langToggleLabel: Bilingual;
@@ -158,6 +158,7 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
 
   const cta: SiteContent["cta"] = {
     primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
+    primaryHref: requiredUrl(ctaBlock.data, "primary_href", "site/site-cta"),
     secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
     contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
   };
