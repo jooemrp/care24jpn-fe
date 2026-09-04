@@ -226,64 +226,65 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     })),
   };
 
+  const pricingContext = "home/home-pricing-summary";
+  const pricingLogos = [
+    ["visa", "payment_visa", "payment_visa_alt"],
+    ["mastercard", "payment_mastercard", "payment_mastercard_alt"],
+    ["jcb", "payment_jcb", "payment_jcb_alt"],
+    ["amex", "payment_amex", "payment_amex_alt"],
+  ] as const;
   const pricingSummary: HomeContent["pricingSummary"] = {
-    heading: requiredBi(
+    heading: requiredBi(pricingSummaryBlock.data, "heading", pricingContext),
+    care: {
+      label: requiredBi(pricingSummaryBlock.data, "care_label", pricingContext),
+      amount: requiredBi(pricingSummaryBlock.data, "care_amount", pricingContext),
+      minNote: requiredBi(pricingSummaryBlock.data, "care_min_note", pricingContext),
+      transportNote: requiredBi(
+        pricingSummaryBlock.data,
+        "care_transport_note",
+        pricingContext,
+      ),
+    },
+    nursing: {
+      label: requiredBi(pricingSummaryBlock.data, "nursing_label", pricingContext),
+      amount: requiredBi(pricingSummaryBlock.data, "nursing_amount", pricingContext),
+      minNote: requiredBi(pricingSummaryBlock.data, "nursing_min_note", pricingContext),
+      transportNote: requiredBi(
+        pricingSummaryBlock.data,
+        "nursing_transport_note",
+        pricingContext,
+      ),
+    },
+    extensionNote: requiredBi(
       pricingSummaryBlock.data,
-      "heading",
-      "home/home-pricing-summary",
+      "extension_note",
+      pricingContext,
     ),
     payment: {
-      heading: requiredBi(
-        pricingSummaryBlock.data,
-        "payment_heading",
-        "home/home-pricing-summary",
-      ),
-      body: requiredBi(
-        pricingSummaryBlock.data,
-        "payment_body",
-        "home/home-pricing-summary",
-      ),
+      heading: requiredBi(pricingSummaryBlock.data, "payment_heading", pricingContext),
+      body: requiredBi(pricingSummaryBlock.data, "payment_body", pricingContext),
       settleNote: requiredBi(
         pricingSummaryBlock.data,
         "payment_settle_note",
-        "home/home-pricing-summary",
+        pricingContext,
       ),
-      logos: [
-        {
-          mark: "visa",
-          src: requiredImageUrl(
-            pricingSummaryBlock.data,
-            "payment_visa",
-            "home/home-pricing-summary",
-          ),
-        },
-        {
-          mark: "mastercard",
-          src: requiredImageUrl(
-            pricingSummaryBlock.data,
-            "payment_mastercard",
-            "home/home-pricing-summary",
-          ),
-        },
-        {
-          mark: "jcb",
-          src: requiredImageUrl(
-            pricingSummaryBlock.data,
-            "payment_jcb",
-            "home/home-pricing-summary",
-          ),
-        },
-        {
-          mark: "amex",
-          src: requiredImageUrl(
-            pricingSummaryBlock.data,
-            "payment_amex",
-            "home/home-pricing-summary",
-          ),
-        },
-      ],
+      logos: pricingLogos.map(([mark, srcKey, altKey]) => ({
+        mark,
+        src: requiredImageUrl(pricingSummaryBlock.data, srcKey, pricingContext),
+        alt: requiredBi(pricingSummaryBlock.data, altKey, pricingContext),
+      })),
     },
   };
+  const pricingDetailsLink = requiredBi(
+    pricingSummaryBlock.data,
+    "pricing_details_label",
+    pricingContext,
+  );
+  const pricingDetailsHref = requiredUrl(
+    pricingSummaryBlock.data,
+    "pricing_details_href",
+    pricingContext,
+  );
 
   const nursingItems: NursingFeature[] = nursingFeatureBlocks.map((block, i) => ({
     icon: requiredEnum(
@@ -431,6 +432,8 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       flow,
       apply,
       pricingSummary,
+      pricingDetailsLink,
+      pricingDetailsHref,
     },
     contactData: contactBlock.data,
   };

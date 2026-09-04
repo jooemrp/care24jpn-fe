@@ -245,14 +245,36 @@ async function main(): Promise<void> {
 
   // 3b: home_pricing_summary — TOP baseline fees copy + payment brand logos
   {
+    const paymentAlt = (mark: string): Bilingual => {
+      const logo = home.pricingSummary.payment.logos.find((item) => item.mark === mark);
+      if (!logo) {
+        throw new Error(`home.pricingSummary.payment.logos is missing mark "${mark}".`);
+      }
+      return logo.alt;
+    };
     const split = splitBilingual({
       heading: home.pricingSummary.heading,
+      care_label: home.pricingSummary.care.label,
+      care_amount: home.pricingSummary.care.amount,
+      care_min_note: home.pricingSummary.care.minNote,
+      care_transport_note: home.pricingSummary.care.transportNote,
+      nursing_label: home.pricingSummary.nursing.label,
+      nursing_amount: home.pricingSummary.nursing.amount,
+      nursing_min_note: home.pricingSummary.nursing.minNote,
+      nursing_transport_note: home.pricingSummary.nursing.transportNote,
+      extension_note: home.pricingSummary.extensionNote,
+      pricing_details_label: home.pricingDetailsLink,
       payment_heading: home.pricingSummary.payment.heading,
       payment_body: home.pricingSummary.payment.body,
       payment_settle_note: home.pricingSummary.payment.settleNote,
+      payment_visa_alt: paymentAlt("visa"),
+      payment_mastercard_alt: paymentAlt("mastercard"),
+      payment_jcb_alt: paymentAlt("jcb"),
+      payment_amex_alt: paymentAlt("amex"),
     });
     const ja = {
       ...split.ja,
+      pricing_details_href: "/pricing",
       payment_visa: mediaId(media, "payment-visa.png"),
       payment_mastercard: mediaId(media, "payment-mastercard.png"),
       payment_jcb: mediaId(media, "payment-jcb.png"),

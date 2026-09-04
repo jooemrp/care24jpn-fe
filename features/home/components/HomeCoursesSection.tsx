@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   IconBuildingHospital,
   IconHeartHandshake,
@@ -15,18 +14,21 @@ import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { queryStates } from "@/constants/copy";
 import { CmsContentError } from "@/features/cms/errors";
-import { localizeHref, t, type Lang } from "@/features/lang/i18n";
+import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { SafeInternalLink } from "./HomeLinks";
 
 export function HomeCoursesSection({
   careCourse,
   nursingCourse,
   pricingDetailsLink,
+  pricingDetailsHref,
   lang,
 }: {
   careCourse: HomeContent["careCourse"];
   nursingCourse: HomeContent["nursingCourse"];
   pricingDetailsLink: HomeContent["pricingDetailsLink"];
+  pricingDetailsHref: HomeContent["pricingDetailsHref"];
   lang: Lang;
 }) {
   return (
@@ -60,16 +62,15 @@ export function HomeCoursesSection({
                 </span>
               </p>
               <p className="mt-1 text-lg text-body">{t(careCourse.price.taxIncluded, lang)}</p>
-              {pricingDetailsLink ? (
-                <p className="mt-5 text-lg">
-                  <Link
-                    href={localizeHref("/pricing", lang)}
-                    className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
-                  >
-                    {t(pricingDetailsLink, lang)}
-                  </Link>
-                </p>
-              ) : null}
+              <p className="mt-5 text-lg">
+                <SafeInternalLink
+                  href={pricingDetailsHref}
+                  lang={lang}
+                  className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
+                >
+                  {t(pricingDetailsLink, lang)}
+                </SafeInternalLink>
+              </p>
             </div>
 
             {careCourse.fees.length > 0 ? (
@@ -169,16 +170,15 @@ export function HomeCoursesSection({
               </span>
             </p>
             <p className="mt-1 text-lg text-body">{t(nursingCourse.price.taxIncluded, lang)}</p>
-            {pricingDetailsLink ? (
-              <p className="mt-6 text-lg">
-                <Link
-                  href={localizeHref("/pricing", lang)}
-                  className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
-                >
-                  {t(pricingDetailsLink, lang)}
-                </Link>
-              </p>
-            ) : null}
+            <p className="mt-6 text-lg">
+              <SafeInternalLink
+                href={pricingDetailsHref}
+                lang={lang}
+                className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
+              >
+                {t(pricingDetailsLink, lang)}
+              </SafeInternalLink>
+            </p>
           </div>
 
           <div className="animate-fade-up [animation-delay:120ms]">

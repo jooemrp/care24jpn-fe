@@ -35,6 +35,7 @@ test("homepage sections remain focused components", () => {
   for (const component of [
     "HomeHeroSection",
     "HomeProblemsSection",
+    "HomePricingSection",
     "HomeCoursesSection",
     "HomeExamplesSection",
     "HomeFlowSection",

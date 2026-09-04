@@ -58,6 +58,7 @@ const content = {
     micsLogo: "/images/mics-logo.png",
     isoLogo: "/images/iso27001-bsi.png",
   },
+  pricingDetailsHref: "/pricing",
 } as unknown as HomeContent;
 
 async function main(): Promise<void> {
@@ -74,12 +75,18 @@ async function main(): Promise<void> {
 
     assert.match(html, /Reliable Support,/);
     assert.match(html, /Caregiving course/);
+    assert.match(html, /About fees \(tax included\)/);
+    assert.match(html, /JPY 3,740 \/ hour~/);
+    assert.match(html, /Extensions are available in 1-hour increments\./);
+    assert.match(html, /For full pricing details, please click here\./);
+    assert.match(html, /href="\/en\/pricing"/);
     assert.match(html, /Examples of use/);
     assert.match(html, /id="contact"/);
     assert.match(html, /hero\.webp/);
     assert.match(html, /target="_blank"/);
     assert.match(html, /rel="noopener noreferrer"/);
     assert.match(html, /md:grid-cols-2/);
+    assert.doesNotMatch(html, /CMS content contract is incomplete/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
   });
 
@@ -126,18 +133,17 @@ async function main(): Promise<void> {
     assert.doesNotMatch(html, /undefined/);
   });
 
-  test("course sections omit the pricing link when its CMS label is absent", () => {
-    const withoutPricingDetailsLink = { ...content, pricingDetailsLink: undefined };
+  test("course and pricing sections keep the CMS pricing details link", () => {
     const html = renderToStaticMarkup(
       React.createElement(HomeContentView, {
-        content: withoutPricingDetailsLink,
+        content,
         lang: "en",
         contactCta: cta.contact,
       }),
     );
 
-    assert.doesNotMatch(html, /For full pricing details, please click here\./);
-    assert.doesNotMatch(html, /href="\/en\/pricing"/);
+    assert.match(html, /For full pricing details, please click here\./);
+    assert.match(html, /href="\/en\/pricing"/);
   });
 }
 

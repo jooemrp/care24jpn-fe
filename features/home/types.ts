@@ -42,14 +42,18 @@ export type HomeContent = Omit<
   };
   pricingSummary: {
     heading: Bilingual;
+    care: Home["pricingSummary"]["care"];
+    nursing: Home["pricingSummary"]["nursing"];
+    extensionNote: Bilingual;
     payment: {
       heading: Bilingual;
       body: Bilingual;
       settleNote: Bilingual;
-      logos: { mark: string; src: string }[];
+      logos: { mark: string; src: string; alt: Bilingual }[];
     };
   };
-  pricingDetailsLink?: Bilingual;
+  pricingDetailsLink: Bilingual;
+  pricingDetailsHref: string;
 };
 
 export type HomeFee = Fee;
