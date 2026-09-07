@@ -14,14 +14,14 @@
  * Uses the light semantic tokens defined in globals.css.
  */
 
-import { useState, useId } from "react";
+import { useState, useId, type ReactNode } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 
 export type AccordionItemProps = {
   /** The question / trigger label */
   question: string;
-  /** The answer / panel content */
-  answer: string;
+  /** The answer / panel content (plain text or CMS inline markup nodes) */
+  answer: ReactNode;
   /** Whether the item starts open. Defaults to false. */
   defaultOpen?: boolean;
 };

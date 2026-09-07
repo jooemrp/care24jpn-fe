@@ -4,11 +4,14 @@
  * Source: "【English explanation】Care 24 Japan Webpage revision 26th Aug 2026.pdf"
  * Section 5 — FAQ Accordion Implementation Specification & Dataset.
  *
+ * Seed input only — runtime FAQ HTML comes from Atlas (`scripts/atlas/seed-faq.ts`).
+ *
  * LOCKED values (do NOT change without a documented content decision):
  * - Q5 answer: minimum **2 hours** / 最低2時間
  * - Q16 answer: minimum **2 hours** / 最低2時間
  *
  * Structure:
+ * - faqPage / hero chrome (heading, intro, view-more labels)
  * - faqCategories: 6 buckets (01–05 + scenarios)
  * - faqItems:      29 items (Q1–Q24 + S1–S5)
  * - scenariosHeading: section label for the S1–S5 block
@@ -29,6 +32,39 @@ export type FaqItem = {
   category: string;
   question: Bilingual;
   answer: Bilingual;
+};
+
+// ---------------------------------------------------------------------------
+// Page chrome (page-hero + faq-page) — duplicated heading/intro match live Atlas
+// ---------------------------------------------------------------------------
+
+export const faqHero: {
+  heading: Bilingual;
+  body: Bilingual;
+} = {
+  heading: { ja: "よくあるご質問", en: "FAQ" },
+  body: {
+    ja: "Care24Japanのサービスについてよくいただくご質問をまとめました。",
+    en: "Find answers to the most common questions about Care24Japan's services.",
+  },
+};
+
+/** Labels on the `faq-page` config block (scenarios heading + accordion chrome). */
+export const faqPage: {
+  heading: Bilingual;
+  intro: Bilingual;
+  scenariosHeading: Bilingual;
+  viewMoreLabel: Bilingual;
+  collapseLabel: Bilingual;
+} = {
+  heading: faqHero.heading,
+  intro: faqHero.body,
+  scenariosHeading: {
+    ja: "こんな場合でも利用できますか？",
+    en: "Can I use in these cases?",
+  },
+  viewMoreLabel: { ja: "もっと見る", en: "View More" },
+  collapseLabel: { ja: "閉じる", en: "Show Less" },
 };
 
 // ---------------------------------------------------------------------------
@@ -84,10 +120,8 @@ export const faqCategories: FaqCategory[] = [
 // Scenarios section heading (rendered separately from category label)
 // ---------------------------------------------------------------------------
 
-export const scenariosHeading: Bilingual = {
-  ja: "こんな場合でも利用できますか？",
-  en: "Can I use in these cases?",
-};
+/** Alias of `faqPage.scenariosHeading` for existing imports/tests. */
+export const scenariosHeading: Bilingual = faqPage.scenariosHeading;
 
 // ---------------------------------------------------------------------------
 // FAQ items — Q1–Q24, then S1–S5
@@ -278,8 +312,10 @@ export const faqItems: FaqItem[] = [
       en: "How much does the service cost?",
     },
     answer: {
-      ja: "サービス内容、資格、利用時間などによって異なります。詳しくは料金ページをご確認ください。",
-      en: "Rates vary depending on service content, specialist qualification, and duration. Please check our Pricing Page for detailed rates.",
+      // 0907 #22 — pricing URL lives in CMS answer markdown; FaqList resolves
+      // `[label](/path)` via localizeHref (no hardcoded /pricing in faq-view).
+      ja: "サービス内容、資格、利用時間などによって異なります。詳しくは[料金ページ](/pricing)をご確認ください。",
+      en: "Rates vary depending on service content, specialist qualification, and duration. Please check our [Pricing Page](/pricing) for detailed rates.",
     },
   },
   {

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 import { AccordionItem } from "@/components/ui/Accordion";
+import { InlineCmsText } from "@/components/cms/InlineCmsText";
 import { t, type Lang } from "@/features/lang/i18n";
 
 export type FaqItem = {
@@ -30,7 +31,8 @@ type FaqListProps = {
 /**
  * Presentational FAQ accordion. All questions, answers, categories, and
  * controls are supplied by the caller; this component does not import or
- * invent bundled FAQ copy.
+ * invent bundled FAQ copy. Answer `[label](/path)` markers from CMS are
+ * resolved through InlineCmsText + localizeHref — never hardcoded hrefs.
  */
 export default function FaqList({
   lang,
@@ -55,7 +57,13 @@ export default function FaqList({
             <AccordionItem
               key={item.id}
               question={t(item.question, lang)}
-              answer={t(item.answer, lang)}
+              answer={
+                <InlineCmsText
+                  text={t(item.answer, lang)}
+                  lang={lang}
+                  keyPrefix={item.id}
+                />
+              }
               defaultOpen={false}
             />
           ))}
@@ -82,7 +90,13 @@ export default function FaqList({
                     <AccordionItem
                       key={item.id}
                       question={t(item.question, lang)}
-                      answer={t(item.answer, lang)}
+                      answer={
+                        <InlineCmsText
+                          text={t(item.answer, lang)}
+                          lang={lang}
+                          keyPrefix={item.id}
+                        />
+                      }
                       defaultOpen={false}
                     />
                   ))}

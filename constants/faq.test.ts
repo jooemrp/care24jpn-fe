@@ -179,6 +179,15 @@ async function main(): Promise<void> {
   });
 
   // -----------------------------------------------------------------------
+  // 0907 #22: Q15 answer carries a CMS markdown link to /pricing
+  // -----------------------------------------------------------------------
+  test("Q15 answer (JA/EN) includes markdown link to /pricing", () => {
+    const q15 = faqItems.find((item) => item.id === "Q15")!;
+    assert.match(q15.answer.ja, /\[料金ページ\]\(\/pricing\)/);
+    assert.match(q15.answer.en, /\[Pricing Page\]\(\/pricing\)/);
+  });
+
+  // -----------------------------------------------------------------------
   // scenariosHeading export
   // -----------------------------------------------------------------------
   test("module exports scenariosHeading bilingual", async () => {
