@@ -27,13 +27,34 @@ export async function getContact(): Promise<ApiResult<ContactContent>> {
 export async function submitContact(payload: ContactPayload): Promise<SubmitContactResult> {
   try {
     const requestHeaders = await headers();
-    const origin = requestHeaders.get("origin") ?? requestHeaders.get("referer") ?? "";
+    // Prefer Origin; fall back to Referer. Normalize a full Referer URL to its
+    // origin so the backend allowlist compares hostnames correctly.
+    const rawOrigin =
+      requestHeaders.get("origin") ?? requestHeaders.get("referer") ?? "";
+    let origin = rawOrigin;
+    try {
+      if (rawOrigin) origin = new URL(rawOrigin).origin;
+    } catch {
+      // Keep the raw value; backend originAllowed will reject garbage.
+    }
     const result = await submitContactPayloadService(payload, { origin });
 
     // Transport/config/upstream failures are represented as stable domain
     // outcomes so the form can preserve its localized error/rate-limit copy.
+    // success:true + data:"error" means the action ran but upstream rejected.
+    if (result.outcome !== "success") {
+      console.error("[contact] submitContact outcome", {
+        outcome: result.outcome,
+        status: result.status,
+        origin: origin || "(empty)",
+        formLoadAt: payload.form_load_at,
+      });
+    }
     return apiSuccess(result.outcome);
-  } catch {
+  } catch (err) {
+    console.error("[contact] submitContact threw", {
+      error: err instanceof Error ? err.message : "unknown",
+    });
     return apiFailure({
       code: "CONTACT_ACTION_FAILED",
       message: "Contact service unavailable, please try again later.",

@@ -94,12 +94,28 @@ export async function submitContactRequest(
     });
 
     const body = await upstream.text();
+    const outcome = contactOutcomeForStatus(upstream.status);
+    if (outcome !== "success") {
+      // Surface enough to diagnose allowlist / timing / SMTP without leaking
+      // credentials. Server Action maps these to data:"error"|"rate_limited".
+      console.error("[contact] upstream non-success", {
+        status: upstream.status,
+        outcome,
+        origin: origin || "(empty)",
+        bodyPreview: body.slice(0, 400),
+      });
+    }
     return {
-      outcome: contactOutcomeForStatus(upstream.status),
+      outcome,
       status: upstream.status,
       body,
     };
-  } catch {
+  } catch (err) {
+    console.error("[contact] upstream request failed", {
+      endpoint,
+      origin: origin || "(empty)",
+      error: err instanceof Error ? err.message : "unknown",
+    });
     return localFailure(502, "Contact service unavailable, please try again later.");
   }
 }
