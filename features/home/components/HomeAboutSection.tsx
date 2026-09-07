@@ -16,10 +16,10 @@ export function HomeAboutSection({
 }) {
   return (
     <Section heading={content.heading} lang={lang}>
-      <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
+      <p className="max-w-3xl whitespace-pre-line text-xl font-semibold leading-relaxed text-heading md:text-2xl">
         {t(content.catchphrase, lang)}
       </p>
-      <p className="mt-4 max-w-3xl text-base leading-relaxed text-body">
+      <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-body">
         {t(content.body, lang)}
       </p>
 
@@ -43,7 +43,7 @@ export function HomeAboutSection({
                 ) : null}
               </span>
               <h3 className="mt-5 text-lg font-bold text-heading">{t(card.title, lang)}</h3>
-              <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-body">
+              <p className="mt-2 max-w-[16rem] whitespace-pre-line text-sm leading-relaxed text-body">
                 {t(card.body, lang)}
               </p>
             </li>

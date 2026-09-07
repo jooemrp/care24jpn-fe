@@ -1,14 +1,14 @@
 /**
- * Seeds the "home" page — the 31 blocks that make up `app/[lang]/page.tsx` —
+ * Seeds the "home" page — the 34 blocks that make up `app/[lang]/page.tsx` —
  * from `constants/copy.ts#home` (single source of truth, never retyped by
  * hand) onto the live Atlas workspace, then publishes it.
  *
  * Order and field names (matching the block types declared in
  * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems,
- * home_nursing_course, home_nursing_feature x6, home_care_course,
- * home_care_course_fee x3, home_care_course_card x4, home_examples,
- * home_example_case x3, home_flow, home_flow_step x4, home_apply,
- * home_contact.
+ * home_pricing_summary, home_nursing_course, home_nursing_course_fee x3,
+ * home_nursing_feature x6, home_care_course, home_care_course_fee x3,
+ * home_care_course_card x4, home_examples, home_example_case x3, home_flow,
+ * home_flow_step x4, home_apply, home_contact.
  *
  * Idempotent: safe to run twice. `ensurePublishedPage` (scripts/atlas/lib.ts)
  * updates first and only creates on a 404, so an existing page is updated in
@@ -16,7 +16,7 @@
  * never a second page under the same slug (page slugs are NOT unique at the
  * create endpoint on this backend; see that helper's doc comment).
  *
- * Requires the 31 block types to already exist — run `npm run atlas:schema`
+ * Requires the block types to already exist — run `npm run atlas:schema`
  * first.
  *
  * Usage (from marketing-web/):
@@ -44,6 +44,21 @@ function biJoin(items: Bilingual[]): Bilingual {
   return {
     ja: items.map((i) => i.ja).join("\n"),
     en: items.map((i) => i.en).join("\n"),
+  };
+}
+
+/**
+ * Like `biJoin`, but replaces embedded newlines inside each item with the
+ * visible marker `⏎` so a 0907 multi-line card body still counts as ONE list
+ * row for `optionalLines` (which splits on raw `\n`). Literal `\\n` is NOT
+ * safe — Atlas textarea storage turns it back into a real newline. The home
+ * mapper restores `⏎` → `\n` on read for `whitespace-pre-line`.
+ */
+function biJoinMultiline(items: Bilingual[]): Bilingual {
+  const escape = (value: string) => value.replace(/\n/g, "⏎");
+  return {
+    ja: items.map((i) => escape(i.ja)).join("\n"),
+    en: items.map((i) => escape(i.en)).join("\n"),
   };
 }
 
@@ -130,6 +145,7 @@ const BLOCK_TYPE_SLUGS = [
   "home_problems",
   "home_pricing_summary",
   "home_nursing_course",
+  "home_nursing_course_fee",
   "home_nursing_feature",
   "home_care_course",
   "home_care_course_fee",
@@ -206,7 +222,9 @@ async function main(): Promise<void> {
   // 2: home_about (3 cards + illustration + card icon images)
   {
     const cardTitles = biJoin(home.about.cards.map((c) => c.title));
-    const cardBodies = biJoin(home.about.cards.map((c) => c.body));
+    // Card bodies carry intentional mid-copy line breaks (0907); escape so
+    // biJoin's item separator stays distinct from those breaks.
+    const cardBodies = biJoinMultiline(home.about.cards.map((c) => c.body));
     const split = splitBilingual({
       heading: home.about.heading,
       catchphrase: home.about.catchphrase,
@@ -243,15 +261,8 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_problems", next(), ja, split.en));
   }
 
-  // 3b: home_pricing_summary — TOP baseline fees copy + payment brand logos
+  // 3b: home_pricing_summary — TOP baseline fees + bank-transfer payment copy
   {
-    const paymentAlt = (mark: string): Bilingual => {
-      const logo = home.pricingSummary.payment.logos.find((item) => item.mark === mark);
-      if (!logo) {
-        throw new Error(`home.pricingSummary.payment.logos is missing mark "${mark}".`);
-      }
-      return logo.alt;
-    };
     const split = splitBilingual({
       heading: home.pricingSummary.heading,
       care_label: home.pricingSummary.care.label,
@@ -267,18 +278,10 @@ async function main(): Promise<void> {
       payment_heading: home.pricingSummary.payment.heading,
       payment_body: home.pricingSummary.payment.body,
       payment_settle_note: home.pricingSummary.payment.settleNote,
-      payment_visa_alt: paymentAlt("visa"),
-      payment_mastercard_alt: paymentAlt("mastercard"),
-      payment_jcb_alt: paymentAlt("jcb"),
-      payment_amex_alt: paymentAlt("amex"),
     });
     const ja = {
       ...split.ja,
       pricing_details_href: "/pricing",
-      payment_visa: mediaId(media, "payment-visa.png"),
-      payment_mastercard: mediaId(media, "payment-mastercard.png"),
-      payment_jcb: mediaId(media, "payment-jcb.png"),
-      payment_amex: mediaId(media, "payment-amex.png"),
     };
     blocks.push(makeBlock(typeIds, "home_pricing_summary", next(), ja, split.en));
   }
@@ -298,8 +301,16 @@ async function main(): Promise<void> {
       price_tax_included: home.nursingCourse.price.taxIncluded,
       note: home.nursingCourse.note,
       panel_heading: home.nursingCourse.panel.heading,
+      medical_note: home.nursingCourse.medicalNote,
     });
     blocks.push(makeBlock(typeIds, "home_nursing_course", next(), split.ja, split.en));
+  }
+
+  // 4b: home_nursing_course_fee (same 3-cell structure as care)
+  for (const fee of home.nursingCourse.fees) {
+    const note = "note" in fee ? (fee as { note?: Bilingual }).note : undefined;
+    const split = splitBilingual({ label: fee.label, value: fee.value, note });
+    blocks.push(makeBlock(typeIds, "home_nursing_course_fee", next(), split.ja, split.en));
   }
 
   // 4-9: home_nursing_feature (6 items) — icon is non-localizable (select)
@@ -330,7 +341,8 @@ async function main(): Promise<void> {
   // present only for [1]. splitBilingual drops undefined fields entirely, so
   // the read-side merge never sees an empty {ja:"",en:""} for `note`.
   for (const fee of home.careCourse.fees) {
-    const split = splitBilingual({ label: fee.label, value: fee.value, note: fee.note });
+    const note = "note" in fee ? (fee as { note?: Bilingual }).note : undefined;
+    const split = splitBilingual({ label: fee.label, value: fee.value, note });
     blocks.push(makeBlock(typeIds, "home_care_course_fee", next(), split.ja, split.en));
   }
 
@@ -469,8 +481,8 @@ async function main(): Promise<void> {
     );
   }
 
-  if (blocks.length !== 31) {
-    throw new Error(`Expected 31 blocks, built ${blocks.length} — check the block list above.`);
+  if (blocks.length !== 34) {
+    throw new Error(`Expected 34 blocks, built ${blocks.length} — check the block list above.`);
   }
 
   const pageSlug = "home";

@@ -54,21 +54,22 @@ export function HomeHeroSection({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg"
+        className="absolute inset-x-0 bottom-0 -z-10 h-16 bg-linear-to-b from-transparent to-bg md:h-24"
       />
 
-      <div className="relative mx-auto flex min-h-[calc(100dvh-81px)] max-w-6xl flex-col justify-center px-6 py-20 md:min-h-[calc(100dvh-130px)] md:py-24">
+      {/* 0907 #1: SP — no forced full-viewport height so Care24Japanとは enters first screen */}
+      <div className="relative mx-auto flex max-w-6xl flex-col justify-center px-6 py-10 sm:py-12 md:min-h-[calc(100dvh-130px)] md:py-24">
         <div className="max-w-xl animate-fade-up">
-          <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
+          <h1 className="whitespace-pre-line text-3xl font-bold leading-tight text-heading sm:text-4xl md:text-5xl">
             {t(content.heading, lang)}
           </h1>
           {body ? (
-            <p className="mt-6 text-base leading-relaxed text-body">
+            <p className="mt-4 text-base leading-relaxed text-body md:mt-6">
               {t(body, lang)}
             </p>
           ) : null}
 
-          <div className="mt-8 flex flex-col items-start gap-3">
+          <div className="mt-6 flex flex-col items-start gap-3 md:mt-8">
             {external ? (
               <a
                 href={href}
@@ -99,7 +100,10 @@ export function HomeHeroSection({
                   {t(content.areaBadge.main, lang)}
                 </p>
               </div>
-              <p className="px-1 text-xs text-muted">{t(content.areaBadge.sub, lang)}</p>
+              {/* 0907 #5 — darker footnote for readability */}
+              <p className="px-1 text-xs font-medium text-heading">
+                {t(content.areaBadge.sub, lang)}
+              </p>
             </div>
           </div>
         </div>

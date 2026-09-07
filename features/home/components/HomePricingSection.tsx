@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import Section from "@/components/ui/Section";
-import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
@@ -20,6 +18,7 @@ export function HomePricingSection({
   lang: Lang;
 }) {
   const courses = [content.care, content.nursing] as const;
+  const settleNote = content.payment.settleNote;
 
   return (
     <Section lang={lang}>
@@ -38,6 +37,7 @@ export function HomePricingSection({
                 <p className="mt-2 text-2xl font-bold tabular-nums text-accent md:text-3xl">
                   {t(course.amount, lang)}
                 </p>
+                {/* 0907 #11 — min notes stay single-line (no whitespace-pre-line) */}
                 <p className="mt-3 text-xs leading-relaxed text-muted">{t(course.minNote, lang)}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted">
                   {t(course.transportNote, lang)}
@@ -61,10 +61,12 @@ export function HomePricingSection({
           <h2 className="text-xl font-bold text-heading md:text-2xl">
             {t(content.payment.heading, lang)}
           </h2>
-          <p className="mt-3 text-base text-body">{t(content.payment.body, lang)}</p>
+          <p className="mt-3 whitespace-pre-line text-base text-body">
+            {t(content.payment.body, lang)}
+          </p>
 
-          <div className="mt-6 flex flex-1 flex-col rounded-xl bg-primary-light/60 p-4 sm:p-5">
-            {content.payment.logos.length > 0 ? (
+          {content.payment.logos.length > 0 ? (
+            <div className="mt-6 flex flex-1 flex-col rounded-xl bg-primary-light/60 p-4 sm:p-5">
               <ul className="grid flex-1 grid-cols-2 content-center gap-3 sm:gap-4">
                 {content.payment.logos.map((logo) => (
                   <li key={logo.mark} className="min-w-0">
@@ -72,13 +74,15 @@ export function HomePricingSection({
                   </li>
                 ))}
               </ul>
-            ) : (
-              <QueryEmptyState title={t(queryStates.empty, lang)} className="border-0 bg-transparent shadow-none" />
-            )}
-            <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
-              {t(content.payment.settleNote, lang)}
-            </p>
-          </div>
+              {settleNote ? (
+                <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
+                  {t(settleNote, lang)}
+                </p>
+              ) : null}
+            </div>
+          ) : settleNote ? (
+            <p className="mt-4 text-sm leading-relaxed text-muted">{t(settleNote, lang)}</p>
+          ) : null}
         </div>
       </div>
     </Section>

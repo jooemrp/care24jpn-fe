@@ -20,10 +20,9 @@ import {
 } from "./fields";
 import type { CmsBlock } from "./types";
 import type { home as HomeCopy } from "@/constants/copy";
-import type { HomeContent } from "@/features/home/types";
+import type { HomeContent, HomeFee } from "@/features/home/types";
 
 type Home = typeof HomeCopy;
-type Fee = Home["careCourse"]["fees"][number];
 
 /**
  * `constants/copy.ts` carries no image paths — every `<Image src>` on this
@@ -91,6 +90,7 @@ const HOME_TYPES = [
   "home-problems",
   "home-pricing-summary",
   "home-nursing-course",
+  "home-nursing-course-fee",
   "home-nursing-feature",
   "home-care-course",
   "home-care-course-fee",
@@ -128,6 +128,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   const [contactBlock] = groups["home-contact"];
 
   const nursingFeatureBlocks = groups["home-nursing-feature"];
+  const nursingFeeBlocks = groups["home-nursing-course-fee"];
   const feeBlocks = groups["home-care-course-fee"];
   const cardBlocks = groups["home-care-course-card"];
   const caseBlocks = groups["home-example-case"];
@@ -169,7 +170,14 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   };
 
   const cardTitles = optionalLines(aboutBlock.data, "card_titles", "home/home-about");
-  const cardBodies = optionalLines(aboutBlock.data, "card_bodies", "home/home-about");
+  // Seed stores mid-body line breaks as `⏎` (or legacy `\\n`) so list length
+  // stays aligned with card_titles; restore real newlines for pre-line UI.
+  const cardBodies = optionalLines(aboutBlock.data, "card_bodies", "home/home-about").map(
+    (line) => ({
+      ja: line.ja.replace(/⏎/g, "\n").replace(/\\n/g, "\n"),
+      en: line.en.replace(/⏎/g, "\n").replace(/\\n/g, "\n"),
+    }),
+  );
   requireEqualLengths(
     "home/home-about",
     "card_titles",
@@ -227,12 +235,30 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   };
 
   const pricingContext = "home/home-pricing-summary";
-  const pricingLogos = [
+  const pricingLogoSpecs = [
     ["visa", "payment_visa", "payment_visa_alt"],
     ["mastercard", "payment_mastercard", "payment_mastercard_alt"],
     ["jcb", "payment_jcb", "payment_jcb_alt"],
     ["amex", "payment_amex", "payment_amex_alt"],
   ] as const;
+  // 0907 #15 — logos are optional; only map marks that still have media in Atlas.
+  const paymentLogos = pricingLogoSpecs.flatMap(([mark, srcKey, altKey]) => {
+    const raw = pricingSummaryBlock.data[srcKey];
+    const src =
+      typeof raw === "string"
+        ? raw
+        : raw && typeof raw === "object" && "ja" in raw
+          ? String((raw as { ja?: string }).ja ?? "")
+          : "";
+    if (!src.trim()) return [];
+    return [
+      {
+        mark,
+        src: requiredImageUrl(pricingSummaryBlock.data, srcKey, pricingContext),
+        alt: requiredBi(pricingSummaryBlock.data, altKey, pricingContext),
+      },
+    ];
+  });
   const pricingSummary: HomeContent["pricingSummary"] = {
     heading: requiredBi(pricingSummaryBlock.data, "heading", pricingContext),
     care: {
@@ -263,16 +289,12 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     payment: {
       heading: requiredBi(pricingSummaryBlock.data, "payment_heading", pricingContext),
       body: requiredBi(pricingSummaryBlock.data, "payment_body", pricingContext),
-      settleNote: requiredBi(
+      settleNote: optionalBi(
         pricingSummaryBlock.data,
         "payment_settle_note",
         pricingContext,
       ),
-      logos: pricingLogos.map(([mark, srcKey, altKey]) => ({
-        mark,
-        src: requiredImageUrl(pricingSummaryBlock.data, srcKey, pricingContext),
-        alt: requiredBi(pricingSummaryBlock.data, altKey, pricingContext),
-      })),
+      logos: paymentLogos,
     },
   };
   const pricingDetailsLink = requiredBi(
@@ -296,7 +318,13 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     label: requiredBi(block.data, "label", `home/home-nursing-feature[${i}]`),
   }));
 
-  const nursingCourse: Home["nursingCourse"] = {
+  const nursingFees: HomeFee[] = nursingFeeBlocks.map((block, i) => ({
+    label: requiredBi(block.data, "label", `home/home-nursing-course-fee[${i}]`),
+    value: requiredBi(block.data, "value", `home/home-nursing-course-fee[${i}]`),
+    note: optionalBi(block.data, "note", `home/home-nursing-course-fee[${i}]`),
+  }));
+
+  const nursingCourse: HomeContent["nursingCourse"] = {
     leadIn: requiredBi(nursingCourseBlock.data, "lead_in", "home/home-nursing-course"),
     badge: requiredBi(nursingCourseBlock.data, "badge", "home/home-nursing-course"),
     tagline: requiredBi(nursingCourseBlock.data, "tagline", "home/home-nursing-course"),
@@ -314,8 +342,10 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       ),
     },
     note: requiredBi(nursingCourseBlock.data, "note", "home/home-nursing-course"),
+    medicalNote: requiredBi(nursingCourseBlock.data, "medical_note", "home/home-nursing-course"),
+    fees: nursingFees,
     panel: {
-      heading: requiredBi(
+      heading: optionalBi(
         nursingCourseBlock.data,
         "panel_heading",
         "home/home-nursing-course",
@@ -324,7 +354,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     },
   };
 
-  const fees: Fee[] = feeBlocks.map((block, i) => ({
+  const fees: HomeFee[] = feeBlocks.map((block, i) => ({
     label: requiredBi(block.data, "label", `home/home-care-course-fee[${i}]`),
     value: requiredBi(block.data, "value", `home/home-care-course-fee[${i}]`),
     note: optionalBi(block.data, "note", `home/home-care-course-fee[${i}]`),
