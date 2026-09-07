@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     });
 
     assert.equal(called, false);
-    assert.equal(result.outcome, "error");
+    assert.equal(result.outcome.status, "error");
     assert.equal(result.status, 503);
   });
 
@@ -70,13 +70,14 @@ async function main(): Promise<void> {
     });
 
     assert.equal(called, false);
-    assert.deepEqual(result, {
-      outcome: "error",
-      status: 503,
-      body: JSON.stringify({
-        success: false,
-        message: "Contact service is not configured.",
-      }),
+    assert.equal(result.status, 503);
+    assert.equal(result.outcome.status, "error");
+    if (result.outcome.status === "error") {
+      assert.equal(result.outcome.code, "config");
+    }
+    assert.deepEqual(JSON.parse(result.body), {
+      success: false,
+      message: "Contact service is not configured.",
     });
   });
 
@@ -93,7 +94,7 @@ async function main(): Promise<void> {
     });
 
     assert.equal(called, false);
-    assert.equal(result.outcome, "error");
+    assert.equal(result.outcome.status, "error");
     assert.equal(result.status, 413);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
@@ -166,7 +167,7 @@ async function main(): Promise<void> {
       },
     );
 
-    assert.equal(result.outcome, "success");
+    assert.equal(result.outcome.status, "success");
     assert.equal(result.status, 200);
     assert.equal(result.body, upstreamBody);
     assert.equal(String(request?.input), "https://backend.example.test/api/v1/public/contact");
@@ -195,8 +196,27 @@ async function main(): Promise<void> {
       fetchImpl: async () => new Response(upstreamBody, { status: 429 }),
     });
 
-    assert.equal(result.outcome, "rate_limited");
+    assert.equal(result.outcome.status, "rate_limited");
     assert.equal(result.status, 429);
+    assert.equal(result.body, upstreamBody);
+  });
+
+  test("maps upstream timing failures to too_fast with a clear code", async () => {
+    const upstreamBody = JSON.stringify({
+      success: false,
+      message: "invalid input provided: please wait a few seconds before submitting",
+    });
+    const result = await submitRequest(JSON.stringify(validPayload()), {
+      endpoint: "https://backend.example.test/api/v1/public/contact",
+      apiKey: "atlas_live_test",
+      fetchImpl: async () => new Response(upstreamBody, { status: 400 }),
+    });
+
+    assert.equal(result.outcome.status, "error");
+    if (result.outcome.status === "error") {
+      assert.equal(result.outcome.code, "too_fast");
+    }
+    assert.equal(result.status, 400);
     assert.equal(result.body, upstreamBody);
   });
 
@@ -211,7 +231,10 @@ async function main(): Promise<void> {
       fetchImpl: async () => new Response(upstreamBody, { status: 503 }),
     });
 
-    assert.equal(result.outcome, "error");
+    assert.equal(result.outcome.status, "error");
+    if (result.outcome.status === "error") {
+      assert.equal(result.outcome.code, "unavailable");
+    }
     assert.equal(result.status, 503);
     assert.equal(result.body, upstreamBody);
   });
@@ -237,7 +260,7 @@ async function main(): Promise<void> {
       fetchImpl,
     });
 
-    assert.equal(result.outcome, "error");
+    assert.equal(result.outcome.status, "error");
     assert.equal(result.status, 502);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
@@ -260,7 +283,7 @@ async function main(): Promise<void> {
     );
 
     assert.equal(called, false);
-    assert.equal(result.outcome, "error");
+    assert.equal(result.outcome.status, "error");
     assert.equal(result.status, 413);
   });
 }

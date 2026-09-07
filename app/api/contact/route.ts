@@ -14,14 +14,31 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const raw = await request.text();
-  const rawOrigin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
+  const headerOrigin = request.headers.get("origin") ?? "";
+  const headerReferer = request.headers.get("referer") ?? "";
+  const rawOrigin = headerOrigin || headerReferer;
   let origin = rawOrigin;
   try {
     if (rawOrigin) origin = new URL(rawOrigin).origin;
   } catch {
     // Keep raw; upstream allowlist rejects invalid values.
   }
+
+  console.info("[contact] api/contact POST", {
+    headerOrigin: headerOrigin || "(empty)",
+    headerReferer: headerReferer ? headerReferer.slice(0, 120) : "(empty)",
+    normalizedOrigin: origin || "(empty)",
+    bodyBytes: raw.length,
+  });
+
   const result = await submitContactRequest(raw, { origin });
+
+  console.info("[contact] api/contact mapped", {
+    normalizedOrigin: origin || "(empty)",
+    httpStatus: result.status,
+    mappedOutcome: result.outcome,
+    upstreamBody: result.body.slice(0, 500),
+  });
 
   return new Response(result.body, {
     status: result.status,

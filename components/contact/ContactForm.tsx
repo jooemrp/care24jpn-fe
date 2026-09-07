@@ -11,15 +11,18 @@
  * client).
  *
  * Layered client-side defences:
- *  1. Honeypot — a visually-hidden, off-screen input a human never fills.
- *     Filled => backend rejects.
- *  2. Reserved field (`company_name`) that bots spray automatically.
- *  3. Timing trap — `form_load_at` is the form-mount timestamp (page render).
+ *  1. Honeypot fields (`company` / `company_name`) exist only in the JSON
+ *     payload — never as autofillable DOM inputs. Password managers and form
+ *     fillers spray every text input (even renamed/hidden ones) and caused
+ *     false rejects (backend: contact: honeypot triggered). Humans always
+ *     send empty strings from JS; naive API spray bots that fill `company`
+ *     are still rejected server-side.
+ *  2. Timing trap — `form_load_at` is the form-mount timestamp (page render).
  *     The backend rejects submissions faster than its minimum human fill-time
- *     (~4s). Never stamp this at submit time — that always fails the check.
- *  4. Submit cooldown so a double-click / scripted loop cannot fire more
+ *     (~4s when enabled). Never stamp this at submit time — that always fails.
+ *  3. Submit cooldown so a double-click / scripted loop cannot fire more
  *     than one request per second.
- *  5. Status via `aria-live` so screen readers hear success/failure without
+ *  4. Status via `aria-live` so screen readers hear success/failure without
  *     a page reload (this form no longer navigates to mailto:).
  *
  * Validation: TanStack Form + Zod (`contactFormValuesSchema`) on submit only —
@@ -37,6 +40,7 @@ import type { ContactPageContent } from "@/features/contact/content-contract";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useContactMutation } from "@/features/contact/hooks";
 import {
+  isContactFailure,
   statusCopyFor,
   type ContactSubmitResult,
 } from "@/features/contact/lib";
@@ -119,6 +123,16 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
       setSubmitAttemptedAt(now);
 
       const formLoadAt = formLoadStartedAtRef.current ?? now;
+      // Mirror backend minFormFill (~4s) so humans see a clear message instead
+      // of an opaque upstream reject when autofill/submit is near-instant.
+      if (now - formLoadAt < 4000) {
+        setStatus({
+          status: "error",
+          code: "too_fast",
+          message: "That was too fast. Please wait a few seconds and try again.",
+        });
+        return;
+      }
       setStatus("sending");
 
       // Re-parse so Zod trims/narrows output (TanStack keeps draft input values).
@@ -126,15 +140,23 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
       try {
         const result = await contactMutation.mutateAsync({
           ...parsed,
+          // Never trust DOM/autofill for honeypot fields — always empty from JS.
+          // Backend still rejects non-empty company on direct API spam.
+          company: "",
+          company_name: "",
           form_load_at: formLoadAt,
         });
 
         setStatus(result);
-        if (result === "success") {
+        if (result.status === "success") {
           form.reset();
         }
       } catch {
-        setStatus("error");
+        setStatus({
+          status: "error",
+          code: "unavailable",
+          message: "Contact service unavailable, please try again later.",
+        });
       }
     },
   });
@@ -142,6 +164,8 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
   const submitting = status === "sending" || contactMutation.isPending;
   const statusCopy = status === "idle" ? null : statusCopyFor(status, lang, content.status);
   const categoryPlaceholder = t(content.categoryPlaceholder, lang);
+  const statusIsFailure = status !== "idle" && status !== "sending" && isContactFailure(status);
+  const statusIsSuccess = status !== "idle" && status !== "sending" && status.status === "success";
 
   return (
     <form
@@ -161,38 +185,9 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
         {t(content.requiredNote, lang)}
       </p>
 
-      {/* Honeypot + reserved traps — hidden from humans and screen readers,
-          only bots (and scripted tools) ever fill these. Never show errors. */}
-      <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-        <form.Field name="company">
-          {(field) => (
-            <input
-              id={`${formId}-company`}
-              type="text"
-              name={field.name}
-              tabIndex={-1}
-              autoComplete="off"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-          )}
-        </form.Field>
-        <form.Field name="company_name">
-          {(field) => (
-            <input
-              id={`${formId}-company-name`}
-              type="text"
-              name={field.name}
-              tabIndex={-1}
-              autoComplete="off"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-          )}
-        </form.Field>
-      </div>
+      {/* Honeypot is payload-only (company/company_name forced "" on submit).
+          No honeypot <input> in the DOM — autofill/form-fillers fill every
+          text input and caused false backend honeypot rejects. */}
 
       <form.Field name="category">
         {(field) => {
@@ -375,12 +370,15 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
           role="status"
           aria-live="polite"
           className={`min-h-5 text-sm leading-relaxed ${
-            status === "error" || status === "rate_limited"
-              ? "text-red-600"
-              : status === "success"
-                ? "text-emerald-700"
+            statusIsFailure
+              ? "text-red-600 dark:text-red-400"
+              : statusIsSuccess
+                ? "text-emerald-700 dark:text-emerald-400"
                 : "text-muted"
           }`}
+          {...(status !== "idle" && status !== "sending" && status.status === "error"
+            ? { "data-contact-error-code": status.code }
+            : {})}
         >
           {statusCopy}
         </p>
