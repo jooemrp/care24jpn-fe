@@ -14,9 +14,9 @@
  *  1. Honeypot — a visually-hidden, off-screen input a human never fills.
  *     Filled => backend rejects.
  *  2. Reserved field (`company_name`) that bots spray automatically.
- *  3. Timing trap — `form_load_at` is the timestamp of the visitor's first
- *     interaction (first observed submit-time keydown/pointer activity); a
- *     submission under the backend's minimum human fill-time is rejected.
+ *  3. Timing trap — `form_load_at` is the form-mount timestamp (page render).
+ *     The backend rejects submissions faster than its minimum human fill-time
+ *     (~4s). Never stamp this at submit time — that always fails the check.
  *  4. Submit cooldown so a double-click / scripted loop cannot fire more
  *     than one request per second.
  *  5. Status via `aria-live` so screen readers hear success/failure without
@@ -31,7 +31,7 @@
  * text-body/text-heading) consistently with the rest of the site.
  */
 
-import { useRef, useState, useId } from "react";
+import { useRef, useState, useId, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
 import type { ContactPageContent } from "@/features/contact/content-contract";
 import { t, type Lang } from "@/features/lang/i18n";
@@ -95,9 +95,13 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
   const noteId = `${formId}-note`;
   const statusId = `${formId}-status`;
 
-  // When the visitor started interacting with the form, lazily recorded on
-  // the first submit so the backend's timing trap has a start timestamp.
+  // Backend timing trap: elapsed = now - form_load_at must be >= ~4s.
+  // Stamp at mount (page render), never at submit — submit-time stamps always
+  // fail because network RTT is far below the minimum fill window.
   const formLoadStartedAtRef = useRef<number | null>(null);
+  useEffect(() => {
+    formLoadStartedAtRef.current = Date.now();
+  }, []);
 
   const [status, setStatus] = useState<ContactSubmitResult | "sending" | "idle">("idle");
   const [submitAttemptedAt, setSubmitAttemptedAt] = useState<number>(0);
@@ -114,13 +118,7 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
       if (now - submitAttemptedAt < 1000) return;
       setSubmitAttemptedAt(now);
 
-      // Timing trap: the backend measures how long the visitor took between
-      // first load and submit. "Load" is approximated as the moment this first
-      // submit was allowed through (the cooldown above ensures a scripted
-      // instant double-submit cannot reset it); nowMs() is read lazily here
-      // rather than at render so the component stays pure.
-      formLoadStartedAtRef.current ??= now;
-
+      const formLoadAt = formLoadStartedAtRef.current ?? now;
       setStatus("sending");
 
       // Re-parse so Zod trims/narrows output (TanStack keeps draft input values).
@@ -128,7 +126,7 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
       try {
         const result = await contactMutation.mutateAsync({
           ...parsed,
-          form_load_at: formLoadStartedAtRef.current!,
+          form_load_at: formLoadAt,
         });
 
         setStatus(result);

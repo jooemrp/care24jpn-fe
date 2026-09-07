@@ -14,7 +14,13 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const raw = await request.text();
-  const origin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
+  const rawOrigin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
+  let origin = rawOrigin;
+  try {
+    if (rawOrigin) origin = new URL(rawOrigin).origin;
+  } catch {
+    // Keep raw; upstream allowlist rejects invalid values.
+  }
   const result = await submitContactRequest(raw, { origin });
 
   return new Response(result.body, {
