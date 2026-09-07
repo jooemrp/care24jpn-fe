@@ -164,6 +164,7 @@ export interface PricingMeta {
   highlights?: string; // localizable
   note?: string; // localizable
   cancellation_label?: string; // localizable
+  payment_note?: string; // localizable
   cancellation_href?: string;
 }
 
@@ -269,6 +270,14 @@ export interface HomeNursingCourse {
   price_tax_included?: string; // localizable
   note?: string; // localizable
   panel_heading?: string; // localizable
+  medical_note?: string; // localizable
+}
+
+/** Home — Nursing Course fee cell (content type: "home-nursing-course-fee") */
+export interface HomeNursingCourseFee {
+  label?: string; // localizable
+  value?: string; // localizable
+  note?: string; // localizable
 }
 
 /** Home — Care Course service card (content type: "home-care-course-card") */
@@ -372,6 +381,7 @@ export interface SiteCta {
   primary?: string; // localizable
   secondary?: string; // localizable
   contact?: string; // localizable
+  primary_href?: string;
 }
 
 /** Site — Contact Phone (content type: "site-contact-phone") */
@@ -427,6 +437,7 @@ export interface AtlasContentTypes {
   "home-examples": HomeExamples;
   "home-nursing-feature": HomeNursingFeature;
   "home-nursing-course": HomeNursingCourse;
+  "home-nursing-course-fee": HomeNursingCourseFee;
   "home-care-course-card": HomeCareCourseCard;
   "home-care-course-fee": HomeCareCourseFee;
   "home-care-course": HomeCareCourse;

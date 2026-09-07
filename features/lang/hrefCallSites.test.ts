@@ -81,15 +81,23 @@ type Binding = {
 const ALLOWLIST: Array<Binding & { reason: string }> = [
   {
     file: "components/Navbar.tsx",
-    line: 217,
+    line: 276,
     content: "homeHref",
     reason:
       "homeHref = localizeHref(\"/\", lang) is assigned earlier in the " +
-      "same component body (Navbar.tsx:174).",
+      "same component body (Navbar.tsx).",
   },
   {
     file: "components/Navbar.tsx",
-    line: 273,
+    line: 308,
+    content: "href",
+    reason:
+      "const href = localizeHref(item.href, lang) is assigned on the " +
+      "line directly above, inside the same .map() callback (SP bar shortcuts).",
+  },
+  {
+    file: "components/Navbar.tsx",
+    line: 352,
     content: "href",
     reason:
       "const href = localizeHref(item.href, lang) is assigned on the " +
@@ -97,11 +105,10 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
   },
   {
     file: "components/Navbar.tsx",
-    line: 301,
+    line: 380,
     content: "href",
     reason:
-      "Same pattern as :273, one .map() callback below, in the mobile " +
-      "nav menu.",
+      "Same pattern as desktop nav, in the mobile hamburger menu .map().",
   },
 ];
 

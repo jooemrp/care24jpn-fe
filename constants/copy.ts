@@ -27,16 +27,24 @@ export const brand = {
   } satisfies Bilingual,
 };
 
-/** Primary navigation links. `href` must match the App Router routes. */
+/**
+ * Primary navigation links. `href` must match the App Router routes.
+ *
+ * 0907 item 3: `/#service-details` and `/pricing` use SHORT labels
+ * (「サービス」「料金」) so the SP bar matches the mock — those same CMS
+ * labels also render on desktop tabs (approach A; no dedicated SP fields).
+ * Contact (item 2) sits after FAQ.
+ */
 export const nav: { href: string; label: Bilingual }[] = [
   { href: "/", label: { ja: "ホーム", en: "Home" } },
-  { href: "/#service-details", label: { ja: "サービス内容", en: "Service Details" } },
+  { href: "/#service-details", label: { ja: "サービス", en: "Service" } },
   {
     href: "/service-flow",
     label: { ja: "ご利用の流れ", en: "How to Use Our Services" },
   },
-  { href: "/pricing", label: { ja: "ご利用料金", en: "Usage Fees" } },
+  { href: "/pricing", label: { ja: "料金", en: "Pricing" } },
   { href: "/faq", label: { ja: "よくあるご質問", en: "FAQ" } },
+  { href: "/contact", label: { ja: "お問い合わせ", en: "Contact" } },
 ];
 
 /**
@@ -56,9 +64,15 @@ export const contactPhone = {
   } satisfies Bilingual,
 };
 
-/** Shared call-to-action buttons reused across pages. */
+/**
+ * Shared call-to-action buttons reused across pages.
+ *
+ * `primaryHref` seeds `site_cta.primary_href` (sticky CTA + hamburger CTA).
+ * Runtime reads it from Atlas only — never hardcode this URL in JSX.
+ */
 export const cta = {
   primary: { ja: "無料相談を予約する", en: "Book a free consultation" } satisfies Bilingual,
+  primaryHref: "https://portal.care24.jp/register",
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
   contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
 };
@@ -243,29 +257,29 @@ export const home = {
       en: "Certified Specialists Filling the Care Gap Beyond Standard Insurance.",
     } satisfies Bilingual,
     body: {
-      ja: "介護保険では対応しきれないサポートや、ご家族の不安に寄り添うケアを、必要なときに必要な時間だけご利用いただけます。",
-      en: "We offer tailored care and emotional support for your family that standard nursing care insurance cannot cover, available whenever and for as long as you need it.",
+      ja: "介護保険では対応しきれないサポートや、ご家族の不安に寄り添うケアを、必要なときに必要な時間だけ\nご利用いただけます。",
+      en: "We offer tailored care and emotional support for your family that standard nursing care insurance cannot cover,\navailable whenever and for as long as you need it.",
     } satisfies Bilingual,
     cards: [
       {
         title: { ja: "有資格者が対応", en: "Qualified Specialists" } satisfies Bilingual,
         body: {
-          ja: "看護師・介護士などの有資格者が訪問します。",
-          en: "Certified nurses and professional caregivers visit your home.",
+          ja: "看護師・介護士などの有資格者が\n訪問します。",
+          en: "Certified nurses and professional caregivers\nvisit your home.",
         } satisfies Bilingual,
       },
       {
         title: { ja: "必要なときに利用", en: "Flexible Availability" } satisfies Bilingual,
         body: {
-          ja: "必要な時間・内容に合わせて、最低2時間からご利用いただけます。",
-          en: "Available from a 2-hour minimum according to your needs and schedule.",
+          ja: "必要な時間・内容に合わせて、\n最低2時間からご利用いただけます。",
+          en: "Available from a 2-hour minimum,\ntailored to your needs and schedule.",
         } satisfies Bilingual,
       },
       {
         title: { ja: "保険外だから柔軟", en: "Private & Adaptable" } satisfies Bilingual,
         body: {
-          ja: "保険では対応できないご要望にも柔軟に対応します。",
-          en: "Since it is non-insurance, we can flexibly adapt to special requests outside standard insurance constraints.",
+          ja: "保険では対応できないご要望にも\n柔軟に対応します。",
+          en: "Flexibly accommodating requests\nnot covered by insurance.",
         } satisfies Bilingual,
       },
     ],
@@ -377,8 +391,8 @@ export const home = {
         // ST-U2 Tugas 3: ¥ -> JPY for EN readers (user decision "en ya en"),
         // synced with the same field's Atlas value (home page,
         // home-care-course-fee block, en.value).
+        // 0907 #16: nomination-free footnote removed.
         value: { ja: "330円/時間", en: "JPY 330/hour" } satisfies Bilingual,
-        note: { ja: "※定期の方は指名無料", en: "*Free for regular clients" } satisfies Bilingual,
       },
       {
         label: { ja: "往復交通費", en: "Round-trip transport" } satisfies Bilingual,
@@ -484,11 +498,29 @@ export const home = {
       ja: "※詳しくは料金表をご覧ください。",
       en: "*Please see the price list for details.",
     } satisfies Bilingual,
+    // 0907 #18 — large footnote under nursing description (Atlas medical_note).
+    medicalNote: {
+      ja: "医療行為を必要とする場合は必ず医師の指示書が必要になります",
+      en: "A doctor's written instructions are strictly required if medical procedures are needed.",
+    } satisfies Bilingual,
+    // 0907 #16 — same fee-cell structure as careCourse.fees (no nomination-free note).
+    fees: [
+      {
+        label: { ja: "最低利用時間", en: "Minimum usage" } satisfies Bilingual,
+        value: { ja: "2時間から", en: "From 2 hours" } satisfies Bilingual,
+      },
+      {
+        label: { ja: "指名料", en: "Nomination fee" } satisfies Bilingual,
+        value: { ja: "330円/時間", en: "JPY 330/hour" } satisfies Bilingual,
+      },
+      {
+        label: { ja: "往復交通費", en: "Round-trip transport" } satisfies Bilingual,
+        value: { ja: "別途990円", en: "JPY 990 separately" } satisfies Bilingual,
+      },
+    ],
     panel: {
-      heading: {
-        ja: "スタッフによる医療ケアが必要な場合や、なにかあったときに安心のコースです。",
-        en: "When medical care by qualified staff is required — a course that gives peace of mind when something happens.",
-      } satisfies Bilingual,
+      // 0907 #17 — duplicate of tagline removed; leave empty so UI skips heading.
+      heading: { ja: "", en: "" } satisfies Bilingual,
       items: [
         {
           icon: "vitals",
@@ -692,8 +724,8 @@ export const home = {
         icon: "report",
         title: { ja: "レポート報告", en: "Service report" } satisfies Bilingual,
         body: {
-          ja: "サービス終了後、内容をもとにレポートを作成・ご報告します。",
-          en: "After the visit, we prepare and share a report based on the session.",
+          ja: "サービス終了後、内容をもとに\nレポートを作成・ご報告します。",
+          en: "After service, we will prepare and submit a report\nbased on the details.",
         } satisfies Bilingual,
       },
     ],
@@ -707,8 +739,8 @@ export const home = {
         en: "Please feel free to contact us first",
       } satisfies Bilingual,
       body: {
-        ja: "ご相談・お見積りは無料です。あなたやご家族の「困った」を、私たちがサポートします。",
-        en: "Consultations and estimates are free. We support you and your family's challenges.",
+        ja: "ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。",
+        en: "Consultations and quotes are free. We support you and your family's\nconcerns.",
       } satisfies Bilingual,
       cta: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
       href: "https://portal.care24.jp/register",
@@ -760,8 +792,8 @@ export const home = {
       en: "[Reception Hours] Weekdays 9:00 AM – 6:00 PM",
     } satisfies Bilingual,
     isms: {
-      ja: "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-      en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
+      ja: "メディカルインフォマティクス株式会社は情報セキュリティ\nマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+      en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security\nmanagement systems (ISMS).",
     } satisfies Bilingual,
     // Verbatim from app/[lang]/page.tsx:511. Already language-neutral (a
     // company name + Latin abbreviation), so en === ja is not a placeholder.
@@ -823,38 +855,17 @@ export const home = {
     } satisfies Bilingual,
     payment: {
       heading: { ja: "お支払い方法", en: "Payment methods" } satisfies Bilingual,
+      // 0907 #15 — bank transfer (prepaid); card logos unused (not seeded).
       body: {
-        ja: "クレジットカード決済のみとなります。",
-        en: "Credit card payment only.",
+        ja: "お支払いは銀行振込（前払い）となります。",
+        en: "Payment is made by bank transfer (in advance).",
       } satisfies Bilingual,
-      settleNote: {
-        ja: "※ご利用後に決済が確定します。",
-        en: "*Payment is finalized after use.",
-      } satisfies Bilingual,
-      // Brand marks for accepted cards (Visual Ref 4). Files live in
-      // public/images/ and are also uploaded to Atlas via upload-media.ts.
-      logos: [
-        {
-          mark: "visa",
-          src: "/images/payment-visa.png",
-          alt: { ja: "Visa", en: "Visa" } satisfies Bilingual,
-        },
-        {
-          mark: "mastercard",
-          src: "/images/payment-mastercard.png",
-          alt: { ja: "Mastercard", en: "Mastercard" } satisfies Bilingual,
-        },
-        {
-          mark: "jcb",
-          src: "/images/payment-jcb.png",
-          alt: { ja: "JCB", en: "JCB" } satisfies Bilingual,
-        },
-        {
-          mark: "amex",
-          src: "/images/payment-amex.png",
-          alt: { ja: "American Express", en: "American Express" } satisfies Bilingual,
-        },
-      ],
+      settleNote: { ja: "", en: "" } satisfies Bilingual,
+      logos: [] as {
+        mark: string;
+        src: string;
+        alt: Bilingual;
+      }[],
     },
   },
 };
@@ -984,9 +995,9 @@ export const serviceFlow = {
       ja: "ご登録からサービス終了まで、4つのステップで進みます。",
       en: "From registration to completion, in four simple steps.",
     } satisfies Bilingual,
-    // Verbatim from app/[lang]/service-flow/page.tsx's closing CTA — same
-    // shape and same reasoning as `useCase.hero.ctaHref` above.
-    ctaHref: "/pricing",
+    // 0907 #20 — sheet absolute contact URL stored as site-relative path;
+    // view resolves via localizeHref(content.hero.ctaHref).
+    ctaHref: "/contact",
   },
   // `number` is verbatim from components/ui/StepFlow.tsx's old `{i + 1}` —
   // plain "1".."4", not the zero-padded "01".."04" `home.flow.steps` uses:
@@ -1092,10 +1103,17 @@ export const pricing = {
     ja: "※ 表示価格はすべて税込です。ご利用内容により変動する場合があります。",
     en: "All prices include tax and may vary based on care requirements.",
   } satisfies Bilingual,
+  // 0907 #21 — exact prepaid bank-transfer copy under pricing amounts.
+  paymentNote: {
+    ja: "お支払いは銀行振込（前払い）となります。",
+    en: "Payment is made by bank transfer (in advance).",
+  } satisfies Bilingual,
   cancellationLinkLabel: {
     ja: "詳しくはこちら（キャンセルポリシー）をご確認ください。",
     en: "For cancellation terms, please click here.",
   } satisfies Bilingual,
+  // Optional 0825 hygiene — CMS href for the cancellation label (not hardcoded in view).
+  cancellationHref: "/cancellation-policy",
 };
 
 /* ------------------------------------------------------------------ */

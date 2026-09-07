@@ -94,7 +94,12 @@ function otherSiteBlocks(): CmsBlock[] {
       tagline: bi("tag"),
     }),
     simple("site-contact-phone", 1, { display: bi("0120"), tel: bi("0120"), note: bi("note") }),
-    simple("site-cta", 2, { primary: bi("p"), secondary: bi("s"), contact: bi("c") }),
+    simple("site-cta", 2, {
+      primary: bi("p"),
+      primary_href: bi("https://portal.example.com/register"),
+      secondary: bi("s"),
+      contact: bi("c"),
+    }),
     simple("site-ui-labels", 3, {
       menu_toggle_label: bi("m"),
       lang_toggle_label: bi("l"),
@@ -284,6 +289,85 @@ async function main(): Promise<void> {
 
   test("a site-error-labels block missing a field is rejected", () => {
     assert.throws(() => mapSite(siteBlocksWithLegal({ body: undefined })));
+  });
+
+  // ---------------------------------------------------------------------------
+  // 0907 chrome: primary_href on site-cta + Contact nav-item after FAQ
+  // ---------------------------------------------------------------------------
+
+  test("mapSite() reads primary_href into cta.primaryHref", () => {
+    const result = mapSite(siteBlocks(liveOrderLegalBlocks()));
+    assert.equal(result.cta.primaryHref, "https://portal.example.com/register");
+  });
+
+  test("mapSite() rejects site-cta missing primary_href", () => {
+    const blocks = siteBlocks(liveOrderLegalBlocks()).map((block) =>
+      block.type === "site-cta"
+        ? {
+            ...block,
+            data: {
+              primary: bi("p"),
+              secondary: bi("s"),
+              contact: bi("c"),
+            },
+          }
+        : block,
+    );
+    assert.throws(() => mapSite(blocks));
+  });
+
+  test("mapSite() preserves Contact nav-item after FAQ when present in blocks", () => {
+    const blocks = [
+      ...otherSiteBlocks().filter((b) => b.type !== "nav-item"),
+      {
+        id: "nav-0",
+        type: "nav-item",
+        blockTypeId: "uuid-of-nav-item",
+        parentId: null,
+        position: 6,
+        data: { href: bi("/"), label: bi("ホーム") },
+      },
+      {
+        id: "nav-1",
+        type: "nav-item",
+        blockTypeId: "uuid-of-nav-item",
+        parentId: null,
+        position: 7,
+        data: { href: bi("/#service-details"), label: bi("サービス") },
+      },
+      {
+        id: "nav-2",
+        type: "nav-item",
+        blockTypeId: "uuid-of-nav-item",
+        parentId: null,
+        position: 8,
+        data: { href: bi("/pricing"), label: bi("料金") },
+      },
+      {
+        id: "nav-3",
+        type: "nav-item",
+        blockTypeId: "uuid-of-nav-item",
+        parentId: null,
+        position: 9,
+        data: { href: bi("/faq"), label: bi("FAQ") },
+      },
+      {
+        id: "nav-4",
+        type: "nav-item",
+        blockTypeId: "uuid-of-nav-item",
+        parentId: null,
+        position: 10,
+        data: { href: bi("/contact"), label: bi("お問い合わせ") },
+      },
+      ...liveOrderLegalBlocks(),
+    ];
+    const result = mapSite(blocks);
+    assert.equal(result.nav.length, 5);
+    assert.deepEqual(result.nav[3], { href: "/faq", label: bi("FAQ") });
+    assert.deepEqual(result.nav[4], {
+      href: "/contact",
+      label: bi("お問い合わせ"),
+    });
   });
 }
 

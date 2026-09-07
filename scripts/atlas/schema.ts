@@ -1,5 +1,5 @@
 /**
- * Creates all 30 CMS block content types (and their fields) on the live
+ * Creates all CMS block content types (and their fields) on the live
  * Atlas workspace. This file IS the specification — every block type and
  * field below is the single authoritative source the seed-*.ts scripts write
  * against and the features/cms/*.ts loaders read back.
@@ -82,6 +82,10 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "primary", label: "Primary CTA", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "secondary", label: "Secondary CTA", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "contact", label: "Contact CTA", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      // Sticky CTA / hamburger CTA destination (0907 item 4). Non-localizable —
+      // one URL for both locales (portal or internal path). Mapped as
+      // `site.cta.primaryHref` via requiredUrl in site-map.ts.
+      { name: "primary_href", label: "Primary CTA href", field_type: "text", localizable: false, required: false, sort_order: 3 },
     ],
   },
   {
@@ -215,7 +219,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
   },
   {
     slug: "home_pricing_summary",
-    name: "Home — Pricing summary + payment logos",
+    name: "Home — Pricing summary + payment",
     is_block: true,
     fields: [
       { name: "heading", label: "Fees heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
@@ -232,15 +236,17 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "pricing_details_href", label: "Pricing details link href", field_type: "text", localizable: false, required: false, sort_order: 11 },
       { name: "payment_heading", label: "Payment heading", field_type: "text", localizable: true, required: false, sort_order: 12 },
       { name: "payment_body", label: "Payment body", field_type: "textarea", localizable: true, required: false, sort_order: 13 },
-      { name: "payment_settle_note", label: "Payment settle note", field_type: "text", localizable: true, required: false, sort_order: 14 },
-      { name: "payment_visa", label: "Logo Visa", field_type: "image", localizable: false, required: false, sort_order: 15 },
-      { name: "payment_visa_alt", label: "Logo Visa alt", field_type: "text", localizable: true, required: false, sort_order: 16 },
-      { name: "payment_mastercard", label: "Logo Mastercard", field_type: "image", localizable: false, required: false, sort_order: 17 },
-      { name: "payment_mastercard_alt", label: "Logo Mastercard alt", field_type: "text", localizable: true, required: false, sort_order: 18 },
-      { name: "payment_jcb", label: "Logo JCB", field_type: "image", localizable: false, required: false, sort_order: 19 },
-      { name: "payment_jcb_alt", label: "Logo JCB alt", field_type: "text", localizable: true, required: false, sort_order: 20 },
-      { name: "payment_amex", label: "Logo American Express", field_type: "image", localizable: false, required: false, sort_order: 21 },
-      { name: "payment_amex_alt", label: "Logo American Express alt", field_type: "text", localizable: true, required: false, sort_order: 22 },
+      { name: "payment_settle_note", label: "Payment settle note (optional)", field_type: "text", localizable: true, required: false, sort_order: 14 },
+      // Card logos retired for 0907 #15 (bank transfer). Fields remain undeletable in Atlas;
+      // seed omits them and the mapper only maps logos when media is present.
+      { name: "payment_visa", label: "Logo Visa (unused)", field_type: "image", localizable: false, required: false, sort_order: 15 },
+      { name: "payment_visa_alt", label: "Logo Visa alt (unused)", field_type: "text", localizable: true, required: false, sort_order: 16 },
+      { name: "payment_mastercard", label: "Logo Mastercard (unused)", field_type: "image", localizable: false, required: false, sort_order: 17 },
+      { name: "payment_mastercard_alt", label: "Logo Mastercard alt (unused)", field_type: "text", localizable: true, required: false, sort_order: 18 },
+      { name: "payment_jcb", label: "Logo JCB (unused)", field_type: "image", localizable: false, required: false, sort_order: 19 },
+      { name: "payment_jcb_alt", label: "Logo JCB alt (unused)", field_type: "text", localizable: true, required: false, sort_order: 20 },
+      { name: "payment_amex", label: "Logo American Express (unused)", field_type: "image", localizable: false, required: false, sort_order: 21 },
+      { name: "payment_amex_alt", label: "Logo American Express alt (unused)", field_type: "text", localizable: true, required: false, sort_order: 22 },
     ],
   },
   {
@@ -298,6 +304,17 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "price_tax_included", label: "Tax-included line", field_type: "text", localizable: true, required: false, sort_order: 9 },
       { name: "note", label: "Note", field_type: "text", localizable: true, required: false, sort_order: 10 },
       { name: "panel_heading", label: "Panel H3", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
+      { name: "medical_note", label: "Medical footnote (doctor's order)", field_type: "textarea", localizable: true, required: false, sort_order: 12 },
+    ],
+  },
+  {
+    slug: "home_nursing_course_fee",
+    name: "Home — Nursing Course fee cell",
+    is_block: true,
+    fields: [
+      { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "value", label: "Value", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "note", label: "Note (opsional)", field_type: "text", localizable: true, required: false, sort_order: 2 },
     ],
   },
   {
@@ -423,6 +440,10 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "highlights", label: "Highlights (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 0 },
       { name: "note", label: "Note", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
       { name: "cancellation_label", label: "Cancellation policy link label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      // 0907 #21 — prepaid bank-transfer note under pricing amounts.
+      { name: "payment_note", label: "Payment note (under amounts)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      // Optional 0825 hygiene — destination for cancellation_label (not required for 0907 #21).
+      { name: "cancellation_href", label: "Cancellation policy href", field_type: "text", localizable: false, required: false, sort_order: 4 },
     ],
   },
   {
@@ -494,6 +515,44 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "body", label: "Body", field_type: "richtext", localizable: true, required: false, sort_order: 1 },
+    ],
+  },
+  // FAQ page chrome + items (live on Atlas since Aug 2026; declared here so
+  // schema.ts remains the single source for ensureContentType on a fresh
+  // workspace, and seed-faq.ts can resolve type ids by slug).
+  {
+    slug: "faq_page",
+    name: "FAQ — Page config",
+    is_block: true,
+    fields: [
+      { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "intro", label: "Intro", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
+      { name: "scenarios_heading", label: "Scenarios section heading", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "view_more_label", label: "View more label", field_type: "text", localizable: true, required: false, sort_order: 3 },
+      { name: "collapse_label", label: "Collapse label", field_type: "text", localizable: true, required: false, sort_order: 4 },
+    ],
+  },
+  {
+    slug: "faq_category",
+    name: "FAQ — Category",
+    is_block: true,
+    fields: [
+      { name: "id", label: "Id (legacy)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "category_key", label: "Category key", field_type: "text", localizable: false, required: false, sort_order: 2 },
+    ],
+  },
+  {
+    slug: "faq_item",
+    name: "FAQ — Item",
+    is_block: true,
+    fields: [
+      { name: "id", label: "Id (legacy)", field_type: "text", localizable: false, required: false, sort_order: 0 },
+      { name: "category", label: "Category (legacy)", field_type: "text", localizable: false, required: false, sort_order: 1 },
+      { name: "question", label: "Question", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "answer", label: "Answer", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "item_key", label: "Item key", field_type: "text", localizable: false, required: false, sort_order: 4 },
+      { name: "category_key", label: "Category key", field_type: "text", localizable: false, required: false, sort_order: 5 },
     ],
   },
 ];

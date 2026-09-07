@@ -129,7 +129,11 @@ function buildBlocks(
     translations: en({ note: contactPhone.note.en }),
   });
 
-  // position 2 — site_cta: primary / secondary / contact
+  // position 2 — site_cta: primary / secondary / contact / primary_href
+  //
+  // `primary_href` is non-localizable (one destination for both locales) —
+  // sticky CTA + open-hamburger CTA (0907 item 4). Written into JA `data`
+  // only, same pattern as `nav_item.href`.
   blocks.push({
     block_type_id: blockTypeIds.site_cta,
     parent_id: null,
@@ -138,6 +142,7 @@ function buildBlocks(
       primary: cta.primary.ja,
       secondary: cta.secondary.ja,
       contact: cta.contact.ja,
+      primary_href: cta.primaryHref,
     },
     translations: en({
       primary: cta.primary.en,
