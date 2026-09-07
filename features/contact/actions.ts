@@ -23,31 +23,63 @@ export async function getContact(): Promise<ApiResult<ContactContent>> {
  * The service performs the runtime validation because Server Action arguments
  * are still untrusted. The request origin is read from the action request,
  * never accepted as client-provided form data.
+ *
+ * On failure the action still returns `success: true` with a structured
+ * `data: { status, code, message }` so the form can show why it failed
+ * without treating transport errors and domain rejects the same way.
  */
 export async function submitContact(payload: ContactPayload): Promise<SubmitContactResult> {
   try {
     const requestHeaders = await headers();
     // Prefer Origin; fall back to Referer. Normalize a full Referer URL to its
     // origin so the backend allowlist compares hostnames correctly.
-    const rawOrigin =
-      requestHeaders.get("origin") ?? requestHeaders.get("referer") ?? "";
+    const headerOrigin = requestHeaders.get("origin") ?? "";
+    const headerReferer = requestHeaders.get("referer") ?? "";
+    const rawOrigin = headerOrigin || headerReferer;
     let origin = rawOrigin;
     try {
       if (rawOrigin) origin = new URL(rawOrigin).origin;
     } catch {
       // Keep the raw value; backend originAllowed will reject garbage.
     }
+    const formLoadAt = payload.form_load_at;
+    const formLoadAgeMs =
+      typeof formLoadAt === "number" && Number.isFinite(formLoadAt)
+        ? Date.now() - formLoadAt
+        : null;
+
+    console.info("[contact] submitContact start", {
+      headerOrigin: headerOrigin || "(empty)",
+      headerReferer: headerReferer ? headerReferer.slice(0, 120) : "(empty)",
+      normalizedOrigin: origin || "(empty)",
+      formLoadAt,
+      formLoadAgeMs,
+    });
+
     const result = await submitContactPayloadService(payload, { origin });
 
-    // Transport/config/upstream failures are represented as stable domain
-    // outcomes so the form can preserve its localized error/rate-limit copy.
-    // success:true + data:"error" means the action ran but upstream rejected.
-    if (result.outcome !== "success") {
+    console.info("[contact] submitContact mapped", {
+      normalizedOrigin: origin || "(empty)",
+      formLoadAt,
+      formLoadAgeMs,
+      httpStatus: result.status,
+      mappedOutcome: result.outcome,
+      mappedWhy:
+        result.outcome.status === "success"
+          ? "upstream accepted"
+          : `action returns structured failure code=${"code" in result.outcome ? result.outcome.code : "n/a"}`,
+      upstreamBody: result.body.slice(0, 500),
+    });
+
+    if (result.outcome.status !== "success") {
       console.error("[contact] submitContact outcome", {
-        outcome: result.outcome,
-        status: result.status,
+        status: result.outcome.status,
+        code: "code" in result.outcome ? result.outcome.code : undefined,
+        message: "message" in result.outcome ? result.outcome.message : undefined,
+        httpStatus: result.status,
         origin: origin || "(empty)",
-        formLoadAt: payload.form_load_at,
+        formLoadAt,
+        formLoadAgeMs,
       });
     }
     return apiSuccess(result.outcome);

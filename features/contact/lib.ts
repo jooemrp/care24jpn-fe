@@ -8,6 +8,7 @@
 import type { Lang } from "@/features/lang/i18n";
 import type { ContactPayload } from "./schema";
 import {
+  isContactFailure as pureIsContactFailure,
   statusCopyFor as pureStatusCopyFor,
   type ContactStatusTable,
   type ContactSubmitResult,
@@ -26,4 +27,8 @@ export function statusCopyFor(
   table: ContactStatusTable,
 ): string {
   return pureStatusCopyFor(status, lang, table);
+}
+
+export function isContactFailure(result: ContactSubmitResult): boolean {
+  return pureIsContactFailure(result);
 }

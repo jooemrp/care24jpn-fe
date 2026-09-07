@@ -22,7 +22,7 @@ const modulePath = "./status-copy" + ".ts";
 
 async function main() {
   const m = (await import(modulePath)) as typeof StatusCopyModule;
-  const { statusCopyFor } = m;
+  const { contactResultFromUpstream, statusCopyFor } = m;
   type ContactStatusTable = StatusCopyModule.ContactStatusTable;
 
   const table: ContactStatusTable = {
@@ -38,18 +38,68 @@ async function main() {
   });
 
   test("success status returns localized copy", () => {
-    assert.equal(statusCopyFor("success", "ja", table), table.success.ja);
-    assert.equal(statusCopyFor("success", "en", table), table.success.en);
+    assert.equal(
+      statusCopyFor({ status: "success" }, "ja", table),
+      table.success.ja,
+    );
+    assert.equal(
+      statusCopyFor({ status: "success" }, "en", table),
+      table.success.en,
+    );
   });
 
-  test("error status returns localized copy", () => {
-    assert.equal(statusCopyFor("error", "ja", table), table.error.ja);
-    assert.equal(statusCopyFor("error", "en", table), table.error.en);
+  test("too_fast uses detail copy instead of opaque CMS error", () => {
+    const result = {
+      status: "error" as const,
+      code: "too_fast" as const,
+      message: "please wait",
+    };
+    assert.match(statusCopyFor(result, "en", table), /too fast/i);
+    assert.match(statusCopyFor(result, "ja", table), /早すぎ/);
   });
 
-  test("rate_limited status returns localized copy", () => {
-    assert.equal(statusCopyFor("rate_limited", "ja", table), table.rateLimited.ja);
-    assert.equal(statusCopyFor("rate_limited", "en", table), table.rateLimited.en);
+  test("rate_limited status returns detail copy", () => {
+    const result = {
+      status: "rate_limited" as const,
+      code: "rate_limited" as const,
+      message: "too many",
+    };
+    assert.match(statusCopyFor(result, "en", table), /Too many/i);
+  });
+
+  test("classifies upstream timing reject", () => {
+    const result = contactResultFromUpstream(
+      400,
+      JSON.stringify({
+        success: false,
+        message: "invalid input provided: please wait a few seconds before submitting",
+      }),
+    );
+    assert.deepEqual(result, {
+      status: "error",
+      code: "too_fast",
+      message: "That was too fast. Please wait a few seconds and try again.",
+    });
+  });
+
+  test("classifies upstream origin reject", () => {
+    const result = contactResultFromUpstream(
+      400,
+      JSON.stringify({
+        success: false,
+        message: "invalid input provided: request origin is not allowed",
+      }),
+    );
+    assert.equal(result.status, "error");
+    if (result.status === "error") assert.equal(result.code, "origin");
+  });
+
+  test("classifies 429 as rate_limited", () => {
+    const result = contactResultFromUpstream(
+      429,
+      JSON.stringify({ success: false, message: "too many submissions" }),
+    );
+    assert.equal(result.status, "rate_limited");
   });
 }
 
