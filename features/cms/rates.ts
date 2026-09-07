@@ -201,9 +201,16 @@ export function mapPricingCopy(blocks: CmsBlock[]): PricingCopy {
     },
     highlights: optionalLines(metaBlock.data, "highlights", "pricing/pricing-meta"),
     note: requiredBi(metaBlock.data, "note", "pricing/pricing-meta"),
+    paymentNote: requiredBi(metaBlock.data, "payment_note", "pricing/pricing-meta"),
     cancellationLinkLabel: requiredBi(
       metaBlock.data,
       "cancellation_label",
+      "pricing/pricing-meta",
+    ),
+    // Optional 0825 hygiene — seeded with the cancellation label destination.
+    cancellationHref: requiredUrl(
+      metaBlock.data,
+      "cancellation_href",
       "pricing/pricing-meta",
     ),
   };

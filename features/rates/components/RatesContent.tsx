@@ -65,12 +65,15 @@ export function PricingRatesContent({
           <EmptyRates lang={lang} />
         )}
 
+        <p className="mt-8 text-base leading-relaxed text-body md:text-lg">
+          {t(rates.pricing.paymentNote, lang)}
+        </p>
         <p className="mt-8 text-lg text-muted">
           {t(rates.pricing.note, lang)}
         </p>
         <p className="mt-4 text-base text-body">
           <Link
-            href={localizeHref("/cancellation-policy", lang)}
+            href={localizeHref(rates.pricing.cancellationHref, lang)}
             className="font-medium text-primary underline-offset-2 hover:underline"
           >
             {t(rates.pricing.cancellationLinkLabel, lang)}

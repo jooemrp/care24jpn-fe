@@ -16,10 +16,15 @@ const rates: RatesContent = {
     },
     highlights: [{ ja: "登録料無料", en: "Registration is free" }],
     note: { ja: "内容により変動します。", en: "Rates may vary." },
+    paymentNote: {
+      ja: "お支払いは銀行振込（前払い）となります。",
+      en: "Payment is made by bank transfer (in advance).",
+    },
     cancellationLinkLabel: {
       ja: "キャンセルポリシーをご確認ください。",
       en: "See the cancellation policy.",
     },
+    cancellationHref: "/cancellation-policy",
   },
   fees: {
     hero: {
@@ -81,8 +86,22 @@ async function main(): Promise<void> {
     assert.match(html, /Pricing for users/);
     assert.match(html, /Caregiving course/);
     assert.match(html, /JPY 3,740/);
+    assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
+    assert.match(html, /href="\/en\/cancellation-policy"/);
     assert.match(html, /lg:grid-cols-2/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
+  });
+
+  test("pricing JA renders the exact prepaid bank-transfer payment note", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(PricingRatesContent, {
+        rates,
+        lang: "ja",
+      }),
+    );
+
+    assert.match(html, /お支払いは銀行振込（前払い）となります。/);
+    assert.match(html, /href="\/cancellation-policy"/);
   });
 
   test("fees content uses the same customer amount as pricing", () => {

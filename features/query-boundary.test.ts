@@ -209,6 +209,9 @@ test("rates content does not render an un-migrated constants label", () => {
     /from ["']@\/constants\/pricing["'][^;\n]*cancellationLinkLabel/,
   );
   assert.match(ratesContent, /rates\.pricing\.cancellationLinkLabel/);
+  assert.match(ratesContent, /rates\.pricing\.paymentNote/);
+  assert.match(ratesContent, /rates\.pricing\.cancellationHref/);
+  assert.doesNotMatch(ratesContent, /localizeHref\(["']\/cancellation-policy["']/);
 });
 
 test("light semantic tokens and query states avoid theme switching", () => {
