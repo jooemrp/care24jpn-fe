@@ -378,30 +378,48 @@ async function main(): Promise<void> {
   const S3_URL =
     "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/08/01a01e63-67db-78cd-8e8b-6cabe598c3fe-hero.jpg";
 
-  test("required bilingual and plain-text fields reject missing CMS values", () => {
+  test("required bilingual and plain-text fields emit visible markers for empty CMS values", async () => {
     assert.deepEqual(requiredBi({ title: { ja: "見出し", en: "Heading" } }, "title", "home/hero"), {
       ja: "見出し",
       en: "Heading",
     });
     assert.equal(requiredJa({ href: bi("/pricing", "/pricing") }, "href", "home/apply"), "/pricing");
 
-    for (const data of [
-      {},
-      { title: { ja: "", en: "Heading" } },
-      { title: { ja: "見出し", en: "   " } },
-    ]) {
-      assert.throws(
-        () => requiredBi(data, "title", "home/hero"),
-        (error: unknown) =>
-          error instanceof Error &&
-          error.name === "CmsContentError" &&
-          (error as { code?: string }).code === "CMS_MISSING_REQUIRED_FIELD",
-      );
-    }
-    assert.throws(() => requiredJa({}, "href", "home/apply"), (error: unknown) =>
-      error instanceof Error &&
-      error.name === "CmsContentError" &&
-      (error as { code?: string }).code === "CMS_MISSING_REQUIRED_FIELD",
+    const marker = "[missing: home/hero.title]";
+    const { result: bothEmpty, warnings: bothWarnings } = await capturing(() =>
+      requiredBi({}, "title", "home/hero"),
+    );
+    assert.deepEqual(bothEmpty, { ja: marker, en: marker });
+    assert.equal(bothWarnings.length, 1);
+    assert.match(bothWarnings[0], /\[cms:missing-field\]/);
+    assert.match(bothWarnings[0], /home\/hero\.title/);
+
+    assert.deepEqual(requiredBi({ title: { ja: "", en: "Heading" } }, "title", "home/hero"), {
+      ja: marker,
+      en: "Heading",
+    });
+    assert.deepEqual(requiredBi({ title: { ja: "見出し", en: "   " } }, "title", "home/hero"), {
+      ja: "見出し",
+      en: marker,
+    });
+
+    const jaMarker = "[missing: home/apply.href]";
+    assert.equal(requiredJa({}, "href", "home/apply"), jaMarker);
+    assert.equal(requiredJa({ href: "" }, "href", "home/apply"), jaMarker);
+
+    assert.throws(
+      () => requiredBi({ title: { ja: "見出し" } }, "title", "home/hero"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
+    assert.throws(
+      () => requiredJa({ href: 12 }, "href", "home/apply"),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.name === "CmsContentError" &&
+        (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
     );
   });
 

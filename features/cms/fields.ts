@@ -8,8 +8,9 @@
  *    `merge.ts#mergeBlockData` cannot see the workspace schema, so every
  *    string field comes back as `Bilingual | undefined` regardless of whether
  *    it is localizable. These narrow that back to the shape the loader
- *    declares and throw a typed `CmsContentError` when required CMS content is
- *    missing or malformed.
+ *    declares. Empty required *text* becomes a visible `[missing: …]` marker;
+ *    malformed shapes and structural fields (URL/image/enum/blocks) throw a
+ *    typed `CmsContentError`.
  * 2. **`mapBlocksByType`** — turns a page's flat block list into one group per
  *    block type, so a loader reads `groups["nav-item"]` instead of
  *    destructuring by array index.
@@ -37,9 +38,10 @@ import type { Bilingual, CmsBlock, CmsBlockTypeId } from "./types";
 const warnedKeys = new Set<string>();
 
 /**
- * `console.warn`, at most once per `key` per process. Warnings are reserved
- * for extra CMS blocks that are ignored; malformed or missing required
- * content throws instead of being replaced.
+ * `console.warn`, at most once per `key` per process. Used for ignored CMS
+ * blocks and for empty required text fields that render as visible markers
+ * instead of crashing the page. Malformed shapes and structural failures
+ * (URLs, images, enums, missing blocks) still throw.
  */
 export function warnOnce(key: string, message: string): void {
   if (warnedKeys.has(key)) return;
@@ -71,13 +73,16 @@ function fieldPath(context: string, key: string): string {
   return `${context}.${key}`;
 }
 
-function missingField(context: string, key: string): never {
+/** Visible placeholder so editors see the exact Atlas path to fill. */
+function missingMarker(context: string, key: string): string {
+  return `[missing: ${fieldPath(context, key)}]`;
+}
+
+function warnMissingText(context: string, key: string): void {
   const path = fieldPath(context, key);
-  throw new CmsContentError(
-    "CMS_MISSING_REQUIRED_FIELD",
-    `Required CMS field "${path}" is missing or empty.`,
-    [path],
-    context,
+  warnOnce(
+    `missing-field:${path}`,
+    `[cms:missing-field] Required CMS field "${path}" is missing or empty; rendering visible marker.`,
   );
 }
 
@@ -92,22 +97,45 @@ function invalidField(context: string, key: string): never {
 }
 
 /**
+ * True when `raw` is present but neither a plain string nor a valid
+ * bilingual `{ ja, en }` of strings — bad shape, not an empty editor field.
+ */
+function isMalformedTextValue(raw: unknown): boolean {
+  if (raw === undefined || raw === null) return false;
+  if (typeof raw === "string") return false;
+  if (typeof raw !== "object") return true;
+  const candidate = raw as Record<string, unknown>;
+  return typeof candidate.ja !== "string" || typeof candidate.en !== "string";
+}
+
+/**
  * Reads a required bilingual CMS field without borrowing a value from the
- * application bundle. Both locales must contain non-whitespace text.
+ * application bundle. Empty or absent locales become a visible `[missing: …]`
+ * marker (per locale); malformed non-string shapes still throw.
  */
 export function requiredBi(
   data: CmsBlock["data"],
   key: string,
   context: string,
 ): Bilingual {
+  const raw = data[key];
+  if (isMalformedTextValue(raw)) return invalidField(context, key);
+
   const value = pick(data, key);
-  if (!value || value.ja.trim() === "" || value.en.trim() === "") {
-    return missingField(context, key);
+  const marker = missingMarker(context, key);
+
+  if (!value) {
+    warnMissingText(context, key);
+    return { ja: marker, en: marker };
   }
-  return value;
+
+  const ja = value.ja.trim() === "" ? marker : value.ja;
+  const en = value.en.trim() === "" ? marker : value.en;
+  if (ja === marker || en === marker) warnMissingText(context, key);
+  return { ja, en };
 }
 
-/** Reads a required non-localized CMS string. */
+/** Reads a required non-localized CMS string. Empty/absent → visible marker. */
 export function requiredJa(
   data: CmsBlock["data"],
   key: string,
@@ -115,12 +143,25 @@ export function requiredJa(
 ): string {
   const raw = data[key];
   if (typeof raw === "string") {
-    if (raw.trim() === "") return missingField(context, key);
+    if (raw.trim() === "") {
+      warnMissingText(context, key);
+      return missingMarker(context, key);
+    }
     return raw;
   }
 
+  if (raw === undefined || raw === null) {
+    warnMissingText(context, key);
+    return missingMarker(context, key);
+  }
+
+  if (isMalformedTextValue(raw)) return invalidField(context, key);
+
   const value = pick(data, key);
-  if (!value || value.ja.trim() === "") return missingField(context, key);
+  if (!value || value.ja.trim() === "") {
+    warnMissingText(context, key);
+    return missingMarker(context, key);
+  }
   return value.ja;
 }
 

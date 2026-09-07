@@ -43,20 +43,17 @@ async function main(): Promise<void> {
     );
   });
 
-  test("manifest projection reports the exact missing required CMS field", () => {
-    assert.throws(
-      () =>
-        mapSiteManifest([
-          block("site-brand", 0, {
-            name: "Care 24 Japan",
-          }),
-        ]),
-      (error: unknown) =>
-        error instanceof Error &&
-        error.name === "CmsContentError" &&
-        (error as { code?: string }).code === "CMS_MISSING_REQUIRED_FIELD" &&
-        (error as { fields?: string[] }).fields?.includes("site/site-brand.tagline") &&
-        error.message.includes('Required CMS field "site/site-brand.tagline"'),
+  test("manifest projection renders a visible marker for a missing required CMS field", () => {
+    assert.deepEqual(
+      mapSiteManifest([
+        block("site-brand", 0, {
+          name: "Care 24 Japan",
+        }),
+      ]),
+      {
+        name: "Care 24 Japan",
+        description: "[missing: site/site-brand.tagline]",
+      },
     );
   });
 }
