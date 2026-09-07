@@ -34,27 +34,34 @@ async function main(): Promise<void> {
     }
   });
 
-  test("required bilingual fields reject missing and incomplete CMS values", () => {
+  test("required bilingual fields emit markers for empty text and throw on malformed shapes", () => {
     assert.deepEqual(fields.requiredBi({ title: bi("見出し", "Heading") }, "title", "home/hero"), {
       ja: "見出し",
       en: "Heading",
     });
 
-    for (const data of [
-      {},
-      { title: undefined },
-      { title: bi("", "Heading") },
-      { title: bi("見出し", "   ") },
-      { title: { ja: "見出し" } },
-    ]) {
-      assert.throws(
-        () => fields.requiredBi(data, "title", "home/hero"),
-        (error: unknown) =>
-          error instanceof errors.CmsContentError &&
-          error.code === "CMS_MISSING_REQUIRED_FIELD" &&
-          error.fields.includes("home/hero.title"),
-      );
-    }
+    const marker = "[missing: home/hero.title]";
+    assert.deepEqual(fields.requiredBi({}, "title", "home/hero"), { ja: marker, en: marker });
+    assert.deepEqual(fields.requiredBi({ title: undefined }, "title", "home/hero"), {
+      ja: marker,
+      en: marker,
+    });
+    assert.deepEqual(fields.requiredBi({ title: bi("", "Heading") }, "title", "home/hero"), {
+      ja: marker,
+      en: "Heading",
+    });
+    assert.deepEqual(fields.requiredBi({ title: bi("見出し", "   ") }, "title", "home/hero"), {
+      ja: "見出し",
+      en: marker,
+    });
+
+    assert.throws(
+      () => fields.requiredBi({ title: { ja: "見出し" } }, "title", "home/hero"),
+      (error: unknown) =>
+        error instanceof errors.CmsContentError &&
+        error.code === "CMS_INVALID_REQUIRED_FIELD" &&
+        error.fields.includes("home/hero.title"),
+    );
   });
 
   test("required URLs reject absent, relative, and raw media-id values", () => {
