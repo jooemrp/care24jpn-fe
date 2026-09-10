@@ -201,10 +201,10 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
         className={`pointer-events-none sticky top-0 z-50 shrink-0 ${SHELL_HEIGHT}`}
       >
         <div
-            className={`pointer-events-auto border-b border-border backdrop-blur-md dark:border-neutral-700 ${MOTION} ${
+          className={`pointer-events-auto border-b border-border backdrop-blur-md ${MOTION} ${
             condensed
-              ? "bg-surface/65 shadow-[0_2px_12px_rgba(27,31,94,0.07)] dark:bg-neutral-900/80"
-              : "bg-surface/45 shadow-none dark:bg-neutral-900/60"
+              ? "bg-surface/65 shadow-[0_2px_12px_rgba(27,31,94,0.07)]"
+              : "bg-surface/45 shadow-none"
           }`}
         >
         {/* Tier 1 — brand, contact, actions */}
@@ -257,8 +257,8 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                           aria-label={t(item.label, lang)}
                           className={`block rounded-full px-2.5 py-1.5 text-sm font-medium transition ${HIT_AREA} ${
                             active
-                              ? "bg-primary-light text-primary dark:bg-primary/30 dark:text-white"
-                              : "text-heading hover:bg-primary-light/60 hover:text-primary dark:text-neutral-100 dark:hover:bg-neutral-800"
+                              ? "bg-primary-light text-primary"
+                              : "text-heading hover:bg-primary-light/60 hover:text-primary"
                           }`}
                         >
                           {t(item.shortLabel!, lang)}
@@ -275,9 +275,9 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
             >
-              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
-              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
-              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
+              <span className="block h-0.5 w-6 bg-heading" />
+              <span className="block h-0.5 w-6 bg-heading" />
+              <span className="block h-0.5 w-6 bg-heading" />
             </button>
           </div>
         </div>
@@ -315,7 +315,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
 
         {/* Mobile menu */}
         {open && (
-          <div className="md:hidden border-t border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900">
+          <div className="md:hidden border-t border-border bg-surface">
             <nav>
               <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
                 {site.nav.map((item) => {
@@ -328,7 +328,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                         onClick={() => setOpen(false)}
                         aria-current={active ? "page" : undefined}
                         className={`block text-sm ${
-                          active ? "text-primary" : "text-body dark:text-neutral-200"
+                          active ? "text-primary" : "text-body"
                         }`}
                       >
                         {t(item.label, lang)}
@@ -340,12 +340,12 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                   <Link
                     href={localizeHref(site.cta.primaryHref, lang)}
                     onClick={() => setOpen(false)}
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-mid dark:bg-primary dark:text-white"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-mid"
                   >
                     {t(site.cta.primary, lang)}
                   </Link>
                 </li>
-                <li className="border-t border-border pt-4 dark:border-neutral-700">
+                <li className="border-t border-border pt-4">
                   <PhoneBlock lang={lang} contactPhone={site.contactPhone} align="start" />
                 </li>
               </ul>

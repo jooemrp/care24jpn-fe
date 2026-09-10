@@ -185,7 +185,12 @@ async function main(): Promise<void> {
     // time same as the hardcoded literals they replace.
     const ja = {
       ...split.ja,
-      image: mediaId(media, "hero.webp"),
+      image: mediaId(
+        media,
+        media.assets["revision/_hero-preview.png"]?.id
+          ? "revision/_hero-preview.png"
+          : "hero.webp",
+      ),
       cta_primary_href: home.hero.ctaPrimaryHref,
       cta_secondary_href: home.hero.ctaSecondaryHref,
     };

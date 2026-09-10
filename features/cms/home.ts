@@ -19,19 +19,19 @@ import {
   type BlockTypeList,
 } from "./fields";
 import type { CmsBlock } from "./types";
-import type { home as HomeCopy } from "@/constants/copy";
+import { home, type home as HomeCopy } from "@/constants/copy";
 import type { HomeContent } from "@/features/home/types";
 
 type Home = typeof HomeCopy;
 type Fee = Home["careCourse"]["fees"][number];
 
 /**
- * `constants/copy.ts` carries no image paths — every `<Image src>` on this
- * page used to be a literal in JSX, and the care-course cards derived theirs
- * from the LOOP INDEX (`/images/use-case-${i + 1}.webp`), which meant a 5th
- * card added in the dashboard rendered a guaranteed 404. So the home content
- * this loader returns is the constants shape PLUS one image URL per rendered
- * image, and the card's image is now a property OF THE CARD.
+ * `constants/copy.ts` carries no image paths except `home.hero.image` (the
+ * original photograph the 0907 layout work must not replace). Every other
+ * `<Image src>` on this page is an Atlas media URL. The care-course cards
+ * used to derive theirs from the LOOP INDEX (`/images/use-case-${i + 1}.webp`),
+ * which meant a 5th card added in the dashboard rendered a guaranteed 404.
+ * Card images stay a property OF THE CARD.
  */
 export type { HomeContent } from "@/features/home/types";
 
@@ -135,6 +135,10 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   const caseBlocks = groups["home-example-case"];
   const stepBlocks = groups["home-flow-step"];
 
+  // Atlas still requires an image field (media UUID → S3 URL). Validate it
+  // so the field cannot go missing; the live src is the original photograph.
+  requiredImageUrl(heroBlock.data, "image", "home/home-hero");
+
   const hero: HomeContent["hero"] = {
     badge: requiredBi(heroBlock.data, "badge", "home/home-hero"),
     resolve: requiredBi(heroBlock.data, "resolve", "home/home-hero"),
@@ -144,7 +148,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     ctaPrimary: requiredBi(heroBlock.data, "cta_primary", "home/home-hero"),
     ctaSecondary: optionalBi(heroBlock.data, "cta_secondary", "home/home-hero"),
     imageAlt: requiredBi(heroBlock.data, "image_alt", "home/home-hero"),
-    image: requiredImageUrl(heroBlock.data, "image", "home/home-hero"),
+    image: home.hero.image,
     ctaPrimaryHref: requiredUrl(heroBlock.data, "cta_primary_href", "home/home-hero"),
     ctaSecondaryHref: requiredUrl(heroBlock.data, "cta_secondary_href", "home/home-hero"),
     areaBadge: {

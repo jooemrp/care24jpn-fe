@@ -53,7 +53,7 @@ export default function StickyCta({ lang }: { lang: Lang }) {
         >
           <Link
             href={localized}
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(43,126,193,0.55)] transition hover:bg-primary-mid md:w-auto md:min-w-72 dark:bg-primary dark:text-white dark:hover:bg-primary-mid"
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(43,126,193,0.55)] transition hover:bg-primary-mid md:w-auto md:min-w-72"
           >
             {t(label, lang)}
           </Link>

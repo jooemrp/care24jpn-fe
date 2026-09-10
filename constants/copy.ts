@@ -206,6 +206,8 @@ export const home = {
       ja: "窓辺で介護スタッフと穏やかに過ごす高齢の女性",
       en: "An elderly woman resting calmly by a window with a care professional",
     } satisfies Bilingual,
+    /** Original hero photograph. 0907 was layout-only — do not swap this file. */
+    image: "/images/revision/_hero-preview.png",
     ctaPrimaryHref: "https://portal.care24.jp/register",
     ctaSecondaryHref: "/pricing",
     areaBadge: {

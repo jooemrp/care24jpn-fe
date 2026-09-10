@@ -95,7 +95,8 @@ const IMAGES_DIR = resolve(__dirname, "..", "..", "public", "images");
  * which is also the manifest key the seed scripts look up. `usedBy` is
  * documentation only; the authoritative wiring lives in the seed scripts. */
 const ASSETS: { file: string; usedBy: string }[] = [
-  { file: "hero.webp", usedBy: "home_hero.image" },
+  { file: "revision/_hero-preview.png", usedBy: "home_hero.image" },
+  { file: "hero.webp", usedBy: "home_hero.image (legacy fallback until preview is uploaded)" },
   { file: "logo.png", usedBy: "site_brand.logo (Navbar + Footer)" },
   { file: "mics-logo.png", usedBy: "home_contact.mics_logo" },
   { file: "iso27001-bsi.png", usedBy: "home_contact.iso_logo" },

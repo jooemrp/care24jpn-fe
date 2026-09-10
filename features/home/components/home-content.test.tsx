@@ -13,7 +13,7 @@ const content = {
   ...home,
   hero: {
     ...home.hero,
-    image: "/images/hero.webp",
+    image: "/images/revision/_hero-preview.png",
   },
   about: {
     ...home.about,
@@ -85,7 +85,7 @@ async function main(): Promise<void> {
     assert.match(html, /Please feel free to contact us first/);
     assert.match(html, /Examples of use/);
     assert.match(html, /id="contact"/);
-    assert.match(html, /hero\.webp/);
+    assert.match(html, /_hero-preview\.png/);
     assert.match(html, /target="_blank"/);
     assert.match(html, /rel="noopener noreferrer"/);
     assert.match(html, /md:grid-cols-2/);

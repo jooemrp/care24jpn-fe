@@ -39,7 +39,7 @@ export function HomeHeroSection({
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-[74%_48%] md:object-[70%_46%]"
+          className="object-cover object-center"
         />
       </div>
 

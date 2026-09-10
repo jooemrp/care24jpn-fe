@@ -241,6 +241,8 @@ test("light semantic tokens and query states avoid theme switching", () => {
     "components/cms/QueryLoadingState.tsx",
     "components/cms/QueryErrorState.tsx",
     "components/cms/QueryEmptyState.tsx",
+    "components/Navbar.tsx",
+    "components/StickyCta.tsx",
   ]) {
     const source = readFileSync(resolve(process.cwd(), relativePath), "utf8");
     assert.doesNotMatch(source, new RegExp(`${darkVariant}(?:bg|border|text)-`));
