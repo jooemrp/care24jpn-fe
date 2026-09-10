@@ -65,7 +65,7 @@ See [scripts/atlas/README.md](scripts/atlas/README.md) for what each script does
 
 **Seeding replaces pages wholesale.** `PUT /pages/:slug` is a full replace, not a merge, and the pipeline has no rollback, backup, or content versioning. A dashboard edit to a seeded page is silently deleted by the next `atlas:seed` — no error, no diff. So run `pnpm atlas:drift` *before* seeding: it re-fetches live content over the read-only delivery path and diffs it against a committed snapshot, turning "nobody has edited this" into a checked invariant. That snapshot's validity expires the moment you seed, so every seed run must be followed by `npx tsx scripts/atlas/drift-check.ts --write` (add `--only=<slugs>` when you touched only some) to refresh it — otherwise the next drift check reports false positives.
 
-There is also `pnpm assets:generate-revision` ([scripts/generate-revision-assets.ts](scripts/generate-revision-assets.ts)), which uses `OPENAI_API_KEY` to generate revision imagery locally.
+There is also `pnpm assets:generate-revision` ([scripts/generate-revision-assets.ts](scripts/generate-revision-assets.ts)), which uses `OPENAI_API_KEY` to generate revision imagery locally. It writes drafts to `public/images/revision/` rather than over the live assets — review them there, then wire the ones you want into `upload-media.ts` (the home hero currently points at `revision/_hero-preview.png`).
 
 `pnpm atlas:verify` builds the site twice — once against the live CMS and once with
 Atlas deliberately unconfigured — then compares 29 pre-migration baseline snapshots
@@ -93,6 +93,26 @@ A typical route composes these directly — see [app/[lang]/company/page.tsx](ap
 
 Because this boundary is load-bearing for credential safety, it is guarded by an assertion test rather than convention alone: [lib/bff-architecture.test.ts](lib/bff-architecture.test.ts) reads the source of `lib/bff.ts` and `next.config.ts` and fails if the runtime-env pattern or the Vercel build gate is removed. Several features carry their own `*-architecture.test.ts` in the same spirit.
 
+## CMS Content Contract
+
+Atlas fields are merged before the workspace schema is known, so every string arrives as `Bilingual | undefined` whether or not it is localizable. [features/cms/fields.ts](features/cms/fields.ts) narrows that back to the shape each loader declares, and it does so with two deliberately different failure modes:
+
+- **Empty required *text*** renders a visible `[missing: …]` marker and logs once per key (`warnOnce`) instead of crashing the page — an unfilled headline should be obvious to whoever is editing, not a 500.
+- **Malformed shapes and structural fields** (URL, image, enum, nested blocks) throw a typed `CmsContentError`. A missing image or a broken link target is not something a marker can paper over. [components/cms/CmsContractNotice.tsx](components/cms/CmsContractNotice.tsx) is the in-page surface for those, used where a partial render is still worth showing (FAQ accordions).
+
+`fields.ts` is dependency-free at runtime — no `server-only`, no `react`, no `@/constants/*` — which is what lets [features/cms/fields.test.ts](features/cms/fields.test.ts) run under `node --test` with no bundler and no Atlas connection. It also exposes `mapBlocksByType`, so loaders read `groups["nav-item"]` rather than destructuring a flat block list by index.
+
+CMS text may carry inline links written as markdown: [features/cms/inline-links.ts](features/cms/inline-links.ts) parses `[label](/path)` and [components/cms/CmsInlineText.tsx](components/cms/CmsInlineText.tsx) renders each one as a locale-aware `next/link`. **Only same-app relative paths become links** — protocol-relative (`//`), absolute, and control-character hrefs stay literal text, so a CMS editor cannot point a link off-site and no view has to hardcode a destination.
+
+## Contact Form
+
+Submissions are validated by [features/contact/schema.ts](features/contact/schema.ts) and relayed by [features/contact/service.ts](features/contact/service.ts); the backend runs two anti-bot traps that the client must cooperate with, and both have already caused real false rejections:
+
+- **Honeypot** — there is deliberately **no honeypot `<input>` in the DOM**. Password managers and autofill fill every text input they find, which triggered `contact: honeypot triggered` for real humans. [components/contact/ContactForm.tsx](components/contact/ContactForm.tsx) sends the reserved fields as empty values from JS instead of reading them back out of the DOM.
+- **Timing trap** — `form_load_at` is stamped on mount (page render), and the backend requires `now - form_load_at >= ~4s`. It must not be computed at submit time or every submission fails.
+
+Rejection messages are intentionally opaque — see [features/contact/status-copy.ts](features/contact/status-copy.ts).
+
 ## Internationalization
 
 Routes are backed internally by a language segment, `app/[lang]/...`, where `lang` is `ja` (default) or `en`. The default locale (`ja`) has no URL prefix — [proxy.ts](proxy.ts) rewrites bare paths to `/ja/...` internally and 308-redirects any incoming `/ja/...` link to its prefix-less form; `en` keeps its `/en` prefix. There is no client-side language store — `lang` is resolved from the route segment and passed down from there. See [features/lang/i18n.ts](features/lang/i18n.ts) for the language helpers (`t`, `isLang`, `localizeHref`).
@@ -100,14 +120,14 @@ Routes are backed internally by a language segment, `app/[lang]/...`, where `lan
 ## Project Structure
 
 - [app/[lang]/](app/%5Blang%5D) — localized routes: home, pricing, fees, company, contact, faq, service-flow, use-case, compensation, cancellation-policy, quasi-mandate, tokushoho, privacy, terms-for-users, terms-for-care-supporters
-- [app/api/contact/](app/api/contact) — same-origin proxy for contact submissions (the `connect-src 'self'` CSP is what forces submissions through it rather than straight to Atlas); [app/sitemap.ts](app/sitemap.ts) and [app/robots.txt/](app/robots.txt) — generated sitemap and robots
+- [app/api/contact/](app/api/contact) — same-origin proxy for contact submissions (the `connect-src 'self'` CSP is what forces submissions through it rather than straight to Atlas; see Contact Form below); [app/sitemap.ts](app/sitemap.ts) and [app/robots.txt/](app/robots.txt) — generated sitemap and robots
 - [lib/](lib) — server-only BFF adapter, the `ApiResult` contract, and TanStack query keys (see Data Fetching)
 - [features/](features) — per-domain modules, most following an `actions.ts` / `hooks.ts` / `components/` shape:
   - [cms/](features/cms) — Atlas client, generated `atlas.types.ts`, block→content mappings, typed CMS errors
   - [home/](features/home), [rates/](features/rates), [company/](features/company), [contact/](features/contact), [faq/](features/faq), [service-flow/](features/service-flow), [use-case/](features/use-case) — page domains
   - [seo/](features/seo) — page metadata, JSON-LD, Organization schema
   - [lang/](features/lang) — i18n utilities
-- [components/](components) — shared UI (`Navbar`, `Footer`, `AppShell`, `LangToggle`, `LegalDocPage`, `TableOfContents`, `JsonLd`, `providers.tsx`), plus [cms/](components/cms) (loading/error/empty states), [query/](components/query), [contact/](components/contact), [faq/](components/faq), and [ui/](components/ui)
+- [components/](components) — shared UI (`Navbar`, `Footer`, `AppShell`, `StickyCta`, `LangToggle`, `LegalDocPage`, `TableOfContents`, `JsonLd`, `providers.tsx`, `site-cta-provider.tsx`), plus [cms/](components/cms) (loading/error/empty states, `CmsContractNotice`, `CmsInlineText`), [query/](components/query), [contact/](components/contact), [faq/](components/faq), and [ui/](components/ui)
 - [constants/](constants) — site config, copy, pricing, legal content, FAQ, SEO defaults
 - [scripts/atlas/](scripts/atlas) — manual CMS seeding, schema, and verification scripts
 - [styles/](styles) — global styles
