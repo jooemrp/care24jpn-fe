@@ -3,7 +3,7 @@
 import type { Bilingual } from "@/constants/copy";
 import type { Lang } from "@/features/lang/i18n";
 import type { HomeContent as HomeContentData } from "../types";
-import { HomeAboutIntro, HomeAboutSection } from "./HomeAboutSection";
+import { HomeAboutSection } from "./HomeAboutSection";
 import { HomeApplySection } from "./HomeApplySection";
 import { HomeContactSection } from "./HomeContactSection";
 import { HomeCoursesSection } from "./HomeCoursesSection";
@@ -31,7 +31,6 @@ export function HomeContentView({
     <>
       <div data-first-view>
         <HomeHeroSection content={content.hero} lang={lang} />
-        <HomeAboutIntro content={content.about} lang={lang} />
       </div>
       <HomeAboutSection content={content.about} lang={lang} />
       <HomeProblemsSection content={content.problems} lang={lang} />

@@ -286,7 +286,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
         <div className="hidden md:block border-t border-border/70">
           <nav>
             <ul
-              className={`max-w-6xl mx-auto px-6 flex items-center gap-2 ${MOTION} ${
+              className={`mx-auto flex max-w-6xl flex-nowrap items-center gap-1 overflow-x-auto px-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:gap-2 lg:px-6 ${MOTION} ${
                 condensed ? "h-11" : "h-12"
               }`}
             >
@@ -294,11 +294,11 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                 const href = localizeHref(item.href, lang);
                 const active = href === activeHref;
                 return (
-                  <li key={item.href}>
+                  <li key={item.href} className="shrink-0">
                     <Link
                       href={href}
                       aria-current={active ? "page" : undefined}
-                      className={`block rounded-full px-4 py-1.5 text-sm transition ${HIT_AREA} ${
+                      className={`block whitespace-nowrap rounded-full px-2.5 py-1.5 text-[13px] transition lg:px-4 lg:text-sm ${HIT_AREA} ${
                         active
                           ? "bg-primary-light font-medium text-primary"
                           : "text-body hover:bg-primary-light/60 hover:text-primary"

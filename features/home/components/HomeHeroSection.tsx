@@ -16,7 +16,6 @@ export function HomeHeroSection({
 }) {
   const external = isSafeExternalHref(content.ctaPrimaryHref);
   const href = safeLocalizedHref(content.ctaPrimaryHref, lang);
-  const body = content.body;
 
   const cta = (
     <>
@@ -46,44 +45,20 @@ export function HomeHeroSection({
 
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_92%_8%,var(--color-accent-light)_0%,transparent_60%)] opacity-30"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(40%_40%_at_92%_8%,var(--color-accent-light)_0%,transparent_70%)] opacity-20"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-linear-to-r from-bg/50 via-bg/15 to-transparent md:from-bg/40 md:via-bg/8"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg"
+        className="absolute inset-0 -z-10 bg-linear-to-r from-bg/20 via-transparent to-transparent md:from-bg/15"
       />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col justify-center px-6 py-10 md:py-16">
+      <div className="relative mx-auto flex min-h-[26rem] max-w-6xl flex-col justify-center px-6 py-16 md:min-h-[34rem] md:py-20">
         <div className="max-w-xl animate-fade-up">
           <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
             {t(content.heading, lang)}
           </h1>
-          {body ? (
-            <p className="mt-6 text-base leading-relaxed text-body">
-              {t(body, lang)}
-            </p>
-          ) : null}
 
-          <div className="mt-6 flex flex-col items-start gap-4 md:mt-8">
-            <div className="flex max-w-full flex-col items-start gap-1.5">
-              <div className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-border bg-surface/90 px-4 py-2.5 shadow-sm backdrop-blur-sm">
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
-                  aria-hidden="true"
-                >
-                  <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
-                </span>
-                <p className="break-keep text-sm font-semibold text-heading">
-                  {t(content.areaBadge.main, lang)}
-                </p>
-              </div>
-              <p className="px-1 text-xs text-heading">{t(content.areaBadge.sub, lang)}</p>
-            </div>
-
+          <div className="mt-8 flex flex-col items-start gap-3">
             {external ? (
               <a
                 href={href}
@@ -101,6 +76,21 @@ export function HomeHeroSection({
                 {cta}
               </Link>
             )}
+
+            <div className="flex max-w-full flex-col items-start gap-1.5">
+              <div className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-border bg-surface/90 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
+                  aria-hidden="true"
+                >
+                  <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
+                </span>
+                <p className="break-keep text-sm font-semibold text-heading">
+                  {t(content.areaBadge.main, lang)}
+                </p>
+              </div>
+              <p className="px-1 text-xs text-muted">{t(content.areaBadge.sub, lang)}</p>
+            </div>
           </div>
         </div>
       </div>

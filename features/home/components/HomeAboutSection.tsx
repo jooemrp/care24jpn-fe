@@ -7,28 +7,6 @@ import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 
-export function HomeAboutIntro({
-  content,
-  lang,
-}: {
-  content: HomeContent["about"];
-  lang: Lang;
-}) {
-  return (
-    <div className="mx-auto max-w-6xl px-6 pb-8 md:pb-10">
-      <h2 className="text-2xl font-bold text-heading md:text-3xl">
-        {t(content.heading, lang)}
-      </h2>
-      <p className="mt-4 max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
-        {t(content.catchphrase, lang)}
-      </p>
-      <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-body">
-        {t(content.body, lang)}
-      </p>
-    </div>
-  );
-}
-
 export function HomeAboutSection({
   content,
   lang,
@@ -37,9 +15,16 @@ export function HomeAboutSection({
   lang: Lang;
 }) {
   return (
-    <Section lang={lang}>
+    <Section heading={content.heading} lang={lang} className="pt-5! md:pt-8!">
+      <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
+        {t(content.catchphrase, lang)}
+      </p>
+      <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-body">
+        {t(content.body, lang)}
+      </p>
+
       {content.cards.length > 0 ? (
-        <ul className="grid gap-8 sm:grid-cols-3">
+        <ul className="mt-12 grid gap-8 sm:grid-cols-3">
           {content.cards.map((card, index) => (
             <li
               key={index}
@@ -65,7 +50,7 @@ export function HomeAboutSection({
           ))}
         </ul>
       ) : (
-        <div>
+        <div className="mt-8">
           <QueryEmptyState title={t(queryStates.empty, lang)} />
         </div>
       )}
