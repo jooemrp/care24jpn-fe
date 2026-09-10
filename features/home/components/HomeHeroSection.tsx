@@ -30,7 +30,10 @@ export function HomeHeroSection({
   );
 
   return (
-    <section className="relative isolate overflow-hidden" data-hero>
+    <section
+      className="relative isolate overflow-hidden xl:aspect-2/1 xl:min-h-[48rem] 2xl:min-h-[56rem]"
+      data-hero
+    >
       <div className="absolute inset-0 -z-20">
         <Image
           src={content.image}
@@ -39,7 +42,7 @@ export function HomeHeroSection({
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-[62%_top] md:object-[58%_top]"
+          className="object-cover object-[62%_center] md:object-[58%_center]"
         />
       </div>
 
@@ -56,7 +59,7 @@ export function HomeHeroSection({
         className="absolute inset-x-0 bottom-0 -z-10 h-12 bg-linear-to-b from-transparent to-bg md:h-16"
       />
 
-      <div className="relative mx-auto flex min-h-[30rem] max-w-6xl flex-col justify-center px-6 py-16 pb-24 md:min-h-[40rem] md:py-20 md:pb-28 lg:min-h-[44rem]">
+      <div className="relative mx-auto flex h-full min-h-[30rem] max-w-6xl flex-col justify-center px-6 py-16 pb-24 md:min-h-[36rem] md:py-20 md:pb-28 lg:min-h-[42rem] xl:min-h-[48rem] 2xl:min-h-[min(70vh,56rem)]">
         <div className="max-w-xl animate-fade-up">
           <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
             {t(content.heading, lang)}

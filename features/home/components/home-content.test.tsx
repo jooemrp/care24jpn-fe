@@ -83,6 +83,7 @@ async function main(): Promise<void> {
     assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
     assert.match(html, /Bank transfer/);
     assert.match(html, /inline-flex w-fit/);
+    assert.match(html, /border-t border-border bg-primary-light/);
     assert.doesNotMatch(html, /min-h-28|min-h-32/);
     assert.doesNotMatch(html, /payment-visa|payment-mastercard|payment-jcb|payment-amex/);
     assert.match(html, /written instructions are strictly required/);
@@ -94,7 +95,12 @@ async function main(): Promise<void> {
     assert.match(html, /rel="noopener noreferrer"/);
     assert.match(html, /md:grid-cols-2/);
     assert.match(html, /data-first-view/);
+    assert.match(html, /xl:aspect-2\/1/);
+    assert.match(html, /xl:min-h-\[48rem\]/);
+    assert.match(html, /2xl:min-h-\[56rem\]/);
+    assert.match(html, /min-h-\[30rem\].*md:min-h-\[36rem\].*lg:min-h-\[42rem\].*xl:min-h-\[48rem\].*2xl:min-h-\[min\(70vh,56rem\)\]/);
     assert.doesNotMatch(html, /min-h-\[calc\(100dvh/);
+    assert.doesNotMatch(html, /min-h-\[100dvh\]/);
     assert.doesNotMatch(html, /Credit card/);
     assert.doesNotMatch(html, /クレジットカード/);
     assert.doesNotMatch(html, /定期の方は指名無料/);

@@ -58,32 +58,38 @@ export function HomePricingSection({
           </p>
         </div>
 
-        <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-heading md:text-2xl">
-            {t(content.payment.heading, lang)}
-          </h2>
-          <p className="mt-3 whitespace-pre-line text-base text-body">
-            {t(content.payment.body, lang)}
-          </p>
+        <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface">
+          <div className="px-6 pt-6 sm:px-8 sm:pt-8">
+            <h2 className="text-xl font-bold text-heading md:text-2xl">
+              {t(content.payment.heading, lang)}
+            </h2>
+            <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-body">
+              {t(content.payment.body, lang)}
+            </p>
+            {settleNote ? (
+              <p className="mt-3 text-sm leading-relaxed text-muted">{settleNote}</p>
+            ) : null}
+          </div>
 
           {content.payment.icon.src ? (
-            <div className="mt-6">
-              <span className="inline-flex w-fit max-w-full items-center gap-3 rounded-xl border border-border bg-primary-light/60 px-4 py-3 sm:px-5 sm:py-3.5">
+            <div className="relative mt-6 flex min-h-0 flex-1 flex-col items-center justify-center border-t border-border bg-primary-light px-6 py-8 sm:px-8 sm:py-10">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,var(--color-surface),transparent_64%)]"
+              />
+              <div className="relative flex min-h-40 w-full max-w-[17rem] flex-1 items-center justify-center sm:min-h-44 sm:max-w-[19rem] lg:max-w-[21rem]">
                 <Image
                   src={content.payment.icon.src}
                   alt=""
-                  width={160}
-                  height={80}
-                  className="h-10 w-auto object-contain sm:h-12"
+                  width={400}
+                  height={400}
+                  className="h-full w-full object-contain"
                 />
-                <span className="text-sm font-semibold text-heading sm:text-base">
-                  {t(content.payment.icon.alt, lang)}
-                </span>
-              </span>
+              </div>
+              <p className="relative mt-4 shrink-0 text-center text-sm font-semibold text-heading sm:mt-5 sm:text-base">
+                {t(content.payment.icon.alt, lang)}
+              </p>
             </div>
-          ) : null}
-          {settleNote ? (
-            <p className="mt-4 text-sm leading-relaxed text-muted">{settleNote}</p>
           ) : null}
         </div>
       </div>
