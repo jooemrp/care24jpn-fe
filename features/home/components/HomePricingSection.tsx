@@ -29,7 +29,7 @@ export function HomePricingSection({
           <h2 className="text-xl font-bold text-heading md:text-2xl">
             {t(content.heading, lang)}
           </h2>
-          <div className="mt-6 grid flex-1 gap-5 sm:grid-cols-2">
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
             {courses.map((course) => (
               <div
                 key={course.label.ja}
@@ -59,7 +59,7 @@ export function HomePricingSection({
         </div>
 
         <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface">
-          <div className="px-6 pt-6 sm:px-8 sm:pt-8">
+          <div className="px-6 py-5 sm:px-8 sm:py-6">
             <h2 className="text-xl font-bold text-heading md:text-2xl">
               {t(content.payment.heading, lang)}
             </h2>
@@ -72,23 +72,25 @@ export function HomePricingSection({
           </div>
 
           {content.payment.icon.src ? (
-            <div className="relative mt-6 flex min-h-0 flex-1 flex-col items-center justify-center border-t border-border bg-primary-light px-6 py-8 sm:px-8 sm:py-10">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,var(--color-surface),transparent_64%)]"
-              />
-              <div className="relative flex min-h-40 w-full max-w-[17rem] flex-1 items-center justify-center sm:min-h-44 sm:max-w-[19rem] lg:max-w-[21rem]">
-                <Image
-                  src={content.payment.icon.src}
-                  alt=""
-                  width={400}
-                  height={400}
-                  className="h-full w-full object-contain"
+            <div className="flex flex-1 flex-col items-center justify-center px-6 py-6 sm:px-8">
+              <div className="relative flex flex-col items-center">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,var(--color-primary-light),transparent_64%)]"
                 />
+                <div className="relative h-28 w-28 shrink-0 sm:h-32 sm:w-32 lg:h-36 lg:w-36">
+                  <Image
+                    src={content.payment.icon.src}
+                    alt=""
+                    width={400}
+                    height={400}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <p className="relative mt-3 shrink-0 text-center text-sm font-semibold text-heading sm:mt-3.5 sm:text-base">
+                  {t(content.payment.icon.alt, lang)}
+                </p>
               </div>
-              <p className="relative mt-4 shrink-0 text-center text-sm font-semibold text-heading sm:mt-5 sm:text-base">
-                {t(content.payment.icon.alt, lang)}
-              </p>
             </div>
           ) : null}
         </div>

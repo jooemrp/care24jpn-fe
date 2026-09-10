@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T08:04:09.241Z",
+  "generated_at": "2026-09-10T10:19:04.866Z",
   "folder": "/marketing-web/",
   "assets": {
     "logo.png": {
@@ -227,10 +227,10 @@
       "uploaded_as": "flow-04-report.jpg"
     },
     "payment-bank-transfer.png": {
-      "id": "01a08a58-751e-727c-9234-9f6881634f38",
-      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a08a58-71ba-7535-bfb7-d36d1a48f37c-payment-bank-transfer.png",
-      "width": 480,
-      "height": 240,
+      "id": "01a08ad4-0181-79c1-87ac-1bd794631e9d",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a08ad3-ffe6-7add-8496-b2318a23af29-payment-bank-transfer.png",
+      "width": 640,
+      "height": 640,
       "mime_type": "image/png",
       "uploaded_as": "payment-bank-transfer.png"
     }
