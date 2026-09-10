@@ -39,7 +39,7 @@ export function HomeHeroSection({
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-[62%_38%] md:object-[58%_32%]"
+          className="object-cover object-[74%_48%] md:object-[70%_46%]"
         />
       </div>
 
@@ -49,16 +49,20 @@ export function HomeHeroSection({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-linear-to-r from-bg/20 via-transparent to-transparent md:from-bg/15"
+        className="absolute inset-0 -z-10 bg-linear-to-r from-bg/60 via-bg/20 to-transparent md:from-bg/45 md:via-bg/10"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 -z-10 h-12 bg-linear-to-b from-transparent to-bg md:h-16"
       />
 
-      <div className="relative mx-auto flex min-h-[26rem] max-w-6xl flex-col justify-center px-6 py-16 md:min-h-[34rem] md:py-20">
+      <div className="relative mx-auto flex min-h-[30rem] max-w-6xl flex-col justify-center px-6 py-16 pb-24 md:min-h-[40rem] md:py-20 md:pb-28 lg:min-h-[44rem]">
         <div className="max-w-xl animate-fade-up">
           <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
             {t(content.heading, lang)}
           </h1>
 
-          <div className="mt-8 flex flex-col items-start gap-3">
+          <div className="mt-8 flex flex-col items-start gap-4">
             {external ? (
               <a
                 href={href}
@@ -89,7 +93,9 @@ export function HomeHeroSection({
                   {t(content.areaBadge.main, lang)}
                 </p>
               </div>
-              <p className="px-1 text-xs text-muted">{t(content.areaBadge.sub, lang)}</p>
+              <p className="px-1 text-xs leading-relaxed text-body md:text-sm">
+                {t(content.areaBadge.sub, lang)}
+              </p>
             </div>
           </div>
         </div>
