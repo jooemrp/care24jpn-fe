@@ -81,6 +81,10 @@ async function main(): Promise<void> {
     assert.match(html, /For full pricing details, please click here\./);
     assert.match(html, /href="\/en\/pricing"/);
     assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
+    assert.match(html, /Bank transfer/);
+    assert.match(html, /inline-flex w-fit/);
+    assert.doesNotMatch(html, /min-h-28|min-h-32/);
+    assert.doesNotMatch(html, /payment-visa|payment-mastercard|payment-jcb|payment-amex/);
     assert.match(html, /written instructions are strictly required/);
     assert.match(html, /Please feel free to contact us first/);
     assert.match(html, /Examples of use/);

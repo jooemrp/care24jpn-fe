@@ -24,6 +24,10 @@ const rates: RatesContent = {
       ja: "お支払いは銀行振込（前払い）となります。",
       en: "Payment is made by bank transfer (in advance).",
     },
+    paymentIcon: {
+      src: "/images/payment-bank-transfer.png",
+      alt: { ja: "銀行振込", en: "Bank transfer" },
+    },
   },
   fees: {
     hero: {
@@ -86,6 +90,7 @@ async function main(): Promise<void> {
     assert.match(html, /Caregiving course/);
     assert.match(html, /JPY 3,740/);
     assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
+    assert.doesNotMatch(html, /payment-bank-transfer/);
     assert.match(html, /lg:grid-cols-2/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
   });

@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import Section from "@/components/ui/Section";
-import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
@@ -20,6 +18,9 @@ export function HomePricingSection({
   lang: Lang;
 }) {
   const courses = [content.care, content.nursing] as const;
+  const settleNote = content.payment.settleNote
+    ? t(content.payment.settleNote, lang).trim()
+    : "";
 
   return (
     <Section lang={lang}>
@@ -61,41 +62,31 @@ export function HomePricingSection({
           <h2 className="text-xl font-bold text-heading md:text-2xl">
             {t(content.payment.heading, lang)}
           </h2>
-          <p className="mt-3 whitespace-pre-line text-base text-body">{t(content.payment.body, lang)}</p>
+          <p className="mt-3 whitespace-pre-line text-base text-body">
+            {t(content.payment.body, lang)}
+          </p>
 
-          <div className="mt-6 flex flex-1 flex-col rounded-xl bg-primary-light/60 p-4 sm:p-5">
-            {content.payment.icon.src ? (
-              <div className="flex flex-1 items-center justify-center">
-                <PaymentBrand
+          {content.payment.icon.src ? (
+            <div className="mt-6">
+              <span className="inline-flex w-fit max-w-full items-center gap-3 rounded-xl border border-border bg-primary-light/60 px-4 py-3 sm:px-5 sm:py-3.5">
+                <Image
                   src={content.payment.icon.src}
-                  alt={t(content.payment.icon.alt, lang)}
+                  alt=""
+                  width={160}
+                  height={80}
+                  className="h-10 w-auto object-contain sm:h-12"
                 />
-              </div>
-            ) : (
-              <QueryEmptyState title={t(queryStates.empty, lang)} className="border-0 bg-transparent shadow-none" />
-            )}
-            {content.payment.settleNote ? (
-              <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
-                {t(content.payment.settleNote, lang)}
-              </p>
-            ) : null}
-          </div>
+                <span className="text-sm font-semibold text-heading sm:text-base">
+                  {t(content.payment.icon.alt, lang)}
+                </span>
+              </span>
+            </div>
+          ) : null}
+          {settleNote ? (
+            <p className="mt-4 text-sm leading-relaxed text-muted">{settleNote}</p>
+          ) : null}
         </div>
       </div>
     </Section>
-  );
-}
-
-function PaymentBrand({ src, alt }: { src: string; alt: string }) {
-  return (
-    <span className="flex min-h-28 w-full max-w-sm items-center justify-center rounded-xl border border-border/80 bg-surface px-6 py-6 sm:min-h-32">
-      <Image
-        src={src}
-        alt={alt}
-        width={480}
-        height={240}
-        className="h-16 w-auto max-w-[16rem] object-contain sm:h-20 sm:max-w-[18rem]"
-      />
-    </span>
   );
 }

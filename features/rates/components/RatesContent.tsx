@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
@@ -72,17 +71,6 @@ export function PricingRatesContent({
         <p className="mt-4 whitespace-pre-line text-base font-medium text-heading">
           {t(rates.pricing.paymentNote, lang)}
         </p>
-        {rates.pricing.paymentIcon ? (
-          <div className="mt-4 flex max-w-xs items-center">
-            <Image
-              src={rates.pricing.paymentIcon.src}
-              alt={t(rates.pricing.paymentIcon.alt, lang)}
-              width={480}
-              height={240}
-              className="h-14 w-auto object-contain"
-            />
-          </div>
-        ) : null}
         <p className="mt-4 text-base text-body">
           <Link
             href={localizeHref("/cancellation-policy", lang)}

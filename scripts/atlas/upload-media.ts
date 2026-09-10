@@ -112,10 +112,6 @@ const ASSETS: { file: string; usedBy: string }[] = [
   // deletes any manifest key NOT listed here.
   { file: "og-card.png", usedBy: "seo.og_image (ja) — via seed-og-image.ts" },
   { file: "og-card-en.png", usedBy: "seo_translations.en.seo.og_image — via seed-og-image.ts" },
-  { file: "payment-visa.png", usedBy: "home_pricing_summary.payment_visa (retired)" },
-  { file: "payment-mastercard.png", usedBy: "home_pricing_summary.payment_mastercard (retired)" },
-  { file: "payment-jcb.png", usedBy: "home_pricing_summary.payment_jcb" },
-  { file: "payment-amex.png", usedBy: "home_pricing_summary.payment_amex" },
   { file: "payment-bank-transfer.png", usedBy: "home_pricing_summary.payment_icon + pricing_meta.payment_icon" },
   // TOP revision visual assets (AI-generated drafts under public/images/)
   { file: "about-family.png", usedBy: "home_about.illustration" },
