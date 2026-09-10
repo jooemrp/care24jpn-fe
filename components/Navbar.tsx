@@ -201,10 +201,10 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
         className={`pointer-events-none sticky top-0 z-50 shrink-0 ${SHELL_HEIGHT}`}
       >
         <div
-          className={`pointer-events-auto border-b border-border backdrop-blur-md ${MOTION} ${
+            className={`pointer-events-auto border-b border-border backdrop-blur-md dark:border-neutral-700 ${MOTION} ${
             condensed
-              ? "bg-surface/65 shadow-[0_2px_12px_rgba(27,31,94,0.07)]"
-              : "bg-surface/45 shadow-none"
+              ? "bg-surface/65 shadow-[0_2px_12px_rgba(27,31,94,0.07)] dark:bg-neutral-900/80"
+              : "bg-surface/45 shadow-none dark:bg-neutral-900/60"
           }`}
         >
         {/* Tier 1 — brand, contact, actions */}
@@ -225,7 +225,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               width={LOGO_INTRINSIC_WIDTH}
               height={LOGO_INTRINSIC_HEIGHT}
               priority
-              className={`h-auto w-36 origin-left ${MOTION} ${
+              className={`h-auto w-28 origin-left sm:w-36 ${MOTION} ${
                 condensed ? "scale-[0.78]" : "scale-100"
               }`}
             />
@@ -240,8 +240,34 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
             <PhoneBlock lang={lang} contactPhone={site.contactPhone} condensed={condensed} />
           </div>
 
-          {/* Mobile: hamburger */}
-          <div className="md:hidden flex items-center gap-3">
+          {/* Mobile: SP shortcut bar (items with short_label) + hamburger */}
+          <div className="md:hidden flex min-w-0 items-center gap-1 sm:gap-2">
+            <nav className="min-w-0">
+              <ul className="flex items-center gap-1 sm:gap-2">
+                {site.nav
+                  .filter((item) => item.shortLabel)
+                  .map((item) => {
+                    const href = localizeHref(item.href, lang);
+                    const active = href === activeHref;
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={href}
+                          aria-current={active ? "page" : undefined}
+                          aria-label={t(item.label, lang)}
+                          className={`block rounded-full px-2.5 py-1.5 text-sm font-medium transition ${HIT_AREA} ${
+                            active
+                              ? "bg-primary-light text-primary dark:bg-primary/30 dark:text-white"
+                              : "text-heading hover:bg-primary-light/60 hover:text-primary dark:text-neutral-100 dark:hover:bg-neutral-800"
+                          }`}
+                        >
+                          {t(item.shortLabel!, lang)}
+                        </Link>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </nav>
             <button
               type="button"
               className="inline-flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-2"
@@ -249,9 +275,9 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
             >
-              <span className="block h-0.5 w-6 bg-heading" />
-              <span className="block h-0.5 w-6 bg-heading" />
-              <span className="block h-0.5 w-6 bg-heading" />
+              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
+              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
+              <span className="block h-0.5 w-6 bg-heading dark:bg-neutral-100" />
             </button>
           </div>
         </div>
@@ -289,7 +315,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
 
         {/* Mobile menu */}
         {open && (
-          <div className="md:hidden border-t border-border bg-surface">
+          <div className="md:hidden border-t border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900">
             <nav>
               <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
                 {site.nav.map((item) => {
@@ -302,7 +328,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                         onClick={() => setOpen(false)}
                         aria-current={active ? "page" : undefined}
                         className={`block text-sm ${
-                          active ? "text-primary" : "text-body"
+                          active ? "text-primary" : "text-body dark:text-neutral-200"
                         }`}
                       >
                         {t(item.label, lang)}
@@ -310,9 +336,16 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                     </li>
                   );
                 })}
-                {/* Dropped alongside the desktop one — /pricing is already the
-                    fourth item in the list directly above. */}
-                <li className="border-t border-border pt-4">
+                <li>
+                  <Link
+                    href={localizeHref(site.cta.primaryHref, lang)}
+                    onClick={() => setOpen(false)}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-mid dark:bg-primary dark:text-white"
+                  >
+                    {t(site.cta.primary, lang)}
+                  </Link>
+                </li>
+                <li className="border-t border-border pt-4 dark:border-neutral-700">
                   <PhoneBlock lang={lang} contactPhone={site.contactPhone} align="start" />
                 </li>
               </ul>

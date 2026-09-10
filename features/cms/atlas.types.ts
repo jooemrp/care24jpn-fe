@@ -88,6 +88,8 @@ export interface HomePricingSummary {
   payment_amex_alt?: string; // localizable
   pricing_details_label?: string; // localizable
   pricing_details_href?: string;
+  payment_icon?: string;
+  payment_icon_alt?: string; // localizable
 }
 
 /** Home — About (Care24Japanとは) (content type: "home-about") */
@@ -101,6 +103,9 @@ export interface HomeAbout {
   card_image_1?: string;
   card_image_2?: string;
   card_image_3?: string;
+  card_body_1?: string; // localizable
+  card_body_2?: string; // localizable
+  card_body_3?: string; // localizable
 }
 
 /** Site — 404 page labels (content type: "site-not-found-labels") */
@@ -165,6 +170,9 @@ export interface PricingMeta {
   note?: string; // localizable
   cancellation_label?: string; // localizable
   cancellation_href?: string;
+  payment_note?: string; // localizable
+  payment_icon?: string;
+  payment_icon_alt?: string; // localizable
 }
 
 /** Rates — Row (content type: "rate-row") */
@@ -269,6 +277,14 @@ export interface HomeNursingCourse {
   price_tax_included?: string; // localizable
   note?: string; // localizable
   panel_heading?: string; // localizable
+  medical_note?: string; // localizable
+}
+
+/** Home — Nursing Course fee cell (content type: "home-nursing-course-fee") */
+export interface HomeNursingCourseFee {
+  label?: string; // localizable
+  value?: string; // localizable
+  note?: string; // localizable
 }
 
 /** Home — Care Course service card (content type: "home-care-course-card") */
@@ -355,6 +371,7 @@ export interface SiteFooter {
 export interface NavItem {
   href?: string;
   label?: string; // localizable
+  short_label?: string; // localizable
 }
 
 /** Site — UI chrome labels (content type: "site-ui-labels") */
@@ -372,6 +389,7 @@ export interface SiteCta {
   primary?: string; // localizable
   secondary?: string; // localizable
   contact?: string; // localizable
+  primary_href?: string;
 }
 
 /** Site — Contact Phone (content type: "site-contact-phone") */
@@ -426,6 +444,7 @@ export interface AtlasContentTypes {
   "home-example-case": HomeExampleCase;
   "home-examples": HomeExamples;
   "home-nursing-feature": HomeNursingFeature;
+  "home-nursing-course-fee": HomeNursingCourseFee;
   "home-nursing-course": HomeNursingCourse;
   "home-care-course-card": HomeCareCourseCard;
   "home-care-course-fee": HomeCareCourseFee;

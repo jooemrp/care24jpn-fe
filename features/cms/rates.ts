@@ -9,6 +9,7 @@ import {
 import {
   mapBlocksByType,
   optionalBi,
+  optionalImageUrl,
   optionalLines,
   requiredBi,
   requiredJa,
@@ -206,6 +207,15 @@ export function mapPricingCopy(blocks: CmsBlock[]): PricingCopy {
       "cancellation_label",
       "pricing/pricing-meta",
     ),
+    paymentNote: requiredBi(metaBlock.data, "payment_note", "pricing/pricing-meta"),
+    paymentIcon: (() => {
+      const src = optionalImageUrl(metaBlock.data, "payment_icon", "pricing/pricing-meta");
+      if (!src) return undefined;
+      return {
+        src,
+        alt: requiredBi(metaBlock.data, "payment_icon_alt", "pricing/pricing-meta"),
+      };
+    })(),
   };
 }
 

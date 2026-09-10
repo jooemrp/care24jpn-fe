@@ -75,7 +75,7 @@ function requireEqualLengths(
 
 // ---------------------------------------------------------------------------
 // Assembly — the content types scripts/atlas/seed-home.ts writes. 10 section
-// types + 4 repeated item types; the seed currently produces 30 blocks, but
+// types + 5 repeated item types; the seed currently produces 34 blocks, but
 // neither the COUNT nor the ORDER is part of the contract any more: a 5th
 // service card or a 7th nursing feature added in the dashboard renders as
 // itself instead of reverting the entire home page to constants/copy.ts.
@@ -91,6 +91,7 @@ const HOME_TYPES = [
   "home-problems",
   "home-pricing-summary",
   "home-nursing-course",
+  "home-nursing-course-fee",
   "home-nursing-feature",
   "home-care-course",
   "home-care-course-fee",
@@ -128,6 +129,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   const [contactBlock] = groups["home-contact"];
 
   const nursingFeatureBlocks = groups["home-nursing-feature"];
+  const nursingFeeBlocks = groups["home-nursing-course-fee"];
   const feeBlocks = groups["home-care-course-fee"];
   const cardBlocks = groups["home-care-course-card"];
   const caseBlocks = groups["home-example-case"];
@@ -169,7 +171,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   };
 
   const cardTitles = optionalLines(aboutBlock.data, "card_titles", "home/home-about");
-  const cardBodies = optionalLines(aboutBlock.data, "card_bodies", "home/home-about");
+  const cardBodies = [
+    requiredBi(aboutBlock.data, "card_body_1", "home/home-about"),
+    requiredBi(aboutBlock.data, "card_body_2", "home/home-about"),
+    requiredBi(aboutBlock.data, "card_body_3", "home/home-about"),
+  ];
   requireEqualLengths(
     "home/home-about",
     "card_titles",
@@ -227,12 +233,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   };
 
   const pricingContext = "home/home-pricing-summary";
-  const pricingLogos = [
-    ["visa", "payment_visa", "payment_visa_alt"],
-    ["mastercard", "payment_mastercard", "payment_mastercard_alt"],
-    ["jcb", "payment_jcb", "payment_jcb_alt"],
-    ["amex", "payment_amex", "payment_amex_alt"],
-  ] as const;
+  const paymentSettleNote = optionalBi(
+    pricingSummaryBlock.data,
+    "payment_settle_note",
+    pricingContext,
+  );
   const pricingSummary: HomeContent["pricingSummary"] = {
     heading: requiredBi(pricingSummaryBlock.data, "heading", pricingContext),
     care: {
@@ -263,16 +268,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     payment: {
       heading: requiredBi(pricingSummaryBlock.data, "payment_heading", pricingContext),
       body: requiredBi(pricingSummaryBlock.data, "payment_body", pricingContext),
-      settleNote: requiredBi(
-        pricingSummaryBlock.data,
-        "payment_settle_note",
-        pricingContext,
-      ),
-      logos: pricingLogos.map(([mark, srcKey, altKey]) => ({
-        mark,
-        src: requiredImageUrl(pricingSummaryBlock.data, srcKey, pricingContext),
-        alt: requiredBi(pricingSummaryBlock.data, altKey, pricingContext),
-      })),
+      settleNote: paymentSettleNote,
+      icon: {
+        src: requiredImageUrl(pricingSummaryBlock.data, "payment_icon", pricingContext),
+        alt: requiredBi(pricingSummaryBlock.data, "payment_icon_alt", pricingContext),
+      },
     },
   };
   const pricingDetailsLink = requiredBi(
@@ -296,7 +296,13 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     label: requiredBi(block.data, "label", `home/home-nursing-feature[${i}]`),
   }));
 
-  const nursingCourse: Home["nursingCourse"] = {
+  const nursingFees: Fee[] = nursingFeeBlocks.map((block, i) => ({
+    label: requiredBi(block.data, "label", `home/home-nursing-course-fee[${i}]`),
+    value: requiredBi(block.data, "value", `home/home-nursing-course-fee[${i}]`),
+    note: optionalBi(block.data, "note", `home/home-nursing-course-fee[${i}]`),
+  }));
+
+  const nursingCourse: HomeContent["nursingCourse"] = {
     leadIn: requiredBi(nursingCourseBlock.data, "lead_in", "home/home-nursing-course"),
     badge: requiredBi(nursingCourseBlock.data, "badge", "home/home-nursing-course"),
     tagline: requiredBi(nursingCourseBlock.data, "tagline", "home/home-nursing-course"),
@@ -314,8 +320,14 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       ),
     },
     note: requiredBi(nursingCourseBlock.data, "note", "home/home-nursing-course"),
+    medicalNote: requiredBi(
+      nursingCourseBlock.data,
+      "medical_note",
+      "home/home-nursing-course",
+    ),
+    fees: nursingFees,
     panel: {
-      heading: requiredBi(
+      heading: optionalBi(
         nursingCourseBlock.data,
         "panel_heading",
         "home/home-nursing-course",
@@ -404,6 +416,10 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   };
 
   const apply: HomeContent["apply"] = {
+    consult: {
+      heading: requiredBi(applyBlock.data, "consult_heading", "home/home-apply"),
+      body: requiredBi(applyBlock.data, "consult_body", "home/home-apply"),
+    },
     user: {
       eyebrow: requiredBi(applyBlock.data, "user_eyebrow", "home/home-apply"),
       label: requiredBi(applyBlock.data, "user_label", "home/home-apply"),

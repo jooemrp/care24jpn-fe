@@ -129,7 +129,7 @@ function buildBlocks(
     translations: en({ note: contactPhone.note.en }),
   });
 
-  // position 2 — site_cta: primary / secondary / contact
+  // position 2 — site_cta: primary / secondary / contact / primary_href
   blocks.push({
     block_type_id: blockTypeIds.site_cta,
     parent_id: null,
@@ -138,6 +138,7 @@ function buildBlocks(
       primary: cta.primary.ja,
       secondary: cta.secondary.ja,
       contact: cta.contact.ja,
+      primary_href: cta.primaryHref,
     },
     translations: en({
       primary: cta.primary.en,
@@ -247,12 +248,18 @@ function buildBlocks(
   // share the same value).
   const navStartPosition = 6;
   nav.forEach((item, i) => {
+    const data: Record<string, unknown> = { href: item.href, label: item.label.ja };
+    const enData: Record<string, unknown> = { label: item.label.en };
+    if (item.shortLabel) {
+      data.short_label = item.shortLabel.ja;
+      enData.short_label = item.shortLabel.en;
+    }
     blocks.push({
       block_type_id: blockTypeIds.nav_item,
       parent_id: null,
       position: navStartPosition + i,
-      data: { href: item.href, label: item.label.ja },
-      translations: en({ label: item.label.en }),
+      data,
+      translations: en(enData),
     });
   });
 

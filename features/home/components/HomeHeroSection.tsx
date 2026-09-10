@@ -31,7 +31,7 @@ export function HomeHeroSection({
   );
 
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-hidden" data-hero>
       <div className="absolute inset-0 -z-20">
         <Image
           src={content.image}
@@ -57,7 +57,7 @@ export function HomeHeroSection({
         className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-linear-to-b from-transparent to-bg"
       />
 
-      <div className="relative mx-auto flex min-h-[calc(100dvh-81px)] max-w-6xl flex-col justify-center px-6 py-20 md:min-h-[calc(100dvh-130px)] md:py-24">
+      <div className="relative mx-auto flex max-w-6xl flex-col justify-center px-6 py-10 md:py-16">
         <div className="max-w-xl animate-fade-up">
           <h1 className="whitespace-pre-line text-4xl font-bold leading-tight text-heading md:text-5xl">
             {t(content.heading, lang)}
@@ -68,7 +68,22 @@ export function HomeHeroSection({
             </p>
           ) : null}
 
-          <div className="mt-8 flex flex-col items-start gap-3">
+          <div className="mt-6 flex flex-col items-start gap-4 md:mt-8">
+            <div className="flex max-w-full flex-col items-start gap-1.5">
+              <div className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-border bg-surface/90 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
+                  aria-hidden="true"
+                >
+                  <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
+                </span>
+                <p className="break-keep text-sm font-semibold text-heading">
+                  {t(content.areaBadge.main, lang)}
+                </p>
+              </div>
+              <p className="px-1 text-xs text-heading">{t(content.areaBadge.sub, lang)}</p>
+            </div>
+
             {external ? (
               <a
                 href={href}
@@ -86,21 +101,6 @@ export function HomeHeroSection({
                 {cta}
               </Link>
             )}
-
-            <div className="flex flex-col items-start gap-1.5">
-              <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/90 px-4 py-2.5 shadow-sm backdrop-blur-sm">
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
-                  aria-hidden="true"
-                >
-                  <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
-                </span>
-                <p className="text-sm font-semibold text-heading">
-                  {t(content.areaBadge.main, lang)}
-                </p>
-              </div>
-              <p className="px-1 text-xs text-muted">{t(content.areaBadge.sub, lang)}</p>
-            </div>
           </div>
         </div>
       </div>

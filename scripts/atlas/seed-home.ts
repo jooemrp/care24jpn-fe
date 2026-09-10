@@ -1,11 +1,11 @@
 /**
- * Seeds the "home" page — the 31 blocks that make up `app/[lang]/page.tsx` —
+ * Seeds the "home" page — the 34 blocks that make up `app/[lang]/page.tsx` —
  * from `constants/copy.ts#home` (single source of truth, never retyped by
  * hand) onto the live Atlas workspace, then publishes it.
  *
  * Order and field names (matching the block types declared in
  * scripts/atlas/schema.ts): home_hero, home_values, home_about, home_problems,
- * home_nursing_course, home_nursing_feature x6, home_care_course,
+ * home_nursing_course, home_nursing_course_fee x3, home_nursing_feature x6, home_care_course,
  * home_care_course_fee x3, home_care_course_card x4, home_examples,
  * home_example_case x3, home_flow, home_flow_step x4, home_apply,
  * home_contact.
@@ -130,6 +130,7 @@ const BLOCK_TYPE_SLUGS = [
   "home_problems",
   "home_pricing_summary",
   "home_nursing_course",
+  "home_nursing_course_fee",
   "home_nursing_feature",
   "home_care_course",
   "home_care_course_fee",
@@ -206,13 +207,15 @@ async function main(): Promise<void> {
   // 2: home_about (3 cards + illustration + card icon images)
   {
     const cardTitles = biJoin(home.about.cards.map((c) => c.title));
-    const cardBodies = biJoin(home.about.cards.map((c) => c.body));
     const split = splitBilingual({
       heading: home.about.heading,
       catchphrase: home.about.catchphrase,
       body: home.about.body,
       card_titles: cardTitles,
-      card_bodies: cardBodies,
+      card_bodies: { ja: "", en: "" },
+      card_body_1: home.about.cards[0]?.body,
+      card_body_2: home.about.cards[1]?.body,
+      card_body_3: home.about.cards[2]?.body,
     });
     const ja = {
       ...split.ja,
@@ -243,15 +246,8 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_problems", next(), ja, split.en));
   }
 
-  // 3b: home_pricing_summary — TOP baseline fees copy + payment brand logos
+  // 3b: home_pricing_summary — TOP baseline fees copy + bank-transfer icon
   {
-    const paymentAlt = (mark: string): Bilingual => {
-      const logo = home.pricingSummary.payment.logos.find((item) => item.mark === mark);
-      if (!logo) {
-        throw new Error(`home.pricingSummary.payment.logos is missing mark "${mark}".`);
-      }
-      return logo.alt;
-    };
     const split = splitBilingual({
       heading: home.pricingSummary.heading,
       care_label: home.pricingSummary.care.label,
@@ -267,18 +263,20 @@ async function main(): Promise<void> {
       payment_heading: home.pricingSummary.payment.heading,
       payment_body: home.pricingSummary.payment.body,
       payment_settle_note: home.pricingSummary.payment.settleNote,
-      payment_visa_alt: paymentAlt("visa"),
-      payment_mastercard_alt: paymentAlt("mastercard"),
-      payment_jcb_alt: paymentAlt("jcb"),
-      payment_amex_alt: paymentAlt("amex"),
+      payment_icon_alt: home.pricingSummary.payment.icon.alt,
+      payment_visa_alt: { ja: "", en: "" },
+      payment_mastercard_alt: { ja: "", en: "" },
+      payment_jcb_alt: { ja: "", en: "" },
+      payment_amex_alt: { ja: "", en: "" },
     });
     const ja = {
       ...split.ja,
       pricing_details_href: "/pricing",
-      payment_visa: mediaId(media, "payment-visa.png"),
-      payment_mastercard: mediaId(media, "payment-mastercard.png"),
-      payment_jcb: mediaId(media, "payment-jcb.png"),
-      payment_amex: mediaId(media, "payment-amex.png"),
+      payment_icon: mediaId(media, "payment-bank-transfer.png"),
+      payment_visa: "",
+      payment_mastercard: "",
+      payment_jcb: "",
+      payment_amex: "",
     };
     blocks.push(makeBlock(typeIds, "home_pricing_summary", next(), ja, split.en));
   }
@@ -298,8 +296,15 @@ async function main(): Promise<void> {
       price_tax_included: home.nursingCourse.price.taxIncluded,
       note: home.nursingCourse.note,
       panel_heading: home.nursingCourse.panel.heading,
+      medical_note: home.nursingCourse.medicalNote,
     });
     blocks.push(makeBlock(typeIds, "home_nursing_course", next(), split.ja, split.en));
+  }
+
+  // 4b: home_nursing_course_fee (3 cells, same grid as caregiving)
+  for (const fee of home.nursingCourse.fees) {
+    const split = splitBilingual({ label: fee.label, value: fee.value });
+    blocks.push(makeBlock(typeIds, "home_nursing_course_fee", next(), split.ja, split.en));
   }
 
   // 4-9: home_nursing_feature (6 items) — icon is non-localizable (select)
@@ -326,11 +331,10 @@ async function main(): Promise<void> {
     blocks.push(makeBlock(typeIds, "home_care_course", next(), split.ja, split.en));
   }
 
-  // 11-13: home_care_course_fee (3 items) — note is UNDEFINED for [0] and [2],
-  // present only for [1]. splitBilingual drops undefined fields entirely, so
-  // the read-side merge never sees an empty {ja:"",en:""} for `note`.
+  // 11-13: home_care_course_fee (3 items). Nomination "free for regulars"
+  // note was removed (0907 item 16); none of the three cells have a note.
   for (const fee of home.careCourse.fees) {
-    const split = splitBilingual({ label: fee.label, value: fee.value, note: fee.note });
+    const split = splitBilingual({ label: fee.label, value: fee.value });
     blocks.push(makeBlock(typeIds, "home_care_course_fee", next(), split.ja, split.en));
   }
 
@@ -469,8 +473,8 @@ async function main(): Promise<void> {
     );
   }
 
-  if (blocks.length !== 31) {
-    throw new Error(`Expected 31 blocks, built ${blocks.length} — check the block list above.`);
+  if (blocks.length !== 34) {
+    throw new Error(`Expected 34 blocks, built ${blocks.length} — check the block list above.`);
   }
 
   const pageSlug = "home";

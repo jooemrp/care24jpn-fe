@@ -61,23 +61,24 @@ export function HomePricingSection({
           <h2 className="text-xl font-bold text-heading md:text-2xl">
             {t(content.payment.heading, lang)}
           </h2>
-          <p className="mt-3 text-base text-body">{t(content.payment.body, lang)}</p>
+          <p className="mt-3 whitespace-pre-line text-base text-body">{t(content.payment.body, lang)}</p>
 
           <div className="mt-6 flex flex-1 flex-col rounded-xl bg-primary-light/60 p-4 sm:p-5">
-            {content.payment.logos.length > 0 ? (
-              <ul className="grid flex-1 grid-cols-2 content-center gap-3 sm:gap-4">
-                {content.payment.logos.map((logo) => (
-                  <li key={logo.mark} className="min-w-0">
-                    <PaymentBrand src={logo.src} alt={t(logo.alt, lang)} />
-                  </li>
-                ))}
-              </ul>
+            {content.payment.icon.src ? (
+              <div className="flex flex-1 items-center justify-center">
+                <PaymentBrand
+                  src={content.payment.icon.src}
+                  alt={t(content.payment.icon.alt, lang)}
+                />
+              </div>
             ) : (
               <QueryEmptyState title={t(queryStates.empty, lang)} className="border-0 bg-transparent shadow-none" />
             )}
-            <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
-              {t(content.payment.settleNote, lang)}
-            </p>
+            {content.payment.settleNote ? (
+              <p className="mt-4 text-center text-xs leading-relaxed text-muted sm:text-sm">
+                {t(content.payment.settleNote, lang)}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>
@@ -87,13 +88,13 @@ export function HomePricingSection({
 
 function PaymentBrand({ src, alt }: { src: string; alt: string }) {
   return (
-    <span className="flex h-full min-h-20 w-full items-center justify-center rounded-xl border border-border/80 bg-surface px-4 py-4 sm:min-h-24 sm:px-5 sm:py-5">
+    <span className="flex min-h-28 w-full max-w-sm items-center justify-center rounded-xl border border-border/80 bg-surface px-6 py-6 sm:min-h-32">
       <Image
         src={src}
         alt={alt}
-        width={240}
-        height={160}
-        className="h-10 w-auto max-w-[7.5rem] object-contain sm:h-12 sm:max-w-[9rem]"
+        width={480}
+        height={240}
+        className="h-16 w-auto max-w-[16rem] object-contain sm:h-20 sm:max-w-[18rem]"
       />
     </span>
   );

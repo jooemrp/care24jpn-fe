@@ -255,6 +255,20 @@ export function requiredImageUrl(
   return value;
 }
 
+/** Reads an optional Atlas image field. Empty/absent → undefined. */
+export function optionalImageUrl(
+  data: CmsBlock["data"],
+  key: string,
+  context: string,
+): string | undefined {
+  const raw = data[key];
+  if (raw === undefined || raw === null) return undefined;
+  if (typeof raw === "string" && raw.trim() === "") return undefined;
+  const value = typeof raw === "string" ? raw : pick(data, key)?.ja;
+  if (!value || value.trim() === "") return undefined;
+  return requiredImageUrl(data, key, context);
+}
+
 /** Reads a required finite number using the Atlas field's declared number type. */
 export function requiredNumber(
   data: CmsBlock["data"],

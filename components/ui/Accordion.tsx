@@ -16,12 +16,15 @@
 
 import { useState, useId } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
+import type { Lang } from "@/features/lang/i18n";
+import { CmsInlineText } from "@/components/cms/CmsInlineText";
 
 export type AccordionItemProps = {
   /** The question / trigger label */
   question: string;
   /** The answer / panel content */
   answer: string;
+  lang: Lang;
   /** Whether the item starts open. Defaults to false. */
   defaultOpen?: boolean;
 };
@@ -29,6 +32,7 @@ export type AccordionItemProps = {
 export function AccordionItem({
   question,
   answer,
+  lang,
   defaultOpen = false,
 }: AccordionItemProps) {
   const [open, setOpen] = useState(defaultOpen);
@@ -71,7 +75,7 @@ export function AccordionItem({
       >
         <div className="overflow-hidden">
           <div className="px-5 pb-5 pt-1 md:px-6 md:pb-6 text-base leading-relaxed text-body">
-            {answer}
+            <CmsInlineText text={answer} lang={lang} />
           </div>
         </div>
       </div>

@@ -94,7 +94,12 @@ function otherSiteBlocks(): CmsBlock[] {
       tagline: bi("tag"),
     }),
     simple("site-contact-phone", 1, { display: bi("0120"), tel: bi("0120"), note: bi("note") }),
-    simple("site-cta", 2, { primary: bi("p"), secondary: bi("s"), contact: bi("c") }),
+    simple("site-cta", 2, {
+      primary: bi("p"),
+      secondary: bi("s"),
+      contact: bi("c"),
+      primary_href: bi("/contact"),
+    }),
     simple("site-ui-labels", 3, {
       menu_toggle_label: bi("m"),
       lang_toggle_label: bi("l"),
@@ -282,8 +287,35 @@ async function main(): Promise<void> {
     });
   });
 
-  test("a site-error-labels block missing a field is rejected", () => {
-    assert.throws(() => mapSite(siteBlocksWithLegal({ body: undefined })));
+  test("a site-error-labels block missing a field renders a visible marker", () => {
+    const result = mapSite(siteBlocksWithLegal({ body: undefined }));
+    assert.equal(result.errorPage.body.ja, "[missing: site/site-error-labels.body]");
+    assert.equal(result.errorPage.body.en, "[missing: site/site-error-labels.body]");
+  });
+
+  test("mapSite() reads site-cta.primary_href and optional nav-item.short_label", () => {
+    const blocks = siteBlocks(liveOrderLegalBlocks()).map((block) => {
+      if (block.type === "nav-item") {
+        return {
+          ...block,
+          data: {
+            ...block.data,
+            href: bi("/#service-details"),
+            label: bi("サービス内容"),
+            short_label: bi("サービス"),
+          },
+        };
+      }
+      return block;
+    });
+    const result = mapSite(blocks);
+    assert.equal(result.cta.primaryHref, "/contact");
+    assert.deepEqual(result.nav[0]?.shortLabel, bi("サービス"));
+  });
+
+  test("a nav item without short_label stays hamburger-only", () => {
+    const result = mapSite(siteBlocks(liveOrderLegalBlocks()));
+    assert.equal(result.nav[0]?.shortLabel, undefined);
   });
 }
 

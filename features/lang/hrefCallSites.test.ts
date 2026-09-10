@@ -89,7 +89,15 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
   },
   {
     file: "components/Navbar.tsx",
-    line: 273,
+    line: 255,
+    content: "href",
+    reason:
+      "const href = localizeHref(item.href, lang) is assigned on the " +
+      "line directly above, inside the SP shortcut-bar .map() callback.",
+  },
+  {
+    file: "components/Navbar.tsx",
+    line: 299,
     content: "href",
     reason:
       "const href = localizeHref(item.href, lang) is assigned on the " +
@@ -97,11 +105,19 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
   },
   {
     file: "components/Navbar.tsx",
-    line: 301,
+    line: 327,
     content: "href",
     reason:
-      "Same pattern as :273, one .map() callback below, in the mobile " +
+      "Same pattern as :299, one .map() callback below, in the mobile " +
       "nav menu.",
+  },
+  {
+    file: "components/StickyCta.tsx",
+    line: 55,
+    content: "localized",
+    reason:
+      "const localized = localizeHref(href, lang) is assigned earlier in " +
+      "the same component body (StickyCta.tsx).",
   },
 ];
 

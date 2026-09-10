@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
+import { queryStates, type Bilingual } from "@/constants/copy";
 import { CmsContentError } from "@/features/cms/errors";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
@@ -74,22 +74,7 @@ export function HomeCoursesSection({
             </div>
 
             {careCourse.fees.length > 0 ? (
-              <dl className="grid flex-1 auto-rows-fr gap-px overflow-hidden rounded-xl bg-primary/20 sm:grid-cols-3">
-                {careCourse.fees.map((fee, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center"
-                  >
-                    <dt className="text-lg text-muted">{t(fee.label, lang)}</dt>
-                    <dd className="mt-1.5 text-lg font-bold text-heading">{t(fee.value, lang)}</dd>
-                    {fee.note ? (
-                      <dd className="mt-1 text-lg leading-snug text-muted">
-                        {t(fee.note, lang)}
-                      </dd>
-                    ) : null}
-                  </div>
-                ))}
-              </dl>
+              <FeeGrid fees={careCourse.fees} lang={lang} />
             ) : (
               <div className="flex-1">
                 <QueryEmptyState title={t(queryStates.empty, lang)} />
@@ -150,61 +135,104 @@ export function HomeCoursesSection({
           {t(nursingCourse.tagline, lang)}
           {t(nursingCourse.taglineSub, lang)}
         </p>
+        <p className="mx-auto mt-6 max-w-3xl animate-fade-up rounded-xl border border-accent/30 bg-accent-light px-5 py-4 text-center text-base font-semibold leading-relaxed text-heading md:px-8 md:py-5 md:text-lg">
+          {t(nursingCourse.medicalNote, lang)}
+        </p>
 
-        <div className="mt-10 grid gap-8 md:grid-cols-2 md:items-start">
-          <div className="rounded-2xl border border-accent/25 bg-accent-light/60 p-8 animate-fade-up md:sticky md:top-36">
-            <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
-              {t(nursingCourse.badge, lang)}
-            </span>
-            <p className="mt-6 text-lg font-medium text-body">
-              {t(nursingCourse.price.label, lang)}
-              {t(nursingCourse.price.hours, lang)}
-            </p>
-            <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-              <span className="text-5xl font-bold tabular-nums text-heading">
-                {t(nursingCourse.price.amount, lang)}
+        <div className="mt-10 animate-fade-up rounded-2xl border border-accent/25 bg-accent-light/50 p-6 sm:p-8">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
+            <div className="lg:w-[38%] lg:shrink-0">
+              <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
+                {t(nursingCourse.badge, lang)}
               </span>
-              <span className="text-lg text-muted">{t(nursingCourse.price.taxNote, lang)}</span>
-              <span className="text-lg font-medium text-body">
-                {t(nursingCourse.price.unit, lang)}
-              </span>
-            </p>
-            <p className="mt-1 text-lg text-body">{t(nursingCourse.price.taxIncluded, lang)}</p>
-            <p className="mt-6 text-lg">
-              <SafeInternalLink
-                href={pricingDetailsHref}
-                lang={lang}
-                className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
-              >
-                {t(pricingDetailsLink, lang)}
-              </SafeInternalLink>
-            </p>
-          </div>
+              <p className="mt-5 text-lg font-medium text-body">
+                {t(nursingCourse.price.label, lang)}
+                {t(nursingCourse.price.hours, lang)}
+              </p>
+              <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                <span className="text-5xl font-bold tabular-nums text-heading">
+                  {t(nursingCourse.price.amount, lang)}
+                </span>
+                <span className="text-lg text-muted">{t(nursingCourse.price.taxNote, lang)}</span>
+                <span className="text-lg font-medium text-body">
+                  {t(nursingCourse.price.unit, lang)}
+                </span>
+              </p>
+              <p className="mt-1 text-lg text-body">{t(nursingCourse.price.taxIncluded, lang)}</p>
+              <p className="mt-5 text-lg">
+                <SafeInternalLink
+                  href={pricingDetailsHref}
+                  lang={lang}
+                  className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
+                >
+                  {t(pricingDetailsLink, lang)}
+                </SafeInternalLink>
+              </p>
+            </div>
 
-          <div className="animate-fade-up [animation-delay:120ms]">
-            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
-              {t(nursingCourse.panel.heading, lang)}
-            </h3>
-            {nursingCourse.panel.items.length > 0 ? (
-              <ul className="mt-6 flex flex-col gap-5">
-                {nursingCourse.panel.items.map((item, index) => (
-                  <li key={index} className="flex items-center gap-3.5">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
-                      <NursingIcon name={item.icon} />
-                    </span>
-                    <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
-                  </li>
-                ))}
-              </ul>
+            {nursingCourse.fees.length > 0 ? (
+              <FeeGrid fees={nursingCourse.fees} lang={lang} tone="accent" />
             ) : (
-              <div className="mt-6">
+              <div className="flex-1">
                 <QueryEmptyState title={t(queryStates.empty, lang)} />
               </div>
             )}
           </div>
         </div>
+
+        <div className="mt-10 animate-fade-up [animation-delay:120ms]">
+          {nursingCourse.panel.heading && t(nursingCourse.panel.heading, lang).trim() ? (
+            <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
+              {t(nursingCourse.panel.heading, lang)}
+            </h3>
+          ) : null}
+          {nursingCourse.panel.items.length > 0 ? (
+            <ul className="mt-6 flex flex-col gap-5 md:grid md:grid-cols-2">
+              {nursingCourse.panel.items.map((item, index) => (
+                <li key={index} className="flex items-center gap-3.5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
+                    <NursingIcon name={item.icon} />
+                  </span>
+                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-6">
+              <QueryEmptyState title={t(queryStates.empty, lang)} />
+            </div>
+          )}
+        </div>
       </Section>
     </>
+  );
+}
+
+function FeeGrid({
+  fees,
+  lang,
+  tone = "primary",
+}: {
+  fees: Array<{ label: Bilingual; value: Bilingual; note?: Bilingual }>;
+  lang: Lang;
+  tone?: "primary" | "accent";
+}) {
+  const divider = tone === "accent" ? "bg-accent/20" : "bg-primary/20";
+  return (
+    <dl className={`grid flex-1 auto-rows-fr gap-px overflow-hidden rounded-xl ${divider} sm:grid-cols-3`}>
+      {fees.map((fee, index) => (
+        <div
+          key={index}
+          className="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center"
+        >
+          <dt className="text-lg text-muted">{t(fee.label, lang)}</dt>
+          <dd className="mt-1.5 text-lg font-bold text-heading">{t(fee.value, lang)}</dd>
+          {fee.note ? (
+            <dd className="mt-1 text-lg leading-snug text-muted">{t(fee.note, lang)}</dd>
+          ) : null}
+        </div>
+      ))}
+    </dl>
   );
 }
 

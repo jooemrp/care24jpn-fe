@@ -178,6 +178,12 @@ async function main(): Promise<void> {
     );
   });
 
+  test("Q15 answers contain an internal markdown link to /pricing", () => {
+    const q15 = faqItems.find((item) => item.id === "Q15")!;
+    assert.match(q15.answer.ja, /\[料金ページ\]\(\/pricing\)/);
+    assert.match(q15.answer.en, /\[Pricing Page\]\(\/pricing\)/);
+  });
+
   // -----------------------------------------------------------------------
   // scenariosHeading export
   // -----------------------------------------------------------------------

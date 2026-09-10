@@ -278,8 +278,8 @@ export const faqItems: FaqItem[] = [
       en: "How much does the service cost?",
     },
     answer: {
-      ja: "サービス内容、資格、利用時間などによって異なります。詳しくは料金ページをご確認ください。",
-      en: "Rates vary depending on service content, specialist qualification, and duration. Please check our Pricing Page for detailed rates.",
+      ja: "サービス内容、資格、利用時間などによって異なります。詳しくは[料金ページ](/pricing)をご確認ください。",
+      en: "Rates vary depending on service content, specialist qualification, and duration. Please check our [Pricing Page](/pricing) for detailed rates.",
     },
   },
   {

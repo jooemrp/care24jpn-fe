@@ -56,6 +56,7 @@ export default function FaqList({
               key={item.id}
               question={t(item.question, lang)}
               answer={t(item.answer, lang)}
+              lang={lang}
               defaultOpen={false}
             />
           ))}
@@ -83,6 +84,7 @@ export default function FaqList({
                       key={item.id}
                       question={t(item.question, lang)}
                       answer={t(item.answer, lang)}
+                      lang={lang}
                       defaultOpen={false}
                     />
                   ))}

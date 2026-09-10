@@ -9,6 +9,7 @@ export type HomeContent = Omit<
   Home,
   | "hero"
   | "careCourse"
+  | "nursingCourse"
   | "contact"
   | "flow"
   | "about"
@@ -25,6 +26,12 @@ export type HomeContent = Omit<
   careCourse: Omit<Home["careCourse"], "cards"> & {
     cards: (Card & { image: string })[];
   };
+  nursingCourse: Omit<Home["nursingCourse"], "panel"> & {
+    panel: {
+      heading?: Bilingual;
+      items: NursingFeature[];
+    };
+  };
   contact: Home["contact"] & { micsLogo: string; isoLogo: string };
   about: Omit<Home["about"], "cards"> & {
     illustration: string;
@@ -34,6 +41,10 @@ export type HomeContent = Omit<
     items: { title: Bilingual; image: string }[];
   };
   apply: {
+    consult: {
+      heading: Bilingual;
+      body: Bilingual;
+    };
     user: Home["apply"]["user"];
     staff: Home["apply"]["staff"];
   };
@@ -48,8 +59,8 @@ export type HomeContent = Omit<
     payment: {
       heading: Bilingual;
       body: Bilingual;
-      settleNote: Bilingual;
-      logos: { mark: string; src: string; alt: Bilingual }[];
+      settleNote?: Bilingual;
+      icon: { src: string; alt: Bilingual };
     };
   };
   pricingDetailsLink: Bilingual;

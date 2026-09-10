@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import StickyCta from "./StickyCta";
 import { SiteCtaProvider } from "./site-cta-provider";
 import type { ReactNode } from "react";
 import type { Lang } from "@/features/lang/i18n";
@@ -28,8 +29,16 @@ export default function AppShell({
   return (
     <>
       <Navbar lang={lang} site={site} />
-      <SiteCtaProvider primaryCta={site.cta.primary}>
+      <SiteCtaProvider primaryCta={site.cta.primary} primaryHref={site.cta.primaryHref}>
+        <div aria-hidden="true" className="relative h-0">
+          <div
+            data-sticky-cta-sentinel
+            className="pointer-events-none absolute left-0 top-0 w-px"
+            style={{ height: 120 }}
+          />
+        </div>
         <main className="flex-1">{children}</main>
+        <StickyCta lang={lang} />
       </SiteCtaProvider>
       <Footer
         lang={lang}

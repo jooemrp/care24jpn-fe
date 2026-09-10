@@ -20,6 +20,10 @@ const rates: RatesContent = {
       ja: "キャンセルポリシーをご確認ください。",
       en: "See the cancellation policy.",
     },
+    paymentNote: {
+      ja: "お支払いは銀行振込（前払い）となります。",
+      en: "Payment is made by bank transfer (in advance).",
+    },
   },
   fees: {
     hero: {
@@ -81,6 +85,7 @@ async function main(): Promise<void> {
     assert.match(html, /Pricing for users/);
     assert.match(html, /Caregiving course/);
     assert.match(html, /JPY 3,740/);
+    assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
     assert.match(html, /lg:grid-cols-2/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
   });

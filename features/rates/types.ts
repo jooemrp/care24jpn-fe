@@ -1,7 +1,9 @@
 import type { actionPlan as FeesCopyValue, pricing as PricingCopyValue } from "@/constants/copy";
 import type { CourseRates, SupporterRates } from "@/constants/pricing";
 
-export type PricingCopy = typeof PricingCopyValue;
+export type PricingCopy = Omit<typeof PricingCopyValue, "paymentIconAlt"> & {
+  paymentIcon?: { src: string; alt: typeof PricingCopyValue.paymentIconAlt };
+};
 type FeesCopyShape = typeof FeesCopyValue;
 export type FeesCopy = Omit<FeesCopyShape, "columns"> & {
   columns: Omit<FeesCopyShape["columns"], "service"> & {

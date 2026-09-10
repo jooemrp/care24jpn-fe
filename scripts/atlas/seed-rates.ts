@@ -44,6 +44,8 @@ import {
   getContentType,
   createScriptManagementClient,
   ensurePublishedPage,
+  requireMediaManifest,
+  mediaId,
   type AtlasScriptEnv,
 } from "./lib";
 import { ogImageForSlug } from "./og-image";
@@ -142,6 +144,9 @@ function pricingMetaBlock(
   highlights: Bilingual[],
   note: Bilingual,
   cancellationLinkLabel: Bilingual,
+  paymentNote: Bilingual,
+  paymentIconAlt: Bilingual,
+  paymentIconId: string,
 ): BlockInput {
   // textarea field, one line per highlight — features/cms/rates.ts#optionalLines
   // splits this back into `highlights: Bilingual[]` by index.
@@ -156,6 +161,9 @@ function pricingMetaBlock(
       highlights: highlightsJa,
       note: note.ja,
       cancellation_label: cancellationLinkLabel.ja,
+      payment_note: paymentNote.ja,
+      payment_icon: paymentIconId,
+      payment_icon_alt: paymentIconAlt.ja,
     },
     translations: {
       en: {
@@ -163,6 +171,8 @@ function pricingMetaBlock(
           highlights: highlightsEn,
           note: note.en,
           cancellation_label: cancellationLinkLabel.en,
+          payment_note: paymentNote.en,
+          payment_icon_alt: paymentIconAlt.en,
         },
       },
     },
@@ -241,7 +251,7 @@ function buildRatesPage(courseId: string, rowId: string): PageInput {
   };
 }
 
-function buildPricingPage(heroId: string, metaId: string): PageInput {
+function buildPricingPage(heroId: string, metaId: string, paymentIconId: string): PageInput {
   return {
     slug: "pricing",
     seo: { title: "ご利用者様向け料金" },
@@ -253,6 +263,9 @@ function buildPricingPage(heroId: string, metaId: string): PageInput {
         pricingCopy.highlights,
         pricingCopy.note,
         pricingCopy.cancellationLinkLabel,
+        pricingCopy.paymentNote,
+        pricingCopy.paymentIconAlt,
+        paymentIconId,
       ),
     ],
   };
@@ -280,6 +293,8 @@ function buildFeesPage(heroId: string, metaId: string): PageInput {
 async function main(): Promise<void> {
   const env = requireAtlasEnv();
   const client = await createScriptManagementClient();
+  const media = requireMediaManifest();
+  const paymentIconId = mediaId(media, "payment-bank-transfer.png");
 
   const [rateCourseId, rateRowId, pageHeroId, pricingMetaId, feesMetaId] = await Promise.all([
     resolveBlockTypeId(env, "rate_course"),
@@ -291,7 +306,7 @@ async function main(): Promise<void> {
 
   const pages: PageInput[] = [
     buildRatesPage(rateCourseId, rateRowId),
-    buildPricingPage(pageHeroId, pricingMetaId),
+    buildPricingPage(pageHeroId, pricingMetaId, paymentIconId),
     buildFeesPage(pageHeroId, feesMetaId),
   ];
 

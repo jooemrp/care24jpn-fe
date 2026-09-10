@@ -16,6 +16,14 @@ export function HomeApplySection({
 }) {
   return (
     <Section surface lang={lang}>
+      <div className="mb-8 text-center md:mb-10">
+        <h2 className="text-2xl font-bold text-heading md:text-3xl">
+          {t(content.consult.heading, lang)}
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl whitespace-pre-line text-base leading-relaxed text-body md:text-lg">
+          {t(content.consult.body, lang)}
+        </p>
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         <ApplyBanner
           href={content.user.href}
@@ -31,7 +39,6 @@ export function HomeApplySection({
           eyebrow={t(content.staff.eyebrow, lang)}
           label={t(content.staff.label, lang)}
           tone="primary"
-          emphasis="secondary"
           external={isSafeExternalHref(content.staff.href)}
           lang={lang}
           delay={80}

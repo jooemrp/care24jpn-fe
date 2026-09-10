@@ -123,6 +123,7 @@ async function main(): Promise<void> {
     requiredBi,
     requiredEnum,
     requiredImageUrl,
+    optionalImageUrl,
     requiredJa,
     requiredNumber,
     requiredUrl,
@@ -460,6 +461,15 @@ async function main(): Promise<void> {
         error instanceof Error &&
         error.name === "CmsContentError" &&
         (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
+  });
+
+  test("optional images are absent when empty and required-shaped when present", () => {
+    assert.equal(optionalImageUrl({}, "payment_icon", "pricing/pricing-meta"), undefined);
+    assert.equal(optionalImageUrl({ payment_icon: "" }, "payment_icon", "pricing/pricing-meta"), undefined);
+    assert.equal(
+      optionalImageUrl({ payment_icon: bi(S3_URL, S3_URL) }, "payment_icon", "pricing/pricing-meta"),
+      S3_URL,
     );
   });
 

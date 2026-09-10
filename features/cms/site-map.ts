@@ -41,9 +41,9 @@ export type SiteContent = {
     logoAlt: Bilingual;
     tagline: Bilingual;
   };
-  nav: { href: string; label: Bilingual }[];
+  nav: { href: string; label: Bilingual; shortLabel?: Bilingual }[];
   contactPhone: { display: string; tel: string; note: Bilingual };
-  cta: { primary: Bilingual; secondary: Bilingual; contact: Bilingual };
+  cta: { primary: Bilingual; secondary: Bilingual; contact: Bilingual; primaryHref: string };
   ui: {
     menuToggleLabel: Bilingual;
     langToggleLabel: Bilingual;
@@ -160,6 +160,7 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
     secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
     contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
+    primaryHref: requiredUrl(ctaBlock.data, "primary_href", "site/site-cta"),
   };
 
   const ui: SiteContent["ui"] = {
@@ -191,6 +192,7 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
   const nav: SiteContent["nav"] = navBlocks.map((block, i) => ({
     href: requiredUrl(block.data, "href", `site/nav-item[${i}]`),
     label: requiredBi(block.data, "label", `site/nav-item[${i}]`),
+    shortLabel: optionalBi(block.data, "short_label", `site/nav-item[${i}]`),
   }));
 
   const legalLinks: SiteContent["footer"]["legalLinks"] = legalBlocks.map((block, i) => {

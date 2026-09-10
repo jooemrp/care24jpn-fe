@@ -1,5 +1,5 @@
 /**
- * Creates all 30 CMS block content types (and their fields) on the live
+ * Creates all CMS block content types (and their fields) on the live
  * Atlas workspace. This file IS the specification — every block type and
  * field below is the single authoritative source the seed-*.ts scripts write
  * against and the features/cms/*.ts loaders read back.
@@ -82,6 +82,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "primary", label: "Primary CTA", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "secondary", label: "Secondary CTA", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "contact", label: "Contact CTA", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "primary_href", label: "Primary CTA href", field_type: "text", localizable: false, required: false, sort_order: 3 },
     ],
   },
   {
@@ -131,6 +132,7 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
     fields: [
       { name: "href", label: "Href", field_type: "text", localizable: false, required: false, sort_order: 0 },
       { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "short_label", label: "Short label (SP shortcut bar)", field_type: "text", localizable: true, required: false, sort_order: 2 },
     ],
   },
   {
@@ -196,6 +198,13 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "card_image_1", label: "Card 1 icon image", field_type: "image", localizable: false, required: false, sort_order: 6 },
       { name: "card_image_2", label: "Card 2 icon image", field_type: "image", localizable: false, required: false, sort_order: 7 },
       { name: "card_image_3", label: "Card 3 icon image", field_type: "image", localizable: false, required: false, sort_order: 8 },
+      // Per-card textareas so punch-list line breaks (`\n`) survive. The packed
+      // `card_bodies` field above cannot store a newline inside a card because
+      // the loader splits that field on `\n`. Atlas has no delete-field
+      // endpoint, so `card_bodies` stays and is seeded empty.
+      { name: "card_body_1", label: "Card 1 body", field_type: "textarea", localizable: true, required: false, sort_order: 9 },
+      { name: "card_body_2", label: "Card 2 body", field_type: "textarea", localizable: true, required: false, sort_order: 10 },
+      { name: "card_body_3", label: "Card 3 body", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
     ],
   },
   {
@@ -241,6 +250,8 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "payment_jcb_alt", label: "Logo JCB alt", field_type: "text", localizable: true, required: false, sort_order: 20 },
       { name: "payment_amex", label: "Logo American Express", field_type: "image", localizable: false, required: false, sort_order: 21 },
       { name: "payment_amex_alt", label: "Logo American Express alt", field_type: "text", localizable: true, required: false, sort_order: 22 },
+      { name: "payment_icon", label: "Bank transfer icon", field_type: "image", localizable: false, required: false, sort_order: 23 },
+      { name: "payment_icon_alt", label: "Bank transfer icon alt", field_type: "text", localizable: true, required: false, sort_order: 24 },
     ],
   },
   {
@@ -298,6 +309,17 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "price_tax_included", label: "Tax-included line", field_type: "text", localizable: true, required: false, sort_order: 9 },
       { name: "note", label: "Note", field_type: "text", localizable: true, required: false, sort_order: 10 },
       { name: "panel_heading", label: "Panel H3", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
+      { name: "medical_note", label: "Medical directive footnote", field_type: "textarea", localizable: true, required: false, sort_order: 12 },
+    ],
+  },
+  {
+    slug: "home_nursing_course_fee",
+    name: "Home — Nursing Course fee cell",
+    is_block: true,
+    fields: [
+      { name: "label", label: "Label", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "value", label: "Value", field_type: "text", localizable: true, required: false, sort_order: 1 },
+      { name: "note", label: "Note (opsional)", field_type: "text", localizable: true, required: false, sort_order: 2 },
     ],
   },
   {
@@ -423,6 +445,9 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "highlights", label: "Highlights (satu per baris)", field_type: "textarea", localizable: true, required: false, sort_order: 0 },
       { name: "note", label: "Note", field_type: "textarea", localizable: true, required: false, sort_order: 1 },
       { name: "cancellation_label", label: "Cancellation policy link label", field_type: "text", localizable: true, required: false, sort_order: 2 },
+      { name: "payment_note", label: "Payment method note", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "payment_icon", label: "Bank transfer icon", field_type: "image", localizable: false, required: false, sort_order: 4 },
+      { name: "payment_icon_alt", label: "Bank transfer icon alt", field_type: "text", localizable: true, required: false, sort_order: 5 },
     ],
   },
   {
