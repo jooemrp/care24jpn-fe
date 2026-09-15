@@ -18,7 +18,9 @@ The written client requirement for an always-visible fixed bar takes precedence 
 ## Desktop
 
 - A full-width blue rail is fixed to the bottom edge.
-- Its centered inner content contains the phone action and phone number on the left and a high-contrast Contact/Request Information action on the right.
+- Following the client-provided Ichirou reference, its centered inner content is divided into three visually balanced zones: a short consultation message, the phone action and number, and a high-contrast Contact/Request Information action.
+- The consultation message uses the existing CMS-managed phone note. The phone number remains the dominant element, while the request action keeps its magenta emphasis.
+- The three-zone structure applies only at the desktop breakpoint. It replaces the current oversized two-zone phone column that makes the bar appear empty.
 - The outer rail has a top border and upward shadow, but no inset margin or rounded outer corners.
 - The desktop Contact navigation item remains immediately after FAQ and links to the localized contact route.
 
@@ -37,7 +39,7 @@ The written client requirement for an always-visible fixed bar takes precedence 
 
 ## Content and Data
 
-- Phone display, telephone href, CTA labels, and contact href continue to come from the existing site CTA provider and CMS mapping.
+- Consultation message, phone display, telephone href, CTA labels, and contact href continue to come from the existing site CTA provider and CMS mapping.
 - No user-facing copy is invented.
 - Existing fallback labels remain in place for published workspaces that have not yet received the optional sticky-label fields.
 
@@ -46,5 +48,6 @@ The written client requirement for an always-visible fixed bar takes precedence 
 - Add a regression test proving the bar is full-width and rendered without hidden/translated state.
 - Add a navigation-source test proving `/contact` follows `/faq`.
 - Run focused tests, the full suite, ESLint, and a production build.
-- Browser-check desktop at 1440×900 and mobile at 390×844 and 375×667.
+- Browser-check the three-zone desktop composition at 1440×900 and confirm that it does not create wrapping or overflow at the desktop breakpoint.
+- Recheck mobile at 390×844 and 375×667 to prove the approved two-way split is unchanged.
 - On mobile, open the hamburger menu and confirm the CTA remains visible and clickable above it.
