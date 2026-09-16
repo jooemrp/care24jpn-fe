@@ -135,10 +135,6 @@ export function HomeCoursesSection({
           {t(nursingCourse.tagline, lang)}
           {t(nursingCourse.taglineSub, lang)}
         </p>
-        <p className="mx-auto mt-6 max-w-3xl animate-fade-up rounded-xl border border-accent/30 bg-accent-light px-5 py-4 text-center text-base font-semibold leading-relaxed text-heading md:px-8 md:py-5 md:text-lg">
-          {t(nursingCourse.medicalNote, lang)}
-        </p>
-
         <div className="mt-10 animate-fade-up rounded-2xl border border-accent/25 bg-accent-light/50 p-6 sm:p-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
             <div className="lg:w-[38%] lg:shrink-0">
@@ -203,6 +199,8 @@ export function HomeCoursesSection({
             </div>
           )}
         </div>
+
+        <MedicalNoteBanner note={nursingCourse.medicalNote} lang={lang} />
       </Section>
     </>
   );
@@ -256,4 +254,119 @@ function NursingIcon({ name }: { name: string }) {
     );
   }
   return <Component className="h-[1.375rem] w-[1.375rem]" stroke={1.6} aria-hidden="true" />;
+}
+
+function NursingDirectiveIllustration() {
+  return (
+    <svg
+      viewBox="0 0 160 160"
+      className="h-20 w-20 shrink-0 sm:h-24 sm:w-24 md:h-28 md:w-28"
+      aria-hidden="true"
+      data-nursing-directive="true"
+      focusable="false"
+    >
+      <rect
+        x="50"
+        y="32"
+        width="82"
+        height="106"
+        rx="4"
+        className="fill-primary-light stroke-border"
+        strokeWidth="1.5"
+        transform="rotate(11 91 85)"
+      />
+      <rect
+        x="40"
+        y="25"
+        width="84"
+        height="108"
+        rx="4"
+        className="fill-surface stroke-border"
+        strokeWidth="1.5"
+        transform="rotate(5.5 82 79)"
+      />
+      <rect
+        x="28"
+        y="20"
+        width="88"
+        height="112"
+        rx="4"
+        className="fill-surface stroke-primary"
+        strokeWidth="1.75"
+      />
+      <g className="stroke-muted" fill="none" strokeWidth="1.6" strokeLinecap="round">
+        <line x1="76" y1="44" x2="104" y2="44" />
+        <line x1="76" y1="57" x2="104" y2="57" />
+        <line x1="76" y1="70" x2="104" y2="70" />
+        <line x1="76" y1="83" x2="100" y2="83" />
+        <line x1="76" y1="96" x2="94" y2="96" />
+      </g>
+      <text
+        x="50"
+        y="48"
+        textAnchor="middle"
+        className="fill-heading"
+        fontSize="18"
+        fontWeight="700"
+        fontFamily="var(--font-sans)"
+      >
+        処
+      </text>
+      <text
+        x="50"
+        y="70"
+        textAnchor="middle"
+        className="fill-heading"
+        fontSize="18"
+        fontWeight="700"
+        fontFamily="var(--font-sans)"
+      >
+        方
+      </text>
+      <text
+        x="50"
+        y="92"
+        textAnchor="middle"
+        className="fill-heading"
+        fontSize="18"
+        fontWeight="700"
+        fontFamily="var(--font-sans)"
+      >
+        箋
+      </text>
+      <g transform="translate(98 112)">
+        <circle cx="0" cy="-5.4" r="3.5" className="fill-accent" />
+        <circle cx="5.14" cy="-1.67" r="3.5" className="fill-accent" />
+        <circle cx="3.18" cy="4.37" r="3.5" className="fill-accent" />
+        <circle cx="-3.18" cy="4.37" r="3.5" className="fill-accent" />
+        <circle cx="-5.14" cy="-1.67" r="3.5" className="fill-accent" />
+        <circle cx="0" cy="0" r="2.3" className="fill-surface" />
+        <circle cx="0" cy="0" r="1.2" className="fill-accent" />
+      </g>
+    </svg>
+  );
+}
+
+function MedicalNoteBanner({ note, lang }: { note: Bilingual; lang: Lang }) {
+  const lines = t(note, lang)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const heading = lines[0] ?? "";
+  const body = lines.slice(1).join("\n");
+
+  return (
+    <aside
+      role="note"
+      className="mt-10 flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent-light px-4 py-4 text-left sm:items-center sm:gap-6 sm:px-8 sm:py-6"
+    >
+      <NursingDirectiveIllustration />
+      <div className="min-w-0 flex-1">
+        <p className="text-base font-bold leading-snug text-heading md:text-lg">{heading}</p>
+        {body ? (
+          <p className="mt-2 text-sm leading-relaxed text-body md:text-base">{body}</p>
+        ) : null}
+      </div>
+    </aside>
+  );
 }

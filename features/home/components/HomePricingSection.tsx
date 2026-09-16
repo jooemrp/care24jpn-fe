@@ -24,7 +24,7 @@ export function HomePricingSection({
 
   return (
     <Section lang={lang}>
-      <div className="grid items-stretch gap-6 lg:grid-cols-2">
+      <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
         <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 sm:p-8">
           <h2 className="text-xl font-bold text-heading md:text-2xl">
             {t(content.heading, lang)}
@@ -39,8 +39,10 @@ export function HomePricingSection({
                 <p className="mt-2 text-2xl font-bold tabular-nums text-accent md:text-3xl">
                   {t(course.amount, lang)}
                 </p>
-                <p className="mt-3 text-xs leading-relaxed text-muted">{t(course.minNote, lang)}</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted">
+                <p className="mt-3 break-keep text-xs leading-relaxed text-muted">
+                  {t(course.minNote, lang)}
+                </p>
+                <p className="mt-1 break-keep text-xs leading-relaxed text-muted">
                   {t(course.transportNote, lang)}
                 </p>
               </div>
@@ -63,7 +65,7 @@ export function HomePricingSection({
             <h2 className="text-xl font-bold text-heading md:text-2xl">
               {t(content.payment.heading, lang)}
             </h2>
-            <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-body">
+            <p className="mt-3 break-keep text-base leading-relaxed text-body [text-wrap:balance]">
               {t(content.payment.body, lang)}
             </p>
             {settleNote ? (

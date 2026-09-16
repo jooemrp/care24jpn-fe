@@ -6,6 +6,7 @@ import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 
 export function HomeAboutSection({
   content,
@@ -15,12 +16,21 @@ export function HomeAboutSection({
   lang: Lang;
 }) {
   return (
-    <Section heading={content.heading} lang={lang} className="pt-5! md:pt-8!">
+    <Section lang={lang} className="pt-6! md:pt-8!">
+      <header className="mb-5 animate-fade-up md:mb-8" data-about-intro>
+        <span
+          aria-hidden="true"
+          className="mb-3 block h-1 w-10 rounded-full bg-primary md:hidden"
+        />
+        <h2 className="mb-1 text-[1.75rem] leading-tight tracking-[-0.025em] text-heading md:text-3xl md:tracking-normal">
+          {t(content.heading, lang)}
+        </h2>
+      </header>
       <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
         {t(content.catchphrase, lang)}
       </p>
-      <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-body">
-        {t(content.body, lang)}
+      <p className="mt-4 max-w-3xl text-base leading-relaxed text-body">
+        <ResponsiveCopy text={content.body} lang={lang} mode="desktop-only" />
       </p>
 
       {content.cards.length > 0 ? (

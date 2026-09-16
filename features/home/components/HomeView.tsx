@@ -93,7 +93,7 @@ function HomeLoadingState({ lang }: { lang: Lang }) {
         </HomeSkeletonSection>
 
         <HomeSkeletonSection>
-          <div className="grid items-stretch gap-6 lg:grid-cols-2">
+          <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
             <HomePanelSkeleton />
             <HomePanelSkeleton />
           </div>

@@ -15,6 +15,7 @@
  */
 
 import { mapBlocksByType, requiredBi, type BlockTypeList } from "./fields";
+import { CmsContentError } from "./errors";
 import type { Bilingual, CmsBlock } from "./types";
 
 /** Each `legal-*` page is exactly one `legal-doc` block (see
@@ -39,7 +40,28 @@ export function selectLegalFields(
 ): RawLegalFields {
   void caller;
   const [block] = mapBlocksByType(slug, blocks, LEGAL_TYPES)["legal-doc"];
-  const heading = requiredBi(block.data, "heading", `${slug}/legal-doc`);
-  const body = requiredBi(block.data, "body", `${slug}/legal-doc`);
+  const context = `${slug}/legal-doc`;
+  const heading = requireStrictText(block.data, "heading", context);
+  const body = requireStrictText(block.data, "body", context);
   return { heading, body: { ja: body.ja, en: body.en } };
+}
+
+/** Legal documents fail closed when an editor leaves either locale empty. */
+function requireStrictText(
+  data: CmsBlock["data"],
+  key: string,
+  context: string,
+): Bilingual {
+  const value = requiredBi(data, key, context);
+  const marker = `[missing: ${context}.${key}]`;
+  if (value.ja === marker || value.en === marker) {
+    const path = `${context}.${key}`;
+    throw new CmsContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      `Required CMS field "${path}" is missing or empty.`,
+      [path],
+      context,
+    );
+  }
+  return value;
 }

@@ -29,7 +29,13 @@ export default function AppShell({
   return (
     <>
       <Navbar lang={lang} site={site} />
-      <SiteCtaProvider primaryCta={site.cta.primary} primaryHref={site.cta.primaryHref}>
+      <SiteCtaProvider
+        primaryCta={site.cta.primary}
+        primaryHref={site.cta.primaryHref}
+        contactPhone={site.contactPhone}
+        stickyPhoneLabel={site.cta.stickyPhoneLabel}
+        stickyRequestLabel={site.cta.stickyRequestLabel}
+      >
         <div aria-hidden="true" className="relative h-0">
           <div
             data-sticky-cta-sentinel

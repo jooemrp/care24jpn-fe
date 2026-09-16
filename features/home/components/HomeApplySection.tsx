@@ -6,6 +6,7 @@ import Section from "@/components/ui/Section";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { isSafeExternalHref, safeLocalizedHref } from "./HomeLinks";
+import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 
 export function HomeApplySection({
   content,
@@ -17,11 +18,11 @@ export function HomeApplySection({
   return (
     <Section surface lang={lang}>
       <div className="mb-8 text-center md:mb-10">
-        <h2 className="text-2xl font-bold text-heading md:text-3xl">
+        <h2 className="text-2xl font-bold text-heading [text-wrap:balance] md:text-3xl">
           {t(content.consult.heading, lang)}
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl whitespace-pre-line text-base leading-relaxed text-body md:text-lg">
-          {t(content.consult.body, lang)}
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-body md:text-lg">
+          <ResponsiveCopy text={content.consult.body} lang={lang} mode="desktop-only" />
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -94,10 +95,10 @@ function ApplyBanner({
   const style = { animationDelay: `${delay}ms` };
   const children = isPrimary ? (
     <>
-      <span className="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white/90">
+      <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white">
         {eyebrow}
       </span>
-      <span className="col-start-1 row-start-2 self-end text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">
+      <span className="col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">
         {label}
       </span>
       <span

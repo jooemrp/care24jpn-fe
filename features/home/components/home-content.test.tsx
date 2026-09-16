@@ -83,29 +83,95 @@ async function main(): Promise<void> {
     assert.match(html, /Payment is made by bank transfer \(in advance\)\./);
     assert.match(html, /Bank transfer/);
     assert.match(html, /inline-flex w-fit/);
-    assert.match(html, /border-t border-border bg-primary-light/);
     assert.doesNotMatch(html, /min-h-28|min-h-32/);
     assert.doesNotMatch(html, /payment-visa|payment-mastercard|payment-jcb|payment-amex/);
-    assert.match(html, /written instructions are strictly required/);
+    assert.match(html, /A written order from your attending physician is required to use this service\./);
+    assert.match(
+      html,
+      /As needed, we coordinate with care managers, social workers, and long-term care insurance providers to deliver safe, appropriate care\./,
+    );
+    assert.ok(
+      html.indexOf("A written order from your attending physician is required to use this service.") >
+        html.indexOf("Coordination with medical institutions"),
+      "the nursing medical directive should follow the feature list",
+    );
+    assert.match(html, /nursing-directive/);
+    assert.match(
+      html,
+      /mt-10 flex items-start gap-3 rounded-2xl border border-accent\/25 bg-accent-light/,
+    );
+    assert.doesNotMatch(html, /written instructions are strictly required/);
+    assert.doesNotMatch(html, /border-2 border-accent/);
+    assert.doesNotMatch(html, /bg-note/);
     assert.match(html, /Please feel free to contact us first/);
+    assert.match(
+      html,
+      /<h2 class="text-2xl font-bold text-heading \[text-wrap:balance\] md:text-3xl">/,
+    );
     assert.match(html, /Examples of use/);
     assert.match(html, /id="contact"/);
     assert.match(html, /_hero-preview\.png/);
+    assert.match(html, /object-\[58%_42%\] md:object-\[58%_center\]/);
+    assert.match(html, /w-full max-w-none whitespace-pre-line text-left text-\[11px\].*max-\[350px\]:text-\[9px\]/);
     assert.match(html, /target="_blank"/);
     assert.match(html, /rel="noopener noreferrer"/);
     assert.match(html, /md:grid-cols-2/);
+    assert.match(
+      html,
+      /max-w-6xl grid-cols-1 gap-y-8 md:grid-cols-\[minmax\(0,1fr\)_auto_minmax\(0,1fr\)_auto_minmax\(0,1fr\)_auto_minmax\(0,1fr\)\]/,
+    );
+    assert.match(html, /text-sm leading-relaxed text-body \[text-wrap:balance\] lg:max-w-\[18rem\] lg:text-\[13px\]/);
     assert.match(html, /data-first-view/);
     assert.match(html, /xl:aspect-2\/1/);
     assert.match(html, /xl:min-h-\[48rem\]/);
     assert.match(html, /2xl:min-h-\[56rem\]/);
-    assert.match(html, /min-h-\[30rem\].*md:min-h-\[36rem\].*lg:min-h-\[42rem\].*xl:min-h-\[48rem\].*2xl:min-h-\[min\(70vh,56rem\)\]/);
+    assert.match(
+      html,
+      /md:min-h-\[36rem\].*lg:min-h-\[42rem\].*xl:min-h-\[48rem\].*2xl:min-h-\[min\(70vh,56rem\)\]/,
+    );
     assert.doesNotMatch(html, /min-h-\[calc\(100dvh/);
     assert.doesNotMatch(html, /min-h-\[100dvh\]/);
     assert.doesNotMatch(html, /Credit card/);
     assert.doesNotMatch(html, /クレジットカード/);
     assert.doesNotMatch(html, /定期の方は指名無料/);
+    assert.doesNotMatch(html, /こちらから/);
+    assert.match(html, /lg:grid-cols-\[minmax\(0,7fr\)_minmax\(0,3fr\)\]/);
     assert.doesNotMatch(html, /CMS content contract is incomplete/);
     assert.doesNotMatch(html, new RegExp(darkVariant));
+  });
+
+  test("mobile hero uses an editorial media frame and clear conversion hierarchy", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(HomeContentView, {
+        content,
+        lang: "en",
+        contactCta: cta.contact,
+      }),
+    );
+
+    assert.match(html, /data-hero-media="true"/);
+    assert.match(
+      html,
+      /mx-4 mt-3 aspect-video.*rounded-\[1\.5rem_1\.5rem_4\.5rem_1\.5rem\].*md:absolute.*md:m-0.*md:rounded-none/,
+    );
+    assert.match(html, /object-\[58%_42%\] md:object-\[58%_center\]/);
+    assert.match(html, /hidden.*bg-linear-to-r.*md:block/);
+    assert.match(html, /data-hero-copy="true"/);
+    assert.match(html, /data-hero-accent="true"/);
+    assert.match(html, /data-hero-area="true"/);
+    assert.match(html, /border-l-2 border-primary/);
+    assert.match(html, /data-hero-cta="true"/);
+    assert.match(html, /w-full min-h-14 justify-between rounded-2xl/);
+    assert.match(html, /focus-visible:outline-2/);
+    assert.match(html, /data-about-intro="true"/);
+    assert.doesNotMatch(html, /min-h-\[30rem\]/);
+    assert.ok(
+      html.indexOf("Service Area: Starting from Setagaya &amp; Minato Wards!") <
+        html.indexOf("Sign Up / Apply Here"),
+      "mobile DOM order should place the supported area before the CTA",
+    );
+    assert.match(html, /order-2.*md:order-1/);
+    assert.match(html, /order-1.*md:order-2/);
   });
 
   test("homepage sections show explicit empty states without hiding the rest of the page", () => {
@@ -162,6 +228,33 @@ async function main(): Promise<void> {
 
     assert.match(html, /For full pricing details, please click here\./);
     assert.match(html, /href="\/en\/pricing"/);
+  });
+
+  test("bottom apply banners drop から, keep titles on one line, and read the job-seeker eyebrow clearly", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(HomeContentView, {
+        content,
+        lang: "ja",
+        contactCta: cta.contact,
+      }),
+    );
+
+    assert.match(html, /お申込みはこちら/);
+    assert.match(html, /登録はこちら/);
+    assert.match(html, /お仕事を希望される方/);
+    assert.doesNotMatch(html, /こちらから/);
+    assert.match(
+      html,
+      /col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white/,
+    );
+    assert.doesNotMatch(
+      html,
+      /col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-white\/90/,
+    );
+    assert.match(
+      html,
+      /col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-\[1\.875rem\]/,
+    );
   });
 }
 

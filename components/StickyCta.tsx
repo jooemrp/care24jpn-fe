@@ -2,63 +2,110 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  IconFileDescription,
+  IconHeadset,
+  IconPhone,
+} from "@tabler/icons-react";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
-import { useSitePrimaryCta, useSitePrimaryCtaHref } from "./site-cta-provider";
+import {
+  useSiteContactPhone,
+  useSitePrimaryCtaHref,
+  useSiteStickyPhoneLabel,
+  useSiteStickyRequestLabel,
+} from "./site-cta-provider";
 
-/**
- * Floating conversion bar. Hidden while the first-view (or a short
- * non-home sentinel) is still on screen; then sticks to the bottom of the
- * viewport on both mobile and desktop.
- */
+/** Persistent consultation CTA rail for both mobile and desktop. */
 export default function StickyCta({ lang }: { lang: Lang }) {
-  const label = useSitePrimaryCta();
   const href = useSitePrimaryCtaHref();
+  const contactPhone = useSiteContactPhone();
+  const phoneLabel = useSiteStickyPhoneLabel();
+  const requestLabel = useSiteStickyRequestLabel();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const firstView = document.querySelector("[data-first-view]");
-    const sentinel = document.querySelector("[data-sticky-cta-sentinel]");
-    const target = firstView ?? sentinel;
+    const target =
+      document.querySelector("[data-first-view]") ??
+      document.querySelector("[data-sticky-cta-sentinel]");
     if (!target) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
-      { threshold: 0 },
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, []);
+    const updateVisibility = () => {
+      setVisible(target.getBoundingClientRect().bottom <= 0);
+    };
 
-  const localized = localizeHref(href, lang);
+    updateVisibility();
+
+    if (typeof IntersectionObserver === "undefined") {
+      window.addEventListener("scroll", updateVisibility, { passive: true });
+      window.addEventListener("resize", updateVisibility);
+      return () => {
+        window.removeEventListener("scroll", updateVisibility);
+        window.removeEventListener("resize", updateVisibility);
+      };
+    }
+
+    const observer = new IntersectionObserver(updateVisibility, { threshold: 0 });
+    observer.observe(target);
+    window.addEventListener("resize", updateVisibility);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateVisibility);
+    };
+  }, []);
 
   return (
     <>
       <div
         aria-hidden="true"
-        className={`shrink-0 ${visible ? "h-20" : "h-0"}`}
+        className="h-[calc(4rem+env(safe-area-inset-bottom))] shrink-0 md:h-20"
       />
-      <div
-        className={`pointer-events-none fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 transition duration-200 ${
-            visible
-              ? "translate-y-0 opacity-100"
-              : "pointer-events-none translate-y-full opacity-0"
-          }`}
+      <aside
+        data-sticky-cta
+        aria-hidden={!visible}
+        inert={!visible}
+        className={`fixed inset-x-0 bottom-0 z-[70] border-t border-white/20 bg-primary-deep pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_-14px_rgba(27,31,94,0.55)] transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${
+          visible
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-full opacity-0"
+        }`}
       >
-        <div
-          className={`mx-auto flex max-w-6xl justify-center ${
-            visible ? "pointer-events-auto" : "pointer-events-none"
-          }`}
-        >
-          <Link
-            href={localized}
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(43,126,193,0.55)] transition hover:bg-primary-mid md:w-auto md:min-w-72"
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
+          <div className="hidden min-h-20 items-center gap-3 border-r border-white/20 bg-primary-deep px-6 text-white md:flex">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+              <IconHeadset
+                className="h-5 w-5"
+                stroke={1.9}
+                aria-hidden="true"
+              />
+            </span>
+            <span className="text-sm font-semibold leading-relaxed">
+              {t(contactPhone.note, lang)}
+            </span>
+          </div>
+          <a
+            href={`tel:${contactPhone.tel}`}
+            aria-label={`${t(phoneLabel, lang)} ${contactPhone.display}`}
+            className="group inline-flex min-h-16 items-center justify-center gap-2 border-r border-white/20 bg-primary-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:min-h-20 md:gap-4 md:px-8 md:text-base"
           >
-            {t(label, lang)}
+            <IconPhone className="h-5 w-5 shrink-0" stroke={1.9} aria-hidden="true" />
+            <span className="flex min-w-0 flex-col items-start leading-tight">
+              <span className="text-[0.68rem] font-medium text-white/80 sm:text-xs">
+                {t(phoneLabel, lang)}
+              </span>
+              <span className="whitespace-nowrap tabular-nums tracking-[0.06em]">
+                {contactPhone.display}
+              </span>
+            </span>
+          </a>
+          <Link
+            href={localizeHref(href, lang)}
+            className="inline-flex min-h-16 items-center justify-center gap-2 bg-accent-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:min-h-20 md:px-8 md:text-base"
+          >
+            <IconFileDescription className="h-5 w-5 shrink-0" stroke={1.9} aria-hidden="true" />
+            <span>{t(requestLabel, lang)}</span>
           </Link>
         </div>
-      </div>
+      </aside>
     </>
   );
 }

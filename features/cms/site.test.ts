@@ -99,6 +99,8 @@ function otherSiteBlocks(): CmsBlock[] {
       secondary: bi("s"),
       contact: bi("c"),
       primary_href: bi("/contact"),
+      sticky_phone_label: bi("電話をかける"),
+      sticky_request_label: bi("資料請求"),
     }),
     simple("site-ui-labels", 3, {
       menu_toggle_label: bi("m"),
@@ -311,6 +313,12 @@ async function main(): Promise<void> {
     const result = mapSite(blocks);
     assert.equal(result.cta.primaryHref, "/contact");
     assert.deepEqual(result.nav[0]?.shortLabel, bi("サービス"));
+  });
+
+  test("mapSite() exposes dedicated sticky CTA labels from site-cta", () => {
+    const result = mapSite(siteBlocks(liveOrderLegalBlocks()));
+    assert.deepEqual(result.cta.stickyPhoneLabel, bi("電話をかける"));
+    assert.deepEqual(result.cta.stickyRequestLabel, bi("資料請求"));
   });
 
   test("a nav item without short_label stays hamburger-only", () => {
