@@ -83,6 +83,8 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "secondary", label: "Secondary CTA", field_type: "text", localizable: true, required: false, sort_order: 1 },
       { name: "contact", label: "Contact CTA", field_type: "text", localizable: true, required: false, sort_order: 2 },
       { name: "primary_href", label: "Primary CTA href", field_type: "text", localizable: false, required: false, sort_order: 3 },
+      { name: "sticky_phone_label", label: "Sticky CTA phone label", field_type: "text", localizable: true, required: false, sort_order: 4 },
+      { name: "sticky_request_label", label: "Sticky CTA request-information label", field_type: "text", localizable: true, required: false, sort_order: 5 },
     ],
   },
   {

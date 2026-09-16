@@ -43,7 +43,16 @@ export type SiteContent = {
   };
   nav: { href: string; label: Bilingual; shortLabel?: Bilingual }[];
   contactPhone: { display: string; tel: string; note: Bilingual };
-  cta: { primary: Bilingual; secondary: Bilingual; contact: Bilingual; primaryHref: string };
+  cta: {
+    primary: Bilingual;
+    secondary: Bilingual;
+    contact: Bilingual;
+    /** Optional during the additive rollout; bundled defaults keep the
+     * sticky bar renderable before the published site page is reseeded. */
+    stickyPhoneLabel?: Bilingual;
+    stickyRequestLabel?: Bilingual;
+    primaryHref: string;
+  };
   ui: {
     menuToggleLabel: Bilingual;
     langToggleLabel: Bilingual;
@@ -160,6 +169,12 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
     secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
     contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
+    stickyPhoneLabel: optionalBi(ctaBlock.data, "sticky_phone_label", "site/site-cta"),
+    stickyRequestLabel: optionalBi(
+      ctaBlock.data,
+      "sticky_request_label",
+      "site/site-cta",
+    ),
     primaryHref: requiredUrl(ctaBlock.data, "primary_href", "site/site-cta"),
   };
 

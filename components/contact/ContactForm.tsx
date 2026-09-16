@@ -371,9 +371,9 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
           aria-live="polite"
           className={`min-h-5 text-sm leading-relaxed ${
             statusIsFailure
-              ? "text-red-600 dark:text-red-400"
+              ? "text-red-600"
               : statusIsSuccess
-                ? "text-emerald-700 dark:text-emerald-400"
+                ? "text-emerald-700"
                 : "text-muted"
           }`}
           {...(status !== "idle" && status !== "sending" && status.status === "error"

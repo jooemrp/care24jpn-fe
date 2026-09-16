@@ -7,6 +7,7 @@ import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 
 export function HomeFlowSection({
   content,
@@ -18,7 +19,7 @@ export function HomeFlowSection({
   return (
     <Section surface heading={content.heading} lang={lang}>
       {content.steps.length > 0 ? (
-        <ol className="mx-auto grid max-w-5xl grid-cols-1 gap-y-8 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start md:gap-x-1 lg:gap-x-2">
+        <ol className="mx-auto grid max-w-6xl grid-cols-1 gap-y-8 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start md:gap-x-1 lg:gap-x-2">
           {content.steps.flatMap((step, index) => {
             const last = index === content.steps.length - 1;
             const nodes = [
@@ -38,8 +39,8 @@ export function HomeFlowSection({
                 <h3 className="mt-5 text-lg font-bold leading-snug text-heading md:text-base lg:text-lg">
                   {t(step.title, lang)}
                 </h3>
-                <p className="mt-2 max-w-[14rem] whitespace-pre-line text-sm leading-relaxed text-body">
-                  {t(step.body, lang)}
+                <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-body [text-wrap:balance] lg:max-w-[18rem] lg:text-[13px]">
+                  <ResponsiveCopy text={step.body} lang={lang} mode="desktop-only" />
                 </p>
               </li>,
             ];

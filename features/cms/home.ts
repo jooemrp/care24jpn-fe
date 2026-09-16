@@ -19,6 +19,7 @@ import {
   type BlockTypeList,
 } from "./fields";
 import type { CmsBlock } from "./types";
+import { replaceExactBilingual } from "./legacy-copy";
 import { home, type home as HomeCopy } from "@/constants/copy";
 import type { HomeContent } from "@/features/home/types";
 
@@ -324,10 +325,13 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       ),
     },
     note: requiredBi(nursingCourseBlock.data, "note", "home/home-nursing-course"),
-    medicalNote: requiredBi(
-      nursingCourseBlock.data,
-      "medical_note",
-      "home/home-nursing-course",
+    medicalNote: replaceExactBilingual(
+      requiredBi(nursingCourseBlock.data, "medical_note", "home/home-nursing-course"),
+      home.nursingCourse.medicalNote,
+      {
+        ja: "医療行為を必要とする場合は必ず医師の指示書が必要になります",
+        en: "A doctor's written instructions are strictly required if medical procedures are needed.",
+      },
     ),
     fees: nursingFees,
     panel: {
@@ -426,12 +430,20 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     },
     user: {
       eyebrow: requiredBi(applyBlock.data, "user_eyebrow", "home/home-apply"),
-      label: requiredBi(applyBlock.data, "user_label", "home/home-apply"),
+      label: replaceExactBilingual(
+        requiredBi(applyBlock.data, "user_label", "home/home-apply"),
+        home.apply.user.label,
+        { ja: "お申込みはこちらから" },
+      ),
       href: requiredUrl(applyBlock.data, "user_href", "home/home-apply"),
     },
     staff: {
       eyebrow: requiredBi(applyBlock.data, "staff_eyebrow", "home/home-apply"),
-      label: requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
+      label: replaceExactBilingual(
+        requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
+        home.apply.staff.label,
+        { ja: "登録はこちらから" },
+      ),
       href: requiredUrl(applyBlock.data, "staff_href", "home/home-apply"),
     },
   };
@@ -465,7 +477,20 @@ function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact
     heading: requiredBi(data, "heading", "home/home-contact"),
     phone,
     hours: requiredBi(data, "hours", "home/home-contact"),
-    isms: requiredBi(data, "isms", "home/home-contact"),
+    isms: replaceExactBilingual(
+      requiredBi(data, "isms", "home/home-contact"),
+      home.contact.isms,
+      {
+        ja: [
+          "メディカルインフォマティクス株式会社は情報セキュリティ\nマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+          "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
+        ],
+        en: [
+          "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security\nmanagement systems (ISMS).",
+          "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
+        ],
+      },
+    ),
     micsLogo: requiredImageUrl(data, "mics_logo", "home/home-contact"),
     isoLogo: requiredImageUrl(data, "iso_logo", "home/home-contact"),
     micsLogoAlt: requiredBi(data, "mics_logo_alt", "home/home-contact"),

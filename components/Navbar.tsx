@@ -225,7 +225,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
               width={LOGO_INTRINSIC_WIDTH}
               height={LOGO_INTRINSIC_HEIGHT}
               priority
-              className={`h-auto w-28 origin-left sm:w-36 ${MOTION} ${
+                className={`h-auto w-28 origin-left max-[350px]:w-24 sm:w-36 ${MOTION} ${
                 condensed ? "scale-[0.78]" : "scale-100"
               }`}
             />
@@ -255,7 +255,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                           href={href}
                           aria-current={active ? "page" : undefined}
                           aria-label={t(item.label, lang)}
-                          className={`block rounded-full px-2.5 py-1.5 text-sm font-medium transition ${HIT_AREA} ${
+                          className={`block whitespace-nowrap rounded-full px-1 py-1.5 text-sm font-medium transition sm:px-2.5 ${HIT_AREA} ${
                             active
                               ? "bg-primary-light text-primary"
                               : "text-heading hover:bg-primary-light/60 hover:text-primary"

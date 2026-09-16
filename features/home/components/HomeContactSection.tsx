@@ -75,7 +75,9 @@ export function HomeContactSection({
               className="h-[4.5rem] w-auto"
             />
           </div>
-          <p className="whitespace-pre-line text-left text-xs leading-relaxed text-body">{t(content.isms, lang)}</p>
+          <p className="w-full max-w-none whitespace-pre-line text-left text-[11px] leading-relaxed text-body max-[350px]:text-[9px] sm:w-auto sm:max-w-md sm:text-xs">
+            {t(content.isms, lang)}
+          </p>
         </div>
       </div>
     </Section>

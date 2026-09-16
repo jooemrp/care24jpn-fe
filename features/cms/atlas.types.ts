@@ -390,6 +390,8 @@ export interface SiteCta {
   secondary?: string; // localizable
   contact?: string; // localizable
   primary_href?: string;
+  sticky_phone_label?: string; // localizable
+  sticky_request_label?: string; // localizable
 }
 
 /** Site — Contact Phone (content type: "site-contact-phone") */

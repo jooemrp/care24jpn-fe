@@ -111,14 +111,6 @@ const ALLOWLIST: Array<Binding & { reason: string }> = [
       "Same pattern as :299, one .map() callback below, in the mobile " +
       "nav menu.",
   },
-  {
-    file: "components/StickyCta.tsx",
-    line: 55,
-    content: "localized",
-    reason:
-      "const localized = localizeHref(href, lang) is assigned earlier in " +
-      "the same component body (StickyCta.tsx).",
-  },
 ];
 
 function listTsxFiles(dir: string, out: string[]): string[] {

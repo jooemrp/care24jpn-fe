@@ -129,7 +129,7 @@ function buildBlocks(
     translations: en({ note: contactPhone.note.en }),
   });
 
-  // position 2 — site_cta: primary / secondary / contact / primary_href
+  // position 2 — site_cta: shared labels, sticky labels, and primary href
   blocks.push({
     block_type_id: blockTypeIds.site_cta,
     parent_id: null,
@@ -139,11 +139,15 @@ function buildBlocks(
       secondary: cta.secondary.ja,
       contact: cta.contact.ja,
       primary_href: cta.primaryHref,
+      sticky_phone_label: cta.stickyPhoneLabel.ja,
+      sticky_request_label: cta.stickyRequestLabel.ja,
     },
     translations: en({
       primary: cta.primary.en,
       secondary: cta.secondary.en,
       contact: cta.contact.en,
+      sticky_phone_label: cta.stickyPhoneLabel.en,
+      sticky_request_label: cta.stickyRequestLabel.en,
     }),
   });
 

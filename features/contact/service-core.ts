@@ -1,7 +1,7 @@
 import {
   contactResultFromUpstream,
   type ContactSubmitResult,
-} from "./status-copy";
+} from "./status-copy.ts";
 
 export const CONTACT_BODY_LIMIT = 16 * 1024;
 export const CONTACT_TIMEOUT_MS = 10_000;

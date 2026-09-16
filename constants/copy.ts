@@ -71,6 +71,8 @@ export const cta = {
   primary: { ja: "無料相談を予約する", en: "Book a free consultation" } satisfies Bilingual,
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
   contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
+  stickyPhoneLabel: { ja: "電話をかける", en: "Call" } satisfies Bilingual,
+  stickyRequestLabel: { ja: "資料請求", en: "Request information" } satisfies Bilingual,
   primaryHref: "/contact",
 };
 
@@ -497,8 +499,8 @@ export const home = {
       en: "*Please see the price list for details.",
     } satisfies Bilingual,
     medicalNote: {
-      ja: "医療行為を必要とする場合は必ず医師の指示書が必要になります",
-      en: "A doctor's written instructions are strictly required if medical procedures are needed.",
+      ja: "ご利用には主治医からの指示書が必要です。\n必要に応じて、ケアマネージャーやソーシャルワーカー、介護保険サービス事業所と連携し、安全で適切なケアを行います。",
+      en: "A written order from your attending physician is required to use this service.\nAs needed, we coordinate with care managers, social workers, and long-term care insurance providers to deliver safe, appropriate care.",
     } satisfies Bilingual,
     fees: [
       {
@@ -748,7 +750,7 @@ export const home = {
         ja: "サービスをご利用されたい方",
         en: "For those who wish to use our service",
       } satisfies Bilingual,
-      label: { ja: "お申込みはこちらから", en: "Apply here" } satisfies Bilingual,
+      label: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
       // Verbatim from app/[lang]/page.tsx:458 — the user-registration portal
       // this banner already links to.
       href: "https://portal.care24.jp/register",
@@ -758,7 +760,7 @@ export const home = {
         ja: "お仕事を希望される方",
         en: "For those seeking employment",
       } satisfies Bilingual,
-      label: { ja: "登録はこちらから", en: "Register here" } satisfies Bilingual,
+      label: { ja: "登録はこちら", en: "Register here" } satisfies Bilingual,
       // Verbatim from app/[lang]/page.tsx:465 — the caregiver-registration
       // portal this banner already links to. This fallback previously said
       // "/fees" (the wage table), which was never what the page rendered;
@@ -790,8 +792,8 @@ export const home = {
       en: "[Reception Hours] Weekdays 9:00 AM – 6:00 PM",
     } satisfies Bilingual,
     isms: {
-      ja: "メディカルインフォマティクス株式会社は情報セキュリティ\nマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-      en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security\nmanagement systems (ISMS).",
+      ja: "メディカルインフォマティクス株式会社は\n情報セキュリティマネジメントシステム（ISMS）の\n国際規格である「ISO27001」を取得しております。",
+      en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for\ninformation security management systems (ISMS).",
     } satisfies Bilingual,
     // Verbatim from app/[lang]/page.tsx:511. Already language-neutral (a
     // company name + Latin abbreviation), so en === ja is not a placeholder.
