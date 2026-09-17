@@ -747,8 +747,8 @@ export const home = {
         en: "Consultations and estimates are free. We support you and your family's\nchallenges.",
       } satisfies Bilingual,
       bodyMobile: {
-        ja: "ご相談・お見積りは無料です。あなたやご家族の「困った」を私たちがサポートします。",
-        en: "Consultations and estimates are free. We support you and your family's challenges.",
+        ja: "ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。",
+        en: "Consultations and estimates are free. We support you and your family's\nchallenges.",
       } satisfies Bilingual,
       cta: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
       href: "https://portal.care24.jp/register",
@@ -875,8 +875,8 @@ export const home = {
         en: "Payment is made by bank transfer (in advance).",
       } satisfies Bilingual,
       bodyMobile: {
-        ja: "お支払いは銀行振込（前払い）となります。",
-        en: "Payment is made by bank transfer (in advance).",
+        ja: "お支払いは\n銀行振込（前払い）となります。",
+        en: "Payment is made by\nbank transfer (in advance).",
       } satisfies Bilingual,
       settleNote: { ja: "", en: "" } satisfies Bilingual,
       icon: {

@@ -279,10 +279,13 @@ async function main(): Promise<void> {
 
     assert.match(
       html,
-      /md:hidden whitespace-pre-line[^>]*>ご相談・お見積りは無料です。あなたやご家族の「困った」を私たちがサポートします。<\/span>/,
+      /md:hidden whitespace-pre-line[^>]*>ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。<\/span>/,
     );
     assert.match(html, /mx-auto mt-3 max-w-2xl text-\[13px\] leading-relaxed text-body md:text-lg/);
-    assert.match(html, /md:hidden whitespace-pre-line[^>]*>お支払いは銀行振込（前払い）となります。<\/span>/);
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>お支払いは\n銀行振込（前払い）となります。<\/span>/,
+    );
     assert.match(
       html,
       /mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm/,
