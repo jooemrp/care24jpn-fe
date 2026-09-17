@@ -4,6 +4,7 @@ import Link from "next/link";
 import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
+import { isCmsFieldErrorMarker } from "@/features/cms/fields";
 import type { SupporterRates } from "@/constants/pricing";
 import { formatYen } from "@/features/rates/format-yen";
 import type { Bilingual } from "@/constants/copy";
@@ -75,12 +76,18 @@ export function PricingRatesContent({
           {t(rates.pricing.paymentNote, lang)}
         </p>
         <p className="mt-4 text-base text-body">
-          <Link
-            href={localizeHref(rates.pricing.cancellationHref, lang)}
-            className="font-medium text-primary underline-offset-2 hover:underline"
-          >
-            {t(rates.pricing.cancellationLinkLabel, lang)}
-          </Link>
+          {isCmsFieldErrorMarker(rates.pricing.cancellationHref) ? (
+            <span role="alert" className="font-mono text-sm text-danger-text">
+              {rates.pricing.cancellationHref}
+            </span>
+          ) : (
+            <Link
+              href={localizeHref(rates.pricing.cancellationHref, lang)}
+              className="font-medium text-primary underline-offset-2 hover:underline"
+            >
+              {t(rates.pricing.cancellationLinkLabel, lang)}
+            </Link>
+          )}
         </p>
       </Section>
     </>

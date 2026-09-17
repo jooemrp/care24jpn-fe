@@ -15,6 +15,7 @@ import {
   requiredJa,
   requiredNumber,
   requiredUrl,
+  requiredUrlOrFieldError,
   type BlockTypeList,
 } from "./fields";
 import type { Bilingual, CmsBlock } from "./types";
@@ -207,10 +208,11 @@ export function mapPricingCopy(blocks: CmsBlock[]): PricingCopy {
       "cancellation_label",
       "pricing/pricing-meta",
     ),
-    cancellationHref: requiredUrl(
+    cancellationHref: requiredUrlOrFieldError(
       metaBlock.data,
       "cancellation_href",
       "pricing/pricing-meta",
+      "rates.pricing.cancellationHref",
     ),
     paymentNote: requiredBi(metaBlock.data, "payment_note", "pricing/pricing-meta"),
     paymentIcon: (() => {

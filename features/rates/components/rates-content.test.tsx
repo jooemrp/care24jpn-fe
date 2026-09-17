@@ -141,6 +141,28 @@ async function main(): Promise<void> {
     assert.match(feesHtml, /There is no content to display yet\./);
     assert.doesNotMatch(`${pricingHtml}${feesHtml}`, /JPY 0|¥0/);
   });
+
+  test("a malformed cancellation URL stays a visible field diagnostic instead of crashing pricing", () => {
+    const malformedRates: RatesContent = {
+      ...rates,
+      pricing: {
+        ...rates.pricing,
+        cancellationHref:
+          "[cms-field-error: rates.pricing.cancellationHref (pricing/pricing-meta.cancellation_href)]",
+      },
+    };
+    const html = renderToStaticMarkup(
+      React.createElement(PricingRatesContent, {
+        rates: malformedRates,
+        lang: "ja",
+        emptyLabel: "表示できるコンテンツはありません。",
+      }),
+    );
+
+    assert.match(html, /role="alert"/);
+    assert.match(html, /pricing\/pricing-meta\.cancellation_href/);
+    assert.doesNotMatch(html, /href="\[cms-field-error/);
+  });
 }
 
 void main();

@@ -102,6 +102,8 @@
         <li>Payment, medical note, ISMS, apply labels, and CTA labels render the API field directly.</li>
         <li>Required CTA fields are required by the CMS mapper; missing text is exposed as a visible <code>[missing: ...]</code> marker instead of silently borrowing hardcoded copy.</li>
         <li>The isolated MICS link field <code>content.micsHref</code> renders a field-specific <code>[cms-field-error: ...]</code> diagnostic when empty or malformed, so that one bad URL does not crash the homepage.</li>
+        <li>The live malformed <code>pricing/pricing-meta.cancellation_href</code> field is isolated the same way: <code>/pricing</code> remains usable and shows <code>[cms-field-error: rates.pricing.cancellationHref (...)]</code> instead of returning HTTP 500.</li>
+        <li>Runtime metadata no longer imports the hardcoded SEO seed module; titles, descriptions, og:image values, and sitemap <code>lastModified</code> continue to come from Atlas, while <code>constants/seo-routes.ts</code> contains only route-to-CMS wiring.</li>
         <li>The sticky CTA renders the API <code>sticky_request_label</code> directly, including the client-requested <code>お問合せ</code> label.</li>
         <li>Loading, error, retry, empty, and contact-form status labels are required Atlas fields; missing values surface a visible marker rather than a bundled fallback.</li>
       </ul>
@@ -342,6 +344,7 @@
         <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
         <li>Production build (<code>pnpm build</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
         <li>Fresh production server (<code>pnpm start</code>) returned <strong>HTTP 200</strong> on both <code>http://127.0.0.1:3000/</code> and <code>http://192.168.1.3:3000/</code>; the rendered HTML contained neither <code>Application error</code> nor <code>Minified React error</code>.</li>
+        <li>Fresh route smoke check: all 17 public JA/EN routes returned <strong>HTTP 200</strong>; <code>/pricing</code> visibly rendered a field-specific diagnostic for the malformed CMS cancellation URL instead of a page-wide error.</li>
         <li>The live homepage API now returns the Atlas hero media URL ending in <code>hero-preview.jpg</code>; the hero CTA destinations are also read from Atlas. The fetched image matches the production composition and is used by the rendered page.</li>
         <li>Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone <code>は、</code> or <code>方</code>.</li>
         <li>Project agent rule saved in <code>AGENTS.md</code>: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.</li>

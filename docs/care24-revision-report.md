@@ -20,6 +20,8 @@ The previously failing visual items have been updated:
 - Request 24 / sheet row 26: `処方箋` text was removed from the document icon.
 - Shared query/loading/error labels and contact-form status messages now resolve from required Atlas API fields; runtime rendering no longer imports bundled copy or uses a URL fallback. The live `site` page was updated without overwriting its existing dashboard edits.
 - The isolated `content.micsHref` field now renders a field-specific `[cms-field-error: ...]` diagnostic when empty or malformed, so one bad CMS URL cannot become a project-wide React Application error.
+- The live malformed `pricing/pricing-meta.cancellation_href` field is now isolated the same way: `/pricing` remains usable and shows `[cms-field-error: rates.pricing.cancellationHref (...)]` instead of returning HTTP 500.
+- Runtime metadata no longer imports the hardcoded SEO seed module; titles, descriptions, og:image values, and sitemap `lastModified` continue to come from Atlas, while `constants/seo-routes.ts` contains only route-to-CMS wiring.
 
 Requests 1 and 4 were already implemented in the current branch and were rechecked in the browser. Physical-device verification and final client sign-off are still required for those items.
 
@@ -85,6 +87,7 @@ The following screenshots are the browser QA evidence referenced in the table ab
 - Local ESLint on all changed files: **passed**.
 - Production build (`pnpm build`): **exit 0** (fresh run; TypeScript and 32/32 static pages completed).
 - Fresh production server (`pnpm start`) returned **HTTP 200** on both `http://127.0.0.1:3000/` and `http://192.168.1.3:3000/`; the rendered HTML contained neither `Application error` nor `Minified React error`.
+- Fresh route smoke check: all 17 public JA/EN routes returned **HTTP 200**; `/pricing` visibly rendered a field-specific diagnostic for the malformed CMS cancellation URL instead of a page-wide error.
 - The live homepage API now returns the new Atlas hero media URL ending in `hero-preview.jpg`; `home-hero.cta_primary_href` and `home-hero.cta_secondary_href` are also read from Atlas. The fetched image matches the production composition and is used by the rendered page.
 - Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone `は、` or `方`.
 - Project agent rule saved in `AGENTS.md`: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.

@@ -16,6 +16,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - A missing or malformed CMS field must not take down the whole project when
   the affected field can be isolated. Render a visible, field-specific
   diagnostic such as `content.micsHref` and keep unrelated sections usable.
+- URL fields with a local presentation boundary (for example a pricing policy
+  link) must use the same field-specific diagnostic path instead of throwing a
+  route-level error or creating a broken `<a>` element.
 - Route/page-level errors are reserved for unavailable page structure or a
   failed data request; they must retain a useful diagnostic instead of only a
   generic production "Application error" message.

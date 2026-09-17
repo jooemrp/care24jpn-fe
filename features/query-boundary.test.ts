@@ -128,6 +128,7 @@ test("shared shell uses strict CMS content for footer and JSON-LD inputs", () =>
   assert.doesNotMatch(jsonLd, /fallbackCompany|from ["']@\/constants\/copy/);
   assert.match(pageMetadata, /getPageMetaStrict/);
   assert.doesNotMatch(pageMetadata, /fallbackOgImage/);
+  assert.doesNotMatch(pageMetadata, /@\/constants\/seo["']/);
   assert.doesNotMatch(legalDocPage, /tocLabel\?|目次|Table of Contents/);
 });
 
@@ -149,7 +150,10 @@ test("home and pricing CTAs render API-owned destinations and phone values", () 
   assert.match(homeMapper, /requiredUrlOrFieldError\(\s*data,\s*"mics_href"/);
   assert.match(ratesView, /rates\.pricing\.cancellationHref/);
   assert.doesNotMatch(ratesView, /"\/cancellation-policy"/);
-  assert.match(ratesMapper, /requiredUrl\(\s*metaBlock\.data,\s*"cancellation_href"/);
+  assert.match(
+    ratesMapper,
+    /requiredUrlOrFieldError\(\s*metaBlock\.data,\s*"cancellation_href"/,
+  );
 });
 
 test("pricing UI does not bundle the seed pricing data module", () => {
