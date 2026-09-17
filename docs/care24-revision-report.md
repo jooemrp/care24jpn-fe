@@ -70,10 +70,10 @@ The following screenshots are the browser QA evidence referenced in the table ab
 
 ## Verification performed
 
-- Focused homepage regression tests: **10/10 passed** (fresh run; includes the medical-copy regression cases).
+- Focused homepage regression tests: **9/9 passed** (fresh run; includes the medical-copy regression cases).
 - Responsive-copy tests: **2/2 passed** (fresh run).
 - Sticky-CTA tests: **2/2 passed** (fresh run).
-- Full project suite (`pnpm test`): **exit 0; all invoked suites passed**.
+- Baseline Node test suite: **161/161 passed**. The repository `pnpm test` wrapper was not used as a pass claim because it invokes a network-dependent `npx` step that returned `fetch failed` in this workstation.
 - Local ESLint on all changed files: **passed**.
 - Production build (`pnpm build`): **exit 0** (fresh run; TypeScript and 32/32 static pages completed).
 - Production-build browser QA at 375px mobile and 1280px desktop: completed; screenshots are attached above. The menu-open check was performed after scrolling to `scrollY=900`, and the desktop CTA check after scrolling past the FV.

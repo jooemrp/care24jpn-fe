@@ -88,10 +88,10 @@
       <div class="summary">
         <div class="metric"><strong>24</strong><span>request rows audited</span></div>
         <div class="metric"><strong>59</strong><span>embedded images reviewed</span></div>
-        <div class="metric"><strong>exit 0</strong><span>full test suite</span></div>
+        <div class="metric"><strong>161/161</strong><span>baseline tests</span></div>
         <div class="metric"><strong>exit 0</strong><span>production build</span></div>
       </div>
-      <div class="notice"><strong>External follow-up:</strong> Row 9 needs client confirmation because the workbook has no additional instruction or final OK status. Real-smartphone verification is also still required; no iOS/device provider is connected to this workstation.</div>
+      <div class="notice"><strong>External follow-up:</strong> Request 7 (sheet row 9) is a duplicate/reference of Request 8 (sheet row 10), which has the client status <code>OK です</code>; no separate change is required. Row 23 (sheet row 25) contains only a task number and still needs client clarification. Real-smartphone verification is also still required; no iOS/device provider is connected to this workstation.</div>
     </header>
 
     <section id="data-contract">
@@ -311,10 +311,10 @@
     <section>
       <h2>Verification performed</h2>
       <ul class="checks">
-        <li>Focused homepage regression tests: <strong>10/10 passed</strong>, including the medical-copy regression cases.</li>
+        <li>Focused homepage regression tests: <strong>9/9 passed</strong>, including the medical-copy regression cases.</li>
         <li>Responsive-copy tests: <strong>2/2 passed</strong>.</li>
         <li>Sticky-CTA tests: <strong>2/2 passed</strong>.</li>
-        <li>Full project suite (<code>pnpm test</code>): <strong>exit 0; all invoked suites passed</strong>.</li>
+        <li>Baseline Node test suite: <strong>161/161 passed</strong>. The repository <code>pnpm test</code> wrapper was not used as a pass claim because its network-dependent <code>npx</code> step returned <code>fetch failed</code> on this workstation.</li>
         <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
         <li>Production build (<code>pnpm build</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
         <li>Production-build browser QA at 375px mobile and 1280px desktop completed. The menu-open check was performed after scrolling to <code>scrollY=900</code>, and the desktop CTA check after scrolling past the FV.</li>
