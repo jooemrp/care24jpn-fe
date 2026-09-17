@@ -29,7 +29,7 @@ Requests 1 and 4 were already implemented in the current branch and were recheck
 | 4 | 6 | Sticky Phone + Contact CTA after FV | Current branch has full-width desktop CTA, pink `お問合せ` side, stronger button affordance, and mobile split CTA. | [Production desktop screenshot](../qa-final-desktop.png), [earlier desktop screenshot](../audit-after-sticky-desktop.png) |
 | 5 | 7 | Footnote color under supported area | Workbook status is OK. | Workbook row 7 |
 | 6 | 8 | Mobile line break and CTA visibility while hamburger menu is open | Workbook status is OK; production-build browser check at 375px and scrollY 900 confirms the fixed bottom CTA remains visible over the open menu. | [Production menu-open screenshot](../qa-final-menu-mobile.png), [earlier screenshot](../audit-after-menu-mobile.png) |
-| 7 | 9 | Qualified staff line break | Duplicate/reference row with no final OK status or additional feedback in the workbook. No separate code change can be derived; pending client confirmation. | Workbook row 9 images; [source workbook](/Users/ilham/Downloads/care24Japan%20website%20revision(3).xlsx) |
+| 7 | 9 | Qualified staff line break | This is a duplicate/reference of Request 8 (sheet row 10). Row 10 carries the client status `OK です`, and the same implementation covers both rows; no separate code change is needed. | Workbook row 9 images; Request 8 / sheet row 10 status |
 | 8 | 10 | Qualified staff line break | Workbook status is OK. | Workbook row 10 |
 | 9 | 11 | Minimum two-hour line break | Workbook status is OK. | Workbook row 11 |
 | 10 | 12 | Insurance-excluded support line break | Workbook status is OK. | Workbook row 12 |
