@@ -21,3 +21,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   generic production "Application error" message.
 - Before reporting a change as complete, run the relevant tests, `pnpm build`,
   and a production `pnpm start` smoke check.
+
+## Care24 responsive typography rules
+
+- Never ship a responsive layout that leaves a single character, particle,
+  short word, or other visibly orphaned text on its own line at any supported
+  viewport size. Check at minimum 320px, 375px, desktop, and any breakpoint
+  touched by the change.
+- Keep copy API-owned; solve orphaned wrapping with responsive layout or
+  typography (for example balanced wrapping, appropriate width, or spacing),
+  not by truncating or silently rewriting CMS text.
