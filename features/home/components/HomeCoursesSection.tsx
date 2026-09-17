@@ -40,7 +40,7 @@ export function HomeCoursesSection({
   return (
     <>
       <Section id="service-details" surface lang={lang}>
-        <h2 className="animate-fade-up whitespace-pre-line text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
+        <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
           {t(careCourse.leadIn, lang)}
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">
@@ -138,7 +138,7 @@ export function HomeCoursesSection({
       </Section>
 
       <Section lang={lang}>
-        <h2 className="animate-fade-up whitespace-pre-line text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
+        <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
           {t(nursingCourse.leadIn, lang)}
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">

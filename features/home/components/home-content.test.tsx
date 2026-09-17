@@ -301,6 +301,16 @@ async function main(): Promise<void> {
     );
     assert.match(html, /class="h-14 w-14 shrink-0 sm:h-24 sm:w-24 md:h-28 md:w-28"/);
     assert.match(html, /サービスをご利用の方/);
+    assert.match(
+      html,
+      /whitespace-pre-line \[text-wrap:balance\] text-center text-2xl font-bold leading-snug text-heading md:text-3xl/,
+      "mobile nursing heading should balance wrapped Japanese lines",
+    );
+    assert.match(
+      html,
+      /col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white \[text-wrap:balance\]/,
+      "mobile apply eyebrow should balance instead of leaving a single character",
+    );
     assert.doesNotMatch(html, />処</);
     assert.doesNotMatch(html, />方</);
     assert.doesNotMatch(html, />箋</);

@@ -14,9 +14,12 @@ The previously failing visual items have been updated:
 - Request 15 / sheet row 17: payment copy now breaks after `お支払いは`; desktop typography keeps the second line intact.
 - Request 17 / sheet row 19: pricing link now breaks after `を` on mobile.
 - Request 18 / sheet row 20: medical note mobile line breaks now follow the client specification; the icon is smaller on mobile and no longer contains `処方箋`.
-- Request 19 / sheet row 21: user banner eyebrow now renders the CMS API value `サービスをご利用の方`.
+- Request 19 / sheet row 21: user banner eyebrow renders the CMS API value `サービスをご利用されたい方`; balanced mobile wrapping removes the lone `方`.
+- Hero media: the published `home-hero.image` field was corrected to the production-matching `_hero-preview.png` photo through an Atlas media record; no runtime image fallback was added.
+- Mobile follow-up QA: at 375px and 320px, the nursing heading and apply-banner eyebrow now use balanced wrapping so `は、` and `方` no longer appear alone.
 - Request 24 / sheet row 26: `処方箋` text was removed from the document icon.
 - Shared query/loading/error labels and contact-form status messages now resolve from required Atlas API fields; runtime rendering no longer imports bundled copy or uses a URL fallback. The live `site` page was updated without overwriting its existing dashboard edits.
+- The isolated `content.micsHref` field now renders a field-specific `[cms-field-error: ...]` diagnostic when empty or malformed, so one bad CMS URL cannot become a project-wide React Application error.
 
 Requests 1 and 4 were already implemented in the current branch and were rechecked in the browser. Physical-device verification and final client sign-off are still required for those items.
 
@@ -24,7 +27,7 @@ Requests 1 and 4 were already implemented in the current branch and were recheck
 
 | Request | Sheet row | Client requirement / status | Update or verification | Evidence |
 |---:|---:|---|---|---|
-| 1 | 3 | Mobile FV order and first-view composition | CTA appears before supported area; hero copy no longer overlaps the image. | [Production mobile FV screenshot](../audit-after-hero-mobile.png) |
+| 1 | 3 | Mobile FV order and first-view composition | CTA appears before supported area; hero copy no longer overlaps the image; the published Atlas hero now uses the same approved photo as production (`_hero-preview.png`). | [Production mobile FV screenshot](../audit-after-hero-mobile.png), [CMS hero after fix](../audit-after-hero-cms-375.png) |
 | 2 | 4 | Add Contact Us beside FAQ | Workbook status is OK. | Workbook row 4 |
 | 3 | 5 | Mobile navigation adjustment | Workbook status is OK. | Workbook row 5 |
 | 4 | 6 | Sticky Phone + Contact CTA after FV | Current branch has full-width desktop CTA, pink `お問合せ` side, stronger button affordance, and mobile split CTA. | [Production desktop screenshot](../qa-final-desktop.png), [earlier desktop screenshot](../audit-after-sticky-desktop.png) |
@@ -42,7 +45,7 @@ Requests 1 and 4 were already implemented in the current branch and were recheck
 | 16 | 18 | Nursing fee/transport notes | Workbook status is OK. | Workbook row 18 |
 | 17 | 19 | Pricing link mobile break | Pricing links now break after `詳しくはこちら（料金ページ）を`; desktop stays one line. | [Mobile screenshot](../audit-after-payment-mobile.png) |
 | 18 | 20 | Medical-note mobile line breaks and prominent document icon | Added the specified mobile line breaks, reduced the mobile icon footprint to prevent lone-character wrapping, and removed `処方箋` lettering. | [Mobile screenshot](../audit-after-medical-mobile.png) |
-| 19 | 21 | Apply-banner wording and wrapping | Changed eyebrow to `サービスをご利用の方`; the previous lone `方` wrap is gone. | [Mobile screenshot](../audit-after-apply-mobile.png), [desktop screenshot](../audit-after-apply-desktop.png) |
+| 19 | 21 | Apply-banner wording and wrapping | Eyebrow renders the CMS API value `サービスをご利用されたい方`; balanced mobile wrapping removes the lone `方` at 375px and 320px. | [375px screenshot](../audit-after-apply-balanced-375.png), [320px screenshot](../audit-after-apply-balanced-320.png), [desktop screenshot](../audit-after-apply-desktop.png) |
 | 20 | 22 | Free consultation link | Workbook status is PASS/OK. | Workbook row 22 |
 | 21 | 23 | Bank-transfer payment section | Workbook status is OK. | Workbook row 23 |
 | 22 | 24 | FAQ pricing link | Workbook status is OK. | Workbook row 24 |
@@ -68,16 +71,23 @@ The following screenshots are the browser QA evidence referenced in the table ab
 ![Production mobile FV](../audit-after-hero-mobile.png)
 ![Production mobile menu with sticky CTA](../qa-final-menu-mobile.png)
 ![Production desktop sticky CTA](../qa-final-desktop.png)
+![CMS hero after fix, 375px](../audit-after-hero-cms-375.png)
+![Nursing heading after fix, 375px](../audit-after-nursing-heading-375.png)
+![Nursing heading after fix, 320px](../audit-after-nursing-heading-320.png)
+![Apply eyebrow after fix, 375px](../audit-after-apply-balanced-375.png)
+![Apply eyebrow after fix, 320px](../audit-after-apply-balanced-320.png)
 
 ## Verification performed
 
-- Focused homepage regression tests: **9/9 passed** (fresh run; includes the medical-copy regression cases).
-- Responsive-copy tests: **2/2 passed** (fresh run).
-- Sticky-CTA tests: **2/2 passed** (fresh run).
+- Fresh focused TypeScript/TSX regression set: **53/53 passed**, including CMS field diagnostics, BFF transient retry, query-boundary checks, homepage rendering, and the 375/320 mobile wrapping cases.
 - Baseline Node test suite: **162/162 passed**. The TypeScript/TSX suites used by the repository test script also passed locally (**150/150** plus the changed-component regression set **44/44**). The repository `pnpm test` wrapper was not used as a pass claim because it invokes a network-dependent `npx` step that returned `fetch failed` in this workstation.
 - Live Atlas verification: `site-ui-labels.query_*` and `site-cta.sticky_*` fields are present in the published API response; the client-requested pink label is API value `お問合せ`, and the existing six nav items/footer state were preserved.
 - Local ESLint on all changed files: **passed**.
 - Production build (`pnpm build`): **exit 0** (fresh run; TypeScript and 32/32 static pages completed).
+- Fresh production server (`pnpm start`) returned **HTTP 200** on both `http://127.0.0.1:3000/` and `http://192.168.1.3:3000/`; the rendered HTML contained neither `Application error` nor `Minified React error`.
+- The live homepage API now returns the new Atlas hero media URL ending in `hero-preview.jpg`; the fetched image matches the production composition and is used by the rendered page.
+- Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone `は、` or `方`.
+- Project agent rule saved in `AGENTS.md`: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.
 - Production-build browser QA at 375px mobile and 1280px desktop: completed; screenshots are attached above. The menu-open check was performed after scrolling to `scrollY=900`, and the desktop CTA check after scrolling past the FV.
 - `pnpm lint` itself could not start because pnpm returned `fetch failed`; the local ESLint binary completed successfully.
 

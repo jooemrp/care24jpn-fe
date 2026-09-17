@@ -100,7 +100,7 @@ function ApplyBanner({
   const style = { animationDelay: `${delay}ms` };
   const children = isPrimary ? (
     <>
-      <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white">
+      <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white [text-wrap:balance]">
         {eyebrow}
       </span>
       <span className="col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">

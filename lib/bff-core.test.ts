@@ -72,6 +72,28 @@ async function main(): Promise<void> {
     }
   });
 
+  test("retries one transient network failure before returning current CMS data", async () => {
+    let attempts = 0;
+    const data = {
+      page: { id: "page-company", slug: "company", status: "published" },
+      blocks: [],
+    };
+
+    const result = await fetchPublicPage("company", {
+      baseUrl: "https://atlas.example.test",
+      apiKey: "atlas_live_test",
+      fetchImpl: async () => {
+        attempts += 1;
+        if (attempts === 1) throw new Error("socket reset");
+        return new Response(JSON.stringify({ success: true, data }), { status: 200 });
+      },
+    });
+
+    assert.equal(result.success, true);
+    assert.equal(attempts, 2);
+    if (result.success) assert.deepEqual(result.data, data);
+  });
+
   test("normalizes an upstream error with trace and field errors", async () => {
     const result = await fetchPublicPage("company", {
       baseUrl: "https://atlas.example.test",

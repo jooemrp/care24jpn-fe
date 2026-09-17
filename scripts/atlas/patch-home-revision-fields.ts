@@ -4,8 +4,9 @@
  *
  * The live homepage can contain dashboard edits, so this script reads the
  * current blocks through the delivery API, changes only fields introduced by
- * the mobile-copy/CTA migration, and updates the complete preserved block
- * list with optimistic locking. SEO is omitted and remains untouched.
+ * the mobile-copy/CTA migration plus the approved hero media, and updates the
+ * complete preserved block list with optimistic locking. SEO is omitted and
+ * remains untouched.
  *
  * Usage: npx tsx scripts/atlas/patch-home-revision-fields.ts
  */
@@ -13,6 +14,7 @@ import { home } from "../../constants/copy";
 import {
   createScriptManagementClient,
   loadEnv,
+  readMediaManifest,
   requireAtlasEnv,
 } from "./lib";
 
@@ -71,14 +73,20 @@ async function fetchPublishedHome(): Promise<RawPageResponse> {
   return envelope.data;
 }
 
-function buildPreservedBlocks(page: RawPageResponse) {
+function buildPreservedBlocks(page: RawPageResponse, heroMediaId: string) {
   const blocks = page.blocks ?? [];
   const translations = new Map(
     (page.block_translations ?? [])
       .filter((row) => row.locale === "en")
       .map((row) => [row.block_id, parseObject(row.data)]),
   );
-  const targets = new Set(["home-pricing-summary", "home-nursing-course", "home-apply", "home-contact"]);
+  const targets = new Set([
+    "home-hero",
+    "home-pricing-summary",
+    "home-nursing-course",
+    "home-apply",
+    "home-contact",
+  ]);
   for (const type of targets) {
     if (blocks.filter((block) => block.type === type).length !== 1) {
       throw new Error(`Expected exactly one ${type} block.`);
@@ -88,6 +96,10 @@ function buildPreservedBlocks(page: RawPageResponse) {
   return blocks.map((block) => {
     const data = parseObject(block.data);
     const enData = translations.get(block.id);
+
+    if (block.type === "home-hero") {
+      Object.assign(data, { image: heroMediaId });
+    }
 
     if (block.type === "home-pricing-summary") {
       Object.assign(data, {
@@ -127,14 +139,23 @@ function buildPreservedBlocks(page: RawPageResponse) {
 }
 
 async function main(): Promise<void> {
+  const heroMedia = readMediaManifest()?.assets["revision/_hero-preview.png"];
+  if (!heroMedia?.id) {
+    throw new Error(
+      'Media manifest is missing "revision/_hero-preview.png". Run scripts/atlas/upload-media.ts first.',
+    );
+  }
+
   const page = await fetchPublishedHome();
   const updatedAt = page.page?.updated_at;
   if (!updatedAt) throw new Error("Published homepage has no updated_at for optimistic locking.");
 
-  const blocks = buildPreservedBlocks(page);
+  const blocks = buildPreservedBlocks(page, heroMedia.id);
   const client = await createScriptManagementClient(120_000);
   await client.pages.update(PAGE_SLUG, { updatedAt, blocks });
-  console.log("updated page/home revision fields: payment_body_mobile, pricing_details_label_mobile, medical_note_mobile, consult_body_mobile, mics_href");
+  console.log(
+    "updated page/home revision fields: hero.image, payment_body_mobile, pricing_details_label_mobile, medical_note_mobile, consult_body_mobile, mics_href",
+  );
   console.log("preserved all live blocks and omitted SEO from the update body");
 }
 

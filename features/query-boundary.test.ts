@@ -152,6 +152,22 @@ test("home and pricing CTAs render API-owned destinations and phone values", () 
   assert.match(ratesMapper, /requiredUrl\(\s*metaBlock\.data,\s*"cancellation_href"/);
 });
 
+test("pricing UI does not bundle the seed pricing data module", () => {
+  const ratesContent = readFileSync(
+    resolve(process.cwd(), "features/rates/components/RatesContent.tsx"),
+    "utf8",
+  );
+  const courseRateCard = readFileSync(
+    resolve(process.cwd(), "components/ui/CourseRateCard.tsx"),
+    "utf8",
+  );
+
+  for (const source of [ratesContent, courseRateCard]) {
+    assert.doesNotMatch(source, /import\s*\{[^}]*formatYen[^}]*\}\s*from\s*["']@\/constants\/pricing/);
+    assert.match(source, /from\s*["']@\/features\/rates\/format-yen["']/);
+  }
+});
+
 test("hydrated query views keep content visible during background refetch", () => {
   const viewContracts = [
     {

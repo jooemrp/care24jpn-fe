@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T10:19:04.866Z",
+  "generated_at": "2026-09-17T14:45:02.731Z",
   "folder": "/marketing-web/",
   "assets": {
     "logo.png": {
@@ -233,6 +233,14 @@
       "height": 640,
       "mime_type": "image/png",
       "uploaded_as": "payment-bank-transfer.png"
+    },
+    "revision/_hero-preview.png": {
+      "id": "01a0afd4-04df-7ed7-ba92-b5a74cb15ab3",
+      "url": "https://horizoon.s3.ap-southeast-1.amazonaws.com/care-24/media/2026/09/01a0afd4-01e5-7569-b31f-932536d42f1c-hero-preview.jpg",
+      "width": 1536,
+      "height": 1024,
+      "mime_type": "image/jpeg",
+      "uploaded_as": "_hero-preview.jpg"
     }
   }
 }
