@@ -131,6 +131,27 @@ test("shared shell uses strict CMS content for footer and JSON-LD inputs", () =>
   assert.doesNotMatch(legalDocPage, /tocLabel\?|目次|Table of Contents/);
 });
 
+test("home and pricing CTAs render API-owned destinations and phone values", () => {
+  const homeContact = readFileSync(
+    resolve(process.cwd(), "features/home/components/HomeContactSection.tsx"),
+    "utf8",
+  );
+  const homeMapper = readFileSync(resolve(process.cwd(), "features/cms/home.ts"), "utf8");
+  const ratesView = readFileSync(
+    resolve(process.cwd(), "features/rates/components/RatesContent.tsx"),
+    "utf8",
+  );
+  const ratesMapper = readFileSync(resolve(process.cwd(), "features/cms/rates.ts"), "utf8");
+
+  assert.match(homeContact, /content\.phoneTel/);
+  assert.match(homeContact, /content\.micsHref/);
+  assert.doesNotMatch(homeContact, /mics\.tokyo|replace\(\/\[\^0-9\+\]/);
+  assert.match(homeMapper, /requiredUrl\(data, "mics_href"/);
+  assert.match(ratesView, /rates\.pricing\.cancellationHref/);
+  assert.doesNotMatch(ratesView, /"\/cancellation-policy"/);
+  assert.match(ratesMapper, /requiredUrl\(\s*metaBlock\.data,\s*"cancellation_href"/);
+});
+
 test("hydrated query views keep content visible during background refetch", () => {
   const viewContracts = [
     {

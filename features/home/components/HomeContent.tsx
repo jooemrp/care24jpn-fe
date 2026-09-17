@@ -37,6 +37,7 @@ export function HomeContentView({
       <HomePricingSection
         content={content.pricingSummary}
         pricingDetailsLink={content.pricingDetailsLink}
+        pricingDetailsLinkMobile={content.pricingDetailsLinkMobile}
         pricingDetailsHref={content.pricingDetailsHref}
         lang={lang}
       />
@@ -45,6 +46,7 @@ export function HomeContentView({
         careCourse={content.careCourse}
         nursingCourse={content.nursingCourse}
         pricingDetailsLink={content.pricingDetailsLink}
+        pricingDetailsLinkMobile={content.pricingDetailsLinkMobile}
         pricingDetailsHref={content.pricingDetailsHref}
         lang={lang}
       />

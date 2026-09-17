@@ -265,8 +265,10 @@ async function main(): Promise<void> {
       nursing_transport_note: home.pricingSummary.nursing.transportNote,
       extension_note: home.pricingSummary.extensionNote,
       pricing_details_label: home.pricingDetailsLink,
+      pricing_details_label_mobile: home.pricingDetailsLinkMobile,
       payment_heading: home.pricingSummary.payment.heading,
       payment_body: home.pricingSummary.payment.body,
+      payment_body_mobile: home.pricingSummary.payment.bodyMobile,
       payment_settle_note: home.pricingSummary.payment.settleNote,
       payment_icon_alt: home.pricingSummary.payment.icon.alt,
       payment_visa_alt: { ja: "", en: "" },
@@ -302,6 +304,7 @@ async function main(): Promise<void> {
       note: home.nursingCourse.note,
       panel_heading: home.nursingCourse.panel.heading,
       medical_note: home.nursingCourse.medicalNote,
+      medical_note_mobile: home.nursingCourse.medicalNoteMobile,
     });
     blocks.push(makeBlock(typeIds, "home_nursing_course", next(), split.ja, split.en));
   }
@@ -432,6 +435,7 @@ async function main(): Promise<void> {
       staff_label: home.apply.staff.label,
       consult_heading: home.apply.consult.heading,
       consult_body: home.apply.consult.body,
+      consult_body_mobile: home.apply.consult.bodyMobile,
       consult_cta: home.apply.consult.cta,
     });
     const ja = {
@@ -467,6 +471,7 @@ async function main(): Promise<void> {
       iso_logo: mediaId(media, "iso27001-bsi.png"),
       mics_logo_alt: home.contact.micsLogoAlt.ja,
       iso_logo_alt: home.contact.isoLogoAlt.ja,
+      mics_href: home.contact.micsHref,
       contact_cta_href: home.contact.ctaHref,
     };
     blocks.push(

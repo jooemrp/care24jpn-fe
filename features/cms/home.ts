@@ -268,6 +268,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     payment: {
       heading: requiredBi(pricingSummaryBlock.data, "payment_heading", pricingContext),
       body: requiredBi(pricingSummaryBlock.data, "payment_body", pricingContext),
+      bodyMobile: requiredBi(
+        pricingSummaryBlock.data,
+        "payment_body_mobile",
+        pricingContext,
+      ),
       settleNote: paymentSettleNote,
       icon: {
         src: requiredImageUrl(pricingSummaryBlock.data, "payment_icon", pricingContext),
@@ -278,6 +283,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   const pricingDetailsLink = requiredBi(
     pricingSummaryBlock.data,
     "pricing_details_label",
+    pricingContext,
+  );
+  const pricingDetailsLinkMobile = requiredBi(
+    pricingSummaryBlock.data,
+    "pricing_details_label_mobile",
     pricingContext,
   );
   const pricingDetailsHref = requiredUrl(
@@ -323,6 +333,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     medicalNote: requiredBi(
       nursingCourseBlock.data,
       "medical_note",
+      "home/home-nursing-course",
+    ),
+    medicalNoteMobile: requiredBi(
+      nursingCourseBlock.data,
+      "medical_note_mobile",
       "home/home-nursing-course",
     ),
     fees: nursingFees,
@@ -419,6 +434,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     consult: {
       heading: requiredBi(applyBlock.data, "consult_heading", "home/home-apply"),
       body: requiredBi(applyBlock.data, "consult_body", "home/home-apply"),
+      bodyMobile: requiredBi(applyBlock.data, "consult_body_mobile", "home/home-apply"),
     },
     user: {
       eyebrow: requiredBi(applyBlock.data, "user_eyebrow", "home/home-apply"),
@@ -449,17 +465,22 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       apply,
       pricingSummary,
       pricingDetailsLink,
+      pricingDetailsLinkMobile,
       pricingDetailsHref,
     },
     contactData: contactBlock.data,
   };
 }
 
-function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact"] {
+function mapContact(
+  data: CmsBlock["data"],
+  contactPhone: { display: string; tel: string },
+): HomeContent["contact"] {
   return {
     leadIn: requiredBi(data, "lead_in", "home/home-contact"),
     heading: requiredBi(data, "heading", "home/home-contact"),
-    phone,
+    phone: contactPhone.display,
+    phoneTel: contactPhone.tel,
     hours: requiredBi(data, "hours", "home/home-contact"),
     isms: requiredBi(data, "isms", "home/home-contact"),
     micsLogo: requiredImageUrl(data, "mics_logo", "home/home-contact"),
@@ -467,6 +488,7 @@ function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact
     micsLogoAlt: requiredBi(data, "mics_logo_alt", "home/home-contact"),
     isoLogoAlt: requiredBi(data, "iso_logo_alt", "home/home-contact"),
     ctaHref: requiredUrl(data, "contact_cta_href", "home/home-contact"),
+    micsHref: requiredUrl(data, "mics_href", "home/home-contact"),
     leadInOrnamentStart: requiredBi(
       data,
       "lead_in_ornament_start",
@@ -479,7 +501,7 @@ function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact
 async function fetchHome(): Promise<HomeContent> {
   const mapped = mapHome(unwrap(await getPageBlocksStrict("home")));
   const { contactPhone } = await getSite();
-  return { ...mapped.rest, contact: mapContact(mapped.contactData, contactPhone.display) };
+  return { ...mapped.rest, contact: mapContact(mapped.contactData, contactPhone) };
 }
 
 /** Deduped per-render (React `cache()`): every server component that calls
@@ -500,7 +522,7 @@ export async function getHomeStrict(): Promise<ApiResult<HomeContent>> {
     return apiSuccess(
       {
         ...mapped.rest,
-        contact: mapContact(mapped.contactData, contactPhone.display),
+        contact: mapContact(mapped.contactData, contactPhone),
       },
       result.traceId,
     );

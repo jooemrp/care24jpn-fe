@@ -14,7 +14,7 @@ The previously failing visual items have been updated:
 - Request 15 / sheet row 17: payment copy now breaks after `お支払いは`; desktop typography keeps the second line intact.
 - Request 17 / sheet row 19: pricing link now breaks after `を` on mobile.
 - Request 18 / sheet row 20: medical note mobile line breaks now follow the client specification; the icon is smaller on mobile and no longer contains `処方箋`.
-- Request 19 / sheet row 21: user banner eyebrow changed to `サービスをご利用の方`, including the CMS legacy-value migration.
+- Request 19 / sheet row 21: user banner eyebrow now renders the CMS API value `サービスをご利用の方`.
 - Request 24 / sheet row 26: `処方箋` text was removed from the document icon.
 
 Requests 1 and 4 were already implemented in the current branch and were rechecked in the browser. Physical-device verification and final client sign-off are still required for those items.
@@ -23,7 +23,7 @@ Requests 1 and 4 were already implemented in the current branch and were recheck
 
 | Request | Sheet row | Client requirement / status | Update or verification | Evidence |
 |---:|---:|---|---|---|
-| 1 | 3 | Mobile FV order and first-view composition | CTA appears before supported area; hero copy no longer overlaps the image. | [Production screenshot](../qa-final-mobile.png), [earlier section screenshot](../audit-after-hero-mobile.png) |
+| 1 | 3 | Mobile FV order and first-view composition | CTA appears before supported area; hero copy no longer overlaps the image. | [Production mobile FV screenshot](../audit-after-hero-mobile.png) |
 | 2 | 4 | Add Contact Us beside FAQ | Workbook status is OK. | Workbook row 4 |
 | 3 | 5 | Mobile navigation adjustment | Workbook status is OK. | Workbook row 5 |
 | 4 | 6 | Sticky Phone + Contact CTA after FV | Current branch has full-width desktop CTA, pink `お問合せ` side, stronger button affordance, and mobile split CTA. | [Production desktop screenshot](../qa-final-desktop.png), [earlier desktop screenshot](../audit-after-sticky-desktop.png) |
@@ -64,7 +64,7 @@ The following screenshots are the browser QA evidence referenced in the table ab
 ![Medical note mobile](../audit-after-medical-mobile.png)
 ![Mobile menu with sticky CTA](../audit-after-menu-mobile.png)
 ![Sticky CTA desktop](../audit-after-sticky-desktop.png)
-![Production mobile FV](../qa-final-mobile.png)
+![Production mobile FV](../audit-after-hero-mobile.png)
 ![Production mobile menu with sticky CTA](../qa-final-menu-mobile.png)
 ![Production desktop sticky CTA](../qa-final-desktop.png)
 

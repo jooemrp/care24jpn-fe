@@ -207,6 +207,11 @@ export function mapPricingCopy(blocks: CmsBlock[]): PricingCopy {
       "cancellation_label",
       "pricing/pricing-meta",
     ),
+    cancellationHref: requiredUrl(
+      metaBlock.data,
+      "cancellation_href",
+      "pricing/pricing-meta",
+    ),
     paymentNote: requiredBi(metaBlock.data, "payment_note", "pricing/pricing-meta"),
     paymentIcon: (() => {
       const src = optionalImageUrl(metaBlock.data, "payment_icon", "pricing/pricing-meta");

@@ -6,16 +6,17 @@ import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
-import { japaneseBreakAfter } from "./home-copy";
 
 export function HomePricingSection({
   content,
   pricingDetailsLink,
+  pricingDetailsLinkMobile,
   pricingDetailsHref,
   lang,
 }: {
   content: HomeContent["pricingSummary"];
   pricingDetailsLink: HomeContent["pricingDetailsLink"];
+  pricingDetailsLinkMobile: HomeContent["pricingDetailsLinkMobile"];
   pricingDetailsHref: HomeContent["pricingDetailsHref"];
   lang: Lang;
 }) {
@@ -57,7 +58,11 @@ export function HomePricingSection({
               lang={lang}
               className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
             >
-              <ResponsivePricingLink text={pricingDetailsLink} lang={lang} />
+              <ResponsivePricingLink
+                text={pricingDetailsLink}
+                mobileText={pricingDetailsLinkMobile}
+                lang={lang}
+              />
             </SafeInternalLink>
           </p>
         </div>
@@ -68,7 +73,12 @@ export function HomePricingSection({
               {t(content.payment.heading, lang)}
             </h2>
             <p className="mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm [text-wrap:balance]">
-              {t(japaneseBreakAfter(content.payment.body, "お支払いは"), lang)}
+              <ResponsiveCopy
+                text={content.payment.body}
+                mobileText={content.payment.bodyMobile}
+                lang={lang}
+                mode="desktop-only"
+              />
             </p>
             {settleNote ? (
               <p className="mt-3 text-sm leading-relaxed text-muted">{settleNote}</p>
@@ -105,15 +115,17 @@ export function HomePricingSection({
 
 function ResponsivePricingLink({
   text,
+  mobileText,
   lang,
 }: {
   text: HomeContent["pricingDetailsLink"];
+  mobileText: HomeContent["pricingDetailsLinkMobile"];
   lang: Lang;
 }) {
   return (
     <ResponsiveCopy
       text={text}
-      mobileText={japaneseBreakAfter(text, "詳しくはこちら（料金ページ）を")}
+      mobileText={mobileText}
       lang={lang}
       mode="desktop-only"
     />

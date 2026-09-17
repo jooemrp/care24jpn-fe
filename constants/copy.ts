@@ -502,6 +502,10 @@ export const home = {
       ja: "ご利用には主治医からの指示書が必要です。\n必要に応じて、ケアマネージャーやソーシャルワーカー、介護保険サービス事業所と連携し、安全で適切なケアを行います。",
       en: "A written order from your attending physician is required to use this service.\nAs needed, we coordinate with care managers, social workers, and long-term care insurance providers to deliver safe, appropriate care.",
     } satisfies Bilingual,
+    medicalNoteMobile: {
+      ja: "ご利用には主治医からの\n指示書が必要です。\n必要に応じて、ケアマネージャーや\nソーシャルワーカー、介護保険\nサービス事業所と連携し、\n安全で適切なケアを行います。",
+      en: "A written order from your attending physician is required to use this service.\nAs needed, we coordinate with care managers, social workers, and long-term care insurance providers to deliver safe, appropriate care.",
+    } satisfies Bilingual,
     fees: [
       {
         label: { ja: "最低利用時間", en: "Minimum usage" } satisfies Bilingual,
@@ -742,6 +746,10 @@ export const home = {
         ja: "ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。",
         en: "Consultations and estimates are free. We support you and your family's\nchallenges.",
       } satisfies Bilingual,
+      bodyMobile: {
+        ja: "ご相談・お見積りは無料です。あなたやご家族の「困った」を私たちがサポートします。",
+        en: "Consultations and estimates are free. We support you and your family's challenges.",
+      } satisfies Bilingual,
       cta: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
       href: "https://portal.care24.jp/register",
     },
@@ -809,14 +817,21 @@ export const home = {
       ja: "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
       en: "BSI ISMS-AC ISO27001 認証マーク（IS 793656）",
     } satisfies Bilingual,
+    // Seeded into Atlas and read from the home_contact block at runtime.
+    micsHref: "https://mics.tokyo/",
     // Verbatim from app/[lang]/page.tsx:541 — non-localizable relative path,
     // resolved through `localizeHref()` at render time same as before.
     ctaHref: "/contact",
+    phoneTel: contactPhone.tel,
   },
 
   pricingDetailsLink: {
     ja: "詳しくはこちら（料金ページ）をご確認ください。",
     en: "For full pricing details, please click here.",
+  } satisfies Bilingual,
+  pricingDetailsLinkMobile: {
+    ja: "詳しくはこちら（料金ページ）を\nご確認ください。",
+    en: "For full pricing details,\nplease click here.",
   } satisfies Bilingual,
 
   // Visual Ref 4 — TOP baseline rates only + payment methods.
@@ -857,6 +872,10 @@ export const home = {
       heading: { ja: "お支払い方法", en: "Payment methods" } satisfies Bilingual,
       body: {
         ja: "お支払いは\n銀行振込（前払い）となります。",
+        en: "Payment is made by bank transfer (in advance).",
+      } satisfies Bilingual,
+      bodyMobile: {
+        ja: "お支払いは銀行振込（前払い）となります。",
         en: "Payment is made by bank transfer (in advance).",
       } satisfies Bilingual,
       settleNote: { ja: "", en: "" } satisfies Bilingual,
@@ -1104,6 +1123,7 @@ export const pricing = {
     ja: "詳しくはこちら（キャンセルポリシー）をご確認ください。",
     en: "For cancellation terms, please click here.",
   } satisfies Bilingual,
+  cancellationHref: "/cancellation-policy",
   paymentNote: {
     ja: "お支払いは銀行振込（前払い）となります。",
     en: "Payment is made by bank transfer (in advance).",

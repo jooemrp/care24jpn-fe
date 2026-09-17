@@ -20,6 +20,7 @@ const rates: RatesContent = {
       ja: "キャンセルポリシーをご確認ください。",
       en: "See the cancellation policy.",
     },
+    cancellationHref: "/cancellation-policy",
     paymentNote: {
       ja: "お支払いは銀行振込（前払い）となります。",
       en: "Payment is made by bank transfer (in advance).",

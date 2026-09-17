@@ -18,18 +18,20 @@ import { t, type Lang } from "@/features/lang/i18n";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
-import { japaneseBreakAfter, mobileMedicalNote, splitBilingual } from "./home-copy";
+import { splitBilingual } from "./home-copy";
 
 export function HomeCoursesSection({
   careCourse,
   nursingCourse,
   pricingDetailsLink,
+  pricingDetailsLinkMobile,
   pricingDetailsHref,
   lang,
 }: {
   careCourse: HomeContent["careCourse"];
   nursingCourse: HomeContent["nursingCourse"];
   pricingDetailsLink: HomeContent["pricingDetailsLink"];
+  pricingDetailsLinkMobile: HomeContent["pricingDetailsLinkMobile"];
   pricingDetailsHref: HomeContent["pricingDetailsHref"];
   lang: Lang;
 }) {
@@ -70,7 +72,11 @@ export function HomeCoursesSection({
                   lang={lang}
                   className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
                 >
-                  <ResponsivePricingLink text={pricingDetailsLink} lang={lang} />
+                  <ResponsivePricingLink
+                    text={pricingDetailsLink}
+                    mobileText={pricingDetailsLinkMobile}
+                    lang={lang}
+                  />
                 </SafeInternalLink>
               </p>
             </div>
@@ -163,7 +169,11 @@ export function HomeCoursesSection({
                   lang={lang}
                   className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
                 >
-                  <ResponsivePricingLink text={pricingDetailsLink} lang={lang} />
+                  <ResponsivePricingLink
+                    text={pricingDetailsLink}
+                    mobileText={pricingDetailsLinkMobile}
+                    lang={lang}
+                  />
                 </SafeInternalLink>
               </p>
             </div>
@@ -202,7 +212,11 @@ export function HomeCoursesSection({
           )}
         </div>
 
-        <MedicalNoteBanner note={nursingCourse.medicalNote} lang={lang} />
+        <MedicalNoteBanner
+          note={nursingCourse.medicalNote}
+          mobileNote={nursingCourse.medicalNoteMobile}
+          lang={lang}
+        />
       </Section>
     </>
   );
@@ -260,15 +274,17 @@ function NursingIcon({ name }: { name: string }) {
 
 function ResponsivePricingLink({
   text,
+  mobileText,
   lang,
 }: {
   text: HomeContent["pricingDetailsLink"];
+  mobileText: HomeContent["pricingDetailsLinkMobile"];
   lang: Lang;
 }) {
   return (
     <ResponsiveCopy
       text={text}
-      mobileText={japaneseBreakAfter(text, "詳しくはこちら（料金ページ）を")}
+      mobileText={mobileText}
       lang={lang}
       mode="desktop-only"
     />
@@ -333,13 +349,17 @@ function NursingDirectiveIllustration() {
   );
 }
 
-function MedicalNoteBanner({ note, lang }: { note: Bilingual; lang: Lang }) {
+function MedicalNoteBanner({
+  note,
+  mobileNote,
+  lang,
+}: {
+  note: Bilingual;
+  mobileNote: Bilingual;
+  lang: Lang;
+}) {
   const desktop = splitBilingual(note);
-  const mobileNote = mobileMedicalNote(note);
-  const mobile = splitBilingual(
-    mobileNote,
-    mobileNote.ja === note.ja ? 1 : { ja: 2, en: 1 },
-  );
+  const mobile = splitBilingual(mobileNote, { ja: 2, en: 1 });
 
   return (
     <aside

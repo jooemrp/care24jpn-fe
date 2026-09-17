@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { cta, home } from "@/constants/copy";
 import type { HomeContent } from "../types";
 import type * as HomeContentModule from "./HomeContent.tsx";
-import { mobileMedicalNote, splitBilingual } from "./home-copy";
+import { splitBilingual } from "./home-copy";
 
 const homeContentPath = "./HomeContent" + ".tsx";
 const darkVariant = ["dark", ":"].join("");
@@ -261,7 +261,7 @@ async function main(): Promise<void> {
     );
   });
 
-  test("Japanese revision copy keeps the requested mobile line breaks and wording", () => {
+  test("Japanese revision copy keeps API-owned mobile wording and line breaks", () => {
     const html = renderToStaticMarkup(
       React.createElement(HomeContentView, {
         content,
@@ -272,10 +272,10 @@ async function main(): Promise<void> {
 
     assert.match(
       html,
-      /md:hidden whitespace-pre-line[^>]*>ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。<\/span>/,
+      /md:hidden whitespace-pre-line[^>]*>ご相談・お見積りは無料です。あなたやご家族の「困った」を私たちがサポートします。<\/span>/,
     );
     assert.match(html, /mx-auto mt-3 max-w-2xl text-\[13px\] leading-relaxed text-body md:text-lg/);
-    assert.match(html, /お支払いは\n銀行振込（前払い）となります。/);
+    assert.match(html, /md:hidden whitespace-pre-line[^>]*>お支払いは銀行振込（前払い）となります。<\/span>/);
     assert.match(
       html,
       /mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm/,
@@ -318,21 +318,8 @@ async function main(): Promise<void> {
     );
   });
 
-  test("mobile medical note preserves CMS wording while applying the requested Japanese breaks", () => {
-    const value = {
-      ja: "ご利用には主治医からの指示書が必要です。必要に応じて、ケアマネージャーやソーシャルワーカー、介護保険サービス事業所と連携し、安全で適切なケアを行います。",
-      en: "CMS English heading.\nCMS English body.",
-    };
-
-    assert.deepEqual(mobileMedicalNote(value), {
-      ja: "ご利用には主治医からの\n指示書が必要です。\n必要に応じて、ケアマネージャーや\nソーシャルワーカー、介護保険\nサービス事業所と連携し、\n安全で適切なケアを行います。",
-      en: value.en,
-    });
-  });
-
-  test("changed CMS medical wording stays untouched and locale heading counts stay independent", () => {
+  test("CMS medical wording stays untouched and locale heading counts stay independent", () => {
     const custom = { ja: "カスタム見出し\nカスタム本文", en: "Custom heading\nCustom body" };
-    assert.deepEqual(mobileMedicalNote(custom), custom);
 
     assert.deepEqual(
       splitBilingual(
@@ -347,7 +334,7 @@ async function main(): Promise<void> {
 
     const customContent = {
       ...content,
-      nursingCourse: { ...content.nursingCourse, medicalNote: custom },
+      nursingCourse: { ...content.nursingCourse, medicalNote: custom, medicalNoteMobile: custom },
     } as HomeContent;
     const html = renderToStaticMarkup(
       React.createElement(HomeContentView, {

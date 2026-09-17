@@ -16,8 +16,6 @@ export function HomeContactSection({
   contactCta: { ja: string; en: string };
   lang: Lang;
 }) {
-  const phoneHref = `tel:${content.phone.replace(/[^0-9+]/g, "")}`;
-
   return (
     <Section surface lang={lang}>
       <div
@@ -34,7 +32,7 @@ export function HomeContactSection({
 
         <div className="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
           <a
-            href={phoneHref}
+            href={`tel:${content.phoneTel}`}
             className="flex items-center gap-2 text-3xl font-bold text-heading md:text-4xl"
           >
             <PhoneIcon />
@@ -52,7 +50,7 @@ export function HomeContactSection({
         <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
           <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2">
             <a
-              href="https://mics.tokyo/"
+              href={content.micsHref}
               target="_blank"
               rel="noopener noreferrer"
               className="transition opacity-90 hover:opacity-100"

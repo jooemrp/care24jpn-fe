@@ -87,9 +87,11 @@ export interface HomePricingSummary {
   payment_jcb_alt?: string; // localizable
   payment_amex_alt?: string; // localizable
   pricing_details_label?: string; // localizable
+  pricing_details_label_mobile?: string; // localizable
   pricing_details_href?: string;
   payment_icon?: string;
   payment_icon_alt?: string; // localizable
+  payment_body_mobile?: string; // localizable
 }
 
 /** Home — About (Care24Japanとは) (content type: "home-about") */
@@ -201,6 +203,7 @@ export interface HomeContact {
   iso_logo?: string;
   mics_logo_alt?: string; // localizable
   iso_logo_alt?: string; // localizable
+  mics_href?: string;
   contact_cta_href?: string;
   lead_in_ornament_start?: string; // localizable
   lead_in_ornament_end?: string; // localizable
@@ -216,6 +219,7 @@ export interface HomeApply {
   user_href?: string;
   consult_heading?: string; // localizable
   consult_body?: string; // localizable
+  consult_body_mobile?: string; // localizable
   consult_cta?: string; // localizable
   consult_href?: string;
   consult_illustration?: string;
@@ -278,6 +282,7 @@ export interface HomeNursingCourse {
   note?: string; // localizable
   panel_heading?: string; // localizable
   medical_note?: string; // localizable
+  medical_note_mobile?: string; // localizable
 }
 
 /** Home — Nursing Course fee cell (content type: "home-nursing-course-fee") */
