@@ -64,13 +64,13 @@ export default function StickyCta({ lang }: { lang: Lang }) {
         data-sticky-cta
         aria-hidden={!visible}
         inert={!visible}
-        className={`fixed inset-x-0 bottom-0 z-[70] border-t border-white/20 bg-primary-deep pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_-14px_rgba(27,31,94,0.55)] transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${
+        className={`fixed inset-x-0 bottom-0 z-[70] overflow-x-clip border-t border-white/20 bg-primary-deep pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_-14px_rgba(27,31,94,0.55)] transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${
           visible
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none translate-y-full opacity-0"
         }`}
       >
-        <div className="grid w-full grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
           <div className="hidden min-h-20 items-center gap-3 border-r border-white/20 bg-primary-deep px-6 text-white md:flex">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
               <IconHeadset
@@ -110,7 +110,7 @@ export default function StickyCta({ lang }: { lang: Lang }) {
           </a>
           <Link
             href={localizeHref(href, lang)}
-            className="group inline-flex min-h-16 items-center justify-center gap-2 bg-accent-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:relative md:min-h-20 md:gap-4 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
+            className="group relative inline-flex min-h-16 items-center justify-center gap-2 bg-accent-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 after:pointer-events-none after:absolute after:inset-y-0 after:left-full after:w-screen after:bg-accent-deep after:content-[''] hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:min-h-20 md:gap-4 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
           >
             <IconFileDescription
               className="h-5 w-5 shrink-0 md:h-10 md:w-10 md:rounded-full md:border md:border-white/35 md:bg-white/10 md:p-2"

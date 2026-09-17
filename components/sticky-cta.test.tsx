@@ -42,11 +42,15 @@ test("sticky CTA renders full-width desktop phone and contact actions", () => {
   assert.doesNotMatch(html, /資料請求/);
   assert.match(html, /24時間365日、お気軽にお問い合わせください。/);
   assert.match(html, /data-sticky-cta="true"/);
-  assert.match(html, /fixed inset-x-0 bottom-0 z-\[70\] border-t/);
-  assert.match(html, /grid w-full grid-cols-2.*md:grid-cols-\[0\.85fr_1fr_0\.85fr\]/);
+  assert.match(html, /fixed inset-x-0 bottom-0 z-\[70\] overflow-x-clip border-t/);
+  assert.match(
+    html,
+    /mx-auto grid w-full max-w-6xl grid-cols-2.*md:grid-cols-\[0\.85fr_1fr_0\.85fr\]/,
+  );
   assert.match(html, /hidden min-h-20.*md:flex/);
   assert.match(html, /min-h-16/);
   assert.match(html, /md:border-l md:border-white\/25.*md:shadow-\[inset_0_1px_0_rgba\(255,255,255,0\.16\)\]/);
+  assert.match(html, /after:left-full.*after:w-screen.*after:bg-accent-deep/);
   assert.match(html, /data-sticky-cta="true" aria-hidden="true"/);
   assert.match(html, /pointer-events-none translate-y-full opacity-0/);
   assert.match(html, /motion-reduce:transition-none/);

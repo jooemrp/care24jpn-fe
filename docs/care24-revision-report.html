@@ -154,10 +154,10 @@
               <div class="task-label">Task client</div>
               <p>CTA harus muncul setelah melewati FV, dengan dua aksi seperti referensi Ichirou: telepon dan inquiry. Di PC, area tombol harus besar dan sisi pink harus bertuliskan お問合せ.</p>
               <div class="task-label">Hasil</div>
-              <p>Desktop menampilkan CTA full-width yang fixed di bawah, tombol telepon, dan tombol pink お問合せ dengan affordance yang jelas. Mobile memakai CTA dua bagian.</p>
+              <p>Desktop menampilkan rail biru/pink full-width yang fixed di bawah, tetapi isi CTA dibatasi dan dipusatkan pada <code>max-w-6xl</code> yang sejajar dengan navbar. Tombol telepon dan tombol pink お問合せ memiliki affordance yang jelas. Mobile memakai CTA dua bagian.</p>
             </div>
             <div class="shot-grid">
-              <figure><a href="../qa-final-desktop.png"><img src="../qa-final-desktop.png" alt="Poin 4 production desktop sticky CTA"></a><figcaption>Desktop 1280px setelah melewati FV</figcaption></figure>
+              <figure><a href="../qa-after-cta-maxwidth.png"><img src="../qa-after-cta-maxwidth.png" alt="Poin 4 desktop sticky CTA with max-width content"></a><figcaption>Desktop 1280px: rail full-width, isi CTA max-width setelah melewati FV</figcaption></figure>
               <figure><a href="../qa-final-menu-mobile.png"><img src="../qa-final-menu-mobile.png" alt="Poin 4 mobile sticky CTA"></a><figcaption>Mobile CTA setelah scroll</figcaption></figure>
             </div>
           </div>
@@ -284,7 +284,7 @@
             <tr><td>1</td><td>3</td><td><span class="tag ok">Updated + QA</span><br>Mobile FV order and first-view composition.</td><td>CTA appears before supported area; hero copy no longer overlaps the image; published <code>home-hero.image</code> now uses the approved production photo through Atlas media.</td><td><a href="../audit-after-hero-mobile.png">Production mobile FV screenshot</a><br><a href="../audit-after-hero-cms-375.png">CMS hero after fix</a></td></tr>
             <tr><td>2</td><td>4</td><td><span class="tag ok">OK</span><br>Add Contact Us beside FAQ.</td><td>Workbook status is OK.</td><td>Workbook row 4</td></tr>
             <tr><td>3</td><td>5</td><td><span class="tag ok">OK</span><br>Mobile navigation adjustment.</td><td>Workbook status is OK.</td><td>Workbook row 5</td></tr>
-            <tr><td>4</td><td>6</td><td><span class="tag ok">Updated + QA</span><br>Sticky Phone + Contact CTA after FV.</td><td>Full-width desktop CTA, pink <code>お問合せ</code> side, stronger button affordance, and mobile split CTA. Production QA confirmed it appears after scrolling past the FV.</td><td><a href="../qa-final-desktop.png">Production desktop screenshot</a><br><a href="../audit-after-sticky-desktop.png">Earlier desktop screenshot</a></td></tr>
+            <tr><td>4</td><td>6</td><td><span class="tag ok">Updated + QA</span><br>Sticky Phone + Contact CTA after FV.</td><td>Full-width blue/pink desktop rail with a centered <code>max-w-6xl</code> CTA grid aligned to the navbar, pink <code>お問合せ</code> side, stronger button affordance, and mobile split CTA. Production QA confirmed it appears after scrolling past the FV.</td><td><a href="../qa-after-cta-maxwidth.png">Max-width desktop screenshot</a><br><a href="../qa-final-desktop.png">Production desktop screenshot</a><br><a href="../qa-final-menu-mobile.png">Mobile screenshot</a></td></tr>
             <tr><td>5</td><td>7</td><td><span class="tag ok">OK</span><br>Footnote color under supported area.</td><td>Workbook status is OK.</td><td>Workbook row 7</td></tr>
             <tr><td>6</td><td>8</td><td><span class="tag ok">OK + QA</span><br>Mobile line break and CTA visibility while hamburger menu is open.</td><td>At 375px and scrollY 900, the fixed bottom CTA remains visible over the open menu.</td><td><a href="../qa-final-menu-mobile.png">Production menu-open screenshot</a><br><a href="../audit-after-menu-mobile.png">Earlier screenshot</a></td></tr>
             <tr><td>7</td><td>9</td><td><span class="tag ok">Covered by Request 8</span><br>Qualified staff line break.</td><td>Duplicate/reference of sheet row 10. Row 10 carries the client status <code>OK です</code>; the same implementation covers both rows, so no separate code change is needed.</td><td>Workbook row 9 images<br>See Request 8 / sheet row 10 status</td></tr>
