@@ -80,15 +80,15 @@ The following screenshots are the browser QA evidence referenced in the table ab
 ## Verification performed
 
 - Fresh focused TypeScript/TSX regression set: **53/53 passed**, including CMS field diagnostics, BFF transient retry, query-boundary checks, homepage rendering, and the 375/320 mobile wrapping cases.
-- Baseline Node test suite: **162/162 passed**. The TypeScript/TSX suites used by the repository test script also passed locally (**150/150** plus the changed-component regression set **44/44**). The repository `pnpm test` wrapper was not used as a pass claim because it invokes a network-dependent `npx` step that returned `fetch failed` in this workstation.
+- Full repository test script: **315/315 passed** across all 13 test batches (including the focused responsive/CMS regression set, legal/SEO mappings, contact validation, and API boundary checks).
 - Live Atlas verification: `site-ui-labels.query_*` and `site-cta.sticky_*` fields are present in the published API response; the client-requested pink label is API value `お問合せ`, and the existing six nav items/footer state were preserved.
 - Local ESLint on all changed files: **passed**.
 - Production build (`pnpm build`): **exit 0** (fresh run; TypeScript and 32/32 static pages completed).
 - Fresh production server (`pnpm start`) returned **HTTP 200** on both `http://127.0.0.1:3000/` and `http://192.168.1.3:3000/`; the rendered HTML contained neither `Application error` nor `Minified React error`.
-- The live homepage API now returns the new Atlas hero media URL ending in `hero-preview.jpg`; the fetched image matches the production composition and is used by the rendered page.
+- The live homepage API now returns the new Atlas hero media URL ending in `hero-preview.jpg`; `home-hero.cta_primary_href` and `home-hero.cta_secondary_href` are also read from Atlas. The fetched image matches the production composition and is used by the rendered page.
 - Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone `は、` or `方`.
 - Project agent rule saved in `AGENTS.md`: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.
 - Production-build browser QA at 375px mobile and 1280px desktop: completed; screenshots are attached above. The menu-open check was performed after scrolling to `scrollY=900`, and the desktop CTA check after scrolling past the FV.
-- `pnpm lint` itself could not start because pnpm returned `fetch failed`; the local ESLint binary completed successfully.
+- `pnpm start` is running on port 3000 for manual phone QA; localhost and LAN requests both returned HTTP 200 with no Application/Minified React error markers.
 
 The screenshots are browser evidence, not physical-device evidence. The workstation has no configured iOS/device provider, so the client’s requested real-smartphone check for the FV and sticky CTA remains the final manual QA step.

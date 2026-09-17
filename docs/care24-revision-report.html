@@ -88,7 +88,7 @@
       <div class="summary">
         <div class="metric"><strong>24</strong><span>request rows audited</span></div>
         <div class="metric"><strong>59</strong><span>embedded images reviewed</span></div>
-        <div class="metric"><strong>162/162</strong><span>baseline tests</span></div>
+        <div class="metric"><strong>315/315</strong><span>repository tests</span></div>
         <div class="metric"><strong>exit 0</strong><span>production build</span></div>
       </div>
       <div class="notice"><strong>External follow-up:</strong> Request 7 (sheet row 9) is a duplicate/reference of Request 8 (sheet row 10), which has the client status <code>OK です</code>; no separate change is required. Row 23 (sheet row 25) contains only a task number and still needs client clarification. Real-smartphone verification is also still required; no iOS/device provider is connected to this workstation.</div>
@@ -337,15 +337,16 @@
       <h2>Verification performed</h2>
       <ul class="checks">
         <li>Fresh focused TypeScript/TSX regression set: <strong>53/53 passed</strong>, including CMS field diagnostics, BFF transient retry, query-boundary checks, homepage rendering, and the 375/320 mobile wrapping cases.</li>
-        <li>Baseline Node test suite: <strong>162/162 passed</strong>; the local TypeScript/TSX suites also passed (<strong>150/150</strong> plus changed-component regressions <strong>44/44</strong>). The repository <code>pnpm test</code> wrapper was not used as a pass claim because its network-dependent <code>npx</code> step returned <code>fetch failed</code> on this workstation.</li>
+        <li>Full repository test script: <strong>315/315 passed</strong> across all 13 test batches, including the responsive/CMS regression set, legal/SEO mappings, contact validation, and API boundary checks.</li>
         <li>Live Atlas read-only verification confirmed the published <code>site-ui-labels.query_*</code> and <code>site-cta.sticky_*</code> fields, with the existing six nav items and footer data preserved.</li>
         <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
         <li>Production build (<code>pnpm build</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
         <li>Fresh production server (<code>pnpm start</code>) returned <strong>HTTP 200</strong> on both <code>http://127.0.0.1:3000/</code> and <code>http://192.168.1.3:3000/</code>; the rendered HTML contained neither <code>Application error</code> nor <code>Minified React error</code>.</li>
-        <li>The live homepage API now returns the Atlas hero media URL ending in <code>hero-preview.jpg</code>; the fetched image matches the production composition and is used by the rendered page.</li>
+        <li>The live homepage API now returns the Atlas hero media URL ending in <code>hero-preview.jpg</code>; the hero CTA destinations are also read from Atlas. The fetched image matches the production composition and is used by the rendered page.</li>
         <li>Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone <code>は、</code> or <code>方</code>.</li>
         <li>Project agent rule saved in <code>AGENTS.md</code>: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.</li>
         <li>Production-build browser QA at 375px mobile and 1280px desktop completed. The menu-open check was performed after scrolling to <code>scrollY=900</code>, and the desktop CTA check after scrolling past the FV.</li>
+        <li><code>pnpm start</code> is running on port 3000 for manual phone QA; localhost and LAN requests both returned HTTP 200 with no Application/Minified React error markers.</li>
       </ul>
       <div class="notice"><strong>Remaining manual QA:</strong> screenshots are browser evidence, not physical-device evidence. The workstation has no configured iOS/device provider, so the client’s requested real-smartphone check remains pending.</div>
     </section>
