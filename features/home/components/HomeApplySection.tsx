@@ -7,6 +7,7 @@ import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { isSafeExternalHref, safeLocalizedHref } from "./HomeLinks";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
+import { japaneseBreakAfter } from "./home-copy";
 
 export function HomeApplySection({
   content,
@@ -21,8 +22,13 @@ export function HomeApplySection({
         <h2 className="text-2xl font-bold text-heading [text-wrap:balance] md:text-3xl">
           {t(content.consult.heading, lang)}
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-body md:text-lg">
-          <ResponsiveCopy text={content.consult.body} lang={lang} mode="desktop-only" />
+        <p className="mx-auto mt-3 max-w-2xl text-[13px] leading-relaxed text-body md:text-lg">
+          <ResponsiveCopy
+            text={content.consult.body}
+            mobileText={japaneseBreakAfter(content.consult.body, "ご家族の")}
+            lang={lang}
+            mode="desktop-only"
+          />
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">

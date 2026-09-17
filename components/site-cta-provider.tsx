@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import { cta as fallbackCta, type Bilingual } from "@/constants/copy";
+import type { Bilingual } from "@/constants/copy";
 import { CmsContentError } from "@/features/cms/errors";
 
 type SiteCtaContextValue = {
   label: Bilingual;
+  contactCta: Bilingual;
   href: string;
   contactPhone: { display: string; tel: string; note: Bilingual };
   stickyPhoneLabel: Bilingual;
@@ -16,6 +17,7 @@ const SiteCtaContext = createContext<SiteCtaContextValue | undefined>(undefined)
 
 export function SiteCtaProvider({
   primaryCta,
+  contactCta,
   primaryHref,
   contactPhone,
   stickyPhoneLabel,
@@ -23,22 +25,35 @@ export function SiteCtaProvider({
   children,
 }: {
   primaryCta: Bilingual;
+  contactCta: Bilingual;
   primaryHref: string;
   contactPhone: { display: string; tel: string; note: Bilingual };
-  stickyPhoneLabel?: Bilingual;
-  stickyRequestLabel?: Bilingual;
+  stickyPhoneLabel: Bilingual;
+  stickyRequestLabel: Bilingual;
   children: ReactNode;
 }) {
+  if (!contactCta || !stickyPhoneLabel || !stickyRequestLabel) {
+    throw new CmsContentError(
+      "CMS_MISSING_REQUIRED_FIELD",
+      'Required CMS fields "site.site-cta.contact", "site.site-cta.sticky_phone_label", and "site.site-cta.sticky_request_label" are unavailable.',
+      [
+        "site.site-cta.contact",
+        "site.site-cta.sticky_phone_label",
+        "site.site-cta.sticky_request_label",
+      ],
+      "site",
+    );
+  }
+
   return (
     <SiteCtaContext.Provider
       value={{
         label: primaryCta,
+        contactCta,
         href: primaryHref,
         contactPhone,
-        // These labels are optional while the CMS field rollout catches up
-        // with the published workspace; bundled values keep the shell usable.
-        stickyPhoneLabel: stickyPhoneLabel ?? fallbackCta.stickyPhoneLabel,
-        stickyRequestLabel: stickyRequestLabel ?? fallbackCta.stickyRequestLabel,
+        stickyPhoneLabel,
+        stickyRequestLabel,
       }}
     >
       {children}
@@ -61,6 +76,10 @@ function useSiteCta(): SiteCtaContextValue {
 
 export function useSitePrimaryCta(): Bilingual {
   return useSiteCta().label;
+}
+
+export function useSiteContactCta(): Bilingual {
+  return useSiteCta().contactCta;
 }
 
 export function useSitePrimaryCtaHref(): string {

@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Section from "@/components/ui/Section";
+import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
+import { japaneseBreakAfter } from "./home-copy";
 
 export function HomePricingSection({
   content,
@@ -55,7 +57,7 @@ export function HomePricingSection({
               lang={lang}
               className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
             >
-              {t(pricingDetailsLink, lang)}
+              <ResponsivePricingLink text={pricingDetailsLink} lang={lang} />
             </SafeInternalLink>
           </p>
         </div>
@@ -65,8 +67,8 @@ export function HomePricingSection({
             <h2 className="text-xl font-bold text-heading md:text-2xl">
               {t(content.payment.heading, lang)}
             </h2>
-            <p className="mt-3 break-keep text-base leading-relaxed text-body [text-wrap:balance]">
-              {t(content.payment.body, lang)}
+            <p className="mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm [text-wrap:balance]">
+              {t(japaneseBreakAfter(content.payment.body, "お支払いは"), lang)}
             </p>
             {settleNote ? (
               <p className="mt-3 text-sm leading-relaxed text-muted">{settleNote}</p>
@@ -98,5 +100,22 @@ export function HomePricingSection({
         </div>
       </div>
     </Section>
+  );
+}
+
+function ResponsivePricingLink({
+  text,
+  lang,
+}: {
+  text: HomeContent["pricingDetailsLink"];
+  lang: Lang;
+}) {
+  return (
+    <ResponsiveCopy
+      text={text}
+      mobileText={japaneseBreakAfter(text, "詳しくはこちら（料金ページ）を")}
+      lang={lang}
+      mode="desktop-only"
+    />
   );
 }

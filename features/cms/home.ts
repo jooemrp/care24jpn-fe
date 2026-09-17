@@ -19,20 +19,16 @@ import {
   type BlockTypeList,
 } from "./fields";
 import type { CmsBlock } from "./types";
-import { replaceExactBilingual } from "./legacy-copy";
-import { home, type home as HomeCopy } from "@/constants/copy";
+import type { home as HomeCopy } from "@/constants/copy";
 import type { HomeContent } from "@/features/home/types";
 
 type Home = typeof HomeCopy;
 type Fee = Home["careCourse"]["fees"][number];
 
-/**
- * `constants/copy.ts` carries no image paths except `home.hero.image` (the
- * original photograph the 0907 layout work must not replace). Every other
- * `<Image src>` on this page is an Atlas media URL. The care-course cards
- * used to derive theirs from the LOOP INDEX (`/images/use-case-${i + 1}.webp`),
- * which meant a 5th card added in the dashboard rendered a guaranteed 404.
- * Card images stay a property OF THE CARD.
+/** Every rendered image, text, number and URL on this page is read from the
+ * corresponding Atlas block. The care-course cards keep their image as a
+ * property of the card, so adding a card in the dashboard cannot derive a
+ * guessed path from its position.
  */
 export type { HomeContent } from "@/features/home/types";
 
@@ -136,9 +132,9 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   const caseBlocks = groups["home-example-case"];
   const stepBlocks = groups["home-flow-step"];
 
-  // Atlas still requires an image field (media UUID → S3 URL). Validate it
-  // so the field cannot go missing; the live src is the original photograph.
-  requiredImageUrl(heroBlock.data, "image", "home/home-hero");
+  // Atlas stores media fields as UUIDs and the merged API block exposes the
+  // resolved media URL. The rendered source must be that API value.
+  const heroImage = requiredImageUrl(heroBlock.data, "image", "home/home-hero");
 
   const hero: HomeContent["hero"] = {
     badge: requiredBi(heroBlock.data, "badge", "home/home-hero"),
@@ -149,7 +145,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     ctaPrimary: requiredBi(heroBlock.data, "cta_primary", "home/home-hero"),
     ctaSecondary: optionalBi(heroBlock.data, "cta_secondary", "home/home-hero"),
     imageAlt: requiredBi(heroBlock.data, "image_alt", "home/home-hero"),
-    image: home.hero.image,
+    image: heroImage,
     ctaPrimaryHref: requiredUrl(heroBlock.data, "cta_primary_href", "home/home-hero"),
     ctaSecondaryHref: requiredUrl(heroBlock.data, "cta_secondary_href", "home/home-hero"),
     areaBadge: {
@@ -232,7 +228,6 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     closing: requiredBi(problemsBlock.data, "closing", "home/home-problems"),
     items: problemTitles.map((title, i) => ({
       title,
-      body: title,
       image: problemImages[i]!,
     })),
   };
@@ -325,13 +320,10 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       ),
     },
     note: requiredBi(nursingCourseBlock.data, "note", "home/home-nursing-course"),
-    medicalNote: replaceExactBilingual(
-      requiredBi(nursingCourseBlock.data, "medical_note", "home/home-nursing-course"),
-      home.nursingCourse.medicalNote,
-      {
-        ja: "医療行為を必要とする場合は必ず医師の指示書が必要になります",
-        en: "A doctor's written instructions are strictly required if medical procedures are needed.",
-      },
+    medicalNote: requiredBi(
+      nursingCourseBlock.data,
+      "medical_note",
+      "home/home-nursing-course",
     ),
     fees: nursingFees,
     panel: {
@@ -430,20 +422,12 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
     },
     user: {
       eyebrow: requiredBi(applyBlock.data, "user_eyebrow", "home/home-apply"),
-      label: replaceExactBilingual(
-        requiredBi(applyBlock.data, "user_label", "home/home-apply"),
-        home.apply.user.label,
-        { ja: "お申込みはこちらから" },
-      ),
+      label: requiredBi(applyBlock.data, "user_label", "home/home-apply"),
       href: requiredUrl(applyBlock.data, "user_href", "home/home-apply"),
     },
     staff: {
       eyebrow: requiredBi(applyBlock.data, "staff_eyebrow", "home/home-apply"),
-      label: replaceExactBilingual(
-        requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
-        home.apply.staff.label,
-        { ja: "登録はこちらから" },
-      ),
+      label: requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
       href: requiredUrl(applyBlock.data, "staff_href", "home/home-apply"),
     },
   };
@@ -477,20 +461,7 @@ function mapContact(data: CmsBlock["data"], phone: string): HomeContent["contact
     heading: requiredBi(data, "heading", "home/home-contact"),
     phone,
     hours: requiredBi(data, "hours", "home/home-contact"),
-    isms: replaceExactBilingual(
-      requiredBi(data, "isms", "home/home-contact"),
-      home.contact.isms,
-      {
-        ja: [
-          "メディカルインフォマティクス株式会社は情報セキュリティ\nマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-          "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
-        ],
-        en: [
-          "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security\nmanagement systems (ISMS).",
-          "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for information security management systems (ISMS).",
-        ],
-      },
-    ),
+    isms: requiredBi(data, "isms", "home/home-contact"),
     micsLogo: requiredImageUrl(data, "mics_logo", "home/home-contact"),
     isoLogo: requiredImageUrl(data, "iso_logo", "home/home-contact"),
     micsLogoAlt: requiredBi(data, "mics_logo_alt", "home/home-contact"),

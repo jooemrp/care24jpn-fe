@@ -182,6 +182,15 @@ test("shared CMS CTA context fails closed without a default bundle value", () =>
   );
   assert.match(provider, /CmsContentError/);
   assert.doesNotMatch(provider, /createContext<[^>]+>\(null\)/);
+  assert.doesNotMatch(provider, /fallbackCta|\?\?\s*fallback/);
+});
+
+test("home CMS mapping uses API-owned media and copy without legacy replacements", () => {
+  const loader = readFileSync(resolve(process.cwd(), "features/cms/home.ts"), "utf8");
+  assert.match(loader, /heroImage\s*=\s*requiredImageUrl\(heroBlock\.data,\s*\"image\"/);
+  assert.match(loader, /image:\s*heroImage/);
+  assert.doesNotMatch(loader, /image:\s*home\.hero\.image/);
+  assert.doesNotMatch(loader, /replaceExactBilingual/);
 });
 
 test("route error labels fail closed without a constants default", () => {

@@ -1,12 +1,13 @@
 /**
- * Care 24 Japan — All site copy lives here.
+ * Care 24 Japan — Seed and type-shape copy.
  *
  * RULES:
  * - Japanese (`ja`) is primary; English (`en`) renders beneath as a small
  *   uppercase secondary label.
- * - Never hardcode copy inside components — import from this file.
- * - All values below are the live, client-reviewed copy. Edit here — never
- *   inline in components.
+ * - Runtime page rendering reads Atlas CMS. These values are used by the
+ *   seed scripts and TypeScript shape definitions, never as a rendering
+ *   fallback when an API field is missing.
+ * - Keep the values here aligned with the published CMS seed data.
  */
 
 export type Bilingual = {
@@ -70,7 +71,7 @@ export const contactPhone = {
 export const cta = {
   primary: { ja: "無料相談を予約する", en: "Book a free consultation" } satisfies Bilingual,
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
-  contact: { ja: "お問い合わせ", en: "Contact us" } satisfies Bilingual,
+  contact: { ja: "お問合せ", en: "Contact us" } satisfies Bilingual,
   stickyPhoneLabel: { ja: "電話をかける", en: "Call" } satisfies Bilingual,
   stickyRequestLabel: { ja: "資料請求", en: "Request information" } satisfies Bilingual,
   primaryHref: "/contact",
@@ -128,8 +129,8 @@ export const queryStates = {
  * Client Component render error, not a layout failure — see that file's own
  * doc comment for why the layout is guaranteed to have already succeeded
  * whenever this renders). Verbatim from the JSX that used to hardcode this
- * per-`lang` inline; this is now both the live text AND the fallback used
- * when Atlas is unreachable.
+ * per-`lang` inline; it is retained here as seed data for the corresponding
+ * Atlas block. Runtime error labels are read from that block.
  */
 export const errorPage = {
   title: { ja: "エラーが発生しました", en: "Something went wrong" } satisfies Bilingual,
@@ -142,9 +143,8 @@ export const errorPage = {
 
 /**
  * `app/global-not-found.tsx`'s copy — the 404 page. Verbatim from the JSX
- * that used to hardcode it; this is now both the seed source for the
- * `site_not_found_labels` block and the fallback when Atlas is unreachable,
- * exactly like `errorPage` above.
+ * that used to hardcode it; this is the seed source for the
+ * `site_not_found_labels` block. Runtime 404 labels are read from Atlas.
  *
  * `eyebrow` is NOT bilingual on purpose: "404" is the HTTP status, the same
  * three digits in both locales, and the field is non-localizable in
@@ -747,7 +747,7 @@ export const home = {
     },
     user: {
       eyebrow: {
-        ja: "サービスをご利用されたい方",
+        ja: "サービスをご利用の方",
         en: "For those who wish to use our service",
       } satisfies Bilingual,
       label: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
@@ -856,7 +856,7 @@ export const home = {
     payment: {
       heading: { ja: "お支払い方法", en: "Payment methods" } satisfies Bilingual,
       body: {
-        ja: "お支払いは銀行振込（前払い）となります。",
+        ja: "お支払いは\n銀行振込（前払い）となります。",
         en: "Payment is made by bank transfer (in advance).",
       } satisfies Bilingual,
       settleNote: { ja: "", en: "" } satisfies Bilingual,

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  IconArrowRight,
   IconFileDescription,
   IconHeadset,
   IconPhone,
@@ -10,17 +11,17 @@ import {
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import {
   useSiteContactPhone,
+  useSiteContactCta,
   useSitePrimaryCtaHref,
   useSiteStickyPhoneLabel,
-  useSiteStickyRequestLabel,
 } from "./site-cta-provider";
 
 /** Persistent consultation CTA rail for both mobile and desktop. */
 export default function StickyCta({ lang }: { lang: Lang }) {
   const href = useSitePrimaryCtaHref();
   const contactPhone = useSiteContactPhone();
+  const contactLabel = useSiteContactCta();
   const phoneLabel = useSiteStickyPhoneLabel();
-  const requestLabel = useSiteStickyRequestLabel();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function StickyCta({ lang }: { lang: Lang }) {
             : "pointer-events-none translate-y-full opacity-0"
         }`}
       >
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
+        <div className="grid w-full grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
           <div className="hidden min-h-20 items-center gap-3 border-r border-white/20 bg-primary-deep px-6 text-white md:flex">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
               <IconHeadset
@@ -85,9 +86,13 @@ export default function StickyCta({ lang }: { lang: Lang }) {
           <a
             href={`tel:${contactPhone.tel}`}
             aria-label={`${t(phoneLabel, lang)} ${contactPhone.display}`}
-            className="group inline-flex min-h-16 items-center justify-center gap-2 border-r border-white/20 bg-primary-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:min-h-20 md:gap-4 md:px-8 md:text-base"
+            className="group inline-flex min-h-16 items-center justify-center gap-2 border-r border-white/20 bg-primary-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:relative md:min-h-20 md:gap-4 md:border-r-0 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
           >
-            <IconPhone className="h-5 w-5 shrink-0" stroke={1.9} aria-hidden="true" />
+            <IconPhone
+              className="h-5 w-5 shrink-0 md:h-10 md:w-10 md:rounded-full md:border md:border-white/35 md:bg-white/10 md:p-2"
+              stroke={1.9}
+              aria-hidden="true"
+            />
             <span className="flex min-w-0 flex-col items-start leading-tight">
               <span className="text-[0.68rem] font-medium text-white/80 sm:text-xs">
                 {t(phoneLabel, lang)}
@@ -96,13 +101,29 @@ export default function StickyCta({ lang }: { lang: Lang }) {
                 {contactPhone.display}
               </span>
             </span>
+            <span
+              aria-hidden="true"
+              className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/10 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none md:flex"
+            >
+              <IconArrowRight className="h-4 w-4" stroke={2.25} />
+            </span>
           </a>
           <Link
             href={localizeHref(href, lang)}
-            className="inline-flex min-h-16 items-center justify-center gap-2 bg-accent-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:min-h-20 md:px-8 md:text-base"
+            className="group inline-flex min-h-16 items-center justify-center gap-2 bg-accent-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:relative md:min-h-20 md:gap-4 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
           >
-            <IconFileDescription className="h-5 w-5 shrink-0" stroke={1.9} aria-hidden="true" />
-            <span>{t(requestLabel, lang)}</span>
+            <IconFileDescription
+              className="h-5 w-5 shrink-0 md:h-10 md:w-10 md:rounded-full md:border md:border-white/35 md:bg-white/10 md:p-2"
+              stroke={1.9}
+              aria-hidden="true"
+            />
+            <span>{t(contactLabel, lang)}</span>
+            <span
+              aria-hidden="true"
+              className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/10 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none md:flex"
+            >
+              <IconArrowRight className="h-4 w-4" stroke={2.25} />
+            </span>
           </Link>
         </div>
       </aside>

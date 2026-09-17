@@ -47,10 +47,8 @@ export type SiteContent = {
     primary: Bilingual;
     secondary: Bilingual;
     contact: Bilingual;
-    /** Optional during the additive rollout; bundled defaults keep the
-     * sticky bar renderable before the published site page is reseeded. */
-    stickyPhoneLabel?: Bilingual;
-    stickyRequestLabel?: Bilingual;
+    stickyPhoneLabel: Bilingual;
+    stickyRequestLabel: Bilingual;
     primaryHref: string;
   };
   ui: {
@@ -169,8 +167,8 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
     secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
     contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
-    stickyPhoneLabel: optionalBi(ctaBlock.data, "sticky_phone_label", "site/site-cta"),
-    stickyRequestLabel: optionalBi(
+    stickyPhoneLabel: requiredBi(ctaBlock.data, "sticky_phone_label", "site/site-cta"),
+    stickyRequestLabel: requiredBi(
       ctaBlock.data,
       "sticky_request_label",
       "site/site-cta",
