@@ -78,6 +78,20 @@ function missingMarker(context: string, key: string): string {
   return `[missing: ${fieldPath(context, key)}]`;
 }
 
+/**
+ * A safe-to-render diagnostic for a field that has a local presentation
+ * boundary. It includes the public view-model path as well as the Atlas path,
+ * so an editor can find the broken field without seeing a generic production
+ * "Application error" page.
+ */
+export function cmsFieldErrorMarker(field: string, atlasPath?: string): string {
+  return `[cms-field-error: ${field}${atlasPath ? ` (${atlasPath})` : ""}]`;
+}
+
+export function isCmsFieldErrorMarker(value: unknown): value is string {
+  return typeof value === "string" && value.startsWith("[cms-field-error: ");
+}
+
 function warnMissingText(context: string, key: string): void {
   const path = fieldPath(context, key);
   warnOnce(
@@ -93,6 +107,14 @@ function invalidField(context: string, key: string): never {
     `Required CMS field "${path}" is malformed.`,
     [path],
     context,
+  );
+}
+
+function warnInvalidField(context: string, key: string): void {
+  const path = fieldPath(context, key);
+  warnOnce(
+    `invalid-field:${path}`,
+    `[cms:invalid-field] Required CMS field "${path}" is malformed; rendering a field-level diagnostic.`,
   );
 }
 
@@ -237,6 +259,27 @@ export function requiredUrl(
     return invalidField(context, key);
   }
   return value;
+}
+
+/**
+ * Reads a URL field that has a local presentation boundary. Unlike
+ * `requiredUrl`, this does not throw when the field is absent or malformed;
+ * it returns a visible diagnostic marker so a single broken field cannot
+ * turn the entire page into a production Application error.
+ */
+export function requiredUrlOrFieldError(
+  data: CmsBlock["data"],
+  key: string,
+  context: string,
+  displayField: string,
+): string {
+  const raw = data[key];
+  const value = typeof raw === "string" ? raw : pick(data, key)?.ja;
+
+  if (value && (isAbsoluteHttpUrl(value) || isInternalUrl(value))) return value;
+
+  warnInvalidField(context, key);
+  return cmsFieldErrorMarker(displayField, fieldPath(context, key));
 }
 
 /** Reads a required Atlas image field as an expanded absolute media URL. */

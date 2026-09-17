@@ -146,7 +146,7 @@ test("home and pricing CTAs render API-owned destinations and phone values", () 
   assert.match(homeContact, /content\.phoneTel/);
   assert.match(homeContact, /content\.micsHref/);
   assert.doesNotMatch(homeContact, /mics\.tokyo|replace\(\/\[\^0-9\+\]/);
-  assert.match(homeMapper, /requiredUrl\(data, "mics_href"/);
+  assert.match(homeMapper, /requiredUrlOrFieldError\(\s*data,\s*"mics_href"/);
   assert.match(ratesView, /rates\.pricing\.cancellationHref/);
   assert.doesNotMatch(ratesView, /"\/cancellation-policy"/);
   assert.match(ratesMapper, /requiredUrl\(\s*metaBlock\.data,\s*"cancellation_href"/);

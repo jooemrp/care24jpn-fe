@@ -127,6 +127,9 @@ async function main(): Promise<void> {
     requiredJa,
     requiredNumber,
     requiredUrl,
+    requiredUrlOrFieldError,
+    cmsFieldErrorMarker,
+    isCmsFieldErrorMarker,
   } = fields;
 
   // -------------------------------------------------------------------------
@@ -461,6 +464,39 @@ async function main(): Promise<void> {
         error instanceof Error &&
         error.name === "CmsContentError" &&
         (error as { code?: string }).code === "CMS_INVALID_REQUIRED_FIELD",
+    );
+  });
+
+  test("isolated URL fields expose a field diagnostic instead of throwing", () => {
+    const marker = cmsFieldErrorMarker("content.micsHref", "home/home-contact.mics_href");
+
+    assert.equal(
+      requiredUrlOrFieldError(
+        { mics_href: undefined },
+        "mics_href",
+        "home/home-contact",
+        "content.micsHref",
+      ),
+      marker,
+    );
+    assert.equal(isCmsFieldErrorMarker(marker), true);
+    assert.equal(
+      requiredUrlOrFieldError(
+        { mics_href: { ja: "not-a-url", en: "not-a-url" } },
+        "mics_href",
+        "home/home-contact",
+        "content.micsHref",
+      ),
+      marker,
+    );
+    assert.equal(
+      requiredUrlOrFieldError(
+        { mics_href: { ja: "https://example.com/mics", en: "https://example.com/mics" } },
+        "mics_href",
+        "home/home-contact",
+        "content.micsHref",
+      ),
+      "https://example.com/mics",
     );
   });
 

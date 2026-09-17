@@ -16,6 +16,7 @@ import {
   requiredImageUrl,
   requiredJa,
   requiredUrl,
+  requiredUrlOrFieldError,
   type BlockTypeList,
 } from "./fields";
 import type { CmsBlock } from "./types";
@@ -488,7 +489,12 @@ function mapContact(
     micsLogoAlt: requiredBi(data, "mics_logo_alt", "home/home-contact"),
     isoLogoAlt: requiredBi(data, "iso_logo_alt", "home/home-contact"),
     ctaHref: requiredUrl(data, "contact_cta_href", "home/home-contact"),
-    micsHref: requiredUrl(data, "mics_href", "home/home-contact"),
+    micsHref: requiredUrlOrFieldError(
+      data,
+      "mics_href",
+      "home/home-contact",
+      "content.micsHref",
+    ),
     leadInOrnamentStart: requiredBi(
       data,
       "lead_in_ornament_start",
