@@ -21,7 +21,7 @@ test("sticky CTA renders full-width desktop phone and contact actions", () => {
           },
         },
         stickyPhoneLabel: { ja: "電話をかける", en: "Call" },
-        stickyRequestLabel: { ja: "資料請求", en: "Request information" },
+        stickyRequestLabel: { ja: "お問合せ", en: "Contact us" },
         contactCta: { ja: "お問合せ", en: "Contact us" },
         queryStates: {
           loading: { ja: "読み込み中です", en: "Loading" },

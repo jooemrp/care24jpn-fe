@@ -73,7 +73,7 @@ export const cta = {
   secondary: { ja: "料金を見る", en: "View pricing" } satisfies Bilingual,
   contact: { ja: "お問合せ", en: "Contact us" } satisfies Bilingual,
   stickyPhoneLabel: { ja: "電話をかける", en: "Call" } satisfies Bilingual,
-  stickyRequestLabel: { ja: "資料請求", en: "Request information" } satisfies Bilingual,
+  stickyRequestLabel: { ja: "お問合せ", en: "Contact us" } satisfies Bilingual,
   primaryHref: "/contact",
 };
 

@@ -11,16 +11,16 @@ import {
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import {
   useSiteContactPhone,
-  useSiteContactCta,
   useSitePrimaryCtaHref,
   useSiteStickyPhoneLabel,
+  useSiteStickyRequestLabel,
 } from "./site-cta-provider";
 
 /** Persistent consultation CTA rail for both mobile and desktop. */
 export default function StickyCta({ lang }: { lang: Lang }) {
   const href = useSitePrimaryCtaHref();
   const contactPhone = useSiteContactPhone();
-  const contactLabel = useSiteContactCta();
+  const contactLabel = useSiteStickyRequestLabel();
   const phoneLabel = useSiteStickyPhoneLabel();
   const [visible, setVisible] = useState(false);
 

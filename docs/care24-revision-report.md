@@ -16,7 +16,7 @@ The previously failing visual items have been updated:
 - Request 18 / sheet row 20: medical note mobile line breaks now follow the client specification; the icon is smaller on mobile and no longer contains `処方箋`.
 - Request 19 / sheet row 21: user banner eyebrow now renders the CMS API value `サービスをご利用の方`.
 - Request 24 / sheet row 26: `処方箋` text was removed from the document icon.
-- Shared query/loading/error labels and contact-form status messages now resolve from required Atlas API fields; runtime rendering no longer imports bundled copy or uses a URL fallback.
+- Shared query/loading/error labels and contact-form status messages now resolve from required Atlas API fields; runtime rendering no longer imports bundled copy or uses a URL fallback. The live `site` page was updated without overwriting its existing dashboard edits.
 
 Requests 1 and 4 were already implemented in the current branch and were rechecked in the browser. Physical-device verification and final client sign-off are still required for those items.
 
@@ -75,6 +75,7 @@ The following screenshots are the browser QA evidence referenced in the table ab
 - Responsive-copy tests: **2/2 passed** (fresh run).
 - Sticky-CTA tests: **2/2 passed** (fresh run).
 - Baseline Node test suite: **162/162 passed**. The TypeScript/TSX suites used by the repository test script also passed locally (**150/150** plus the changed-component regression set **44/44**). The repository `pnpm test` wrapper was not used as a pass claim because it invokes a network-dependent `npx` step that returned `fetch failed` in this workstation.
+- Live Atlas verification: `site-ui-labels.query_*` and `site-cta.sticky_*` fields are present in the published API response; the client-requested pink label is API value `お問合せ`, and the existing six nav items/footer state were preserved.
 - Local ESLint on all changed files: **passed**.
 - Production build (`pnpm build`): **exit 0** (fresh run; TypeScript and 32/32 static pages completed).
 - Production-build browser QA at 375px mobile and 1280px desktop: completed; screenshots are attached above. The menu-open check was performed after scrolling to `scrollY=900`, and the desktop CTA check after scrolling past the FV.

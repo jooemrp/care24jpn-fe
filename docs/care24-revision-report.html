@@ -101,7 +101,7 @@
         <li>Hero media uses the required API image URL; it is not replaced with a bundled path.</li>
         <li>Payment, medical note, ISMS, apply labels, and CTA labels render the API field directly.</li>
         <li>Required CTA fields are required by the CMS mapper; missing data is exposed as a visible <code>[missing: ...]</code> marker instead of silently borrowing hardcoded copy.</li>
-        <li>The sticky CTA renders the API contact label directly, including the client-requested <code>お問合せ</code> label.</li>
+        <li>The sticky CTA renders the API <code>sticky_request_label</code> directly, including the client-requested <code>お問合せ</code> label.</li>
         <li>Loading, error, retry, empty, and contact-form status labels are required Atlas fields; missing values surface a visible marker rather than a bundled fallback.</li>
       </ul>
     </section>
@@ -316,6 +316,7 @@
         <li>Responsive-copy tests: <strong>2/2 passed</strong>.</li>
         <li>Sticky-CTA tests: <strong>2/2 passed</strong>.</li>
         <li>Baseline Node test suite: <strong>162/162 passed</strong>; the local TypeScript/TSX suites also passed (<strong>150/150</strong> plus changed-component regressions <strong>44/44</strong>). The repository <code>pnpm test</code> wrapper was not used as a pass claim because its network-dependent <code>npx</code> step returned <code>fetch failed</code> on this workstation.</li>
+        <li>Live Atlas read-only verification confirmed the published <code>site-ui-labels.query_*</code> and <code>site-cta.sticky_*</code> fields, with the existing six nav items and footer data preserved.</li>
         <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
         <li>Production build (<code>pnpm build</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
         <li>Production-build browser QA at 375px mobile and 1280px desktop completed. The menu-open check was performed after scrolling to <code>scrollY=900</code>, and the desktop CTA check after scrolling past the FV.</li>

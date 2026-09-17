@@ -104,12 +104,12 @@ export function requireAtlasEnv(): AtlasScriptEnv {
  * so there is no more specific type to plug in here. Once that codegen
  * exists, parameterize `createScriptManagementClient<AtlasContentTypes>()`
  * at the call site (the SDK supports that) rather than hardcoding it here. */
-export async function createScriptManagementClient(): Promise<
+export async function createScriptManagementClient(timeoutMs = 10_000): Promise<
   ManagementClient<Record<string, unknown>>
 > {
   const { baseUrl, mgmtKey } = requireAtlasEnv();
   const { createManagementClient } = await import("@latellu/atlas-sdk/management");
-  return createManagementClient({ url: baseUrl, token: mgmtKey });
+  return createManagementClient({ url: baseUrl, token: mgmtKey, timeoutMs });
 }
 
 // ---------------------------------------------------------------------------
