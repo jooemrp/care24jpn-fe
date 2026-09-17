@@ -84,6 +84,7 @@ async function main(): Promise<void> {
       React.createElement(PricingRatesContent, {
         rates,
         lang: "en",
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -102,6 +103,7 @@ async function main(): Promise<void> {
         rates,
         lang: "en",
         contactCta: { ja: "お問い合わせ", en: "Contact us" },
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -123,6 +125,7 @@ async function main(): Promise<void> {
       React.createElement(PricingRatesContent, {
         rates: missingRates,
         lang: "en",
+        emptyLabel: "There is no content to display yet.",
       }),
     );
     const feesHtml = renderToStaticMarkup(
@@ -130,6 +133,7 @@ async function main(): Promise<void> {
         rates: missingRates,
         lang: "en",
         contactCta: { ja: "お問い合わせ", en: "Contact us" },
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 

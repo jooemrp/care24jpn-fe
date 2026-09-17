@@ -5,11 +5,12 @@ import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
 import ContactForm from "@/components/contact/ContactForm";
 import Section from "@/components/ui/Section";
-import { queryStates } from "@/constants/copy";
+import { useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useContactQuery } from "../hooks";
 
 export default function ContactView({ lang }: { lang: Lang }) {
+  const queryStates = useSiteQueryStates();
   const query = useContactQuery();
 
   if (query.isPending) {

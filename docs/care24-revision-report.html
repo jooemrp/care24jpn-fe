@@ -88,7 +88,7 @@
       <div class="summary">
         <div class="metric"><strong>24</strong><span>request rows audited</span></div>
         <div class="metric"><strong>59</strong><span>embedded images reviewed</span></div>
-        <div class="metric"><strong>161/161</strong><span>baseline tests</span></div>
+        <div class="metric"><strong>162/162</strong><span>baseline tests</span></div>
         <div class="metric"><strong>exit 0</strong><span>production build</span></div>
       </div>
       <div class="notice"><strong>External follow-up:</strong> Request 7 (sheet row 9) is a duplicate/reference of Request 8 (sheet row 10), which has the client status <code>OK です</code>; no separate change is required. Row 23 (sheet row 25) contains only a task number and still needs client clarification. Real-smartphone verification is also still required; no iOS/device provider is connected to this workstation.</div>
@@ -96,12 +96,13 @@
 
     <section id="data-contract">
       <h2>Data contract</h2>
-      <p>All visible homepage and shared-CTA content now comes from the Atlas API at runtime: text, numbers, image URLs, links, phone values, and CTA labels. <code>constants/copy.ts</code> remains only as a seed/type source and is not used as a rendering fallback.</p>
+      <p>All visible homepage and shared-CTA content now comes from the Atlas API at runtime: text, numbers, image URLs, links, phone values, CTA labels, query-state labels, and contact-form status copy. <code>constants/copy.ts</code> remains only as a seed/type source and is not used as a rendering fallback.</p>
       <ul class="checks">
         <li>Hero media uses the required API image URL; it is not replaced with a bundled path.</li>
         <li>Payment, medical note, ISMS, apply labels, and CTA labels render the API field directly.</li>
         <li>Required CTA fields are required by the CMS mapper; missing data is exposed as a visible <code>[missing: ...]</code> marker instead of silently borrowing hardcoded copy.</li>
         <li>The sticky CTA renders the API contact label directly, including the client-requested <code>お問合せ</code> label.</li>
+        <li>Loading, error, retry, empty, and contact-form status labels are required Atlas fields; missing values surface a visible marker rather than a bundled fallback.</li>
       </ul>
     </section>
 
@@ -314,7 +315,7 @@
         <li>Focused homepage regression tests: <strong>9/9 passed</strong>, including the medical-copy regression cases.</li>
         <li>Responsive-copy tests: <strong>2/2 passed</strong>.</li>
         <li>Sticky-CTA tests: <strong>2/2 passed</strong>.</li>
-        <li>Baseline Node test suite: <strong>161/161 passed</strong>. The repository <code>pnpm test</code> wrapper was not used as a pass claim because its network-dependent <code>npx</code> step returned <code>fetch failed</code> on this workstation.</li>
+        <li>Baseline Node test suite: <strong>162/162 passed</strong>; the local TypeScript/TSX suites also passed (<strong>150/150</strong> plus changed-component regressions <strong>44/44</strong>). The repository <code>pnpm test</code> wrapper was not used as a pass claim because its network-dependent <code>npx</code> step returned <code>fetch failed</code> on this workstation.</li>
         <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
         <li>Production build (<code>pnpm build</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
         <li>Production-build browser QA at 375px mobile and 1280px desktop completed. The menu-open check was performed after scrolling to <code>scrollY=900</code>, and the desktop CTA check after scrolling past the FV.</li>

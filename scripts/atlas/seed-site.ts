@@ -40,6 +40,7 @@ import {
   footer,
   errorPage,
   notFoundPage,
+  queryStates,
 } from "../../constants/copy";
 import {
   requireAtlasEnv,
@@ -184,12 +185,20 @@ function buildBlocks(
       toc_label: ui.tocLabel.ja,
       lang_short_ja: ui.langShortJa,
       lang_short_en: ui.langShortEn,
+      query_loading: queryStates.loading.ja,
+      query_error: queryStates.error.ja,
+      query_retry: queryStates.retry.ja,
+      query_empty: queryStates.empty.ja,
     },
     translations: en({
       menu_toggle_label: ui.menuToggleLabel.en,
       tab_switch_label: "",
       lang_toggle_label: ui.langToggleLabel.en,
       toc_label: ui.tocLabel.en,
+      query_loading: queryStates.loading.en,
+      query_error: queryStates.error.en,
+      query_retry: queryStates.retry.en,
+      query_empty: queryStates.empty.en,
     }),
   });
 

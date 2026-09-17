@@ -387,6 +387,10 @@ export interface SiteUiLabels {
   toc_label?: string; // localizable
   lang_short_ja?: string;
   lang_short_en?: string;
+  query_loading?: string; // localizable
+  query_error?: string; // localizable
+  query_retry?: string; // localizable
+  query_empty?: string; // localizable
 }
 
 /** Site — Shared CTA labels (content type: "site-cta") */

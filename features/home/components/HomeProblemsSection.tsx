@@ -3,16 +3,17 @@
 import Image from "next/image";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 
 export function HomeProblemsSection({
   content,
   lang,
+  emptyLabel,
 }: {
   content: HomeContent["problems"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <Section surface heading={content.heading} lang={lang}>
@@ -40,7 +41,7 @@ export function HomeProblemsSection({
           ))}
         </div>
       ) : (
-        <QueryEmptyState title={t(queryStates.empty, lang)} />
+        <QueryEmptyState title={emptyLabel} />
       )}
 
       {content.items.length > 0 ? (

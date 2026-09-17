@@ -14,13 +14,13 @@
  */
 const envSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-if (!envSiteUrl && process.env.NODE_ENV === "production") {
+if (!envSiteUrl) {
   throw new Error(
     "NEXT_PUBLIC_SITE_URL is not set. Every deploy environment must set " +
-      "NEXT_PUBLIC_SITE_URL (no trailing slash) so canonical URLs, the " +
-      "sitemap, robots.txt, and Organization/og:url all point at the real " +
-      "domain instead of silently falling back."
+    "NEXT_PUBLIC_SITE_URL (no trailing slash) so canonical URLs, the " +
+    "sitemap, robots.txt, and Organization/og:url all point at the real " +
+    "domain instead of silently falling back to a bundled URL."
   );
 }
 
-export const SITE_URL = envSiteUrl ?? "https://care24jpn.vercel.app";
+export const SITE_URL = envSiteUrl;

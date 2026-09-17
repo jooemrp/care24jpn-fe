@@ -71,6 +71,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -147,6 +148,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -191,6 +193,7 @@ async function main(): Promise<void> {
         content: emptyContent,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -214,6 +217,7 @@ async function main(): Promise<void> {
         content: contentWithoutOptionalHeroCopy,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -227,6 +231,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -240,6 +245,7 @@ async function main(): Promise<void> {
         content,
         lang: "ja",
         contactCta: cta.contact,
+        emptyLabel: "表示できるコンテンツがありません。",
       }),
     );
 
@@ -267,6 +273,7 @@ async function main(): Promise<void> {
         content,
         lang: "ja",
         contactCta: cta.contact,
+        emptyLabel: "表示できるコンテンツがありません。",
       }),
     );
 
@@ -305,6 +312,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -341,6 +349,7 @@ async function main(): Promise<void> {
         content: customContent,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
     assert.match(html, /md:hidden whitespace-pre-line">Custom heading<\/span>/);

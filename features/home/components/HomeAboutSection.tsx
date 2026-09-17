@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
@@ -11,9 +10,11 @@ import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 export function HomeAboutSection({
   content,
   lang,
+  emptyLabel,
 }: {
   content: HomeContent["about"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <Section lang={lang} className="pt-6! md:pt-8!">
@@ -61,7 +62,7 @@ export function HomeAboutSection({
         </ul>
       ) : (
         <div className="mt-8">
-          <QueryEmptyState title={t(queryStates.empty, lang)} />
+          <QueryEmptyState title={emptyLabel} />
         </div>
       )}
 

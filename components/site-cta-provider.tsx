@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { Bilingual } from "@/constants/copy";
+import type { SiteContent } from "@/features/cms/site";
 import { CmsContentError } from "@/features/cms/errors";
 
 type SiteCtaContextValue = {
@@ -11,6 +12,7 @@ type SiteCtaContextValue = {
   contactPhone: { display: string; tel: string; note: Bilingual };
   stickyPhoneLabel: Bilingual;
   stickyRequestLabel: Bilingual;
+  queryStates: SiteContent["ui"]["queryStates"];
 };
 
 const SiteCtaContext = createContext<SiteCtaContextValue | undefined>(undefined);
@@ -22,6 +24,7 @@ export function SiteCtaProvider({
   contactPhone,
   stickyPhoneLabel,
   stickyRequestLabel,
+  queryStates,
   children,
 }: {
   primaryCta: Bilingual;
@@ -30,16 +33,21 @@ export function SiteCtaProvider({
   contactPhone: { display: string; tel: string; note: Bilingual };
   stickyPhoneLabel: Bilingual;
   stickyRequestLabel: Bilingual;
+  queryStates: SiteContent["ui"]["queryStates"];
   children: ReactNode;
 }) {
-  if (!contactCta || !stickyPhoneLabel || !stickyRequestLabel) {
+  if (!contactCta || !stickyPhoneLabel || !stickyRequestLabel || !queryStates) {
     throw new CmsContentError(
       "CMS_MISSING_REQUIRED_FIELD",
-      'Required CMS fields "site.site-cta.contact", "site.site-cta.sticky_phone_label", and "site.site-cta.sticky_request_label" are unavailable.',
+      'Required CMS fields "site.site-cta.contact", "site.site-cta.sticky_phone_label", "site.site-cta.sticky_request_label", and "site.site-ui-labels.query_*" are unavailable.',
       [
         "site.site-cta.contact",
         "site.site-cta.sticky_phone_label",
         "site.site-cta.sticky_request_label",
+        "site.site-ui-labels.query_loading",
+        "site.site-ui-labels.query_error",
+        "site.site-ui-labels.query_retry",
+        "site.site-ui-labels.query_empty",
       ],
       "site",
     );
@@ -54,6 +62,7 @@ export function SiteCtaProvider({
         contactPhone,
         stickyPhoneLabel,
         stickyRequestLabel,
+        queryStates,
       }}
     >
       {children}
@@ -109,4 +118,8 @@ export function useSiteStickyPhoneLabel(): Bilingual {
 
 export function useSiteStickyRequestLabel(): Bilingual {
   return useSiteCta().stickyRequestLabel;
+}
+
+export function useSiteQueryStates(): SiteContent["ui"]["queryStates"] {
+  return useSiteCta().queryStates;
 }

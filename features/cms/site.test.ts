@@ -107,6 +107,10 @@ function otherSiteBlocks(): CmsBlock[] {
       toc_label: bi("toc"),
       lang_short_ja: bi("JA"),
       lang_short_en: bi("EN"),
+      query_loading: bi("loading"),
+      query_error: bi("error"),
+      query_retry: bi("retry"),
+      query_empty: bi("empty"),
     }),
     simple("site-error-labels", 4, { title: bi("t"), body: bi("b"), retry_label: bi("r") }),
     simple("site-not-found-labels", 5, {

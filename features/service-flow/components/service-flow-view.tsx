@@ -3,14 +3,14 @@
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
-import { useSitePrimaryCta } from "@/components/site-cta-provider";
-import { queryStates } from "@/constants/copy";
+import { useSitePrimaryCta, useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { ServiceFlowContentView } from "./service-flow-content";
 import { useServiceFlowQuery } from "../hooks";
 
 export default function ServiceFlowView({ lang }: { lang: Lang }) {
   const primaryCta = useSitePrimaryCta();
+  const queryStates = useSiteQueryStates();
   const query = useServiceFlowQuery();
 
   if (query.isPending) {

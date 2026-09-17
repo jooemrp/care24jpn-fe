@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates, type Bilingual } from "@/constants/copy";
+import type { Bilingual } from "@/constants/copy";
 import { CmsContentError } from "@/features/cms/errors";
 import { t, type Lang } from "@/features/lang/i18n";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
@@ -27,6 +27,7 @@ export function HomeCoursesSection({
   pricingDetailsLinkMobile,
   pricingDetailsHref,
   lang,
+  emptyLabel,
 }: {
   careCourse: HomeContent["careCourse"];
   nursingCourse: HomeContent["nursingCourse"];
@@ -34,6 +35,7 @@ export function HomeCoursesSection({
   pricingDetailsLinkMobile: HomeContent["pricingDetailsLinkMobile"];
   pricingDetailsHref: HomeContent["pricingDetailsHref"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <>
@@ -85,7 +87,7 @@ export function HomeCoursesSection({
               <FeeGrid fees={careCourse.fees} lang={lang} />
             ) : (
               <div className="flex-1">
-                <QueryEmptyState title={t(queryStates.empty, lang)} />
+                <QueryEmptyState title={emptyLabel} />
               </div>
             )}
           </div>
@@ -130,7 +132,7 @@ export function HomeCoursesSection({
           </div>
         ) : (
           <div className="mt-8">
-            <QueryEmptyState title={t(queryStates.empty, lang)} />
+            <QueryEmptyState title={emptyLabel} />
           </div>
         )}
       </Section>
@@ -182,7 +184,7 @@ export function HomeCoursesSection({
               <FeeGrid fees={nursingCourse.fees} lang={lang} tone="accent" />
             ) : (
               <div className="flex-1">
-                <QueryEmptyState title={t(queryStates.empty, lang)} />
+                <QueryEmptyState title={emptyLabel} />
               </div>
             )}
           </div>
@@ -207,7 +209,7 @@ export function HomeCoursesSection({
             </ul>
           ) : (
             <div className="mt-6">
-              <QueryEmptyState title={t(queryStates.empty, lang)} />
+              <QueryEmptyState title={emptyLabel} />
             </div>
           )}
         </div>

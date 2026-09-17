@@ -22,18 +22,20 @@ export function HomeContentView({
   content,
   lang,
   contactCta,
+  emptyLabel,
 }: {
   content: HomeContentData;
   lang: Lang;
   contactCta: Bilingual;
+  emptyLabel: string;
 }) {
   return (
     <>
       <div data-first-view>
         <HomeHeroSection content={content.hero} lang={lang} />
       </div>
-      <HomeAboutSection content={content.about} lang={lang} />
-      <HomeProblemsSection content={content.problems} lang={lang} />
+      <HomeAboutSection content={content.about} lang={lang} emptyLabel={emptyLabel} />
+      <HomeProblemsSection content={content.problems} lang={lang} emptyLabel={emptyLabel} />
       <HomePricingSection
         content={content.pricingSummary}
         pricingDetailsLink={content.pricingDetailsLink}
@@ -49,9 +51,10 @@ export function HomeContentView({
         pricingDetailsLinkMobile={content.pricingDetailsLinkMobile}
         pricingDetailsHref={content.pricingDetailsHref}
         lang={lang}
+        emptyLabel={emptyLabel}
       />
-      <HomeExamplesSection content={content.examples} lang={lang} />
-      <HomeFlowSection content={content.flow} lang={lang} />
+      <HomeExamplesSection content={content.examples} lang={lang} emptyLabel={emptyLabel} />
+      <HomeFlowSection content={content.flow} lang={lang} emptyLabel={emptyLabel} />
       <HomeApplySection content={content.apply} lang={lang} />
       <HomeContactSection
         content={content.contact}

@@ -89,7 +89,7 @@ export async function submitContact(payload: ContactPayload): Promise<SubmitCont
     });
     return apiFailure({
       code: "CONTACT_ACTION_FAILED",
-      message: "Contact service unavailable, please try again later.",
+      message: "",
       status: 502,
     });
   }

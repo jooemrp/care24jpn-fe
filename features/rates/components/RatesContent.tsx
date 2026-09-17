@@ -5,7 +5,7 @@ import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { formatYen, type SupporterRates } from "@/constants/pricing";
-import { type Bilingual, queryStates } from "@/constants/copy";
+import type { Bilingual } from "@/constants/copy";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import type { RatesContent } from "../types";
 
@@ -13,8 +13,8 @@ function hasCompleteRates<T extends { rows: unknown[] }>(courses: T[]): boolean 
   return courses.length > 0 && courses.every((course) => course.rows.length > 0);
 }
 
-function EmptyRates({ lang }: { lang: Lang }) {
-  return <QueryEmptyState title={t(queryStates.empty, lang)} />;
+function EmptyRates({ emptyLabel }: { emptyLabel: string }) {
+  return <QueryEmptyState title={emptyLabel} />;
 }
 
 function courseTone(courseKey: string): "primary" | "accent" {
@@ -24,9 +24,11 @@ function courseTone(courseKey: string): "primary" | "accent" {
 export function PricingRatesContent({
   rates,
   lang,
+  emptyLabel,
 }: {
   rates: RatesContent;
   lang: Lang;
+  emptyLabel: string;
 }) {
   const complete = hasCompleteRates(rates.courseRates);
 
@@ -62,7 +64,7 @@ export function PricingRatesContent({
             ))}
           </div>
         ) : (
-          <EmptyRates lang={lang} />
+          <EmptyRates emptyLabel={emptyLabel} />
         )}
 
         <p className="mt-8 text-lg text-muted">
@@ -88,10 +90,12 @@ export function FeesRatesContent({
   rates,
   lang,
   contactCta,
+  emptyLabel,
 }: {
   rates: RatesContent;
   lang: Lang;
   contactCta: Bilingual;
+  emptyLabel: string;
 }) {
   const complete = hasCompleteRates(rates.supporterRates);
 
@@ -116,7 +120,7 @@ export function FeesRatesContent({
             ))}
           </div>
         ) : (
-          <EmptyRates lang={lang} />
+          <EmptyRates emptyLabel={emptyLabel} />
         )}
 
         <p className="mt-8 text-lg text-muted">

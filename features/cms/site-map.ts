@@ -57,6 +57,12 @@ export type SiteContent = {
     tocLabel: Bilingual;
     langShortJa: string;
     langShortEn: string;
+    queryStates: {
+      loading: Bilingual;
+      error: Bilingual;
+      retry: Bilingual;
+      empty: Bilingual;
+    };
   };
   footer: {
     description?: Bilingual;
@@ -182,6 +188,12 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     tocLabel: requiredBi(uiBlock.data, "toc_label", "site/site-ui-labels"),
     langShortJa: requiredJa(uiBlock.data, "lang_short_ja", "site/site-ui-labels"),
     langShortEn: requiredJa(uiBlock.data, "lang_short_en", "site/site-ui-labels"),
+    queryStates: {
+      loading: requiredBi(uiBlock.data, "query_loading", "site/site-ui-labels"),
+      error: requiredBi(uiBlock.data, "query_error", "site/site-ui-labels"),
+      retry: requiredBi(uiBlock.data, "query_retry", "site/site-ui-labels"),
+      empty: requiredBi(uiBlock.data, "query_empty", "site/site-ui-labels"),
+    },
   };
 
   const errorPage: SiteContent["errorPage"] = {

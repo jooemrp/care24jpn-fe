@@ -98,6 +98,10 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "toc_label", label: "Legal doc table-of-contents label", field_type: "text", localizable: true, required: false, sort_order: 3 },
       { name: "lang_short_ja", label: "Lang toggle short label (JA option)", field_type: "text", localizable: false, required: false, sort_order: 4 },
       { name: "lang_short_en", label: "Lang toggle short label (EN option)", field_type: "text", localizable: false, required: false, sort_order: 5 },
+      { name: "query_loading", label: "CMS query loading label", field_type: "text", localizable: true, required: false, sort_order: 6 },
+      { name: "query_error", label: "CMS query error label", field_type: "text", localizable: true, required: false, sort_order: 7 },
+      { name: "query_retry", label: "CMS query retry label", field_type: "text", localizable: true, required: false, sort_order: 8 },
+      { name: "query_empty", label: "CMS query empty label", field_type: "text", localizable: true, required: false, sort_order: 9 },
     ],
   },
   {

@@ -77,7 +77,7 @@ async function main(): Promise<void> {
     }
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
-      message: "Contact service is not configured.",
+      code: "config",
     });
   });
 
@@ -98,7 +98,7 @@ async function main(): Promise<void> {
     assert.equal(result.status, 413);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
-      message: "Request body too large.",
+      code: "validation",
     });
   });
 
@@ -117,7 +117,7 @@ async function main(): Promise<void> {
     assert.equal(result.status, 400);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
-      message: "Invalid JSON body.",
+      code: "validation",
     });
   });
 
@@ -139,7 +139,7 @@ async function main(): Promise<void> {
     assert.equal(result.status, 400);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
-      message: "Invalid request body.",
+      code: "validation",
     });
   });
 
@@ -264,7 +264,7 @@ async function main(): Promise<void> {
     assert.equal(result.status, 502);
     assert.deepEqual(JSON.parse(result.body), {
       success: false,
-      message: "Contact service unavailable, please try again later.",
+      code: "unavailable",
     });
   });
 

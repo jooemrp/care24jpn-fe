@@ -36,6 +36,7 @@ export default function AppShell({
         contactPhone={site.contactPhone}
         stickyPhoneLabel={site.cta.stickyPhoneLabel}
         stickyRequestLabel={site.cta.stickyRequestLabel}
+        queryStates={site.ui.queryStates}
       >
         <div aria-hidden="true" className="relative h-0">
           <div

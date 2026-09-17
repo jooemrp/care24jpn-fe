@@ -53,6 +53,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type * as PageMetadataModule from "./pageMetadata.ts";
 
+// The production module intentionally fails closed when the canonical origin
+// is missing. Keep this pure metadata test deterministic without bundling a
+// fallback into runtime code.
+process.env.NEXT_PUBLIC_SITE_URL ??= "https://metadata-test.invalid";
+
 const pageMetadataPath = "./pageMetadata" + ".ts";
 
 async function main() {
