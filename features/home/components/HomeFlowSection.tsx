@@ -4,7 +4,6 @@ import Image from "next/image";
 import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
@@ -12,9 +11,11 @@ import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 export function HomeFlowSection({
   content,
   lang,
+  emptyLabel,
 }: {
   content: HomeContent["flow"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <Section surface heading={content.heading} lang={lang}>
@@ -66,7 +67,7 @@ export function HomeFlowSection({
           })}
         </ol>
       ) : (
-        <QueryEmptyState title={t(queryStates.empty, lang)} />
+        <QueryEmptyState title={emptyLabel} />
       )}
     </Section>
   );

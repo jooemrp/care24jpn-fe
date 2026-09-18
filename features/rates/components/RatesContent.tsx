@@ -4,8 +4,10 @@ import Link from "next/link";
 import Section from "@/components/ui/Section";
 import CourseRateCard from "@/components/ui/CourseRateCard";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { formatYen, type SupporterRates } from "@/constants/pricing";
-import { type Bilingual, queryStates } from "@/constants/copy";
+import { isCmsFieldErrorMarker } from "@/features/cms/fields";
+import type { SupporterRates } from "@/constants/pricing";
+import { formatYen } from "@/features/rates/format-yen";
+import type { Bilingual } from "@/constants/copy";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import type { RatesContent } from "../types";
 
@@ -13,8 +15,8 @@ function hasCompleteRates<T extends { rows: unknown[] }>(courses: T[]): boolean 
   return courses.length > 0 && courses.every((course) => course.rows.length > 0);
 }
 
-function EmptyRates({ lang }: { lang: Lang }) {
-  return <QueryEmptyState title={t(queryStates.empty, lang)} />;
+function EmptyRates({ emptyLabel }: { emptyLabel: string }) {
+  return <QueryEmptyState title={emptyLabel} />;
 }
 
 function courseTone(courseKey: string): "primary" | "accent" {
@@ -24,9 +26,11 @@ function courseTone(courseKey: string): "primary" | "accent" {
 export function PricingRatesContent({
   rates,
   lang,
+  emptyLabel,
 }: {
   rates: RatesContent;
   lang: Lang;
+  emptyLabel: string;
 }) {
   const complete = hasCompleteRates(rates.courseRates);
 
@@ -62,7 +66,7 @@ export function PricingRatesContent({
             ))}
           </div>
         ) : (
-          <EmptyRates lang={lang} />
+          <EmptyRates emptyLabel={emptyLabel} />
         )}
 
         <p className="mt-8 text-lg text-muted">
@@ -72,12 +76,18 @@ export function PricingRatesContent({
           {t(rates.pricing.paymentNote, lang)}
         </p>
         <p className="mt-4 text-base text-body">
-          <Link
-            href={localizeHref("/cancellation-policy", lang)}
-            className="font-medium text-primary underline-offset-2 hover:underline"
-          >
-            {t(rates.pricing.cancellationLinkLabel, lang)}
-          </Link>
+          {isCmsFieldErrorMarker(rates.pricing.cancellationHref) ? (
+            <span role="alert" className="font-mono text-sm text-danger-text">
+              {rates.pricing.cancellationHref}
+            </span>
+          ) : (
+            <Link
+              href={localizeHref(rates.pricing.cancellationHref, lang)}
+              className="font-medium text-primary underline-offset-2 hover:underline"
+            >
+              {t(rates.pricing.cancellationLinkLabel, lang)}
+            </Link>
+          )}
         </p>
       </Section>
     </>
@@ -88,10 +98,12 @@ export function FeesRatesContent({
   rates,
   lang,
   contactCta,
+  emptyLabel,
 }: {
   rates: RatesContent;
   lang: Lang;
   contactCta: Bilingual;
+  emptyLabel: string;
 }) {
   const complete = hasCompleteRates(rates.supporterRates);
 
@@ -116,7 +128,7 @@ export function FeesRatesContent({
             ))}
           </div>
         ) : (
-          <EmptyRates lang={lang} />
+          <EmptyRates emptyLabel={emptyLabel} />
         )}
 
         <p className="mt-8 text-lg text-muted">

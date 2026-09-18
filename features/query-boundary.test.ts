@@ -128,7 +128,48 @@ test("shared shell uses strict CMS content for footer and JSON-LD inputs", () =>
   assert.doesNotMatch(jsonLd, /fallbackCompany|from ["']@\/constants\/copy/);
   assert.match(pageMetadata, /getPageMetaStrict/);
   assert.doesNotMatch(pageMetadata, /fallbackOgImage/);
+  assert.doesNotMatch(pageMetadata, /@\/constants\/seo["']/);
   assert.doesNotMatch(legalDocPage, /tocLabel\?|目次|Table of Contents/);
+});
+
+test("home and pricing CTAs render API-owned destinations and phone values", () => {
+  const homeContact = readFileSync(
+    resolve(process.cwd(), "features/home/components/HomeContactSection.tsx"),
+    "utf8",
+  );
+  const homeMapper = readFileSync(resolve(process.cwd(), "features/cms/home.ts"), "utf8");
+  const ratesView = readFileSync(
+    resolve(process.cwd(), "features/rates/components/RatesContent.tsx"),
+    "utf8",
+  );
+  const ratesMapper = readFileSync(resolve(process.cwd(), "features/cms/rates.ts"), "utf8");
+
+  assert.match(homeContact, /content\.phoneTel/);
+  assert.match(homeContact, /content\.micsHref/);
+  assert.doesNotMatch(homeContact, /mics\.tokyo|replace\(\/\[\^0-9\+\]/);
+  assert.match(homeMapper, /requiredUrlOrFieldError\(\s*data,\s*"mics_href"/);
+  assert.match(ratesView, /rates\.pricing\.cancellationHref/);
+  assert.doesNotMatch(ratesView, /"\/cancellation-policy"/);
+  assert.match(
+    ratesMapper,
+    /requiredUrlOrFieldError\(\s*metaBlock\.data,\s*"cancellation_href"/,
+  );
+});
+
+test("pricing UI does not bundle the seed pricing data module", () => {
+  const ratesContent = readFileSync(
+    resolve(process.cwd(), "features/rates/components/RatesContent.tsx"),
+    "utf8",
+  );
+  const courseRateCard = readFileSync(
+    resolve(process.cwd(), "components/ui/CourseRateCard.tsx"),
+    "utf8",
+  );
+
+  for (const source of [ratesContent, courseRateCard]) {
+    assert.doesNotMatch(source, /import\s*\{[^}]*formatYen[^}]*\}\s*from\s*["']@\/constants\/pricing/);
+    assert.match(source, /from\s*["']@\/features\/rates\/format-yen["']/);
+  }
 });
 
 test("hydrated query views keep content visible during background refetch", () => {
@@ -182,6 +223,15 @@ test("shared CMS CTA context fails closed without a default bundle value", () =>
   );
   assert.match(provider, /CmsContentError/);
   assert.doesNotMatch(provider, /createContext<[^>]+>\(null\)/);
+  assert.doesNotMatch(provider, /fallbackCta|\?\?\s*fallback/);
+});
+
+test("home CMS mapping uses API-owned media and copy without legacy replacements", () => {
+  const loader = readFileSync(resolve(process.cwd(), "features/cms/home.ts"), "utf8");
+  assert.match(loader, /heroImage\s*=\s*requiredImageUrl\(heroBlock\.data,\s*\"image\"/);
+  assert.match(loader, /image:\s*heroImage/);
+  assert.doesNotMatch(loader, /image:\s*home\.hero\.image/);
+  assert.doesNotMatch(loader, /replaceExactBilingual/);
 });
 
 test("route error labels fail closed without a constants default", () => {

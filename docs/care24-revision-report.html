@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Care24Japan Revision Report</title>
+  <style>
+    :root {
+      --ink: #172554;
+      --muted: #64748b;
+      --line: #dbe4ef;
+      --surface: #ffffff;
+      --soft: #f5f8fc;
+      --blue: #147ab3;
+      --green: #087443;
+      --green-bg: #e8f7ef;
+      --amber: #92400e;
+      --amber-bg: #fff7df;
+      --shadow: 0 12px 36px rgba(23, 37, 84, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1e293b;
+      background: var(--soft);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.65;
+    }
+    .page { max-width: 1440px; margin: 0 auto; padding: 32px 20px 72px; }
+    .hero, section { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+    .hero { padding: 32px; margin-bottom: 22px; }
+    h1, h2 { color: var(--ink); line-height: 1.25; }
+    h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 3vw, 2.7rem); }
+    h2 { margin: 0 0 18px; font-size: 1.35rem; }
+    h3 { color: var(--ink); margin: 26px 0 10px; font-size: 1.05rem; }
+    .meta { color: var(--muted); margin: 4px 0; font-size: .95rem; }
+    .summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .metric { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: #fbfdff; }
+    .metric strong { display: block; color: var(--ink); font-size: 1.25rem; }
+    .metric span { color: var(--muted); font-size: .85rem; }
+    section { padding: 28px; margin-top: 22px; }
+    .notice { border-left: 4px solid #e0a11a; background: var(--amber-bg); color: var(--amber); padding: 14px 16px; border-radius: 8px; margin: 18px 0 0; }
+    .task-list { display: grid; gap: 18px; }
+    .task-card { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: #fbfdff; }
+    .task-card h3 { margin: 0 0 12px; font-size: 1.15rem; }
+    .task-card h3 small { color: var(--muted); font-size: .82rem; font-weight: 500; }
+    .task-card-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr); gap: 22px; align-items: start; }
+    .task-label { margin: 12px 0 3px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .task-card p { margin: 0; }
+    .task-card .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .task-card figure { padding: 8px; }
+    .task-card figure img { height: 210px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; min-width: 1120px; border-collapse: collapse; font-size: .92rem; }
+    th, td { border-bottom: 1px solid var(--line); padding: 13px 12px; vertical-align: top; text-align: left; }
+    th { color: var(--ink); background: #eef5fb; font-weight: 700; position: sticky; top: 0; z-index: 1; }
+    tbody tr:hover { background: #fbfdff; }
+    td:first-child, td:nth-child(2) { white-space: nowrap; font-weight: 700; color: var(--ink); }
+    .tag { display: inline-block; border-radius: 999px; padding: 2px 9px; margin: 0 0 5px; font-size: .76rem; font-weight: 700; }
+    .ok { color: var(--green); background: var(--green-bg); }
+    .pending { color: var(--amber); background: var(--amber-bg); }
+    a { color: var(--blue); text-underline-offset: 2px; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: #fbfdff; }
+    figure img { display: block; width: 100%; height: 220px; object-fit: contain; background: #f1f5f9; border-radius: 8px; }
+    figcaption { color: var(--muted); padding: 8px 2px 0; font-size: .85rem; }
+    ul { padding-left: 1.25rem; }
+    .checks li { margin: 5px 0; }
+    code { background: #eef2f7; border-radius: 4px; padding: 1px 5px; }
+    footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: .85rem; }
+    @media (max-width: 760px) {
+      .page { padding: 16px 12px 44px; }
+      .hero, section { padding: 20px 16px; border-radius: 14px; }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      figure img { height: 180px; }
+      .task-card-grid { grid-template-columns: 1fr; }
+      .task-card figure img { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>Care24Japan Revision Report</h1>
+      <p class="meta"><strong>日付:</strong> 2026-09-17</p>
+      <p class="meta"><strong>Source:</strong> /Users/ilham/Downloads/care24Japan website revision(3).xlsx</p>
+      <p class="meta"><strong>Scope:</strong> シート1 — rows 1–55, columns A–Z, including 59 embedded images</p>
+      <div class="summary">
+        <div class="metric"><strong>24</strong><span>request rows audited</span></div>
+        <div class="metric"><strong>59</strong><span>embedded images reviewed</span></div>
+        <div class="metric"><strong>315/315</strong><span>repository tests</span></div>
+        <div class="metric"><strong>exit 0</strong><span>production build</span></div>
+      </div>
+      <div class="notice"><strong>External follow-up:</strong> Request 7 (sheet row 9) is a duplicate/reference of Request 8 (sheet row 10), which has the client status <code>OK です</code>; no separate change is required. Row 23 (sheet row 25) contains only a task number and still needs client clarification. Real-smartphone verification is also still required; no iOS/device provider is connected to this workstation.</div>
+    </header>
+
+    <section id="data-contract">
+      <h2>Data contract</h2>
+      <p>All visible homepage and shared-CTA content now comes from the Atlas API at runtime: text, numbers, image URLs, links, phone values, CTA labels, query-state labels, and contact-form status copy. <code>constants/copy.ts</code> remains only as a seed/type source and is not used as a rendering fallback.</p>
+      <ul class="checks">
+        <li>Hero media uses the required Atlas API image URL; the published field now points to the production-matching <code>hero-preview.jpg</code> media record rather than the replaced blue-scrubs photo.</li>
+        <li>Payment, medical note, ISMS, apply labels, and CTA labels render the API field directly.</li>
+        <li>Required CTA fields are required by the CMS mapper; missing text is exposed as a visible <code>[missing: ...]</code> marker instead of silently borrowing hardcoded copy.</li>
+        <li>The isolated MICS link field <code>content.micsHref</code> renders a field-specific <code>[cms-field-error: ...]</code> diagnostic when empty or malformed, so that one bad URL does not crash the homepage.</li>
+        <li>The live malformed <code>pricing/pricing-meta.cancellation_href</code> field is isolated the same way: <code>/pricing</code> remains usable and shows <code>[cms-field-error: rates.pricing.cancellationHref (...)]</code> instead of returning HTTP 500.</li>
+        <li>Runtime metadata no longer imports the hardcoded SEO seed module; titles, descriptions, og:image values, and sitemap <code>lastModified</code> continue to come from Atlas, while <code>constants/seo-routes.ts</code> contains only route-to-CMS wiring.</li>
+        <li>The sticky CTA renders the API <code>sticky_request_label</code> directly, including the client-requested <code>お問合せ</code> label.</li>
+        <li>Loading, error, retry, empty, and contact-form status labels are required Atlas fields; missing values surface a visible marker rather than a bundled fallback.</li>
+      </ul>
+    </section>
+
+    <section id="today-updates">
+      <h2>Update hari ini — task, hasil, dan screenshot</h2>
+      <p>Bagian ini menampilkan pekerjaan yang benar-benar di-update atau diverifikasi hari ini. Setiap kartu berisi permintaan client, hasil implementasi, dan screenshot langsung.</p>
+      <div class="task-list">
+        <article class="task-card">
+          <h3>Poin 1 — First View mobile <small>(sheet row 3)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Susunan SP harus menampilkan main visual, catchphrase, area layanan, CTA, dan awal “Care24Japanとは” dalam satu scroll. Catchphrase tidak boleh menimpa wajah pada gambar.</p>
+              <div class="task-label">Hasil</div>
+              <p>Urutan CTA mobile sudah berada sebelum area layanan. Catchphrase terpisah dari wajah background, heading “Care24Japanとは” terlihat setelah FV, dan field API <code>home-hero.image</code> sekarang menunjuk foto produksi yang benar (<code>_hero-preview.png</code>) melalui media Atlas.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-hero-mobile.png"><img src="../audit-after-hero-mobile.png" alt="Poin 1 production mobile FV"></a><figcaption>Production mobile FV, 375px</figcaption></figure>
+              <figure><a href="../audit-after-hero-cms-375.png"><img src="../audit-after-hero-cms-375.png" alt="Poin 1 hero after CMS media fix"></a><figcaption>Hero after CMS media fix, 375px</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Follow-up QA — Mobile line wrapping <small>(375px and 320px)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Temuan</div>
+              <p>Pada lebar 375px/320px, heading nursing memisahkan <code>は、</code> dan eyebrow apply memisahkan <code>方</code> menjadi karakter tunggal.</p>
+              <div class="task-label">Hasil</div>
+              <p>CSS <code>text-wrap: balance</code> diterapkan pada kedua copy yang tetap berasal dari CMS. Hasil browser QA di 375px dan 320px tidak lagi menampilkan karakter tunggal.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-nursing-heading-375.png"><img src="../audit-after-nursing-heading-375.png" alt="Nursing heading balanced at 375px"></a><figcaption>Nursing heading, 375px</figcaption></figure>
+              <figure><a href="../audit-after-nursing-heading-320.png"><img src="../audit-after-nursing-heading-320.png" alt="Nursing heading balanced at 320px"></a><figcaption>Nursing heading, 320px</figcaption></figure>
+              <figure><a href="../audit-after-apply-balanced-375.png"><img src="../audit-after-apply-balanced-375.png" alt="Apply eyebrow balanced at 375px"></a><figcaption>Apply eyebrow, 375px</figcaption></figure>
+              <figure><a href="../audit-after-apply-balanced-320.png"><img src="../audit-after-apply-balanced-320.png" alt="Apply eyebrow balanced at 320px"></a><figcaption>Apply eyebrow, 320px</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 4 — Sticky CTA setelah FV <small>(sheet row 6)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>CTA harus muncul setelah melewati FV, dengan dua aksi seperti referensi Ichirou: telepon dan inquiry. Di PC, area tombol harus besar dan sisi pink harus bertuliskan お問合せ.</p>
+              <div class="task-label">Hasil</div>
+              <p>Desktop menampilkan rail biru/pink full-width yang fixed di bawah, tetapi isi CTA dibatasi dan dipusatkan pada <code>max-w-6xl</code> yang sejajar dengan navbar. Tombol telepon dan tombol pink お問合せ memiliki affordance yang jelas. Mobile memakai CTA dua bagian.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-prod-1280-cta.png"><img src="../audit-prod-1280-cta.png" alt="Poin 4 production desktop sticky CTA with max-width content"></a><figcaption>Production desktop 1280px: rail full-width, isi CTA max-width setelah melewati FV</figcaption></figure>
+              <figure><a href="../qa-final-menu-mobile.png"><img src="../qa-final-menu-mobile.png" alt="Poin 4 mobile sticky CTA"></a><figcaption>Mobile CTA setelah scroll</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 6 — CTA tetap terlihat saat menu mobile terbuka <small>(sheet row 8)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Saat hamburger menu dibuka, bottom CTA tidak boleh menghilang.</p>
+              <div class="task-label">Hasil</div>
+              <p>Production QA pada lebar 375px dan scrollY 900 mengonfirmasi menu terbuka sementara CTA tetap fixed di bawah dengan z-index 70.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../qa-final-menu-mobile.png"><img src="../qa-final-menu-mobile.png" alt="Poin 6 mobile menu with sticky CTA"></a><figcaption>Menu terbuka + CTA tetap terlihat</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 13 — Perbaikan line break konsultasi <small>(sheet row 15)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Jangan biarkan karakter <code>の</code> sendirian di baris berikutnya pada mobile. Break yang diminta adalah setelah <code>ご家族の</code>.</p>
+              <div class="task-label">Hasil</div>
+              <p>Mobile menggunakan editorial break setelah ご家族の dan ukuran body 13px. Desktop tidak berubah.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-apply-mobile.png"><img src="../audit-after-apply-mobile.png" alt="Poin 13 consultation mobile"></a><figcaption>Mobile: dua baris natural</figcaption></figure>
+              <figure><a href="../audit-after-apply-desktop.png"><img src="../audit-after-apply-desktop.png" alt="Poin 13 consultation desktop"></a><figcaption>Desktop tetap dipertahankan</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 15 — Pembayaran bank transfer <small>(sheet row 17)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Metode pembayaran diubah menjadi bank transfer. Pada mobile, <code>す。</code> tidak boleh terpisah menjadi satu karakter.</p>
+              <div class="task-label">Hasil</div>
+              <p>Text mobile dibreak setelah お支払いは. Pada desktop, ukuran card-body disesuaikan agar 銀行振込（前払い）となります。 tetap utuh.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-payment-mobile.png"><img src="../audit-after-payment-mobile.png" alt="Poin 15 payment mobile"></a><figcaption>Mobile payment copy</figcaption></figure>
+              <figure><a href="../audit-after-payment-desktop.png"><img src="../audit-after-payment-desktop.png" alt="Poin 15 payment desktop"></a><figcaption>Desktop payment copy</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 17 — Pricing link mobile <small>(sheet row 19)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Link 詳しくはこちら（料金ページ）ご確認ください。 tidak boleh terpecah secara tidak natural di mobile, sementara desktop tetap satu baris.</p>
+              <div class="task-label">Hasil</div>
+              <p>Mobile dibreak setelah 詳しくはこちら（料金ページ）を. Desktop tetap satu baris.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-pricing-mobile.png"><img src="../audit-after-pricing-mobile.png" alt="Poin 17 pricing link mobile"></a><figcaption>Pricing link mobile (link visible below the pricing card)</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 18 — Catatan medis dan icon 指示書 <small>(sheet row 20)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Tambahkan catatan instruksi dokter dengan line break mobile yang ditentukan, tampilkan icon dokumen, dan jangan menggunakan kata 処方箋 (prescription).</p>
+              <div class="task-label">Hasil</div>
+              <p>Line break mobile mengikuti spesifikasi, icon diperkecil agar tidak memaksa karakter terpisah, dan seluruh teks 処方箋 dihapus.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-medical-mobile.png"><img src="../audit-after-medical-mobile.png" alt="Poin 18 medical note mobile"></a><figcaption>Medical note mobile</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 19 — Wording bottom CTA <small>(sheet row 21)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>Perjelas dan perbesar label untuk pengguna layanan; jangan sampai satu karakter terakhir turun sendiri.</p>
+              <div class="task-label">Hasil</div>
+              <p>Eyebrow mengikuti nilai CMS API <code>サービスをご利用されたい方</code>. Dengan <code>text-wrap: balance</code>, lone-character wrap sudah hilang pada 375px dan 320px.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-apply-mobile.png"><img src="../audit-after-apply-mobile.png" alt="Poin 19 apply banner mobile"></a><figcaption>Mobile apply banner</figcaption></figure>
+              <figure><a href="../audit-after-apply-desktop.png"><img src="../audit-after-apply-desktop.png" alt="Poin 19 apply banner desktop"></a><figcaption>Desktop apply banner</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="task-card">
+          <h3>Poin 24 — Hapus teks 処方箋 dari icon <small>(sheet row 26)</small></h3>
+          <div class="task-card-grid">
+            <div>
+              <div class="task-label">Task client</div>
+              <p>指示書 bukan 処方箋, sehingga teks 処方箋 pada icon harus dihapus.</p>
+              <div class="task-label">Hasil</div>
+              <p>Teks 処方箋 dihapus dari ilustrasi document icon dan sudah dicek pada tampilan mobile.</p>
+            </div>
+            <div class="shot-grid">
+              <figure><a href="../audit-after-medical-mobile.png"><img src="../audit-after-medical-mobile.png" alt="Poin 24 document icon mobile"></a><figcaption>Document icon tanpa 処方箋</figcaption></figure>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Complete task report</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Request</th><th>Sheet row</th><th>Client requirement / status</th><th>Update or verification</th><th>Evidence</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>3</td><td><span class="tag ok">Updated + QA</span><br>Mobile FV order and first-view composition.</td><td>CTA appears before supported area; hero copy no longer overlaps the image; published <code>home-hero.image</code> now uses the approved production photo through Atlas media.</td><td><a href="../audit-after-hero-mobile.png">Production mobile FV screenshot</a><br><a href="../audit-after-hero-cms-375.png">CMS hero after fix</a></td></tr>
+            <tr><td>2</td><td>4</td><td><span class="tag ok">OK</span><br>Add Contact Us beside FAQ.</td><td>Workbook status is OK.</td><td>Workbook row 4</td></tr>
+            <tr><td>3</td><td>5</td><td><span class="tag ok">OK</span><br>Mobile navigation adjustment.</td><td>Workbook status is OK.</td><td>Workbook row 5</td></tr>
+            <tr><td>4</td><td>6</td><td><span class="tag ok">Updated + QA</span><br>Sticky Phone + Contact CTA after FV.</td><td>Full-width blue/pink desktop rail with a centered <code>max-w-6xl</code> CTA grid aligned to the navbar, pink <code>お問合せ</code> side, stronger button affordance, and mobile split CTA. Production QA confirmed it appears after scrolling past the FV.</td><td><a href="../audit-prod-1280-cta.png">Production max-width desktop screenshot</a><br><a href="../qa-after-cta-maxwidth.png">Earlier max-width screenshot</a><br><a href="../qa-final-menu-mobile.png">Mobile screenshot</a></td></tr>
+            <tr><td>5</td><td>7</td><td><span class="tag ok">OK</span><br>Footnote color under supported area.</td><td>Workbook status is OK.</td><td>Workbook row 7</td></tr>
+            <tr><td>6</td><td>8</td><td><span class="tag ok">OK + QA</span><br>Mobile line break and CTA visibility while hamburger menu is open.</td><td>At 375px and scrollY 900, the fixed bottom CTA remains visible over the open menu.</td><td><a href="../qa-final-menu-mobile.png">Production menu-open screenshot</a><br><a href="../audit-after-menu-mobile.png">Earlier screenshot</a></td></tr>
+            <tr><td>7</td><td>9</td><td><span class="tag ok">Covered by Request 8</span><br>Qualified staff line break.</td><td>Duplicate/reference of sheet row 10. Row 10 carries the client status <code>OK です</code>; the same implementation covers both rows, so no separate code change is needed.</td><td>Workbook row 9 images<br>See Request 8 / sheet row 10 status</td></tr>
+            <tr><td>8</td><td>10</td><td><span class="tag ok">OK</span><br>Qualified staff line break.</td><td>Workbook status is OK.</td><td>Workbook row 10</td></tr>
+            <tr><td>9</td><td>11</td><td><span class="tag ok">OK</span><br>Minimum two-hour line break.</td><td>Workbook status is OK.</td><td>Workbook row 11</td></tr>
+            <tr><td>10</td><td>12</td><td><span class="tag ok">OK</span><br>Insurance-excluded support line break.</td><td>Workbook status is OK.</td><td>Workbook row 12</td></tr>
+            <tr><td>11</td><td>13</td><td><span class="tag ok">OK</span><br>Pricing/payment card layout.</td><td>7:3 desktop ratio and non-breaking pricing notes are present.</td><td>Workbook row 13</td></tr>
+            <tr><td>12</td><td>14</td><td><span class="tag ok">OK</span><br>Service-flow report line break.</td><td>Workbook status is OK.</td><td>Workbook row 14</td></tr>
+            <tr><td>13</td><td>15</td><td><span class="tag ok">Updated + QA</span><br>Consultation copy must not leave a lone <code>の</code> on mobile.</td><td>Updated Atlas <code>home-apply.consult_body_mobile</code> with the client-approved break after <code>ご家族の</code>; the production rendering keeps <code>「困った」</code> together on the second line at 320px and 375px. Desktop remains unchanged.</td><td><a href="../audit-prod-375-apply.png">Production 375px screenshot</a><br><a href="../audit-prod-320-apply.png">Production 320px screenshot</a><br><a href="../audit-after-apply-atlas-375.png">Previous Atlas screenshot</a><br><a href="../audit-after-apply-desktop.png">Desktop screenshot</a></td></tr>
+            <tr><td>14</td><td>16</td><td><span class="tag ok">OK</span><br>ISMS line breaks.</td><td>Workbook status is OK.</td><td>Workbook row 16</td></tr>
+            <tr><td>15</td><td>17</td><td><span class="tag ok">Updated + QA</span><br>Bank-transfer payment copy.</td><td>Updated Atlas <code>home-pricing-summary.payment_body_mobile</code> with the client-approved two-line break: <code>お支払いは</code> / <code>銀行振込（前払い）となります。</code>; the production rendering no longer leaves a lone <code>す。</code> at 320px and 375px.</td><td><a href="../audit-prod-375-payment.png">Production 375px screenshot</a><br><a href="../audit-prod-320-payment.png">Production 320px screenshot</a><br><a href="../audit-after-payment-atlas-375.png">Previous Atlas screenshot</a><br><a href="../audit-after-payment-desktop.png">Desktop screenshot</a></td></tr>
+            <tr><td>16</td><td>18</td><td><span class="tag ok">OK</span><br>Nursing fee/transport notes.</td><td>Workbook status is OK.</td><td>Workbook row 18</td></tr>
+            <tr><td>17</td><td>19</td><td><span class="tag ok">Updated + QA</span><br>Pricing link mobile break.</td><td>Pricing links break after <code>詳しくはこちら（料金ページ）を</code>; desktop stays one line.</td><td><a href="../audit-after-pricing-mobile.png">Pricing-link mobile screenshot</a></td></tr>
+            <tr><td>18</td><td>20</td><td><span class="tag ok">Updated + QA</span><br>Medical-note mobile line breaks and document icon.</td><td>Specified mobile line breaks added, mobile icon footprint reduced, and <code>処方箋</code> lettering removed.</td><td><a href="../audit-after-medical-mobile.png">Mobile screenshot</a></td></tr>
+            <tr><td>19</td><td>21</td><td><span class="tag ok">Updated + QA</span><br>Apply-banner wording and wrapping.</td><td>Eyebrow renders the CMS API value <code>サービスをご利用されたい方</code>; balanced wrapping removes the lone <code>方</code> at 375px and 320px.</td><td><a href="../audit-after-apply-balanced-375.png">375px screenshot</a><br><a href="../audit-after-apply-balanced-320.png">320px screenshot</a><br><a href="../audit-after-apply-desktop.png">Desktop screenshot</a></td></tr>
+            <tr><td>20</td><td>22</td><td><span class="tag ok">PASS</span><br>Free consultation link.</td><td>Workbook status is PASS/OK.</td><td>Workbook row 22</td></tr>
+            <tr><td>21</td><td>23</td><td><span class="tag ok">OK</span><br>Bank-transfer payment section.</td><td>Workbook status is OK.</td><td>Workbook row 23</td></tr>
+            <tr><td>22</td><td>24</td><td><span class="tag ok">OK</span><br>FAQ pricing link.</td><td>Workbook status is OK.</td><td>Workbook row 24</td></tr>
+            <tr><td>23</td><td>25</td><td><span class="tag pending">Needs clarification</span><br>Row contains only task number <code>23</code>.</td><td>No request text, feedback, or status exists in columns C–Z; cannot implement or mark pass without clarification.</td><td>Source workbook row 25</td></tr>
+            <tr><td>24</td><td>26</td><td><span class="tag ok">Updated + QA</span><br>Remove text from icon.</td><td>Removed all <code>処方箋</code> characters from the nursing directive illustration.</td><td><a href="../audit-after-medical-mobile.png">Mobile screenshot</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Rows 27–55 and embedded images</h2>
+      <p>Rows 27–55 do not contain additional task descriptions. They are supporting screenshot/mockup areas: row 32 contains only <code>4</code>, row 49 contains an image anchor, row 51 contains <code>Mockup⇒</code>, and the remaining cells are blank or image-only. The 59 embedded images were checked against their task rows; they do not introduce additional independent pass/fail tasks.</p>
+    </section>
+
+    <section>
+      <h2>Screenshot evidence</h2>
+      <div class="gallery">
+        <figure><a href="../audit-after-hero-mobile.png"><img src="../audit-after-hero-mobile.png" alt="Production mobile FV"></a><figcaption>Production mobile FV (375px)</figcaption></figure>
+        <figure><a href="../qa-final-menu-mobile.png"><img src="../qa-final-menu-mobile.png" alt="Production mobile menu with sticky CTA"></a><figcaption>Production mobile menu with sticky CTA</figcaption></figure>
+        <figure><a href="../qa-final-desktop.png"><img src="../qa-final-desktop.png" alt="Production desktop sticky CTA"></a><figcaption>Production desktop sticky CTA (1280px)</figcaption></figure>
+        <figure><a href="../audit-after-hero-mobile.png"><img src="../audit-after-hero-mobile.png" alt="Hero mobile"></a><figcaption>Hero mobile</figcaption></figure>
+        <figure><a href="../audit-after-apply-mobile.png"><img src="../audit-after-apply-mobile.png" alt="Apply section mobile"></a><figcaption>Apply section mobile</figcaption></figure>
+        <figure><a href="../audit-after-apply-desktop.png"><img src="../audit-after-apply-desktop.png" alt="Apply section desktop"></a><figcaption>Apply section desktop</figcaption></figure>
+        <figure><a href="../audit-after-payment-mobile.png"><img src="../audit-after-payment-mobile.png" alt="Payment mobile"></a><figcaption>Payment mobile</figcaption></figure>
+        <figure><a href="../audit-after-payment-desktop.png"><img src="../audit-after-payment-desktop.png" alt="Payment desktop"></a><figcaption>Payment desktop</figcaption></figure>
+        <figure><a href="../audit-after-medical-mobile.png"><img src="../audit-after-medical-mobile.png" alt="Medical note mobile"></a><figcaption>Medical note mobile</figcaption></figure>
+        <figure><a href="../audit-after-hero-cms-375.png"><img src="../audit-after-hero-cms-375.png" alt="CMS hero after fix"></a><figcaption>CMS hero after fix (375px)</figcaption></figure>
+        <figure><a href="../audit-after-nursing-heading-375.png"><img src="../audit-after-nursing-heading-375.png" alt="Nursing heading balanced at 375px"></a><figcaption>Nursing heading (375px)</figcaption></figure>
+        <figure><a href="../audit-after-nursing-heading-320.png"><img src="../audit-after-nursing-heading-320.png" alt="Nursing heading balanced at 320px"></a><figcaption>Nursing heading (320px)</figcaption></figure>
+        <figure><a href="../audit-after-apply-balanced-375.png"><img src="../audit-after-apply-balanced-375.png" alt="Apply eyebrow balanced at 375px"></a><figcaption>Apply eyebrow (375px)</figcaption></figure>
+        <figure><a href="../audit-after-apply-balanced-320.png"><img src="../audit-after-apply-balanced-320.png" alt="Apply eyebrow balanced at 320px"></a><figcaption>Apply eyebrow (320px)</figcaption></figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Verification performed</h2>
+      <ul class="checks">
+        <li>Fresh focused TypeScript/TSX regression set: <strong>53/53 passed</strong>, including CMS field diagnostics, BFF transient retry, query-boundary checks, homepage rendering, and the 375/320 mobile wrapping cases.</li>
+        <li>Full repository test script: <strong>315/315 passed</strong> across all 13 test batches, including the responsive/CMS regression set, legal/SEO mappings, contact validation, and API boundary checks.</li>
+        <li>Live Atlas read-only verification confirmed the published <code>site-ui-labels.query_*</code> and <code>site-cta.sticky_*</code> fields, with the existing six nav items and footer data preserved.</li>
+        <li>Local ESLint on all changed files: <strong>passed</strong>.</li>
+        <li>Production build (<code>node node_modules/next/dist/bin/next build --webpack</code>): <strong>exit 0</strong>; TypeScript and 32/32 static pages completed.</li>
+        <li>Fresh production server (<code>node node_modules/next/dist/bin/next start</code>) returned <strong>HTTP 200</strong> on both <code>http://127.0.0.1:3000/</code> and <code>http://192.168.1.3:3000/</code>; the rendered HTML contained neither <code>Application error</code> nor <code>Minified React error</code>.</li>
+        <li>Fresh route smoke check: all 17 public JA/EN routes returned <strong>HTTP 200</strong>; <code>/pricing</code> visibly rendered a field-specific diagnostic for the malformed CMS cancellation URL instead of a page-wide error.</li>
+        <li>The live homepage API now returns the Atlas hero media URL ending in <code>hero-preview.jpg</code>; the hero CTA destinations are also read from Atlas. The fetched image matches the production composition and is used by the rendered page.</li>
+        <li>Browser checks at 375px and 320px show balanced nursing and apply-banner lines with no standalone <code>は、</code> or <code>方</code>.</li>
+        <li>Project agent rule saved in <code>AGENTS.md</code>: isolate field-level CMS failures, keep unrelated sections usable, and never add runtime hardcoded content fallbacks.</li>
+        <li>Production-build browser QA at 375px mobile and 1280px desktop completed. The menu-open check was performed after scrolling to <code>scrollY=900</code>, and the desktop CTA check after scrolling past the FV.</li>
+        <li>The production Next server is running on port 3000 for manual phone QA; localhost and LAN requests both returned HTTP 200 with no Application/Minified React error markers.</li>
+      </ul>
+      <div class="notice"><strong>Remaining manual QA:</strong> screenshots are browser evidence, not physical-device evidence. The workstation has no configured iOS/device provider, so the client’s requested real-smartphone check remains pending.</div>
+    </section>
+    <footer>Care24Japan revision report · generated from the audited workbook and current implementation</footer>
+  </main>
+</body>
+</html>

@@ -48,23 +48,23 @@ async function main() {
     );
   });
 
-  test("too_fast uses detail copy instead of opaque CMS error", () => {
+  test("too_fast uses the CMS error copy while retaining only a diagnostic code", () => {
     const result = {
       status: "error" as const,
       code: "too_fast" as const,
       message: "please wait",
     };
-    assert.match(statusCopyFor(result, "en", table), /too fast/i);
-    assert.match(statusCopyFor(result, "ja", table), /早すぎ/);
+    assert.equal(statusCopyFor(result, "en", table), table.error.en);
+    assert.equal(statusCopyFor(result, "ja", table), table.error.ja);
   });
 
-  test("rate_limited status returns detail copy", () => {
+  test("rate_limited status uses the CMS rate-limited copy", () => {
     const result = {
       status: "rate_limited" as const,
       code: "rate_limited" as const,
       message: "too many",
     };
-    assert.match(statusCopyFor(result, "en", table), /Too many/i);
+    assert.equal(statusCopyFor(result, "en", table), table.rateLimited.en);
   });
 
   test("classifies upstream timing reject", () => {
@@ -78,7 +78,7 @@ async function main() {
     assert.deepEqual(result, {
       status: "error",
       code: "too_fast",
-      message: "That was too fast. Please wait a few seconds and try again.",
+      message: "invalid input provided: please wait a few seconds before submitting",
     });
   });
 

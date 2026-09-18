@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/constants/site";
-import { seoRoutes, type SeoRouteEntry } from "@/constants/seo";
+import { seoRoutes, type SeoRouteEntry } from "@/constants/seo-routes";
 import { getPageMeta } from "@/features/cms/client";
 import { DEFAULT_LANG, LANGS, localizeHref, type Lang } from "@/features/lang/i18n";
 
@@ -27,7 +27,7 @@ export const dynamic = "force-dynamic";
 
 const routeEntries: SeoRouteEntry[] = Object.values(seoRoutes);
 
-// Every `route` value in `constants/seo.ts#seoRoutes` is a plain absolute
+// Every `route` value in `constants/seo-routes.ts#seoRoutes` is a plain absolute
 // path ("/", "/pricing", ...) with no existing "/ja"/"/en" prefix, no hash,
 // and no scheme — exactly the input shape `localizeHref` (the canonical
 // ja-prefix-less-by-default rule) handles, so this reuses it instead of

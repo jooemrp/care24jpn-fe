@@ -12,29 +12,35 @@ import {
 } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates, type Bilingual } from "@/constants/copy";
+import type { Bilingual } from "@/constants/copy";
 import { CmsContentError } from "@/features/cms/errors";
 import { t, type Lang } from "@/features/lang/i18n";
+import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
+import { splitBilingual } from "./home-copy";
 
 export function HomeCoursesSection({
   careCourse,
   nursingCourse,
   pricingDetailsLink,
+  pricingDetailsLinkMobile,
   pricingDetailsHref,
   lang,
+  emptyLabel,
 }: {
   careCourse: HomeContent["careCourse"];
   nursingCourse: HomeContent["nursingCourse"];
   pricingDetailsLink: HomeContent["pricingDetailsLink"];
+  pricingDetailsLinkMobile: HomeContent["pricingDetailsLinkMobile"];
   pricingDetailsHref: HomeContent["pricingDetailsHref"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <>
       <Section id="service-details" surface lang={lang}>
-        <h2 className="animate-fade-up whitespace-pre-line text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
+        <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
           {t(careCourse.leadIn, lang)}
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">
@@ -68,7 +74,11 @@ export function HomeCoursesSection({
                   lang={lang}
                   className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary-mid hover:decoration-primary/60"
                 >
-                  {t(pricingDetailsLink, lang)}
+                  <ResponsivePricingLink
+                    text={pricingDetailsLink}
+                    mobileText={pricingDetailsLinkMobile}
+                    lang={lang}
+                  />
                 </SafeInternalLink>
               </p>
             </div>
@@ -77,7 +87,7 @@ export function HomeCoursesSection({
               <FeeGrid fees={careCourse.fees} lang={lang} />
             ) : (
               <div className="flex-1">
-                <QueryEmptyState title={t(queryStates.empty, lang)} />
+                <QueryEmptyState title={emptyLabel} />
               </div>
             )}
           </div>
@@ -122,13 +132,13 @@ export function HomeCoursesSection({
           </div>
         ) : (
           <div className="mt-8">
-            <QueryEmptyState title={t(queryStates.empty, lang)} />
+            <QueryEmptyState title={emptyLabel} />
           </div>
         )}
       </Section>
 
       <Section lang={lang}>
-        <h2 className="animate-fade-up whitespace-pre-line text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
+        <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
           {t(nursingCourse.leadIn, lang)}
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">
@@ -161,7 +171,11 @@ export function HomeCoursesSection({
                   lang={lang}
                   className="font-medium text-accent underline decoration-accent/30 underline-offset-2 transition hover:text-accent/80 hover:decoration-accent/60"
                 >
-                  {t(pricingDetailsLink, lang)}
+                  <ResponsivePricingLink
+                    text={pricingDetailsLink}
+                    mobileText={pricingDetailsLinkMobile}
+                    lang={lang}
+                  />
                 </SafeInternalLink>
               </p>
             </div>
@@ -170,7 +184,7 @@ export function HomeCoursesSection({
               <FeeGrid fees={nursingCourse.fees} lang={lang} tone="accent" />
             ) : (
               <div className="flex-1">
-                <QueryEmptyState title={t(queryStates.empty, lang)} />
+                <QueryEmptyState title={emptyLabel} />
               </div>
             )}
           </div>
@@ -195,12 +209,16 @@ export function HomeCoursesSection({
             </ul>
           ) : (
             <div className="mt-6">
-              <QueryEmptyState title={t(queryStates.empty, lang)} />
+              <QueryEmptyState title={emptyLabel} />
             </div>
           )}
         </div>
 
-        <MedicalNoteBanner note={nursingCourse.medicalNote} lang={lang} />
+        <MedicalNoteBanner
+          note={nursingCourse.medicalNote}
+          mobileNote={nursingCourse.medicalNoteMobile}
+          lang={lang}
+        />
       </Section>
     </>
   );
@@ -256,11 +274,30 @@ function NursingIcon({ name }: { name: string }) {
   return <Component className="h-[1.375rem] w-[1.375rem]" stroke={1.6} aria-hidden="true" />;
 }
 
+function ResponsivePricingLink({
+  text,
+  mobileText,
+  lang,
+}: {
+  text: HomeContent["pricingDetailsLink"];
+  mobileText: HomeContent["pricingDetailsLinkMobile"];
+  lang: Lang;
+}) {
+  return (
+    <ResponsiveCopy
+      text={text}
+      mobileText={mobileText}
+      lang={lang}
+      mode="desktop-only"
+    />
+  );
+}
+
 function NursingDirectiveIllustration() {
   return (
     <svg
       viewBox="0 0 160 160"
-      className="h-20 w-20 shrink-0 sm:h-24 sm:w-24 md:h-28 md:w-28"
+      className="h-14 w-14 shrink-0 sm:h-24 sm:w-24 md:h-28 md:w-28"
       aria-hidden="true"
       data-nursing-directive="true"
       focusable="false"
@@ -301,39 +338,6 @@ function NursingDirectiveIllustration() {
         <line x1="76" y1="83" x2="100" y2="83" />
         <line x1="76" y1="96" x2="94" y2="96" />
       </g>
-      <text
-        x="50"
-        y="48"
-        textAnchor="middle"
-        className="fill-heading"
-        fontSize="18"
-        fontWeight="700"
-        fontFamily="var(--font-sans)"
-      >
-        処
-      </text>
-      <text
-        x="50"
-        y="70"
-        textAnchor="middle"
-        className="fill-heading"
-        fontSize="18"
-        fontWeight="700"
-        fontFamily="var(--font-sans)"
-      >
-        方
-      </text>
-      <text
-        x="50"
-        y="92"
-        textAnchor="middle"
-        className="fill-heading"
-        fontSize="18"
-        fontWeight="700"
-        fontFamily="var(--font-sans)"
-      >
-        箋
-      </text>
       <g transform="translate(98 112)">
         <circle cx="0" cy="-5.4" r="3.5" className="fill-accent" />
         <circle cx="5.14" cy="-1.67" r="3.5" className="fill-accent" />
@@ -347,13 +351,17 @@ function NursingDirectiveIllustration() {
   );
 }
 
-function MedicalNoteBanner({ note, lang }: { note: Bilingual; lang: Lang }) {
-  const lines = t(note, lang)
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const heading = lines[0] ?? "";
-  const body = lines.slice(1).join("\n");
+function MedicalNoteBanner({
+  note,
+  mobileNote,
+  lang,
+}: {
+  note: Bilingual;
+  mobileNote: Bilingual;
+  lang: Lang;
+}) {
+  const desktop = splitBilingual(note);
+  const mobile = splitBilingual(mobileNote, { ja: 2, en: 1 });
 
   return (
     <aside
@@ -362,9 +370,23 @@ function MedicalNoteBanner({ note, lang }: { note: Bilingual; lang: Lang }) {
     >
       <NursingDirectiveIllustration />
       <div className="min-w-0 flex-1">
-        <p className="text-base font-bold leading-snug text-heading md:text-lg">{heading}</p>
-        {body ? (
-          <p className="mt-2 text-sm leading-relaxed text-body md:text-base">{body}</p>
+        <p className="text-base font-bold leading-snug text-heading md:text-lg">
+          <ResponsiveCopy
+            text={desktop.heading}
+            mobileText={mobile.heading}
+            lang={lang}
+            mode="desktop-only"
+          />
+        </p>
+        {desktop.body.ja || desktop.body.en ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-body md:text-base">
+            <ResponsiveCopy
+              text={desktop.body}
+              mobileText={mobile.body}
+              lang={lang}
+              mode="desktop-only"
+            />
+          </p>
         ) : null}
       </div>
     </aside>

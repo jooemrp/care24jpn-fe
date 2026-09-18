@@ -7,6 +7,7 @@ export type ResponsiveCopyMode = "always" | "desktop-only";
 
 type ResponsiveCopyProps = {
   text: Bilingual;
+  mobileText?: Bilingual;
   lang: Lang;
   mode?: ResponsiveCopyMode;
   className?: string;
@@ -19,6 +20,7 @@ type ResponsiveCopyProps = {
  */
 export function ResponsiveCopy({
   text,
+  mobileText,
   lang,
   mode = "always",
   className = "",
@@ -30,10 +32,13 @@ export function ResponsiveCopy({
     return <span className={`whitespace-pre-line ${classes}`.trim()}>{value}</span>;
   }
 
-  const mobileValue = value.replace(/\s*\n\s*/g, lang === "en" ? " " : "");
+  const mobileValue = mobileText
+    ? t(mobileText, lang)
+    : value.replace(/\s*\n\s*/g, lang === "en" ? " " : "");
+  const mobileClassName = mobileText ? "md:hidden whitespace-pre-line" : "md:hidden";
   return (
     <>
-      <span className={`md:hidden ${classes}`.trim()}>{mobileValue}</span>
+      <span className={`${mobileClassName} ${classes}`.trim()}>{mobileValue}</span>
       <span className={`hidden md:inline whitespace-pre-line ${classes}`.trim()}>{value}</span>
     </>
   );

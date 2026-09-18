@@ -1,5 +1,6 @@
 import {
   contactResultFromUpstream,
+  type ContactErrorCode,
   type ContactSubmitResult,
 } from "./status-copy.ts";
 
@@ -33,8 +34,8 @@ export interface ContactServiceResult {
   body: string;
 }
 
-function localFailure(status: number, message: string): ContactServiceResult {
-  const body = JSON.stringify({ success: false, message });
+function localFailure(status: number, code: ContactErrorCode): ContactServiceResult {
+  const body = JSON.stringify({ success: false, code });
   return {
     outcome: contactResultFromUpstream(status, body),
     status,
@@ -109,7 +110,7 @@ export async function submitContactRequest(
   const endpointHost = contactEndpointHost(endpoint);
 
   if (!endpoint || !apiKey || !validatePayload) {
-    const failure = localFailure(503, "Contact service is not configured.");
+    const failure = localFailure(503, "config");
     console.error("[contact] submit blocked: missing config", {
       endpointHost,
       hasEndpoint: Boolean(endpoint),
@@ -122,7 +123,7 @@ export async function submitContactRequest(
   }
 
   if (rawBody.length > CONTACT_BODY_LIMIT) {
-    const failure = localFailure(413, "Request body too large.");
+    const failure = localFailure(413, "validation");
     console.error("[contact] submit blocked: body too large", {
       endpointHost,
       bodyBytes: rawBody.length,
@@ -137,7 +138,7 @@ export async function submitContactRequest(
   try {
     payload = JSON.parse(rawBody);
   } catch {
-    const failure = localFailure(400, "Invalid JSON body.");
+    const failure = localFailure(400, "validation");
     console.error("[contact] submit blocked: invalid JSON", {
       endpointHost,
       origin: origin || "(empty)",
@@ -151,7 +152,7 @@ export async function submitContactRequest(
 
   const parsed = validatePayload(payload);
   if (!parsed.success) {
-    const failure = localFailure(400, "Invalid request body.");
+    const failure = localFailure(400, "validation");
     console.error("[contact] submit blocked: schema validation", {
       endpointHost,
       origin: origin || "(empty)",
@@ -219,7 +220,7 @@ export async function submitContactRequest(
       body,
     };
   } catch (err) {
-    const failure = localFailure(502, "Contact service unavailable, please try again later.");
+    const failure = localFailure(502, "unavailable");
     console.error("[contact] upstream request failed", {
       endpointHost,
       origin: origin || "(empty)",
@@ -245,11 +246,11 @@ export async function submitContactPayload(
   try {
     rawBody = JSON.stringify(payload);
   } catch {
-    return localFailure(400, "Invalid JSON body.");
+    return localFailure(400, "validation");
   }
 
   if (rawBody === undefined) {
-    return localFailure(400, "Invalid JSON body.");
+    return localFailure(400, "validation");
   }
 
   return submitContactRequest(rawBody, options);

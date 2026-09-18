@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { cta, home } from "@/constants/copy";
 import type { HomeContent } from "../types";
 import type * as HomeContentModule from "./HomeContent.tsx";
+import { splitBilingual } from "./home-copy";
 
 const homeContentPath = "./HomeContent" + ".tsx";
 const darkVariant = ["dark", ":"].join("");
@@ -70,6 +71,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -146,6 +148,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -165,13 +168,16 @@ async function main(): Promise<void> {
     assert.match(html, /focus-visible:outline-2/);
     assert.match(html, /data-about-intro="true"/);
     assert.doesNotMatch(html, /min-h-\[30rem\]/);
-    assert.ok(
-      html.indexOf("Service Area: Starting from Setagaya &amp; Minato Wards!") <
-        html.indexOf("Sign Up / Apply Here"),
-      "mobile DOM order should place the supported area before the CTA",
+    assert.match(
+      html,
+      /order-2 flex w-full max-w-sm.*md:order-2.*data-hero-area/,
+      "mobile should visually place the supported area after the CTA",
     );
-    assert.match(html, /order-2.*md:order-1/);
-    assert.match(html, /order-1.*md:order-2/);
+    assert.match(
+      html,
+      /order-1 inline-flex w-full min-h-14.*md:order-1.*data-hero-cta/,
+      "mobile should visually place the CTA before the supported area",
+    );
   });
 
   test("homepage sections show explicit empty states without hiding the rest of the page", () => {
@@ -187,6 +193,7 @@ async function main(): Promise<void> {
         content: emptyContent,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -210,6 +217,7 @@ async function main(): Promise<void> {
         content: contentWithoutOptionalHeroCopy,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -223,6 +231,7 @@ async function main(): Promise<void> {
         content,
         lang: "en",
         contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -236,6 +245,7 @@ async function main(): Promise<void> {
         content,
         lang: "ja",
         contactCta: cta.contact,
+        emptyLabel: "表示できるコンテンツがありません。",
       }),
     );
 
@@ -254,6 +264,111 @@ async function main(): Promise<void> {
     assert.match(
       html,
       /col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-\[1\.875rem\]/,
+    );
+  });
+
+  test("Japanese revision copy keeps API-owned mobile wording and line breaks", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(HomeContentView, {
+        content,
+        lang: "ja",
+        contactCta: cta.contact,
+        emptyLabel: "表示できるコンテンツがありません。",
+      }),
+    );
+
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>ご相談・お見積りは無料です。あなたやご家族の\n「困った」を私たちがサポートします。<\/span>/,
+    );
+    assert.match(html, /mx-auto mt-3 max-w-2xl text-\[13px\] leading-relaxed text-body md:text-lg/);
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>お支払いは\n銀行振込（前払い）となります。<\/span>/,
+    );
+    assert.match(
+      html,
+      /mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm/,
+    );
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>詳しくはこちら（料金ページ）を\nご確認ください。<\/span>/,
+    );
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>ご利用には主治医からの\n指示書が必要です。<\/span>/,
+    );
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line[^>]*>必要に応じて、ケアマネージャーや\nソーシャルワーカー、介護保険\nサービス事業所と連携し、\n安全で適切なケアを行います。<\/span>/,
+    );
+    assert.match(html, /class="h-14 w-14 shrink-0 sm:h-24 sm:w-24 md:h-28 md:w-28"/);
+    assert.match(html, /サービスをご利用の方/);
+    assert.match(
+      html,
+      /whitespace-pre-line \[text-wrap:balance\] text-center text-2xl font-bold leading-snug text-heading md:text-3xl/,
+      "mobile nursing heading should balance wrapped Japanese lines",
+    );
+    assert.match(
+      html,
+      /col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white \[text-wrap:balance\]/,
+      "mobile apply eyebrow should balance instead of leaving a single character",
+    );
+    assert.doesNotMatch(html, />処</);
+    assert.doesNotMatch(html, />方</);
+    assert.doesNotMatch(html, />箋</);
+  });
+
+  test("English medical note keeps the explanatory paragraph out of the mobile heading", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(HomeContentView, {
+        content,
+        lang: "en",
+        contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
+      }),
+    );
+
+    assert.match(
+      html,
+      /md:hidden whitespace-pre-line">A written order from your attending physician is required to use this service\.<\/span>/,
+    );
+    assert.match(
+      html,
+      /<p class="mt-2 text-\[13px\] leading-relaxed text-body md:text-base"><span class="md:hidden whitespace-pre-line">As needed, we coordinate with care managers, social workers, and long-term care insurance providers to deliver safe, appropriate care\.<\/span>/,
+    );
+  });
+
+  test("CMS medical wording stays untouched and locale heading counts stay independent", () => {
+    const custom = { ja: "カスタム見出し\nカスタム本文", en: "Custom heading\nCustom body" };
+
+    assert.deepEqual(
+      splitBilingual(
+        { ja: "日本語見出し1\n日本語見出し2\n日本語本文", en: "English heading\nEnglish body" },
+        { ja: 2, en: 1 },
+      ),
+      {
+        heading: { ja: "日本語見出し1\n日本語見出し2", en: "English heading" },
+        body: { ja: "日本語本文", en: "English body" },
+      },
+    );
+
+    const customContent = {
+      ...content,
+      nursingCourse: { ...content.nursingCourse, medicalNote: custom, medicalNoteMobile: custom },
+    } as HomeContent;
+    const html = renderToStaticMarkup(
+      React.createElement(HomeContentView, {
+        content: customContent,
+        lang: "en",
+        contactCta: cta.contact,
+        emptyLabel: "There is no content to display yet.",
+      }),
+    );
+    assert.match(html, /md:hidden whitespace-pre-line">Custom heading<\/span>/);
+    assert.match(
+      html,
+      /<p class="mt-2 text-\[13px\] leading-relaxed text-body md:text-base"><span class="md:hidden whitespace-pre-line">Custom body<\/span>/,
     );
   });
 }

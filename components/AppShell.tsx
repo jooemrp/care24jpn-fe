@@ -31,10 +31,12 @@ export default function AppShell({
       <Navbar lang={lang} site={site} />
       <SiteCtaProvider
         primaryCta={site.cta.primary}
+        contactCta={site.cta.contact}
         primaryHref={site.cta.primaryHref}
         contactPhone={site.contactPhone}
         stickyPhoneLabel={site.cta.stickyPhoneLabel}
         stickyRequestLabel={site.cta.stickyRequestLabel}
+        queryStates={site.ui.queryStates}
       >
         <div aria-hidden="true" className="relative h-0">
           <div

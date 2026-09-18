@@ -137,13 +137,18 @@ const MIME_BY_EXT: Record<string, string> = {
   ".gif": "image/gif",
 };
 
+// Atlas is behind an nginx upload limit of roughly 1 MB. Keep a little headroom
+// so a large approved PNG (the hero preview is ~2.9 MB) can still be stored in
+// the same media field without changing the source asset or its manifest key.
+const MAX_DIRECT_UPLOAD_BYTES = 900_000;
+
 interface UploadPayload {
   /** Filename Atlas records as `original_name` (and sanitizes into the S3 key). */
   name: string;
   mimeType: string;
   bytes: Uint8Array<ArrayBuffer>;
-  /** `true` when the source was WebP and had to be transcoded — reported so a
-   * reader of the log isn't surprised that `hero.webp` landed as `hero.png`. */
+  /** `true` when the source had to be transcoded for Atlas's upload limit or
+   * decoder support — reported so the manifest's uploaded filename is clear. */
   converted: boolean;
 }
 
@@ -157,7 +162,7 @@ async function loadForUpload(file: string): Promise<UploadPayload> {
   const bytes = await readFile(resolve(IMAGES_DIR, file));
   const ext = extname(file).toLowerCase();
 
-  if (ext !== ".webp") {
+  if (ext !== ".webp" && !(ext === ".png" && bytes.byteLength > MAX_DIRECT_UPLOAD_BYTES)) {
     const mimeType = MIME_BY_EXT[ext];
     if (!mimeType) {
       throw new Error(`Unsupported source extension "${ext}" for ${file} — add it to MIME_BY_EXT.`);
@@ -254,7 +259,10 @@ async function verifyExisting(id: string): Promise<VerifyResult> {
 async function main(): Promise<void> {
   loadEnv();
   requireAtlasEnv();
-  const client = await createScriptManagementClient();
+  // Media verification and upload can cross the public Atlas boundary; use a
+  // generous timeout so a slow response is retried by the operator instead of
+  // leaving a half-finished manifest update.
+  const client = await createScriptManagementClient(120_000);
 
   const previous = readMediaManifest();
   const assets: Record<string, MediaManifestEntry> = { ...previous?.assets };
@@ -312,7 +320,7 @@ async function main(): Promise<void> {
     uploaded += 1;
     console.log(
       `+ ${file.padEnd(20)} ${assets[file].id}  (uploaded as ${payload.name}` +
-        `${payload.converted ? ", converted from webp" : ""}) -> ${usedBy}`,
+        `${payload.converted ? ", converted for Atlas upload" : ""}) -> ${usedBy}`,
     );
   }
 

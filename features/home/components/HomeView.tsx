@@ -3,7 +3,8 @@
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
-import { queryStates, type Bilingual } from "@/constants/copy";
+import { useSiteQueryStates } from "@/components/site-cta-provider";
+import type { Bilingual } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { ReactNode } from "react";
 import { useHomeQuery } from "../hooks";
@@ -21,25 +22,45 @@ type HomeViewProps = {
  * the same snapshot; none of them starts an independent CMS request.
  */
 export default function HomeView({ lang, contactCta }: HomeViewProps) {
+  const queryStates = useSiteQueryStates();
   const query = useHomeQuery();
 
   if (query.isPending) {
-    return <HomeLoadingState lang={lang} />;
+    return <HomeLoadingState lang={lang} labels={queryStates} />;
   }
 
   if (query.isError) {
-    return <HomeErrorState lang={lang} onRetry={() => void query.refetch()} />;
+    return (
+      <HomeErrorState
+        lang={lang}
+        labels={queryStates}
+        onRetry={() => void query.refetch()}
+      />
+    );
   }
 
   if (!query.data) {
     return <QueryEmptyState title={t(queryStates.empty, lang)} />;
   }
 
-  return <HomeContentView content={query.data} lang={lang} contactCta={contactCta} />;
+  return (
+    <HomeContentView
+      content={query.data}
+      lang={lang}
+      contactCta={contactCta}
+      emptyLabel={t(queryStates.empty, lang)}
+    />
+  );
 }
 
-function HomeLoadingState({ lang }: { lang: Lang }) {
-  const label = t(queryStates.loading, lang);
+function HomeLoadingState({
+  lang,
+  labels,
+}: {
+  lang: Lang;
+  labels: ReturnType<typeof useSiteQueryStates>;
+}) {
+  const label = t(labels.loading, lang);
 
   return (
     <QueryLoadingState
@@ -268,13 +289,15 @@ function HomePanelSkeleton() {
 
 function HomeErrorState({
   lang,
+  labels,
   onRetry,
 }: {
   lang: Lang;
+  labels: ReturnType<typeof useSiteQueryStates>;
   onRetry: () => void;
 }) {
-  const message = t(queryStates.error, lang);
-  const retryLabel = t(queryStates.retry, lang);
+  const message = t(labels.error, lang);
+  const retryLabel = t(labels.retry, lang);
 
   return (
     <div className="flex flex-col gap-4">

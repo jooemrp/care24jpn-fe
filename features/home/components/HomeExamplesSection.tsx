@@ -3,7 +3,6 @@
 import { IconClock } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
-import { queryStates } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 
@@ -22,9 +21,11 @@ function parseTimeRange(range: string): { start: number; end: number } {
 export function HomeExamplesSection({
   content,
   lang,
+  emptyLabel,
 }: {
   content: HomeContent["examples"];
   lang: Lang;
+  emptyLabel: string;
 }) {
   return (
     <Section lang={lang}>
@@ -132,7 +133,7 @@ export function HomeExamplesSection({
                     </ol>
                   ) : (
                     <div className="mt-3">
-                      <QueryEmptyState title={t(queryStates.empty, lang)} />
+                      <QueryEmptyState title={emptyLabel} />
                     </div>
                   )}
                 </div>
@@ -142,7 +143,7 @@ export function HomeExamplesSection({
         </div>
       ) : (
         <div className="mt-8">
-          <QueryEmptyState title={t(queryStates.empty, lang)} />
+          <QueryEmptyState title={emptyLabel} />
         </div>
       )}
     </Section>

@@ -129,7 +129,7 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
         setStatus({
           status: "error",
           code: "too_fast",
-          message: "That was too fast. Please wait a few seconds and try again.",
+          message: "",
         });
         return;
       }
@@ -155,7 +155,7 @@ export default function ContactForm({ lang, content }: ContactFormProps) {
         setStatus({
           status: "error",
           code: "unavailable",
-          message: "Contact service unavailable, please try again later.",
+          message: "",
         });
       }
     },

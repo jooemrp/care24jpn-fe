@@ -3,12 +3,13 @@
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
-import { queryStates } from "@/constants/copy";
+import { useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { CompanyContentView } from "./company-content";
 import { useCompanyQuery } from "../hooks";
 
 export default function CompanyView({ lang }: { lang: Lang }) {
+  const queryStates = useSiteQueryStates();
   const query = useCompanyQuery();
 
   if (query.isPending) {

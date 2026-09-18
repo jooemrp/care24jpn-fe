@@ -2,6 +2,7 @@ import { apiFailure, apiSuccess, type ApiFieldErrors, type ApiResult } from "./a
 import type { RawPageResponse } from "../features/cms/types";
 
 export const DEFAULT_BFF_TIMEOUT_MS = 8_000;
+const MAX_TRANSIENT_ATTEMPTS = 2;
 
 export interface BffRequestOptions {
   baseUrl?: string;
@@ -102,7 +103,7 @@ function pageUrl(baseUrl: string, slug: string): string {
  * This is intentionally a page-specific adapter, not a pass-through proxy:
  * callers cannot provide an arbitrary upstream path or request method.
  */
-export async function fetchPublicPage(
+async function fetchPublicPageOnce(
   slug: string,
   {
     baseUrl,
@@ -182,4 +183,33 @@ export async function fetchPublicPage(
   }
 
   return apiSuccess(body.data, traceId);
+}
+
+/**
+ * Retries only transport-level failures once. This is not a content fallback:
+ * every successful render still comes from the current Atlas response, and a
+ * second failure remains a structured CMS error for the caller to display.
+ */
+export async function fetchPublicPage(
+  slug: string,
+  options: BffRequestOptions,
+): Promise<ApiResult<RawPageResponse>> {
+  for (let attempt = 1; attempt <= MAX_TRANSIENT_ATTEMPTS; attempt++) {
+    const result = await fetchPublicPageOnce(slug, options);
+    if (result.success) return result;
+    if (
+      attempt === MAX_TRANSIENT_ATTEMPTS ||
+      (result.error.code !== "CMS_TIMEOUT" && result.error.code !== "CMS_NETWORK_ERROR")
+    ) {
+      return result;
+    }
+  }
+
+  // The loop always returns, but keep an explicit typed failure if it is ever
+  // changed so a future refactor cannot accidentally return undefined.
+  return apiFailure({
+    code: "CMS_NETWORK_ERROR",
+    message: "The CMS service could not be reached.",
+    status: 502,
+  });
 }

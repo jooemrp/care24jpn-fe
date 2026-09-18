@@ -2,7 +2,8 @@
 
 import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
-import { queryStates, type Bilingual } from "@/constants/copy";
+import { useSiteQueryStates } from "@/components/site-cta-provider";
+import type { Bilingual } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useRatesQuery } from "../hooks";
 import { FeesRatesContent, PricingRatesContent } from "./RatesContent";
@@ -28,6 +29,7 @@ type RatesViewProps =
  */
 export default function RatesView(props: RatesViewProps) {
   const { lang, mode } = props;
+  const queryStates = useSiteQueryStates();
   const query = useRatesQuery();
 
   if (query.isPending) {
@@ -46,9 +48,18 @@ export default function RatesView(props: RatesViewProps) {
 
   const rates = query.data as RatesContent;
   return mode === "pricing" ? (
-    <PricingRatesContent rates={rates} lang={lang} />
+    <PricingRatesContent
+      rates={rates}
+      lang={lang}
+      emptyLabel={t(queryStates.empty, lang)}
+    />
   ) : (
-    <FeesRatesContent rates={rates} lang={lang} contactCta={props.contactCta} />
+    <FeesRatesContent
+      rates={rates}
+      lang={lang}
+      contactCta={props.contactCta}
+      emptyLabel={t(queryStates.empty, lang)}
+    />
   );
 }
 

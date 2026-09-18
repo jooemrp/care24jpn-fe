@@ -47,10 +47,8 @@ export type SiteContent = {
     primary: Bilingual;
     secondary: Bilingual;
     contact: Bilingual;
-    /** Optional during the additive rollout; bundled defaults keep the
-     * sticky bar renderable before the published site page is reseeded. */
-    stickyPhoneLabel?: Bilingual;
-    stickyRequestLabel?: Bilingual;
+    stickyPhoneLabel: Bilingual;
+    stickyRequestLabel: Bilingual;
     primaryHref: string;
   };
   ui: {
@@ -59,6 +57,12 @@ export type SiteContent = {
     tocLabel: Bilingual;
     langShortJa: string;
     langShortEn: string;
+    queryStates: {
+      loading: Bilingual;
+      error: Bilingual;
+      retry: Bilingual;
+      empty: Bilingual;
+    };
   };
   footer: {
     description?: Bilingual;
@@ -169,8 +173,8 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     primary: requiredBi(ctaBlock.data, "primary", "site/site-cta"),
     secondary: requiredBi(ctaBlock.data, "secondary", "site/site-cta"),
     contact: requiredBi(ctaBlock.data, "contact", "site/site-cta"),
-    stickyPhoneLabel: optionalBi(ctaBlock.data, "sticky_phone_label", "site/site-cta"),
-    stickyRequestLabel: optionalBi(
+    stickyPhoneLabel: requiredBi(ctaBlock.data, "sticky_phone_label", "site/site-cta"),
+    stickyRequestLabel: requiredBi(
       ctaBlock.data,
       "sticky_request_label",
       "site/site-cta",
@@ -184,6 +188,12 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     tocLabel: requiredBi(uiBlock.data, "toc_label", "site/site-ui-labels"),
     langShortJa: requiredJa(uiBlock.data, "lang_short_ja", "site/site-ui-labels"),
     langShortEn: requiredJa(uiBlock.data, "lang_short_en", "site/site-ui-labels"),
+    queryStates: {
+      loading: requiredBi(uiBlock.data, "query_loading", "site/site-ui-labels"),
+      error: requiredBi(uiBlock.data, "query_error", "site/site-ui-labels"),
+      retry: requiredBi(uiBlock.data, "query_retry", "site/site-ui-labels"),
+      empty: requiredBi(uiBlock.data, "query_empty", "site/site-ui-labels"),
+    },
   };
 
   const errorPage: SiteContent["errorPage"] = {

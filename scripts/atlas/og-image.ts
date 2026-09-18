@@ -32,7 +32,8 @@
  * gets before anyone sets its own.
  */
 import { basename } from "node:path";
-import { fallbackOgImage, seoRoutes } from "../../constants/seo";
+import { fallbackOgImage } from "../../constants/seo";
+import { seoRoutes } from "../../constants/seo-routes";
 import { requireMediaManifest, type MediaManifest } from "./lib";
 
 export type OgLang = "ja" | "en";

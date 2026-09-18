@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { IconPhone } from "@tabler/icons-react";
 import Section from "@/components/ui/Section";
+import { isCmsFieldErrorMarker } from "@/features/cms/fields";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
@@ -16,8 +17,6 @@ export function HomeContactSection({
   contactCta: { ja: string; en: string };
   lang: Lang;
 }) {
-  const phoneHref = `tel:${content.phone.replace(/[^0-9+]/g, "")}`;
-
   return (
     <Section surface lang={lang}>
       <div
@@ -34,7 +33,7 @@ export function HomeContactSection({
 
         <div className="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
           <a
-            href={phoneHref}
+            href={`tel:${content.phoneTel}`}
             className="flex items-center gap-2 text-3xl font-bold text-heading md:text-4xl"
           >
             <PhoneIcon />
@@ -51,20 +50,26 @@ export function HomeContactSection({
 
         <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
           <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2">
-            <a
-              href="https://mics.tokyo/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition opacity-90 hover:opacity-100"
-            >
-              <Image
-                src={content.micsLogo}
-                alt={t(content.micsLogoAlt, lang)}
-                width={401}
-                height={140}
-                className="h-auto max-h-14 w-auto"
-              />
-            </a>
+            {isCmsFieldErrorMarker(content.micsHref) ? (
+              <span role="alert" className="px-2 text-xs font-medium text-red-700">
+                {content.micsHref}
+              </span>
+            ) : (
+              <a
+                href={content.micsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition opacity-90 hover:opacity-100"
+              >
+                <Image
+                  src={content.micsLogo}
+                  alt={t(content.micsLogoAlt, lang)}
+                  width={401}
+                  height={140}
+                  className="h-auto max-h-14 w-auto"
+                />
+              </a>
+            )}
           </div>
           <div className="flex h-20 w-auto shrink-0 items-center justify-center rounded-lg bg-white p-1">
             <Image

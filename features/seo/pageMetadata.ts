@@ -27,7 +27,7 @@
 
 import type { Metadata } from "next";
 import { SITE_URL } from "@/constants/site";
-import { seoRoutes, type SeoRouteKey } from "@/constants/seo";
+import { seoRoutes, type SeoRouteKey } from "@/constants/seo-routes";
 import { CmsContentError } from "@/features/cms/errors";
 import type { Bilingual } from "@/features/cms/types";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
@@ -52,7 +52,7 @@ import { unwrap } from "@/lib/api";
  * generate-metadata.md:402-407,417-418,823-846), so `"x-default"` renders
  * as `hreflang="x-default"` with zero special-casing on Next's side.
  *
- * Every `route` value in `constants/seo.ts#seoRoutes` is a plain absolute
+ * Every `route` value in `constants/seo-routes.ts#seoRoutes` is a plain absolute
  * path ("/", "/pricing", ...) with no existing "/ja"/"/en" prefix, no hash,
  * and no scheme — exactly the input shape `localizeHref` (the canonical
  * ja-prefix-less-by-default rule, `features/lang/i18n.ts`) handles, so this
@@ -241,7 +241,7 @@ export function buildPageMetadataFields({
   //
   // Home is the one legitimate exception, and for the same reason
   // `app/[lang]/page.tsx` passes `title: { absolute: ... }`: `route === "/"`
-  // is home-only (see `constants/seo.ts#seoRoutes`), its title already ends
+  // is home-only (see `constants/seo-routes.ts#seoRoutes`), its title already ends
   // with the brand name, and IT bypasses the template on the `<title>` side
   // too — so `og:title` must stay suffix-free there as well, or the two
   // would newly disagree in the other direction.

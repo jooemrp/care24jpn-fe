@@ -20,6 +20,7 @@ const rates: RatesContent = {
       ja: "キャンセルポリシーをご確認ください。",
       en: "See the cancellation policy.",
     },
+    cancellationHref: "/cancellation-policy",
     paymentNote: {
       ja: "お支払いは銀行振込（前払い）となります。",
       en: "Payment is made by bank transfer (in advance).",
@@ -83,6 +84,7 @@ async function main(): Promise<void> {
       React.createElement(PricingRatesContent, {
         rates,
         lang: "en",
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -101,6 +103,7 @@ async function main(): Promise<void> {
         rates,
         lang: "en",
         contactCta: { ja: "お問い合わせ", en: "Contact us" },
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
@@ -122,6 +125,7 @@ async function main(): Promise<void> {
       React.createElement(PricingRatesContent, {
         rates: missingRates,
         lang: "en",
+        emptyLabel: "There is no content to display yet.",
       }),
     );
     const feesHtml = renderToStaticMarkup(
@@ -129,12 +133,35 @@ async function main(): Promise<void> {
         rates: missingRates,
         lang: "en",
         contactCta: { ja: "お問い合わせ", en: "Contact us" },
+        emptyLabel: "There is no content to display yet.",
       }),
     );
 
     assert.match(pricingHtml, /There is no content to display yet\./);
     assert.match(feesHtml, /There is no content to display yet\./);
     assert.doesNotMatch(`${pricingHtml}${feesHtml}`, /JPY 0|¥0/);
+  });
+
+  test("a malformed cancellation URL stays a visible field diagnostic instead of crashing pricing", () => {
+    const malformedRates: RatesContent = {
+      ...rates,
+      pricing: {
+        ...rates.pricing,
+        cancellationHref:
+          "[cms-field-error: rates.pricing.cancellationHref (pricing/pricing-meta.cancellation_href)]",
+      },
+    };
+    const html = renderToStaticMarkup(
+      React.createElement(PricingRatesContent, {
+        rates: malformedRates,
+        lang: "ja",
+        emptyLabel: "表示できるコンテンツはありません。",
+      }),
+    );
+
+    assert.match(html, /role="alert"/);
+    assert.match(html, /pricing\/pricing-meta\.cancellation_href/);
+    assert.doesNotMatch(html, /href="\[cms-field-error/);
   });
 }
 

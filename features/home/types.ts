@@ -17,6 +17,7 @@ export type HomeContent = Omit<
   | "apply"
   | "pricingSummary"
   | "pricingDetailsLink"
+  | "pricingDetailsLinkMobile"
 > & {
   hero: Omit<Home["hero"], "body" | "ctaSecondary"> & {
     body?: Bilingual;
@@ -44,6 +45,7 @@ export type HomeContent = Omit<
     consult: {
       heading: Bilingual;
       body: Bilingual;
+      bodyMobile: Bilingual;
     };
     user: Home["apply"]["user"];
     staff: Home["apply"]["staff"];
@@ -59,11 +61,13 @@ export type HomeContent = Omit<
     payment: {
       heading: Bilingual;
       body: Bilingual;
+      bodyMobile: Bilingual;
       settleNote?: Bilingual;
       icon: { src: string; alt: Bilingual };
     };
   };
   pricingDetailsLink: Bilingual;
+  pricingDetailsLinkMobile: Bilingual;
   pricingDetailsHref: string;
 };
 

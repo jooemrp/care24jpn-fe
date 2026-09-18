@@ -21,8 +21,13 @@ export function HomeApplySection({
         <h2 className="text-2xl font-bold text-heading [text-wrap:balance] md:text-3xl">
           {t(content.consult.heading, lang)}
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-body md:text-lg">
-          <ResponsiveCopy text={content.consult.body} lang={lang} mode="desktop-only" />
+        <p className="mx-auto mt-3 max-w-2xl text-[13px] leading-relaxed text-body md:text-lg">
+          <ResponsiveCopy
+            text={content.consult.body}
+            mobileText={content.consult.bodyMobile}
+            lang={lang}
+            mode="desktop-only"
+          />
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -95,7 +100,7 @@ function ApplyBanner({
   const style = { animationDelay: `${delay}ms` };
   const children = isPrimary ? (
     <>
-      <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white">
+      <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white [text-wrap:balance]">
         {eyebrow}
       </span>
       <span className="col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">

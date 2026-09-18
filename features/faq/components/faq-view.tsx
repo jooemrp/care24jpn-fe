@@ -5,11 +5,12 @@ import { QueryErrorState } from "@/components/cms/QueryErrorState";
 import { QueryLoadingState, Skeleton } from "@/components/cms/QueryLoadingState";
 import Section from "@/components/ui/Section";
 import FaqList from "@/components/faq/FaqList";
-import { queryStates } from "@/constants/copy";
+import { useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useFaqQuery } from "../hooks";
 
 export default function FaqView({ lang }: { lang: Lang }) {
+  const queryStates = useSiteQueryStates();
   const query = useFaqQuery();
 
   if (query.isPending) {

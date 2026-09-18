@@ -26,9 +26,8 @@
  * merge.test.ts). `fields.ts`/`merge.ts` are dependency-free at runtime —
  * their only imports are `type`-only, which TypeScript's type stripping
  * erases entirely, so Node's native loader never has to resolve them.
- * `site-map.ts` genuinely needs `./fields`'s pickers and `@/constants/copy`'s
- * fallback data AT RUNTIME (the whole point of extracting it — see that
- * file's header), and those stay ordinary extensionless/`@/`-aliased
+ * `site-map.ts` genuinely needs `./fields`'s pickers and the shared
+ * `Bilingual` type shape, and those stay ordinary extensionless/`@/`-aliased
  * specifiers so Next's bundler and `tsc` (`moduleResolution: "bundler"`, no
  * `allowImportingTsExtensions`) keep resolving them normally. Node's native
  * ESM loader has neither: no `@/` path-alias support and no
@@ -108,6 +107,10 @@ function otherSiteBlocks(): CmsBlock[] {
       toc_label: bi("toc"),
       lang_short_ja: bi("JA"),
       lang_short_en: bi("EN"),
+      query_loading: bi("loading"),
+      query_error: bi("error"),
+      query_retry: bi("retry"),
+      query_empty: bi("empty"),
     }),
     simple("site-error-labels", 4, { title: bi("t"), body: bi("b"), retry_label: bi("r") }),
     simple("site-not-found-labels", 5, {
@@ -240,14 +243,31 @@ async function main(): Promise<void> {
   });
 
   // ---------------------------------------------------------------------------
-  // (d) a legal link with no CMS `href`/`label` at all falls back to
-  // `constants/copy.ts` BY INDEX, same as before this task — only
-  // `use_legal_heading`'s default changed, not the href/label fallback.
+  // (d) a legal link with no CMS `href`/`label` is rejected rather than
+  // borrowing a value from the bundled copy.
   // ---------------------------------------------------------------------------
 
   test("a legal link missing its own href/label is rejected", () => {
     const blocks = siteBlocks([legalBlock(9, {})]);
     assert.throws(() => mapSite(blocks));
+  });
+
+  test("site CTA sticky labels are required API fields", () => {
+    const blocks = siteBlocks(liveOrderLegalBlocks()).map((block) =>
+      block.type === "site-cta"
+        ? {
+            ...block,
+            data: {
+              ...block.data,
+              sticky_phone_label: undefined,
+              sticky_request_label: undefined,
+            },
+          }
+        : block,
+    );
+    const result = mapSite(blocks);
+    assert.equal(result.cta.stickyPhoneLabel.ja, "[missing: site/site-cta.sticky_phone_label]");
+    assert.equal(result.cta.stickyRequestLabel.ja, "[missing: site/site-cta.sticky_request_label]");
   });
 
   // ---------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-import { formatYen, type CourseRates } from "@/constants/pricing";
+import type { CourseRates } from "@/constants/pricing";
+import { formatYen } from "@/features/rates/format-yen";
 import { t, type Lang } from "@/features/lang/i18n";
 
 type CourseRateCardProps = {

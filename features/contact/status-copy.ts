@@ -35,48 +35,10 @@ export type ContactSubmitResult =
   | { status: "rate_limited"; code: "rate_limited"; message: string }
   | { status: "error"; code: Exclude<ContactErrorCode, "rate_limited">; message: string };
 
-/** Built-in bilingual detail copy for known reject reasons (CMS stays generic). */
-const DETAIL_COPY: Record<
-  Exclude<ContactErrorCode, "rate_limited"> | "rate_limited",
-  { ja: string; en: string }
-> = {
-  too_fast: {
-    ja: "送信が早すぎます。数秒待ってからもう一度お試しください。",
-    en: "That was too fast. Please wait a few seconds and try again.",
-  },
-  expired: {
-    ja: "フォームの有効期限が切れました。ページを再読み込みしてから送信してください。",
-    en: "This form expired. Please reload the page and try again.",
-  },
-  origin: {
-    ja: "このサイトからの送信は許可されていません。公式サイトからお試しください。",
-    en: "Submissions from this site are not allowed. Please use the official website.",
-  },
-  validation: {
-    ja: "入力内容に問題があります。内容を確認して再度お試しください。",
-    en: "Something in the form looks invalid. Please check your entries and try again.",
-  },
-  rejected: {
-    ja: "送信を受け付けられませんでした。内容を確認して再度お試しください。",
-    en: "The submission could not be accepted. Please check your entries and try again.",
-  },
-  unavailable: {
-    ja: "一時的に送信できません。しばらくしてから再度お試しください。",
-    en: "The contact service is temporarily unavailable. Please try again shortly.",
-  },
-  config: {
-    ja: "お問い合わせ機能の設定に問題があります。時間をおいて再度お試しください。",
-    en: "Contact is misconfigured on this environment. Please try again later.",
-  },
-  rate_limited: {
-    ja: "短時間に送信が多すぎます。しばらくしてから再度お試しください。",
-    en: "Too many submissions. Please try again later.",
-  },
-};
-
 /**
  * Maps a known upstream / local failure into a structured UI result.
- * Only safe, non-secret phrases are classified; everything else stays generic.
+ * Only safe, non-secret reason codes are classified; user-facing copy stays
+ * in the CMS-backed status table rather than being bundled here.
  */
 export function contactResultFromUpstream(
   httpStatus: number,
@@ -86,11 +48,16 @@ export function contactResultFromUpstream(
     return {
       status: "rate_limited",
       code: "rate_limited",
-      message: DETAIL_COPY.rate_limited.en,
+      message: extractUpstreamMessage(body),
     };
   }
   if (httpStatus >= 200 && httpStatus < 300) {
     return { status: "success" };
+  }
+
+  const upstreamCode = extractUpstreamCode(body);
+  if (upstreamCode && upstreamCode !== "rate_limited") {
+    return { status: "error", code: upstreamCode, message: extractUpstreamMessage(body) };
   }
 
   const raw = extractUpstreamMessage(body);
@@ -101,13 +68,13 @@ export function contactResultFromUpstream(
     lower.includes("too quickly") ||
     lower.includes("filled too quickly")
   ) {
-    return { status: "error", code: "too_fast", message: DETAIL_COPY.too_fast.en };
+    return { status: "error", code: "too_fast", message: raw };
   }
   if (lower.includes("expired") || lower.includes("reload the form")) {
-    return { status: "error", code: "expired", message: DETAIL_COPY.expired.en };
+    return { status: "error", code: "expired", message: raw };
   }
   if (lower.includes("origin is not allowed") || lower.includes("disallowed origin")) {
-    return { status: "error", code: "origin", message: DETAIL_COPY.origin.en };
+    return { status: "error", code: "origin", message: raw };
   }
   if (
     lower.includes("invalid request body") ||
@@ -115,23 +82,23 @@ export function contactResultFromUpstream(
     lower.includes("unknown category") ||
     lower.includes("validation")
   ) {
-    return { status: "error", code: "validation", message: DETAIL_COPY.validation.en };
+    return { status: "error", code: "validation", message: raw };
   }
   // Backend honeypot / reserved-field trap — message is intentionally opaque.
   if (lower.includes("invalid submission")) {
-    return { status: "error", code: "rejected", message: DETAIL_COPY.rejected.en };
+    return { status: "error", code: "rejected", message: raw };
   }
   if (httpStatus === 503 && lower.includes("not configured")) {
-    return { status: "error", code: "config", message: DETAIL_COPY.config.en };
+    return { status: "error", code: "config", message: raw };
   }
   if (httpStatus === 502 || httpStatus === 503 || httpStatus === 504) {
-    return { status: "error", code: "unavailable", message: DETAIL_COPY.unavailable.en };
+    return { status: "error", code: "unavailable", message: raw };
   }
 
   return {
     status: "error",
     code: "rejected",
-    message: DETAIL_COPY.rejected.en,
+    message: raw,
   };
 }
 
@@ -147,9 +114,33 @@ export function extractUpstreamMessage(body: string): string {
   return "";
 }
 
+/** Read only the stable machine code; user-facing copy never comes from it. */
+function extractUpstreamCode(body: string): Exclude<ContactErrorCode, "rate_limited"> | "rate_limited" | null {
+  if (!body) return null;
+  try {
+    const parsed = JSON.parse(body) as { code?: unknown };
+    if (
+      parsed.code === "too_fast" ||
+      parsed.code === "expired" ||
+      parsed.code === "origin" ||
+      parsed.code === "validation" ||
+      parsed.code === "rejected" ||
+      parsed.code === "unavailable" ||
+      parsed.code === "config" ||
+      parsed.code === "rate_limited"
+    ) {
+      return parsed.code;
+    }
+  } catch {
+    // Non-JSON upstream bodies are ignored for classification.
+  }
+  return null;
+}
+
 /**
- * Picks the localized copy for a submission state. Known reason codes use
- * built-in detail copy; unknown/generic failures fall back to the CMS table.
+ * Picks the localized copy for a submission state. Every user-facing phrase
+ * comes from the CMS-backed contact status table; reason codes are for
+ * diagnostics only.
  */
 export function statusCopyFor(
   result: ContactSubmitResult | "sending",
@@ -158,11 +149,7 @@ export function statusCopyFor(
 ): string {
   if (result === "sending") return table.sending[lang];
   if (result.status === "success") return table.success[lang];
-  if (result.status === "rate_limited") {
-    return DETAIL_COPY.rate_limited[lang] || table.rateLimited[lang];
-  }
-  const detail = DETAIL_COPY[result.code];
-  if (detail) return detail[lang];
+  if (result.status === "rate_limited") return table.rateLimited[lang];
   return table.error[lang];
 }
 
