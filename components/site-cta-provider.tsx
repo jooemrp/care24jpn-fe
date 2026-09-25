@@ -9,7 +9,12 @@ type SiteCtaContextValue = {
   label: Bilingual;
   contactCta: Bilingual;
   href: string;
-  contactPhone: { display: string; tel: string; note: Bilingual };
+  contactPhone: {
+    display: string;
+    tel: string;
+    note: Bilingual;
+    hoursNote?: Bilingual;
+  };
   stickyPhoneLabel: Bilingual;
   stickyRequestLabel: Bilingual;
   queryStates: SiteContent["ui"]["queryStates"];
@@ -30,7 +35,12 @@ export function SiteCtaProvider({
   primaryCta: Bilingual;
   contactCta: Bilingual;
   primaryHref: string;
-  contactPhone: { display: string; tel: string; note: Bilingual };
+  contactPhone: {
+    display: string;
+    tel: string;
+    note: Bilingual;
+    hoursNote?: Bilingual;
+  };
   stickyPhoneLabel: Bilingual;
   stickyRequestLabel: Bilingual;
   queryStates: SiteContent["ui"]["queryStates"];
@@ -108,6 +118,7 @@ export function useSiteContactPhone(): {
   display: string;
   tel: string;
   note: Bilingual;
+  hoursNote?: Bilingual;
 } {
   return useSiteCta().contactPhone;
 }

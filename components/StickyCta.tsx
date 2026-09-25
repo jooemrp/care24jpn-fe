@@ -100,6 +100,11 @@ export default function StickyCta({ lang }: { lang: Lang }) {
               <span className="whitespace-nowrap tabular-nums tracking-[0.06em]">
                 {contactPhone.display}
               </span>
+              {contactPhone.hoursNote ? (
+                <span className="mt-0.5 text-[0.55rem] leading-snug text-white/75 sm:text-[0.6rem] md:text-[0.65rem]">
+                  {t(contactPhone.hoursNote, lang)}
+                </span>
+              ) : null}
             </span>
             <span
               aria-hidden="true"

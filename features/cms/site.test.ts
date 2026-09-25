@@ -341,6 +341,23 @@ async function main(): Promise<void> {
     assert.deepEqual(result.cta.stickyRequestLabel, bi("資料請求"));
   });
 
+  test("mapSite() reads optional site-contact-phone.phone_note into hoursNote", () => {
+    const blocks = siteBlocks(liveOrderLegalBlocks()).map((block) => {
+      if (block.type === "site-contact-phone") {
+        return {
+          ...block,
+          data: {
+            ...block.data,
+            phone_note: bi("※お電話での登録や予約のご対応は午前9時〜午後6時となります。"),
+          },
+        };
+      }
+      return block;
+    });
+    const result = mapSite(blocks);
+    assert.deepEqual(result.contactPhone.hoursNote, bi("※お電話での登録や予約のご対応は午前9時〜午後6時となります。"));
+  });
+
   test("a nav item without short_label stays hamburger-only", () => {
     const result = mapSite(siteBlocks(liveOrderLegalBlocks()));
     assert.equal(result.nav[0]?.shortLabel, undefined);

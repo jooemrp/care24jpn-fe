@@ -64,6 +64,11 @@ export default function ContactView({ lang }: { lang: Lang }) {
               <p className="mt-2 text-sm text-white/85">
                 {t(query.data.phone.hours, lang)}
               </p>
+              {query.data.phone.note ? (
+                <p className="mt-1.5 text-xs leading-relaxed text-white/75 md:text-[0.8rem]">
+                  {t(query.data.phone.note, lang)}
+                </p>
+              ) : null}
             </a>
             <ul className="mt-6 space-y-2 text-sm text-white/90">
               {query.data.phone.bullets.map((bullet) => (

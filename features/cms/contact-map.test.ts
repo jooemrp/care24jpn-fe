@@ -60,6 +60,7 @@ async function main(): Promise<void> {
         tel_label: bi("TEL"),
         number: bi("0120-001-224"),
         hours: bi("Weekdays"),
+        note: bi("Phone note"),
         bullets: bi("Phone bullet 1\nPhone bullet 2"),
       }),
       block("contact-form-card", 2, {
@@ -95,6 +96,7 @@ async function main(): Promise<void> {
       telLabel: bi("TEL"),
       number: "0120-001-224",
       hours: bi("Weekdays"),
+      note: bi("Phone note"),
       bullets: [
         { ja: "Phone bullet 1", en: "Phone bullet 1" },
         { ja: "Phone bullet 2", en: "Phone bullet 2-en" },
