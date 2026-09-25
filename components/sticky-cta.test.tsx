@@ -55,6 +55,49 @@ test("sticky CTA renders full-width desktop phone and contact actions", () => {
   assert.match(html, /pointer-events-none translate-y-full opacity-0/);
   assert.match(html, /motion-reduce:transition-none/);
   assert.doesNotMatch(html, /mx-auto max-w-6xl rounded-2xl bg-primary p-2/);
+  assert.doesNotMatch(
+    html,
+    /※お電話での登録や予約のご対応は午前9時〜午後6時となります。/,
+  );
+});
+
+test("sticky CTA renders optional phone-hours disclaimer under the number", () => {
+  const html = renderToStaticMarkup(
+    React.createElement(
+      SiteCtaProvider,
+      {
+        primaryCta: { ja: "無料相談を予約する", en: "Book a free consultation" },
+        primaryHref: "/contact",
+        contactPhone: {
+          display: "0120-001-224",
+          tel: "0120001224",
+          note: {
+            ja: "24時間365日、お気軽にお問い合わせください。",
+            en: "Contact us 24 hours a day, 365 days a year.",
+          },
+          hoursNote: {
+            ja: "※お電話での登録や予約のご対応は午前9時〜午後6時となります。",
+            en: "Phone registration and reservations are handled from 9:00 a.m. to 6:00 p.m.",
+          },
+        },
+        stickyPhoneLabel: { ja: "電話をかける", en: "Call" },
+        stickyRequestLabel: { ja: "お問合せ", en: "Contact us" },
+        contactCta: { ja: "お問合せ", en: "Contact us" },
+        queryStates: {
+          loading: { ja: "読み込み中です", en: "Loading" },
+          error: { ja: "コンテンツを読み込めませんでした。", en: "We couldn't load this content." },
+          retry: { ja: "再試行", en: "Try again" },
+          empty: { ja: "表示できるコンテンツがありません。", en: "There is no content to display yet." },
+        },
+      } as React.ComponentProps<typeof SiteCtaProvider>,
+      React.createElement(StickyCta, { lang: "ja" }),
+    ),
+  );
+
+  assert.match(
+    html,
+    /※お電話での登録や予約のご対応は午前9時〜午後6時となります。/,
+  );
 });
 
 test("sticky CTA fails closed when the API omits a required label", () => {

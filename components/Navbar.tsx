@@ -114,6 +114,8 @@ function useActiveSection(ids: string[], pathname: string) {
  * centre against the CTA — whether the site is in JA or EN. That fixed width
  * is kept in the condensed state too; only the note collapses, the number
  * itself never shrinks (this is the primary conversion path for the site).
+ * An optional phone-hours disclaimer sits under the 24/7 note when CMS
+ * provides `hoursNote`.
  */
 function PhoneBlock({
   lang,
@@ -126,6 +128,10 @@ function PhoneBlock({
   align?: "start" | "end";
   condensed?: boolean;
 }) {
+  const hoursNote = contactPhone.hoursNote
+    ? t(contactPhone.hoursNote, lang)
+    : null;
+
   return (
     <a
       href={`tel:${contactPhone.tel}`}
@@ -137,17 +143,26 @@ function PhoneBlock({
       <span className="text-2xl font-bold tabular-nums tracking-[0.08em] text-heading transition group-hover:text-primary">
         {contactPhone.display}
       </span>
-      {/* The clip box carries its own 4px padding so the note's glyphs — whose
-          ink box is taller than its `leading-none` line box — are never shaved
-          while the height animates. */}
+      {/* The clip box carries its own padding so note glyphs — whose ink box
+          can exceed the line box — are never shaved while the height animates.
+          max-h expands when a phone-hours disclaimer is present. */}
       <span
         className={`block overflow-hidden ${MOTION} ${
-          condensed ? "max-h-0 py-0 opacity-0" : "max-h-5 py-1 opacity-100"
+          condensed
+            ? "max-h-0 py-0 opacity-0"
+            : hoursNote
+              ? "max-h-12 py-1 opacity-100"
+              : "max-h-5 py-1 opacity-100"
         }`}
       >
         <span className="block whitespace-nowrap text-xs leading-none text-body">
           {t(contactPhone.note, lang)}
         </span>
+        {hoursNote ? (
+          <span className="mt-1 block text-[0.65rem] leading-snug text-muted">
+            {hoursNote}
+          </span>
+        ) : null}
       </span>
     </a>
   );

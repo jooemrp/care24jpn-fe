@@ -42,7 +42,13 @@ export type SiteContent = {
     tagline: Bilingual;
   };
   nav: { href: string; label: Bilingual; shortLabel?: Bilingual }[];
-  contactPhone: { display: string; tel: string; note: Bilingual };
+  contactPhone: {
+    display: string;
+    tel: string;
+    note: Bilingual;
+    /** Phone-hours disclaimer shown under the sticky-bar number. */
+    hoursNote?: Bilingual;
+  };
   cta: {
     primary: Bilingual;
     secondary: Bilingual;
@@ -167,6 +173,7 @@ export function mapSite(blocks: CmsBlock[]): SiteContent {
     display: requiredJa(contactPhoneBlock.data, "display", "site/site-contact-phone"),
     tel: requiredJa(contactPhoneBlock.data, "tel", "site/site-contact-phone"),
     note: requiredBi(contactPhoneBlock.data, "note", "site/site-contact-phone"),
+    hoursNote: optionalBi(contactPhoneBlock.data, "phone_note", "site/site-contact-phone"),
   };
 
   const cta: SiteContent["cta"] = {

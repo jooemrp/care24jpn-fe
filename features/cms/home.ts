@@ -483,6 +483,7 @@ function mapContact(
     phone: contactPhone.display,
     phoneTel: contactPhone.tel,
     hours: requiredBi(data, "hours", "home/home-contact"),
+    phoneNote: optionalBi(data, "phone_note", "home/home-contact"),
     isms: requiredBi(data, "isms", "home/home-contact"),
     micsLogo: requiredImageUrl(data, "mics_logo", "home/home-contact"),
     isoLogo: requiredImageUrl(data, "iso_logo", "home/home-contact"),

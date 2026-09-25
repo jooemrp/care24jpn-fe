@@ -33,7 +33,12 @@ export type HomeContent = Omit<
       items: NursingFeature[];
     };
   };
-  contact: Home["contact"] & { micsLogo: string; isoLogo: string };
+  contact: Home["contact"] & {
+    micsLogo: string;
+    isoLogo: string;
+    /** Phone-hours disclaimer rendered under the phone number. */
+    phoneNote?: Bilingual;
+  };
   about: Omit<Home["about"], "cards"> & {
     illustration: string;
     cards: (Home["about"]["cards"][number] & { image: string })[];

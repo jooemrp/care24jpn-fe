@@ -48,6 +48,12 @@ export function HomeContactSection({
           </SafeInternalLink>
         </div>
 
+        {content.phoneNote ? (
+          <p className="mt-4 text-xs leading-relaxed text-muted md:text-sm">
+            {t(content.phoneNote, lang)}
+          </p>
+        ) : null}
+
         <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
           <div className="flex h-20 w-48 shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2">
             {isCmsFieldErrorMarker(content.micsHref) ? (

@@ -9,6 +9,7 @@
 
 import {
   mapBlocksByType,
+  optionalBi,
   optionalLines,
   requiredBi,
   requiredJa,
@@ -31,6 +32,8 @@ export type ContactContent = ContactPageContent & {
     telLabel: Bilingual;
     number: string;
     hours: Bilingual;
+    /** Phone-hours disclaimer rendered under the number. */
+    note?: Bilingual;
     bullets: Bilingual[];
   };
   form: {
@@ -124,6 +127,7 @@ export function mapContact(blocks: CmsBlock[]): ContactContent {
       telLabel: requiredBi(phoneBlock.data, "tel_label", "contact/contact-phone-card"),
       number: requiredJa(phoneBlock.data, "number", "contact/contact-phone-card"),
       hours: requiredBi(phoneBlock.data, "hours", "contact/contact-phone-card"),
+      note: optionalBi(phoneBlock.data, "note", "contact/contact-phone-card"),
       bullets: phoneBullets,
     },
     form: {
