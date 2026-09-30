@@ -800,7 +800,7 @@ export const home = {
       en: "[Reception Hours] Weekdays 9:00 AM – 6:00 PM",
     } satisfies Bilingual,
     isms: {
-      ja: "メディカルインフォマティクス株式会社は\n情報セキュリティマネジメントシステム（ISMS）の\n国際規格である「ISO27001」を取得しております。",
+      ja: "メディカルインフォマティクス株式会社は情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO27001」を取得しております。",
       en: "MedicalInformatics Co.,Ltd. has obtained ISO27001, the international standard for\ninformation security management systems (ISMS).",
     } satisfies Bilingual,
     // Verbatim from app/[lang]/page.tsx:511. Already language-neutral (a
