@@ -15,6 +15,7 @@ import {
   useSiteStickyPhoneLabel,
   useSiteStickyRequestLabel,
 } from "./site-cta-provider";
+import { PhraseText } from "@/components/PhraseText";
 
 /** Persistent consultation CTA rail for both mobile and desktop. */
 export default function StickyCta({ lang }: { lang: Lang }) {
@@ -71,22 +72,24 @@ export default function StickyCta({ lang }: { lang: Lang }) {
         }`}
       >
         <div className="mx-auto grid w-full max-w-6xl grid-cols-2 md:grid-cols-[0.85fr_1fr_0.85fr]">
+          {/* At md this column is ~240px; the icon and smaller type keep
+              the note to the approved "24時間365日、/お気軽に…" two lines. */}
           <div className="hidden min-h-20 items-center gap-3 border-r border-white/20 bg-primary-deep px-6 text-white md:flex">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+            <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 lg:flex">
               <IconHeadset
                 className="h-5 w-5"
                 stroke={1.9}
                 aria-hidden="true"
               />
             </span>
-            <span className="text-sm font-semibold leading-relaxed">
-              {t(contactPhone.note, lang)}
+            <span className="text-xs font-semibold leading-relaxed lg:text-sm">
+              <PhraseText text={t(contactPhone.note, lang)} />
             </span>
           </div>
           <a
             href={`tel:${contactPhone.tel}`}
             aria-label={`${t(phoneLabel, lang)} ${contactPhone.display}`}
-            className="group inline-flex min-h-16 items-center justify-center gap-2 border-r border-white/20 bg-primary-deep px-3 py-2 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:relative md:min-h-20 md:gap-4 md:border-r-0 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
+            className="group inline-flex min-h-16 items-center justify-center gap-1.5 border-r border-white/20 bg-primary-deep px-2 py-2 sm:gap-2 sm:px-3 text-center text-sm font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white motion-reduce:transition-none md:relative md:min-h-20 md:gap-4 md:border-r-0 md:border-l md:border-white/25 md:px-8 md:text-base md:shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
           >
             <IconPhone
               className="h-5 w-5 shrink-0 md:h-10 md:w-10 md:rounded-full md:border md:border-white/35 md:bg-white/10 md:p-2"
@@ -95,14 +98,14 @@ export default function StickyCta({ lang }: { lang: Lang }) {
             />
             <span className="flex min-w-0 flex-col items-start leading-tight">
               <span className="text-[0.68rem] font-medium text-white/80 sm:text-xs">
-                {t(phoneLabel, lang)}
+                <PhraseText text={t(phoneLabel, lang)} />
               </span>
               <span className="whitespace-nowrap tabular-nums tracking-[0.06em]">
                 {contactPhone.display}
               </span>
               {contactPhone.hoursNote ? (
                 <span className="mt-0.5 text-[0.55rem] leading-snug text-white/75 sm:text-[0.6rem] md:text-[0.65rem]">
-                  {t(contactPhone.hoursNote, lang)}
+                  <PhraseText text={t(contactPhone.hoursNote, lang)} />
                 </span>
               ) : null}
             </span>
@@ -122,7 +125,7 @@ export default function StickyCta({ lang }: { lang: Lang }) {
               stroke={1.9}
               aria-hidden="true"
             />
-            <span>{t(contactLabel, lang)}</span>
+            <span><PhraseText text={t(contactLabel, lang)} /></span>
             <span
               aria-hidden="true"
               className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/10 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none md:flex"

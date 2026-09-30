@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 import { parseInternalMarkdownLinks } from "@/features/cms/inline-links";
+import { PhraseText } from "@/components/PhraseText";
 
 export function CmsInlineText({ text, lang }: { text: string; lang: Lang }) {
   const parts = parseInternalMarkdownLinks(text);
@@ -15,10 +16,10 @@ export function CmsInlineText({ text, lang }: { text: string; lang: Lang }) {
             href={localizeHref(part.href, lang)}
             className="font-medium text-primary underline underline-offset-2 hover:no-underline"
           >
-            {part.label}
+            <PhraseText text={part.label} />
           </Link>
         ) : (
-          <span key={`text-${index}`}>{part.value}</span>
+          <PhraseText key={`text-${index}`} text={part.value} className="inline" />
         ),
       )}
     </>

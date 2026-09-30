@@ -6,6 +6,7 @@ import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeAboutSection({
   content,
@@ -24,11 +25,11 @@ export function HomeAboutSection({
           className="mb-3 block h-1 w-10 rounded-full bg-primary md:hidden"
         />
         <h2 className="mb-1 text-[1.75rem] leading-tight tracking-[-0.025em] text-heading md:text-3xl md:tracking-normal">
-          {t(content.heading, lang)}
+          <PhraseText text={t(content.heading, lang)} />
         </h2>
       </header>
       <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
-        {t(content.catchphrase, lang)}
+        <PhraseText text={t(content.catchphrase, lang)} />
       </p>
       <p className="mt-4 max-w-3xl text-base leading-relaxed text-body">
         <ResponsiveCopy text={content.body} lang={lang} mode="desktop-only" />
@@ -53,9 +54,9 @@ export function HomeAboutSection({
                   />
                 ) : null}
               </span>
-              <h3 className="mt-5 text-lg font-bold text-heading">{t(card.title, lang)}</h3>
+              <h3 className="mt-5 text-lg font-bold text-heading"><PhraseText text={t(card.title, lang)} /></h3>
               <p className="mt-2 max-w-[16rem] whitespace-pre-line text-sm leading-relaxed text-body">
-                {t(card.body, lang)}
+                <PhraseText text={t(card.body, lang)} />
               </p>
             </li>
           ))}

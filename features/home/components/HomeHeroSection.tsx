@@ -6,6 +6,7 @@ import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { isSafeExternalHref, safeLocalizedHref } from "./HomeLinks";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeHeroSection({
   content,
@@ -19,7 +20,7 @@ export function HomeHeroSection({
 
   const cta = (
     <>
-      {t(content.ctaPrimary, lang)}
+      <PhraseText text={t(content.ctaPrimary, lang)} />
       <span
         aria-hidden="true"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
@@ -73,7 +74,7 @@ export function HomeHeroSection({
             data-hero-accent
           />
           <h1 className="whitespace-pre-line text-[2rem] font-bold leading-[1.32] tracking-[-0.035em] text-heading sm:text-4xl md:text-5xl md:leading-tight md:tracking-normal">
-            {t(content.heading, lang)}
+            <PhraseText text={t(content.heading, lang)} />
           </h1>
 
           <div className="mt-5 flex flex-col items-start gap-5 md:mt-8 md:gap-4">
@@ -89,11 +90,11 @@ export function HomeHeroSection({
                   <IconMapPin className="h-4 w-4" stroke={1.8} aria-hidden="true" />
                 </span>
                 <p className="break-keep text-sm font-semibold text-heading">
-                  {t(content.areaBadge.main, lang)}
+                  <PhraseText text={t(content.areaBadge.main, lang)} />
                 </p>
               </div>
               <p className="px-1 text-xs leading-relaxed text-body md:text-sm">
-                {t(content.areaBadge.sub, lang)}
+                <PhraseText text={t(content.areaBadge.sub, lang)} />
               </p>
             </div>
 
@@ -102,7 +103,7 @@ export function HomeHeroSection({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="order-1 inline-flex w-full min-h-14 justify-between rounded-2xl bg-accent-deep px-5 py-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:px-7 md:py-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
+                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
                 data-hero-cta
               >
                 {cta}
@@ -110,7 +111,7 @@ export function HomeHeroSection({
             ) : (
               <Link
                 href={href}
-                className="order-1 inline-flex w-full min-h-14 justify-between rounded-2xl bg-accent-deep px-5 py-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:px-7 md:py-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
+                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
                 data-hero-cta
               >
                 {cta}
@@ -152,9 +153,9 @@ export function PyramidStatement({
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-[10%] pb-[18%] pt-5 text-center text-white">
-        <p className="text-xs font-medium tracking-wide text-white/90 md:text-sm">{badge}</p>
-        <p className="mt-1.5 max-w-[56%] text-md font-bold leading-snug md:mt-2 md:max-w-[62%] md:text-lg">
-          {resolve}
+        <p className="text-xs font-medium tracking-wide text-white/90 md:text-sm"><PhraseText text={badge} /></p>
+        <p className="mt-1.5 max-w-[56%] text-md font-bold leading-snug max-[350px]:max-w-[64%] md:mt-2 md:max-w-[62%] md:text-lg">
+          <PhraseText text={resolve} />
         </p>
       </div>
     </div>

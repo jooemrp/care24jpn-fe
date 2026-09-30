@@ -4,9 +4,10 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import StickyCta from "./StickyCta";
 import { SiteCtaProvider } from "./site-cta-provider";
+import { stripPhraseMarkup } from "../lib/phrase-test-utils";
 
 test("sticky CTA renders full-width desktop phone and contact actions", () => {
-  const html = renderToStaticMarkup(
+  const html = stripPhraseMarkup(renderToStaticMarkup(
     React.createElement(
       SiteCtaProvider,
       {
@@ -32,7 +33,7 @@ test("sticky CTA renders full-width desktop phone and contact actions", () => {
       } as React.ComponentProps<typeof SiteCtaProvider>,
       React.createElement(StickyCta, { lang: "ja" }),
     ),
-  );
+  ));
 
   assert.match(html, /href="tel:0120001224"/);
   assert.match(html, /0120-001-224/);
@@ -62,7 +63,7 @@ test("sticky CTA renders full-width desktop phone and contact actions", () => {
 });
 
 test("sticky CTA renders optional phone-hours disclaimer under the number", () => {
-  const html = renderToStaticMarkup(
+  const html = stripPhraseMarkup(renderToStaticMarkup(
     React.createElement(
       SiteCtaProvider,
       {
@@ -92,7 +93,7 @@ test("sticky CTA renders optional phone-hours disclaimer under the number", () =
       } as React.ComponentProps<typeof SiteCtaProvider>,
       React.createElement(StickyCta, { lang: "ja" }),
     ),
-  );
+  ));
 
   assert.match(
     html,

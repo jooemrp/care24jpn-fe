@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
 import type { SiteContent } from "@/features/cms/site";
 import { LOGO_INTRINSIC_HEIGHT, LOGO_INTRINSIC_WIDTH } from "./Footer";
+import { PhraseText } from "@/components/PhraseText";
 
 /** Scroll distance (px) after which the header condenses. */
 const CONDENSE_AT = 72;
@@ -156,7 +157,7 @@ function PhoneBlock({
         }`}
       >
         <span className="block whitespace-nowrap text-xs leading-none text-body">
-          {t(contactPhone.note, lang)}
+          <PhraseText text={t(contactPhone.note, lang)} />
         </span>
         {hoursNote ? (
           <span className="mt-1 block text-[0.65rem] leading-snug text-muted">
@@ -276,7 +277,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                               : "text-heading hover:bg-primary-light/60 hover:text-primary"
                           }`}
                         >
-                          {t(item.shortLabel!, lang)}
+                          <PhraseText text={t(item.shortLabel!, lang)} />
                         </Link>
                       </li>
                     );
@@ -319,7 +320,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                           : "text-body hover:bg-primary-light/60 hover:text-primary"
                       }`}
                     >
-                      {t(item.label, lang)}
+                      <PhraseText text={t(item.label, lang)} />
                     </Link>
                   </li>
                 );
@@ -346,7 +347,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                           active ? "text-primary" : "text-body"
                         }`}
                       >
-                        {t(item.label, lang)}
+                        <PhraseText text={t(item.label, lang)} />
                       </Link>
                     </li>
                   );
@@ -357,7 +358,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
                     onClick={() => setOpen(false)}
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-mid"
                   >
-                    {t(site.cta.primary, lang)}
+                    <PhraseText text={t(site.cta.primary, lang)} />
                   </Link>
                 </li>
                 <li className="border-t border-border pt-4">

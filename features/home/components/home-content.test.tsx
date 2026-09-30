@@ -6,6 +6,7 @@ import { cta, home } from "@/constants/copy";
 import type { HomeContent } from "../types";
 import type * as HomeContentModule from "./HomeContent.tsx";
 import { splitBilingual } from "./home-copy";
+import { stripPhraseMarkup } from "../../../lib/phrase-test-utils";
 
 const homeContentPath = "./HomeContent" + ".tsx";
 const darkVariant = ["dark", ":"].join("");
@@ -164,7 +165,10 @@ async function main(): Promise<void> {
     assert.match(html, /data-hero-area="true"/);
     assert.match(html, /border-l-2 border-primary/);
     assert.match(html, /data-hero-cta="true"/);
-    assert.match(html, /w-full min-h-14 justify-between rounded-2xl/);
+    assert.match(html, /w-full min-h-14 items-center justify-between rounded-2xl/);
+    // The arrow circle sits as far from the right edge as from top/bottom.
+    assert.match(html, /py-3 pl-5 pr-3 /);
+    assert.match(html, /md:py-3\.5 md:pl-7 md:pr-3\.5 /);
     assert.match(html, /focus-visible:outline-2/);
     assert.match(html, /data-about-intro="true"/);
     assert.doesNotMatch(html, /min-h-\[30rem\]/);
@@ -268,14 +272,14 @@ async function main(): Promise<void> {
   });
 
   test("Japanese revision copy keeps API-owned mobile wording and line breaks", () => {
-    const html = renderToStaticMarkup(
+    const html = stripPhraseMarkup(renderToStaticMarkup(
       React.createElement(HomeContentView, {
         content,
         lang: "ja",
         contactCta: cta.contact,
         emptyLabel: "表示できるコンテンツがありません。",
       }),
-    );
+    ));
 
     assert.match(
       html,

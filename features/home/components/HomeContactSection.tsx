@@ -7,6 +7,7 @@ import { isCmsFieldErrorMarker } from "@/features/cms/fields";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeContactSection({
   content,
@@ -24,11 +25,11 @@ export function HomeContactSection({
         className="scroll-mt-36 rounded-2xl bg-primary-light px-6 py-8 text-center animate-fade-up md:py-12"
       >
         <p className="text-sm font-medium text-primary">
-          {t(content.leadInOrnamentStart, lang)} {t(content.leadIn, lang)}{" "}
-          {t(content.leadInOrnamentEnd, lang)}
+          <PhraseText text={t(content.leadInOrnamentStart, lang)} /> <PhraseText text={t(content.leadIn, lang)} />{" "}
+          <PhraseText text={t(content.leadInOrnamentEnd, lang)} />
         </p>
-        <h2 className="mt-2 text-2xl font-bold text-heading md:text-3xl">
-          {t(content.heading, lang)}
+        <h2 className="mt-2 text-2xl font-bold text-heading [text-wrap:balance] md:text-3xl">
+          <PhraseText text={t(content.heading, lang)} />
         </h2>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row">
@@ -44,13 +45,13 @@ export function HomeContactSection({
             lang={lang}
             className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
           >
-            {t(contactCta, lang)}
+            <PhraseText text={t(contactCta, lang)} />
           </SafeInternalLink>
         </div>
 
         {content.phoneNote ? (
           <p className="mt-4 text-xs leading-relaxed text-muted md:text-sm">
-            {t(content.phoneNote, lang)}
+            <PhraseText text={t(content.phoneNote, lang)} />
           </p>
         ) : null}
 
@@ -87,7 +88,7 @@ export function HomeContactSection({
             />
           </div>
           <p className="w-full max-w-none whitespace-pre-line text-left text-[11px] leading-relaxed text-body max-[350px]:text-[9px] sm:w-auto sm:max-w-md sm:text-xs">
-            {t(content.isms, lang)}
+            <PhraseText text={t(content.isms, lang)} />
           </p>
         </div>
       </div>

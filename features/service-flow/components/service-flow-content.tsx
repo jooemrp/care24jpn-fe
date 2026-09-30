@@ -5,6 +5,7 @@ import Section from "@/components/ui/Section";
 import StepFlow from "@/components/ui/StepFlow";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import type { ServiceFlowContent } from "@/features/cms/pages-map";
+import { PhraseText } from "@/components/PhraseText";
 
 export function ServiceFlowContentView({
   content,
@@ -23,7 +24,7 @@ export function ServiceFlowContentView({
         lang={lang}
       >
         <p className="max-w-2xl text-lg leading-relaxed text-body">
-          {t(content.hero.body, lang)}
+          <PhraseText text={t(content.hero.body, lang)} />
         </p>
       </Section>
 
@@ -34,7 +35,7 @@ export function ServiceFlowContentView({
             href={localizeHref(content.hero.ctaHref, lang)}
             className="inline-flex min-h-11 items-center rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
-            {t(primaryCta, lang)}
+            <PhraseText text={t(primaryCta, lang)} />
           </Link>
         </div>
       </Section>

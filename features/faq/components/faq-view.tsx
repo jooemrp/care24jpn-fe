@@ -8,6 +8,7 @@ import FaqList from "@/components/faq/FaqList";
 import { useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useFaqQuery } from "../hooks";
+import { PhraseText } from "@/components/PhraseText";
 
 export default function FaqView({ lang }: { lang: Lang }) {
   const queryStates = useSiteQueryStates();
@@ -35,7 +36,7 @@ export default function FaqView({ lang }: { lang: Lang }) {
     <>
       <Section heading={query.data.hero.heading} level="h1" lang={lang}>
         <p className="max-w-2xl text-base leading-relaxed text-body">
-          {t(query.data.hero.body, lang)}
+          <PhraseText text={t(query.data.hero.body, lang)} />
         </p>
       </Section>
 

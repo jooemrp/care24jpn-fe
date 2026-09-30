@@ -18,6 +18,7 @@ import { useState, useId } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 import type { Lang } from "@/features/lang/i18n";
 import { CmsInlineText } from "@/components/cms/CmsInlineText";
+import { PhraseText } from "@/components/PhraseText";
 
 export type AccordionItemProps = {
   /** The question / trigger label */
@@ -53,7 +54,7 @@ export function AccordionItem({
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset",
         ].join(" ")}
       >
-        <span className="flex-1">{question}</span>
+        <span className="flex-1"><PhraseText text={question} /></span>
         {/* Chevron icon — rotates 180° when open */}
         <span
           aria-hidden="true"

@@ -7,6 +7,7 @@ import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { ResponsiveCopy } from "@/components/ResponsiveCopy";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeFlowSection({
   content,
@@ -38,7 +39,7 @@ export function HomeFlowSection({
                   </span>
                 </span>
                 <h3 className="mt-5 text-lg font-bold leading-snug text-heading md:text-base lg:text-lg">
-                  {t(step.title, lang)}
+                  <PhraseText text={t(step.title, lang)} />
                 </h3>
                 <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-body [text-wrap:balance] lg:max-w-[18rem] lg:text-[13px]">
                   <ResponsiveCopy text={step.body} lang={lang} mode="desktop-only" />
