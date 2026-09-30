@@ -81,34 +81,34 @@ type Binding = {
 const ALLOWLIST: Array<Binding & { reason: string }> = [
   {
     file: "components/Navbar.tsx",
-    line: 217,
+    line: 233,
     content: "homeHref",
     reason:
       "homeHref = localizeHref(\"/\", lang) is assigned earlier in the " +
-      "same component body (Navbar.tsx:174).",
+      "same component body (Navbar.tsx:190).",
   },
   {
     file: "components/Navbar.tsx",
-    line: 255,
+    line: 271,
     content: "href",
     reason:
-      "const href = localizeHref(item.href, lang) is assigned on the " +
-      "line directly above, inside the SP shortcut-bar .map() callback.",
+      "const href = localizeHref(item.href, lang) is assigned at the " +
+      "top of the same SP shortcut-bar .map() callback.",
   },
   {
     file: "components/Navbar.tsx",
-    line: 299,
+    line: 315,
     content: "href",
     reason:
-      "const href = localizeHref(item.href, lang) is assigned on the " +
-      "line directly above, inside the same .map() callback (desktop nav).",
+      "const href = localizeHref(item.href, lang) is assigned at the " +
+      "top of the same .map() callback (desktop nav).",
   },
   {
     file: "components/Navbar.tsx",
-    line: 327,
+    line: 343,
     content: "href",
     reason:
-      "Same pattern as :299, one .map() callback below, in the mobile " +
+      "Same pattern as :315, one .map() callback below, in the mobile " +
       "nav menu.",
   },
 ];

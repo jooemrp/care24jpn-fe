@@ -3,6 +3,7 @@ import Image from "next/image";
 import { t, localizeHref, type Lang } from "@/features/lang/i18n";
 import type { SiteContent } from "@/features/cms/site";
 import type { HomeContent } from "@/features/home/types";
+import { PhraseText } from "@/components/PhraseText";
 /**
  * Reference `width`/`height` for the backend-provided `site_brand.logo`.
  * Navbar and Footer both render the same CMS field, so both must pass
@@ -68,7 +69,7 @@ export default function Footer({
         />
         {footerDescription ? (
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
-            {t(footerDescription, lang)}
+            <PhraseText text={t(footerDescription, lang)} />
           </p>
         ) : null}
 
@@ -80,7 +81,7 @@ export default function Footer({
                 href={localizeHref(link.href, lang)}
                 className="text-xs text-muted transition hover:text-primary"
               >
-                {t("key" in link ? tokushohoHeading : link.label, lang)}
+                <PhraseText text={t("key" in link ? tokushohoHeading : link.label, lang)} />
               </Link>
             </li>
           ))}
@@ -99,14 +100,14 @@ export default function Footer({
             />
           </div>
           <p className="max-w-xl text-xs leading-relaxed text-muted">
-            {t(homeContact.isms, lang)}
+            <PhraseText text={t(homeContact.isms, lang)} />
           </p>
         </div>
       </div>
 
       <div className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-5">
-          <p className="text-xs text-muted">{t(site.footer.legal, lang)}</p>
+          <p className="text-xs text-muted"><PhraseText text={t(site.footer.legal, lang)} /></p>
         </div>
       </div>
     </footer>

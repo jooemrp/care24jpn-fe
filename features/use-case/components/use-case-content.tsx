@@ -5,6 +5,7 @@ import Link from "next/link";
 import Section from "@/components/ui/Section";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import type { UseCaseContent } from "@/features/cms/pages-map";
+import { PhraseText } from "@/components/PhraseText";
 
 export function UseCaseContentView({
   content,
@@ -23,7 +24,7 @@ export function UseCaseContentView({
         lang={lang}
       >
         <p className="max-w-2xl text-base leading-relaxed text-body">
-          {t(content.hero.body, lang)}
+          <PhraseText text={t(content.hero.body, lang)} />
         </p>
       </Section>
 
@@ -50,13 +51,13 @@ export function UseCaseContentView({
 
               <div>
                 <h2 className="text-2xl font-bold text-heading">
-                  {t(item.title, lang)}
+                  <PhraseText text={t(item.title, lang)} />
                 </h2>
                 <p className="mt-2 text-sm font-medium text-muted">
-                  {t(item.body, lang)}
+                  <PhraseText text={t(item.body, lang)} />
                 </p>
                 <p className="mt-4 text-base leading-relaxed text-body">
-                  {t(item.detail, lang)}
+                  <PhraseText text={t(item.detail, lang)} />
                 </p>
                 <ul className="mt-6 flex flex-col gap-2">
                   {item.highlights.map((highlight, highlightIndex) => (
@@ -68,7 +69,7 @@ export function UseCaseContentView({
                         className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary"
                         aria-hidden="true"
                       />
-                      {t(highlight, lang)}
+                      <PhraseText text={t(highlight, lang)} />
                     </li>
                   ))}
                 </ul>
@@ -84,7 +85,7 @@ export function UseCaseContentView({
             href={localizeHref(content.hero.ctaHref, lang)}
             className="inline-flex min-h-11 items-center rounded-full bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-mid"
           >
-            {t(primaryCta, lang)}
+            <PhraseText text={t(primaryCta, lang)} />
           </Link>
         </div>
       </Section>

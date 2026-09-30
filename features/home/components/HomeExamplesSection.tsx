@@ -5,6 +5,7 @@ import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { PhraseText } from "@/components/PhraseText";
 
 /** "9:00" -> 540 (minutes since midnight). */
 function toMinutes(clock: string): number {
@@ -30,8 +31,8 @@ export function HomeExamplesSection({
   return (
     <Section lang={lang}>
       <div className="animate-fade-up text-center">
-        <p className="text-lg font-bold text-body">{t(content.leadIn, lang)}</p>
-        <h2 className="mt-2 text-3xl font-bold text-primary">{t(content.heading, lang)}</h2>
+        <p className="text-lg font-bold text-body"><PhraseText text={t(content.leadIn, lang)} /></p>
+        <h2 className="mt-2 text-3xl font-bold text-primary"><PhraseText text={t(content.heading, lang)} /></h2>
       </div>
 
       {content.cases.length > 0 ? (
@@ -56,17 +57,17 @@ export function HomeExamplesSection({
                       accent ? "text-accent" : "text-primary"
                     }`}
                   >
-                    {t(example.label, lang)}
+                    <PhraseText text={t(example.label, lang)} />
                   </p>
-                  <h3 className="mt-3 text-2xl font-bold leading-snug text-heading md:text-3xl">
-                    {t(example.request, lang)}
+                  <h3 className="mt-3 text-xl font-bold leading-snug text-heading [text-wrap:balance] sm:text-2xl md:text-3xl">
+                    <PhraseText text={t(example.request, lang)} />
                   </h3>
                   <p className="mt-4 text-lg leading-relaxed text-body">
-                    {t(example.title, lang)}
+                    <PhraseText text={t(example.title, lang)} />
                   </p>
 
                   <p className="mt-7 text-lg font-bold text-muted">
-                    {t(content.servicesLabel, lang)}
+                    <PhraseText text={t(content.servicesLabel, lang)} />
                   </p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {example.services.map((service, serviceIndex) => (
@@ -76,7 +77,7 @@ export function HomeExamplesSection({
                           accent ? "bg-accent-light" : "bg-primary-light"
                         }`}
                       >
-                        {t(service, lang)}
+                        <PhraseText text={t(service, lang)} />
                       </li>
                     ))}
                   </ul>
@@ -84,17 +85,17 @@ export function HomeExamplesSection({
 
                 <div className={flip ? "lg:order-1" : ""}>
                   <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
-                    <p className="flex items-center gap-2 text-lg font-bold text-muted">
+                    <p className="flex shrink-0 items-center gap-2 whitespace-nowrap text-lg font-bold text-muted">
                       <ClockIcon />
-                      {t(content.scheduleLabel, lang)}
+                      <PhraseText text={t(content.scheduleLabel, lang)} />
                     </p>
                     <p className="text-lg font-bold tabular-nums text-heading">
                       <span className="mr-1 text-lg font-normal text-muted">
-                        {t(content.hoursLabel, lang)}
+                        <PhraseText text={t(content.hoursLabel, lang)} />
                       </span>
                       {dayStart}–{dayEnd}
                       <span className="ml-2 text-lg font-normal text-muted">
-                        {t(example.hours, lang)}
+                        <PhraseText text={t(example.hours, lang)} />
                       </span>
                     </p>
                   </div>
@@ -107,7 +108,7 @@ export function HomeExamplesSection({
                           <li
                             key={rowIndex}
                             style={{ minHeight: `${minutes * 1.05}px` }}
-                            className={`flex items-center gap-4 rounded-r-xl border-l-4 px-5 py-3 ${
+                            className={`flex items-center gap-3 rounded-r-xl border-l-4 px-4 py-3 md:gap-4 md:px-5 ${
                               accent
                                 ? rowIndex % 2 === 0
                                   ? "border-accent bg-accent-light"
@@ -118,14 +119,14 @@ export function HomeExamplesSection({
                             }`}
                           >
                             <span
-                              className={`w-[7.5rem] shrink-0 text-lg font-bold tabular-nums ${
+                              className={`w-[6.5rem] shrink-0 text-base font-bold tabular-nums md:w-[7.5rem] md:text-lg ${
                                 accent ? "text-accent" : "text-primary"
                               }`}
                             >
                               {row.time}
                             </span>
-                            <span className="text-lg leading-snug text-body">
-                              {t(row.activity, lang)}
+                            <span className="text-base leading-snug text-body md:text-lg">
+                              <PhraseText text={t(row.activity, lang)} />
                             </span>
                           </li>
                         );

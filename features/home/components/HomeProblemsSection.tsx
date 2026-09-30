@@ -5,6 +5,7 @@ import Section from "@/components/ui/Section";
 import { QueryEmptyState } from "@/components/cms/QueryEmptyState";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeProblemsSection({
   content,
@@ -35,7 +36,7 @@ export function HomeProblemsSection({
                 />
               </span>
               <h3 className="mt-4 text-base font-bold leading-snug text-heading">
-                {t(item.title, lang)}
+                <PhraseText text={t(item.title, lang)} />
               </h3>
             </div>
           ))}
@@ -45,8 +46,8 @@ export function HomeProblemsSection({
       )}
 
       {content.items.length > 0 ? (
-        <p className="mt-10 text-center text-lg font-semibold text-heading md:text-xl">
-          {t(content.closing, lang)}
+        <p className="mt-10 text-center text-lg font-semibold text-heading [text-wrap:balance] md:text-xl">
+          <PhraseText text={t(content.closing, lang)} />
         </p>
       ) : null}
     </Section>

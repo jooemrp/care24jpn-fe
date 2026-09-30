@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Bilingual } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
+import { PhraseText } from "@/components/PhraseText";
 
 type SectionProps = {
   id?: string;
@@ -28,7 +29,7 @@ export default function Section({ id, heading, children, surface = false, classN
         {heading && (
           <header className="mb-6 md:mb-8 animate-fade-up">
             <HeadingTag className="mb-1 text-3xl font-bold text-heading">
-              {t(heading, lang)}
+              <PhraseText text={t(heading, lang)} />
             </HeadingTag>
           </header>
         )}

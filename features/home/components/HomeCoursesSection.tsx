@@ -19,6 +19,7 @@ import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
 import { splitBilingual } from "./home-copy";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomeCoursesSection({
   careCourse,
@@ -41,33 +42,36 @@ export function HomeCoursesSection({
     <>
       <Section id="service-details" surface lang={lang}>
         <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
-          {t(careCourse.leadIn, lang)}
+          <PhraseText text={t(careCourse.leadIn, lang)} />
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">
-          {t(careCourse.tagline, lang)}
-          {t(careCourse.taglineSub, lang)}
+          <PhraseText text={t(careCourse.tagline, lang)} />
+          <PhraseText text={t(careCourse.taglineSub, lang)} />
         </p>
 
         <div className="mt-10 animate-fade-up rounded-2xl border border-primary/25 bg-primary-light/50 p-6 sm:p-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
             <div className="lg:w-[38%] lg:shrink-0">
               <span className="inline-flex w-fit items-center rounded-full bg-primary px-5 py-1.5 text-lg font-bold text-white">
-                {t(careCourse.badge, lang)}
+                <PhraseText text={t(careCourse.badge, lang)} />
               </span>
               <p className="mt-5 text-lg font-medium text-body">
-                {t(careCourse.price.label, lang)}
-                {t(careCourse.price.hours, lang)}
+                <PhraseText text={t(careCourse.price.label, lang)} />
+                <PhraseText text={t(careCourse.price.hours, lang)} />
               </p>
               <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
                 <span className="text-5xl font-bold tabular-nums text-heading">
-                  {t(careCourse.price.amount, lang)}
+                  <PhraseText text={t(careCourse.price.amount, lang)} />
                 </span>
-                <span className="text-lg text-muted">{t(careCourse.price.taxNote, lang)}</span>
-                <span className="text-lg font-medium text-body">
-                  {t(careCourse.price.unit, lang)}
+                {/* One group, so a narrow card wraps the whole "税抜 /時間" under the price. */}
+                <span className="inline-flex items-baseline gap-x-2 whitespace-nowrap">
+                  <span className="text-lg text-muted"><PhraseText text={t(careCourse.price.taxNote, lang)} /></span>
+                  <span className="text-lg font-medium text-body">
+                    <PhraseText text={t(careCourse.price.unit, lang)} />
+                  </span>
                 </span>
               </p>
-              <p className="mt-1 text-lg text-body">{t(careCourse.price.taxIncluded, lang)}</p>
+              <p className="mt-1 text-lg text-body"><PhraseText text={t(careCourse.price.taxIncluded, lang)} /></p>
               <p className="mt-5 text-lg">
                 <SafeInternalLink
                   href={pricingDetailsHref}
@@ -112,8 +116,11 @@ export function HomeCoursesSection({
                     />
                   </div>
                 ) : null}
-                <h3 className="mt-5 text-xl font-bold text-heading">{t(card.title, lang)}</h3>
-                <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+                <h3 className="mt-5 text-xl font-bold text-heading"><PhraseText text={t(card.title, lang)} /></h3>
+                {/* Two list columns only where the card is wide enough for a
+                    phrase like ケアマネジャーとの連携 on one line: phones are
+                    too narrow, and at md the cards sit side by side. */}
+                <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
                   {card.items.map((item, itemIndex) => (
                     <li
                       key={itemIndex}
@@ -123,7 +130,7 @@ export function HomeCoursesSection({
                         className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
                         aria-hidden="true"
                       />
-                      {t(item, lang)}
+                      <PhraseText text={t(item, lang)} />
                     </li>
                   ))}
                 </ul>
@@ -139,32 +146,35 @@ export function HomeCoursesSection({
 
       <Section lang={lang}>
         <h2 className="animate-fade-up whitespace-pre-line [text-wrap:balance] text-center text-2xl font-bold leading-snug text-heading md:text-3xl">
-          {t(nursingCourse.leadIn, lang)}
+          <PhraseText text={t(nursingCourse.leadIn, lang)} />
         </h2>
         <p className="mx-auto mt-5 max-w-3xl animate-fade-up whitespace-pre-line text-center text-lg leading-relaxed text-body">
-          {t(nursingCourse.tagline, lang)}
-          {t(nursingCourse.taglineSub, lang)}
+          <PhraseText text={t(nursingCourse.tagline, lang)} />
+          <PhraseText text={t(nursingCourse.taglineSub, lang)} />
         </p>
         <div className="mt-10 animate-fade-up rounded-2xl border border-accent/25 bg-accent-light/50 p-6 sm:p-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
             <div className="lg:w-[38%] lg:shrink-0">
               <span className="inline-flex w-fit items-center rounded-full bg-accent px-5 py-1.5 text-lg font-bold text-white">
-                {t(nursingCourse.badge, lang)}
+                <PhraseText text={t(nursingCourse.badge, lang)} />
               </span>
               <p className="mt-5 text-lg font-medium text-body">
-                {t(nursingCourse.price.label, lang)}
-                {t(nursingCourse.price.hours, lang)}
+                <PhraseText text={t(nursingCourse.price.label, lang)} />
+                <PhraseText text={t(nursingCourse.price.hours, lang)} />
               </p>
               <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
                 <span className="text-5xl font-bold tabular-nums text-heading">
-                  {t(nursingCourse.price.amount, lang)}
+                  <PhraseText text={t(nursingCourse.price.amount, lang)} />
                 </span>
-                <span className="text-lg text-muted">{t(nursingCourse.price.taxNote, lang)}</span>
-                <span className="text-lg font-medium text-body">
-                  {t(nursingCourse.price.unit, lang)}
+                {/* One group, so a narrow card wraps the whole "税抜 /時間" under the price. */}
+                <span className="inline-flex items-baseline gap-x-2 whitespace-nowrap">
+                  <span className="text-lg text-muted"><PhraseText text={t(nursingCourse.price.taxNote, lang)} /></span>
+                  <span className="text-lg font-medium text-body">
+                    <PhraseText text={t(nursingCourse.price.unit, lang)} />
+                  </span>
                 </span>
               </p>
-              <p className="mt-1 text-lg text-body">{t(nursingCourse.price.taxIncluded, lang)}</p>
+              <p className="mt-1 text-lg text-body"><PhraseText text={t(nursingCourse.price.taxIncluded, lang)} /></p>
               <p className="mt-5 text-lg">
                 <SafeInternalLink
                   href={pricingDetailsHref}
@@ -193,7 +203,7 @@ export function HomeCoursesSection({
         <div className="mt-10 animate-fade-up [animation-delay:120ms]">
           {nursingCourse.panel.heading && t(nursingCourse.panel.heading, lang).trim() ? (
             <h3 className="whitespace-pre-line text-xl font-bold leading-relaxed text-heading">
-              {t(nursingCourse.panel.heading, lang)}
+              <PhraseText text={t(nursingCourse.panel.heading, lang)} />
             </h3>
           ) : null}
           {nursingCourse.panel.items.length > 0 ? (
@@ -203,7 +213,7 @@ export function HomeCoursesSection({
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-light text-accent">
                     <NursingIcon name={item.icon} />
                   </span>
-                  <span className="text-lg leading-snug text-body">{t(item.label, lang)}</span>
+                  <span className="text-lg leading-snug text-body"><PhraseText text={t(item.label, lang)} /></span>
                 </li>
               ))}
             </ul>
@@ -241,10 +251,10 @@ function FeeGrid({
           key={index}
           className="flex flex-col items-center justify-center bg-surface px-4 py-6 text-center"
         >
-          <dt className="text-lg text-muted">{t(fee.label, lang)}</dt>
-          <dd className="mt-1.5 text-lg font-bold text-heading">{t(fee.value, lang)}</dd>
+          <dt className="text-lg text-muted"><PhraseText text={t(fee.label, lang)} /></dt>
+          <dd className="mt-1.5 text-lg font-bold text-heading"><PhraseText text={t(fee.value, lang)} /></dd>
           {fee.note ? (
-            <dd className="mt-1 text-lg leading-snug text-muted">{t(fee.note, lang)}</dd>
+            <dd className="mt-1 text-lg leading-snug text-muted"><PhraseText text={t(fee.note, lang)} /></dd>
           ) : null}
         </div>
       ))}
@@ -289,6 +299,7 @@ function ResponsivePricingLink({
       mobileText={mobileText}
       lang={lang}
       mode="desktop-only"
+      desktopClassName="lg:whitespace-nowrap lg:text-sm"
     />
   );
 }

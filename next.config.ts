@@ -25,6 +25,14 @@ requireAtlasEnvOnVercel();
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  // budoux's package index also pulls in linkedom (for its unused HTML
+  // processor), whose optional `require("canvas")` webpack cannot resolve.
+  // linkedom already falls back to its shim when canvas is absent; aliasing
+  // it to an empty module just silences the unresolved-module warning.
+  webpack(config) {
+    config.resolve.alias = { ...config.resolve.alias, canvas: false };
+    return config;
+  },
   experimental: {
     globalNotFound: true,
   },

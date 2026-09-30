@@ -1,6 +1,7 @@
 import type { CourseRates } from "@/constants/pricing";
 import { formatYen } from "@/features/rates/format-yen";
 import { t, type Lang } from "@/features/lang/i18n";
+import { PhraseText } from "@/components/PhraseText";
 
 type CourseRateCardProps = {
   course: CourseRates;
@@ -44,19 +45,19 @@ export default function CourseRateCard({ course, lang, tone }: CourseRateCardPro
           `h1..h4 { color: var(--color-heading) }` that outranks `text-white`
           on the heading element itself. */}
       <h2 className={`px-7 py-5 text-2xl font-bold ${accent ? "bg-accent" : "bg-primary"}`}>
-        <span className="text-white">{t(course.name, lang)}</span>
+        <span className="text-white"><PhraseText text={t(course.name, lang)} /></span>
       </h2>
 
       <div className="p-7">
         {sharedLabel && (
-          <p className="text-lg font-bold text-muted">{t(sharedLabel, lang)}</p>
+          <p className="text-lg font-bold text-muted"><PhraseText text={t(sharedLabel, lang)} /></p>
         )}
 
         <div className="mt-3 grid gap-px overflow-hidden rounded-xl bg-border sm:grid-cols-2">
           {timed.map((row) => (
             <div key={row.key} className="bg-surface px-5 py-5">
               {!sharedLabel && (
-                <p className="text-lg font-bold text-muted">{t(row.label, lang)}</p>
+                <p className="text-lg font-bold text-muted"><PhraseText text={t(row.label, lang)} /></p>
               )}
               <p className="text-lg text-body">{row.detail && t(row.detail, lang)}</p>
               <p
@@ -74,7 +75,7 @@ export default function CourseRateCard({ course, lang, tone }: CourseRateCardPro
           <dl className="mt-6 divide-y divide-border border-t border-border">
             {extras.map((row) => (
               <div key={row.key} className="flex items-baseline justify-between gap-4 py-4">
-                <dt className="text-lg text-body">{t(row.label, lang)}</dt>
+                <dt className="text-lg text-body"><PhraseText text={t(row.label, lang)} /></dt>
                 <dd className="text-lg font-bold tabular-nums text-heading">
                   {formatYen(row.price, lang)}
                 </dd>

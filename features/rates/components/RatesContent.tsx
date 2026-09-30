@@ -10,6 +10,7 @@ import { formatYen } from "@/features/rates/format-yen";
 import type { Bilingual } from "@/constants/copy";
 import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import type { RatesContent } from "../types";
+import { PhraseText } from "@/components/PhraseText";
 
 function hasCompleteRates<T extends { rows: unknown[] }>(courses: T[]): boolean {
   return courses.length > 0 && courses.every((course) => course.rows.length > 0);
@@ -38,7 +39,7 @@ export function PricingRatesContent({
     <>
       <Section heading={rates.pricing.hero.heading} level="h1" lang={lang}>
         <p className="max-w-2xl text-lg leading-relaxed text-body">
-          {t(rates.pricing.hero.body, lang)}
+          <PhraseText text={t(rates.pricing.hero.body, lang)} />
         </p>
 
         <ul className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -47,7 +48,7 @@ export function PricingRatesContent({
               key={highlight.en}
               className="rounded-xl bg-accent px-6 py-5 text-xl font-bold text-white"
             >
-              {t(highlight, lang)}
+              <PhraseText text={t(highlight, lang)} />
             </li>
           ))}
         </ul>
@@ -70,10 +71,10 @@ export function PricingRatesContent({
         )}
 
         <p className="mt-8 text-lg text-muted">
-          {t(rates.pricing.note, lang)}
+          <PhraseText text={t(rates.pricing.note, lang)} />
         </p>
         <p className="mt-4 whitespace-pre-line text-base font-medium text-heading">
-          {t(rates.pricing.paymentNote, lang)}
+          <PhraseText text={t(rates.pricing.paymentNote, lang)} />
         </p>
         <p className="mt-4 text-base text-body">
           {isCmsFieldErrorMarker(rates.pricing.cancellationHref) ? (
@@ -85,7 +86,7 @@ export function PricingRatesContent({
               href={localizeHref(rates.pricing.cancellationHref, lang)}
               className="font-medium text-primary underline-offset-2 hover:underline"
             >
-              {t(rates.pricing.cancellationLinkLabel, lang)}
+              <PhraseText text={t(rates.pricing.cancellationLinkLabel, lang)} />
             </Link>
           )}
         </p>
@@ -111,7 +112,7 @@ export function FeesRatesContent({
     <>
       <Section heading={rates.fees.hero.heading} level="h1" lang={lang}>
         <p className="max-w-2xl text-lg leading-relaxed text-body">
-          {t(rates.fees.hero.body, lang)}
+          <PhraseText text={t(rates.fees.hero.body, lang)} />
         </p>
       </Section>
 
@@ -132,7 +133,7 @@ export function FeesRatesContent({
         )}
 
         <p className="mt-8 text-lg text-muted">
-          {t(rates.fees.note, lang)}
+          <PhraseText text={t(rates.fees.note, lang)} />
         </p>
 
         <div className="mt-10 animate-fade-up">
@@ -140,7 +141,7 @@ export function FeesRatesContent({
             href={localizeHref(rates.fees.ctaHref, lang)}
             className="inline-flex min-h-11 items-center rounded-full bg-primary px-8 py-4 text-lg font-bold text-white transition hover:bg-primary-mid"
           >
-            {t(contactCta, lang)}
+            <PhraseText text={t(contactCta, lang)} />
           </Link>
         </div>
       </Section>
@@ -160,20 +161,20 @@ function SupporterRateTable({
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-surface">
       <h2 className="bg-primary-light px-7 py-5 text-xl font-bold text-heading">
-        {t(course.name, lang)}
+        <PhraseText text={t(course.name, lang)} />
       </h2>
       <div className="overflow-x-auto px-7 pb-6">
-        <table className="w-full text-lg">
+        <table className="w-full text-base sm:text-lg">
           <thead>
             <tr className="border-b border-border text-left">
               <th className="py-4 pr-4 font-bold text-heading">
                 {columns.service ? t(columns.service, lang) : null}
               </th>
               <th className="py-4 pr-4 text-right font-bold text-heading">
-                {t(columns.customer, lang)}
+                <PhraseText text={t(columns.customer, lang)} />
               </th>
               <th className="py-4 text-right font-bold text-heading">
-                {t(columns.supporter, lang)}
+                <PhraseText text={t(columns.supporter, lang)} />
               </th>
             </tr>
           </thead>
@@ -182,11 +183,11 @@ function SupporterRateTable({
               <tr key={row.key}>
                 <td className="py-4 pr-4">
                   <span className="font-medium text-heading">
-                    {t(row.label, lang)}
+                    <PhraseText text={t(row.label, lang)} />
                   </span>
                   {row.detail ? (
-                    <span className="mt-0.5 block text-lg text-muted">
-                      {t(row.detail, lang)}
+                    <span className="mt-0.5 block text-base text-muted sm:text-lg">
+                      <PhraseText text={t(row.detail, lang)} />
                     </span>
                   ) : null}
                 </td>

@@ -65,6 +65,43 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Japanese phrase wrapping (client sheet (7), J16). `<PhraseText>` puts a
+   <wbr> between BudouX phrases; keep-all forbids every other break so a
+   word like 情報セキュリティ never splits. Works on iOS Safari, unlike
+   `word-break: auto-phrase`. break-word only rescues a single phrase wider
+   than its box, and — unlike `anywhere` — leaves min-content alone. */
+.jp-phrase {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+
+/* Each phrase moves to the next line as one unit — keep-all alone still
+   breaks after 、 inside a phrase (お散歩、/休憩). A phrase wider than its
+   whole box wraps inside it (max-width + anywhere) instead of overflowing,
+   and `anywhere` keeps the phrase out of min-content so a flex/grid parent
+   never widens to fit it. When a glued unit must split at its inner <wbr>,
+   balance keeps it from leaving a short tail (通院の行き帰りの/介助). */
+.jp-phrase > span {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* Auto table layout sizes columns from min-content, which `anywhere` would
+   shrink to one character (ケアサポ/ーター). In cells a phrase keeps its real
+   width; `break-word` still rescues one wider than the whole table. */
+:is(td, th) .jp-phrase > span {
+  overflow-wrap: break-word;
+}
+
+/* Decoration does not propagate into inline-blocks; keep link underlines. */
+a .jp-phrase,
+a .jp-phrase > span {
+  text-decoration: inherit;
+}
+
 /* Headings use Noto Sans JP, bold (weight 700). */
 h1,
 h2,

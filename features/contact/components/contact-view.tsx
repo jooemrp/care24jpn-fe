@@ -8,6 +8,7 @@ import Section from "@/components/ui/Section";
 import { useSiteQueryStates } from "@/components/site-cta-provider";
 import { t, type Lang } from "@/features/lang/i18n";
 import { useContactQuery } from "../hooks";
+import { PhraseText } from "@/components/PhraseText";
 
 export default function ContactView({ lang }: { lang: Lang }) {
   const queryStates = useSiteQueryStates();
@@ -37,36 +38,36 @@ export default function ContactView({ lang }: { lang: Lang }) {
     <>
       <Section heading={query.data.heading} level="h1" lang={lang}>
         <p className="max-w-3xl text-base leading-relaxed text-body md:text-lg">
-          {t(query.data.intro, lang)}
+          <PhraseText text={t(query.data.intro, lang)} />
         </p>
       </Section>
 
       <Section surface lang={lang}>
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-          <div className="rounded-2xl bg-primary px-6 py-8 text-white sm:px-8">
+          <div className="rounded-2xl bg-primary px-4 py-8 text-white sm:px-8">
             <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide">
-              {t(query.data.phone.badge, lang)}
+              <PhraseText text={t(query.data.phone.badge, lang)} />
             </span>
-            <h2 className="mt-4 text-2xl font-bold">{t(query.data.phone.title, lang)}</h2>
+            <h2 className="mt-4 text-2xl font-bold"><PhraseText text={t(query.data.phone.title, lang)} /></h2>
             <p className="mt-3 text-sm leading-relaxed text-white/90 md:text-base">
-              {t(query.data.phone.body, lang)}
+              <PhraseText text={t(query.data.phone.body, lang)} />
             </p>
             <a
               href={`tel:${phoneTel}`}
               className="mt-6 block rounded-xl bg-primary-deep/40 px-5 py-4 transition hover:bg-primary-deep/55"
             >
               <p className="text-xs font-semibold tracking-[0.2em] text-white/80">
-                {t(query.data.phone.telLabel, lang)}
+                <PhraseText text={t(query.data.phone.telLabel, lang)} />
               </p>
               <p className="mt-1 text-3xl font-bold tabular-nums md:text-4xl">
                 {query.data.phone.number}
               </p>
               <p className="mt-2 text-sm text-white/85">
-                {t(query.data.phone.hours, lang)}
+                <PhraseText text={t(query.data.phone.hours, lang)} />
               </p>
               {query.data.phone.note ? (
                 <p className="mt-1.5 text-xs leading-relaxed text-white/75 md:text-[0.8rem]">
-                  {t(query.data.phone.note, lang)}
+                  <PhraseText text={t(query.data.phone.note, lang)} />
                 </p>
               ) : null}
             </a>
@@ -77,7 +78,7 @@ export default function ContactView({ lang }: { lang: Lang }) {
                     aria-hidden="true"
                     className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/80"
                   />
-                  <span>{t(bullet, lang)}</span>
+                  <span><PhraseText text={t(bullet, lang)} /></span>
                 </li>
               ))}
             </ul>
@@ -85,13 +86,13 @@ export default function ContactView({ lang }: { lang: Lang }) {
 
           <div className="rounded-2xl border border-border bg-surface px-5 py-7 sm:px-7 sm:py-8">
             <span className="inline-flex rounded-full border border-primary/30 px-3 py-1 text-xs font-semibold text-primary">
-              {t(query.data.form.badge, lang)}
+              <PhraseText text={t(query.data.form.badge, lang)} />
             </span>
             <h2 className="mt-4 text-2xl font-bold text-heading">
-              {t(query.data.form.title, lang)}
+              <PhraseText text={t(query.data.form.title, lang)} />
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-body md:text-base">
-              {t(query.data.form.body, lang)}
+              <PhraseText text={t(query.data.form.body, lang)} />
             </p>
             <ul className="mt-4 space-y-1.5 text-sm text-body">
               {query.data.form.bullets.map((bullet) => (
@@ -100,7 +101,7 @@ export default function ContactView({ lang }: { lang: Lang }) {
                     aria-hidden="true"
                     className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
                   />
-                  <span>{t(bullet, lang)}</span>
+                  <span><PhraseText text={t(bullet, lang)} /></span>
                 </li>
               ))}
             </ul>
@@ -108,7 +109,7 @@ export default function ContactView({ lang }: { lang: Lang }) {
               <ContactForm lang={lang} content={query.data} />
             </div>
             <p className="mt-5 rounded-xl bg-primary-light px-4 py-3 text-sm leading-relaxed text-body">
-              {t(query.data.form.followUp, lang)}
+              <PhraseText text={t(query.data.form.followUp, lang)} />
             </p>
           </div>
         </div>

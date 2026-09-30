@@ -6,6 +6,7 @@ import { ResponsiveCopy } from "@/components/ResponsiveCopy";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
 import { SafeInternalLink } from "./HomeLinks";
+import { PhraseText } from "@/components/PhraseText";
 
 export function HomePricingSection({
   content,
@@ -30,7 +31,7 @@ export function HomePricingSection({
       <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
         <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 sm:p-8">
           <h2 className="text-xl font-bold text-heading md:text-2xl">
-            {t(content.heading, lang)}
+            <PhraseText text={t(content.heading, lang)} />
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             {courses.map((course) => (
@@ -38,20 +39,20 @@ export function HomePricingSection({
                 key={course.label.ja}
                 className="flex flex-col rounded-xl bg-primary-light/60 px-4 py-5"
               >
-                <p className="text-sm font-semibold text-primary">{t(course.label, lang)}</p>
+                <p className="text-sm font-semibold text-primary"><PhraseText text={t(course.label, lang)} /></p>
                 <p className="mt-2 text-2xl font-bold tabular-nums text-accent md:text-3xl">
-                  {t(course.amount, lang)}
+                  <PhraseText text={t(course.amount, lang)} />
                 </p>
                 <p className="mt-3 break-keep text-xs leading-relaxed text-muted">
-                  {t(course.minNote, lang)}
+                  <PhraseText text={t(course.minNote, lang)} />
                 </p>
                 <p className="mt-1 break-keep text-xs leading-relaxed text-muted">
-                  {t(course.transportNote, lang)}
+                  <PhraseText text={t(course.transportNote, lang)} />
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-muted">{t(content.extensionNote, lang)}</p>
+          <p className="mt-4 text-sm text-muted"><PhraseText text={t(content.extensionNote, lang)} /></p>
           <p className="mt-5 text-base">
             <SafeInternalLink
               href={pricingDetailsHref}
@@ -70,7 +71,7 @@ export function HomePricingSection({
         <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface">
           <div className="px-6 py-5 sm:px-8 sm:py-6">
             <h2 className="text-xl font-bold text-heading md:text-2xl">
-              {t(content.payment.heading, lang)}
+              <PhraseText text={t(content.payment.heading, lang)} />
             </h2>
             <p className="mt-3 break-keep whitespace-pre-line text-base leading-relaxed text-body md:text-sm [text-wrap:balance]">
               <ResponsiveCopy
@@ -81,7 +82,7 @@ export function HomePricingSection({
               />
             </p>
             {settleNote ? (
-              <p className="mt-3 text-sm leading-relaxed text-muted">{settleNote}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted"><PhraseText text={settleNote} /></p>
             ) : null}
           </div>
 
@@ -102,7 +103,7 @@ export function HomePricingSection({
                   />
                 </div>
                 <p className="relative mt-3 shrink-0 text-center text-sm font-semibold text-heading sm:mt-3.5 sm:text-base">
-                  {t(content.payment.icon.alt, lang)}
+                  <PhraseText text={t(content.payment.icon.alt, lang)} />
                 </p>
               </div>
             </div>

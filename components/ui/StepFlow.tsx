@@ -1,5 +1,6 @@
 import type { Bilingual } from "@/constants/copy";
 import { t, type Lang } from "@/features/lang/i18n";
+import { PhraseText } from "@/components/PhraseText";
 
 export type Step = {
   title: Bilingual;
@@ -48,10 +49,10 @@ export default function StepFlow({ steps, lang }: StepFlowProps) {
             </span>
             <div className="min-w-0 flex-1">
               <h3 className="pt-3 text-2xl font-bold leading-snug text-heading">
-                {t(step.title, lang)}
+                <PhraseText text={t(step.title, lang)} />
               </h3>
               <p className="mt-2.5 text-lg leading-relaxed text-body">
-                {t(step.body, lang)}
+                <PhraseText text={t(step.body, lang)} />
               </p>
             </div>
           </li>

@@ -2,6 +2,7 @@
 
 import { t, type Lang } from "@/features/lang/i18n";
 import type { Bilingual } from "@/constants/copy";
+import { PhraseText } from "@/components/PhraseText";
 
 export type ResponsiveCopyMode = "always" | "desktop-only";
 
@@ -11,6 +12,8 @@ type ResponsiveCopyProps = {
   lang: Lang;
   mode?: ResponsiveCopyMode;
   className?: string;
+  /** Extra classes for the `md:` desktop span only (e.g. a one-line lock). */
+  desktopClassName?: string;
 };
 
 /**
@@ -24,12 +27,14 @@ export function ResponsiveCopy({
   lang,
   mode = "always",
   className = "",
+  desktopClassName = "",
 }: ResponsiveCopyProps) {
   const value = t(text, lang);
   const classes = className.trim();
+  const desktopClasses = desktopClassName.trim();
 
   if (mode === "always") {
-    return <span className={`whitespace-pre-line ${classes}`.trim()}>{value}</span>;
+    return <PhraseText text={value} className={`whitespace-pre-line ${classes}`.trim()} />;
   }
 
   const mobileValue = mobileText
@@ -38,8 +43,11 @@ export function ResponsiveCopy({
   const mobileClassName = mobileText ? "md:hidden whitespace-pre-line" : "md:hidden";
   return (
     <>
-      <span className={`${mobileClassName} ${classes}`.trim()}>{mobileValue}</span>
-      <span className={`hidden md:inline whitespace-pre-line ${classes}`.trim()}>{value}</span>
+      <PhraseText text={mobileValue} className={`${mobileClassName} ${classes}`.trim()} />
+      <PhraseText
+        text={value}
+        className={`hidden md:inline whitespace-pre-line ${classes} ${desktopClasses}`.trim()}
+      />
     </>
   );
 }

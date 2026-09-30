@@ -6,6 +6,7 @@ import { cta, home } from "@/constants/copy";
 import type { HomeContent } from "../types";
 import type * as HomeContentModule from "./HomeContent.tsx";
 import { splitBilingual } from "./home-copy";
+import { stripPhraseMarkup } from "../../../lib/phrase-test-utils";
 
 const homeContentPath = "./HomeContent" + ".tsx";
 const darkVariant = ["dark", ":"].join("");
@@ -268,14 +269,14 @@ async function main(): Promise<void> {
   });
 
   test("Japanese revision copy keeps API-owned mobile wording and line breaks", () => {
-    const html = renderToStaticMarkup(
+    const html = stripPhraseMarkup(renderToStaticMarkup(
       React.createElement(HomeContentView, {
         content,
         lang: "ja",
         contactCta: cta.contact,
         emptyLabel: "表示できるコンテンツがありません。",
       }),
-    );
+    ));
 
     assert.match(
       html,
