@@ -84,17 +84,19 @@ export function HomeExamplesSection({
                 </div>
 
                 <div className={flip ? "lg:order-1" : ""}>
-                  <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+                  <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 max-[359px]:flex-wrap max-[359px]:gap-y-1">
                     <p className="flex shrink-0 items-center gap-2 whitespace-nowrap text-lg font-bold text-muted">
                       <ClockIcon />
                       <PhraseText text={t(content.scheduleLabel, lang)} />
                     </p>
                     <p className="text-lg font-bold tabular-nums text-heading">
-                      <span className="mr-1 text-lg font-normal text-muted">
+                      <span className="text-lg font-normal text-muted">
                         <PhraseText text={t(content.hoursLabel, lang)} />
-                      </span>
-                      {dayStart}–{dayEnd}
-                      <span className="ml-2 text-lg font-normal text-muted">
+                      </span>{" "}
+                      <span className="whitespace-nowrap">
+                        {dayStart}–{dayEnd}
+                      </span>{" "}
+                      <span className="whitespace-nowrap text-lg font-normal text-muted">
                         <PhraseText text={t(example.hours, lang)} />
                       </span>
                     </p>
