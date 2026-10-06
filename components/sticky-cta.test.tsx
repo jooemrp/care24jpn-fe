@@ -99,6 +99,9 @@ test("sticky CTA renders optional phone-hours disclaimer under the number", () =
     html,
     /※お電話での登録や予約のご対応は午前9時〜午後6時となります。/,
   );
+  // The link is text-center; the note must opt out so wrapped lines start at
+  // the phone number's left edge instead of being centered under it.
+  assert.match(html, /<span class="mt-0\.5 text-left [^"]*">(?:<[^>]+>)*※/);
 });
 
 test("sticky CTA fails closed when the API omits a required label", () => {
