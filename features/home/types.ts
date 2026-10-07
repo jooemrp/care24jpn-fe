@@ -53,6 +53,7 @@ export type HomeContent = Omit<
       bodyMobile: Bilingual;
     };
     user: Home["apply"]["user"];
+    userRepeat: Home["apply"]["userRepeat"];
     staff: Home["apply"]["staff"];
   };
   flow: Omit<Home["flow"], "steps"> & {

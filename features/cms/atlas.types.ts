@@ -217,6 +217,9 @@ export interface HomeApply {
   staff_label?: string; // localizable
   staff_href?: string;
   user_href?: string;
+  user_repeat_eyebrow?: string; // localizable
+  user_repeat_label?: string; // localizable
+  user_repeat_href?: string;
   consult_heading?: string; // localizable
   consult_body?: string; // localizable
   consult_body_mobile?: string; // localizable

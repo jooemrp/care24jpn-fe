@@ -243,18 +243,20 @@ async function main(): Promise<void> {
     assert.match(html, /href="\/en\/pricing"/);
   });
 
-  test("bottom apply banners drop から, keep titles on one line, and read the job-seeker eyebrow clearly", () => {
-    const html = renderToStaticMarkup(
+  test("bottom apply banners drop から, add the returning-user button, and read the job-seeker eyebrow clearly", () => {
+    const html = stripPhraseMarkup(renderToStaticMarkup(
       React.createElement(HomeContentView, {
         content,
         lang: "ja",
         contactCta: cta.contact,
         emptyLabel: "表示できるコンテンツがありません。",
       }),
-    );
+    ));
 
-    assert.match(html, /お申込みはこちら/);
+    assert.match(html, /ご登録・お申込みはこちら/);
     assert.match(html, /登録はこちら/);
+    assert.match(html, /2回目以降のご予約はこちら/);
+    assert.match(html, /href="https:\/\/forms\.gle\/VG12pAprJv9sFjjWA"/);
     assert.match(html, /お仕事を希望される方/);
     assert.doesNotMatch(html, /こちらから/);
     assert.match(
@@ -267,7 +269,7 @@ async function main(): Promise<void> {
     );
     assert.match(
       html,
-      /col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-\[1\.875rem\]/,
+      /col-start-1 row-start-2 self-end text-xl font-bold leading-tight tracking-tight \[text-wrap:balance\] sm:text-2xl lg:text-\[1\.875rem\]/,
     );
   });
 

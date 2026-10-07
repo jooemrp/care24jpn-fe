@@ -431,6 +431,8 @@ async function main(): Promise<void> {
     const split = splitBilingual({
       user_eyebrow: home.apply.user.eyebrow,
       user_label: home.apply.user.label,
+      user_repeat_eyebrow: home.apply.userRepeat.eyebrow,
+      user_repeat_label: home.apply.userRepeat.label,
       staff_eyebrow: home.apply.staff.eyebrow,
       staff_label: home.apply.staff.label,
       consult_heading: home.apply.consult.heading,
@@ -442,6 +444,7 @@ async function main(): Promise<void> {
       ...split.ja,
       staff_href: home.apply.staff.href,
       user_href: home.apply.user.href,
+      user_repeat_href: home.apply.userRepeat.href,
       consult_href: home.apply.consult.href,
       consult_illustration: mediaId(media, "consult-family.png"),
     };

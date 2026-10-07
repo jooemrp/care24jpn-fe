@@ -405,6 +405,9 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "consult_cta", label: "Consult CTA", field_type: "text", localizable: true, required: false, sort_order: 9 },
       { name: "consult_href", label: "Consult href", field_type: "text", localizable: false, required: false, sort_order: 10 },
       { name: "consult_illustration", label: "Consult illustration", field_type: "image", localizable: false, required: false, sort_order: 11 },
+      { name: "user_repeat_eyebrow", label: "Returning-user eyebrow", field_type: "text", localizable: true, required: false, sort_order: 12 },
+      { name: "user_repeat_label", label: "Returning-user label", field_type: "text", localizable: true, required: false, sort_order: 13 },
+      { name: "user_repeat_href", label: "Returning-user href", field_type: "text", localizable: false, required: false, sort_order: 14 },
     ],
   },
   {
