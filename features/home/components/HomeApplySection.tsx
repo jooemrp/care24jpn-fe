@@ -31,16 +31,28 @@ export function HomeApplySection({
           />
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <ApplyBanner
-          href={content.user.href}
-          eyebrow={t(content.user.eyebrow, lang)}
-          label={t(content.user.label, lang)}
-          tone="accent"
-          external={isSafeExternalHref(content.user.href)}
-          lang={lang}
-          delay={0}
-        />
+      <div className="grid gap-4 md:grid-cols-2 md:items-center">
+        <div className="flex flex-col gap-4">
+          <ApplyBanner
+            href={content.user.href}
+            eyebrow={t(content.user.eyebrow, lang)}
+            label={t(content.user.label, lang)}
+            tone="accent"
+            external={isSafeExternalHref(content.user.href)}
+            lang={lang}
+            delay={0}
+          />
+          <ApplyBanner
+            href={content.userRepeat.href}
+            eyebrow={t(content.userRepeat.eyebrow, lang)}
+            label={t(content.userRepeat.label, lang)}
+            tone="accent"
+            emphasis="secondary"
+            external={isSafeExternalHref(content.userRepeat.href)}
+            lang={lang}
+            delay={40}
+          />
+        </div>
         <ApplyBanner
           href={content.staff.href}
           eyebrow={t(content.staff.eyebrow, lang)}
@@ -80,7 +92,6 @@ function ApplyBanner({
     ? [
         "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-5 gap-y-2",
         "rounded-2xl px-7 py-8 text-white ring-1 ring-inset ring-white/15",
-        "sm:row-span-2 sm:grid-rows-subgrid",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
         "focus-visible:outline-2 focus-visible:outline-offset-3",
@@ -89,13 +100,14 @@ function ApplyBanner({
           : "bg-primary-deep shadow-[0_4px_16px_-6px_rgba(16,66,105,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(16,66,105,0.65)] focus-visible:outline-primary-deep",
       ].join(" ")
     : [
-        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-1.5",
-        "rounded-xl border border-primary/25 bg-surface px-5 py-5 text-heading",
-        "sm:row-span-2 sm:grid-rows-subgrid",
-        "animate-fade-up transition duration-200",
-        "hover:border-primary/40 hover:bg-primary-light/50",
+        "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-5 gap-y-1",
+        "rounded-2xl border-2 bg-surface px-7 py-5",
+        "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
-        "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary",
+        "focus-visible:outline-2 focus-visible:outline-offset-3",
+        accent
+          ? "border-accent-deep text-accent-deep hover:bg-accent-deep/5 focus-visible:outline-accent-deep"
+          : "border-primary-deep text-primary-deep hover:bg-primary-deep/5 focus-visible:outline-primary-deep",
       ].join(" ");
 
   const style = { animationDelay: `${delay}ms` };
@@ -104,8 +116,8 @@ function ApplyBanner({
       <span className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white [text-wrap:balance]">
         {eyebrow}
       </span>
-      <span className="col-start-1 row-start-2 self-end whitespace-nowrap text-2xl font-bold leading-tight tracking-tight md:text-[1.875rem]">
-        {label}
+      <span className="col-start-1 row-start-2 self-end text-xl font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-2xl lg:text-[1.875rem]">
+        <PhraseText text={label} />
       </span>
       <span
         aria-hidden="true"
@@ -118,15 +130,17 @@ function ApplyBanner({
     </>
   ) : (
     <>
-      <span className="col-start-1 row-start-1 self-end text-xs font-medium leading-relaxed text-muted">
+      <span className="col-start-1 row-start-1 self-end text-sm font-medium leading-relaxed text-muted">
         {eyebrow}
       </span>
-      <span className="col-start-1 row-start-2 self-end text-lg font-semibold leading-snug text-heading md:text-xl">
-        {label}
+      <span className="col-start-1 row-start-2 self-end text-lg font-bold leading-snug [text-wrap:balance] sm:text-xl">
+        <PhraseText text={label} />
       </span>
       <span
         aria-hidden="true"
-        className="col-start-2 row-start-1 row-span-2 flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-primary/10 text-primary ring-1 ring-inset ring-primary/15 transition duration-200 group-hover:bg-primary group-hover:text-white group-hover:ring-primary motion-reduce:transition-none"
+        className={`col-start-2 row-start-1 row-span-2 flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full text-white transition duration-200 motion-reduce:transition-none ${
+          accent ? "bg-accent-deep" : "bg-primary-deep"
+        }`}
       >
         <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
       </span>

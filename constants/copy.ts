@@ -758,10 +758,23 @@ export const home = {
         ja: "サービスをご利用の方",
         en: "For those who wish to use our service",
       } satisfies Bilingual,
-      label: { ja: "お申込みはこちら", en: "Apply here" } satisfies Bilingual,
+      label: { ja: "ご登録・お申込みはこちら", en: "Register / Apply here" } satisfies Bilingual,
       // Verbatim from app/[lang]/page.tsx:458 — the user-registration portal
       // this banner already links to.
       href: "https://portal.care24.jp/register",
+    },
+    // Returning users (client request Oct 2026): follow-up bookings go to a
+    // short form instead of the full registration flow.
+    userRepeat: {
+      eyebrow: {
+        ja: "2回目以降ご利用の方",
+        en: "For returning users",
+      } satisfies Bilingual,
+      label: {
+        ja: "2回目以降のご予約はこちら",
+        en: "Book a follow-up visit here",
+      } satisfies Bilingual,
+      href: "https://forms.gle/VG12pAprJv9sFjjWA",
     },
     staff: {
       eyebrow: {

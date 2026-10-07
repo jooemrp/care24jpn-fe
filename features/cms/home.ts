@@ -442,6 +442,11 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
       label: requiredBi(applyBlock.data, "user_label", "home/home-apply"),
       href: requiredUrl(applyBlock.data, "user_href", "home/home-apply"),
     },
+    userRepeat: {
+      eyebrow: requiredBi(applyBlock.data, "user_repeat_eyebrow", "home/home-apply"),
+      label: requiredBi(applyBlock.data, "user_repeat_label", "home/home-apply"),
+      href: requiredUrl(applyBlock.data, "user_repeat_href", "home/home-apply"),
+    },
     staff: {
       eyebrow: requiredBi(applyBlock.data, "staff_eyebrow", "home/home-apply"),
       label: requiredBi(applyBlock.data, "staff_label", "home/home-apply"),
