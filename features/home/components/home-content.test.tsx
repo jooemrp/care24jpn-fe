@@ -176,6 +176,10 @@ async function main(): Promise<void> {
     // The main hero CTA mirrors the apply section's new-user button.
     assert.ok(heroHtml.includes(content.apply.user.label.en));
     assert.ok(!heroHtml.includes(content.hero.ctaPrimary.en));
+    // Both hero buttons share height, label size and a 32px arrow circle.
+    assert.match(heroHtml, /min-h-14 items-center justify-between py-2\.5 pl-\[18px\] pr-2\.5/);
+    assert.equal((heroHtml.match(/ h-8 w-8[ "]/g) ?? []).length, 2);
+    assert.doesNotMatch(heroHtml, /sm:text-xl/);
     const ctaAt = heroHtml.indexOf("data-hero-cta");
     const returningAt = heroHtml.indexOf(content.apply.userRepeat.label.en);
     assert.ok(

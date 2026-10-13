@@ -131,6 +131,7 @@ export function HomeHeroSection({
                 label={t(returningUser.label, lang)}
                 tone="accent"
                 emphasis="secondary"
+                size="hero"
                 external={isSafeExternalHref(returningUser.href)}
                 lang={lang}
                 delay={40}
