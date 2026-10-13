@@ -65,7 +65,7 @@ export function HomeApplyButtons({
   );
 }
 
-function ApplyBanner({
+export function ApplyBanner({
   href,
   eyebrow,
   label,
@@ -73,6 +73,7 @@ function ApplyBanner({
   emphasis = "primary",
   external = false,
   size = "default",
+  shape = "card",
   lang,
   delay,
   className: extraClassName = "",
@@ -85,6 +86,8 @@ function ApplyBanner({
   emphasis?: "primary" | "secondary";
   external?: boolean;
   size?: "default" | "compact";
+  /** `pill` is fully rounded, as the hero's original CTA was. Primary emphasis only. */
+  shape?: "card" | "pill";
   lang: Lang;
   delay: number;
   className?: string;
@@ -95,9 +98,11 @@ function ApplyBanner({
   const className = isPrimary
     ? [
         "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-y-2",
-        compact
-          ? "gap-x-3 rounded-2xl px-4 py-5"
-          : "gap-x-5 rounded-2xl px-7 py-8",
+        shape === "pill"
+          ? "gap-x-4 rounded-full py-3.5 pl-8 pr-4"
+          : compact
+            ? "gap-x-3 rounded-2xl px-4 py-5"
+            : "gap-x-5 rounded-2xl px-7 py-8",
         "text-white ring-1 ring-inset ring-white/15",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -107,10 +112,10 @@ function ApplyBanner({
           : "bg-primary-deep shadow-[0_4px_16px_-6px_rgba(16,66,105,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(16,66,105,0.65)] focus-visible:outline-primary-deep",
       ].join(" ")
     : [
-        // One centered line; the arrow is pinned to the right edge so the
-        // label stays centered on the button, not on the space left of it.
-        "group relative flex items-center justify-center",
-        compact ? "min-h-14 px-11 py-3" : "min-h-16 px-14 py-4",
+        // One left-aligned line; the arrow is pinned to the right edge, so
+        // the right padding keeps the label clear of it.
+        "group relative flex items-center justify-start",
+        compact ? "min-h-14 pl-5 pr-14 py-3" : "min-h-16 pl-7 pr-16 py-4",
         "rounded-2xl border-2 bg-surface",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -153,7 +158,7 @@ function ApplyBanner({
   ) : (
     <>
       <span
-        className={`text-center font-bold leading-snug [text-wrap:balance] ${
+        className={`text-left font-bold leading-snug [text-wrap:balance] ${
           compact ? "text-[0.9375rem]" : "text-lg sm:text-xl"
         }`}
       >

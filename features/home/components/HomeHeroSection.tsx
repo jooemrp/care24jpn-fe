@@ -4,7 +4,8 @@ import Image from "next/image";
 import { IconMapPin } from "@tabler/icons-react";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
-import { HomeApplyButtons } from "./HomeApplyButtons";
+import { ApplyBanner } from "./HomeApplyButtons";
+import { isSafeExternalHref } from "./HomeLinks";
 import { PhraseText } from "@/components/PhraseText";
 
 export function HomeHeroSection({
@@ -53,7 +54,7 @@ export function HomeHeroSection({
         className="relative mx-auto flex max-w-6xl flex-col px-6 pb-7 pt-7 md:h-full md:min-h-[36rem] md:justify-center md:py-20 md:pb-28 lg:min-h-[42rem] xl:min-h-[48rem] 2xl:min-h-[min(70vh,56rem)]"
         data-hero-copy
       >
-        <div className="max-w-[20rem] animate-fade-up sm:max-w-xl md:max-w-[38rem]">
+        <div className="max-w-[20rem] animate-fade-up sm:max-w-xl">
           <span
             aria-hidden="true"
             className="mb-4 block h-1 w-10 rounded-full bg-primary md:hidden"
@@ -84,11 +85,17 @@ export function HomeHeroSection({
               </p>
             </div>
 
-            <HomeApplyButtons
-              content={apply}
-              lang={lang}
+            <ApplyBanner
+              href={apply.user.href}
+              eyebrow={t(apply.user.eyebrow, lang)}
+              label={t(apply.user.label, lang)}
+              tone="accent"
+              external={isSafeExternalHref(apply.user.href)}
               size="compact"
-              className="order-1 w-full"
+              shape="pill"
+              lang={lang}
+              delay={0}
+              className="order-1 w-full max-w-sm"
             />
           </div>
         </div>
