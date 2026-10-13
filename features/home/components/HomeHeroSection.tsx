@@ -1,35 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
+import { IconMapPin } from "@tabler/icons-react";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
-import { isSafeExternalHref, safeLocalizedHref } from "./HomeLinks";
+import { HomeApplyButtons } from "./HomeApplyButtons";
 import { PhraseText } from "@/components/PhraseText";
 
 export function HomeHeroSection({
   content,
+  apply,
   lang,
 }: {
   content: HomeContent["hero"];
+  apply: HomeContent["apply"];
   lang: Lang;
 }) {
-  const external = isSafeExternalHref(content.ctaPrimaryHref);
-  const href = safeLocalizedHref(content.ctaPrimaryHref, lang);
-
-  const cta = (
-    <>
-      <PhraseText text={t(content.ctaPrimary, lang)} />
-      <span
-        aria-hidden="true"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
-      >
-        <ArrowRightIcon className="h-4 w-4" />
-      </span>
-    </>
-  );
-
   return (
     <section
       className="relative isolate w-full overflow-hidden bg-bg xl:aspect-2/1 xl:min-h-[48rem] 2xl:min-h-[56rem]"
@@ -67,7 +53,7 @@ export function HomeHeroSection({
         className="relative mx-auto flex max-w-6xl flex-col px-6 pb-7 pt-7 md:h-full md:min-h-[36rem] md:justify-center md:py-20 md:pb-28 lg:min-h-[42rem] xl:min-h-[48rem] 2xl:min-h-[min(70vh,56rem)]"
         data-hero-copy
       >
-        <div className="max-w-[20rem] animate-fade-up sm:max-w-xl">
+        <div className="max-w-[20rem] animate-fade-up sm:max-w-xl md:max-w-[38rem]">
           <span
             aria-hidden="true"
             className="mb-4 block h-1 w-10 rounded-full bg-primary md:hidden"
@@ -98,25 +84,12 @@ export function HomeHeroSection({
               </p>
             </div>
 
-            {external ? (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
-                data-hero-cta
-              >
-                {cta}
-              </a>
-            ) : (
-              <Link
-                href={href}
-                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-full md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
-                data-hero-cta
-              >
-                {cta}
-              </Link>
-            )}
+            <HomeApplyButtons
+              content={apply}
+              lang={lang}
+              size="compact"
+              className="order-1 w-full"
+            />
           </div>
         </div>
       </div>
@@ -160,8 +133,4 @@ export function PyramidStatement({
       </div>
     </div>
   );
-}
-
-function ArrowRightIcon({ className = "h-5 w-5" }: { className?: string }) {
-  return <IconArrowRight className={className} stroke={2.5} aria-hidden="true" />;
 }
