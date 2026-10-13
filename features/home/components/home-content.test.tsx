@@ -168,7 +168,9 @@ async function main(): Promise<void> {
     assert.match(html, /w-full min-h-14 items-center justify-between rounded-2xl/);
     // The arrow circle sits as far from the right edge as from top/bottom.
     assert.match(html, /py-3 pl-5 pr-3 /);
-    assert.match(html, /md:py-3\.5 md:pl-7 md:pr-3\.5 /);
+    // Desktop keeps the same 2xl corner as the apply banners, not a pill.
+    assert.match(html, /md:rounded-2xl md:bg-accent md:py-3\.5 md:pl-7 md:pr-3\.5 /);
+    assert.doesNotMatch(html, /md:rounded-full/);
     assert.match(html, /focus-visible:outline-2/);
     assert.match(html, /data-about-intro="true"/);
     assert.doesNotMatch(html, /min-h-\[30rem\]/);
@@ -259,6 +261,12 @@ async function main(): Promise<void> {
     assert.match(html, /href="https:\/\/forms\.gle\/VG12pAprJv9sFjjWA"/);
     assert.match(html, /お仕事を希望される方/);
     assert.doesNotMatch(html, /こちらから/);
+    // Returning-user button: one left-aligned line, no gray subtitle.
+    assert.doesNotMatch(html, /2回目以降ご利用の方/);
+    assert.match(html, /justify-start[\s\S]{0,1200}2回目以降のご予約はこちら/);
+    // Top two buttons share a row; the repeat button sits under the left one.
+    assert.match(html, /md:grid-cols-2/);
+    assert.match(html, /md:col-start-2 md:row-start-1/);
     assert.match(
       html,
       /col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white/,
