@@ -62,6 +62,7 @@ export function ApplyBanner({
   tone,
   emphasis = "primary",
   external = false,
+  size = "default",
   lang,
   delay,
   className: extraClassName = "",
@@ -73,12 +74,19 @@ export function ApplyBanner({
   tone: "accent" | "primary";
   emphasis?: "primary" | "secondary";
   external?: boolean;
+  /**
+   * `hero` (secondary only) sizes the button to match the hero's main CTA:
+   * same height, padding, label size and arrow circle. Its paddings are 2px
+   * smaller than the CTA's because this one has a 2px border.
+   */
+  size?: "default" | "hero";
   lang: Lang;
   delay: number;
   className?: string;
 }) {
   const accent = tone === "accent";
   const isPrimary = emphasis === "primary";
+  const hero = size === "hero" && !isPrimary;
   const className = isPrimary
     ? [
         "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-y-2",
@@ -92,10 +100,13 @@ export function ApplyBanner({
           : "bg-primary-deep shadow-[0_4px_16px_-6px_rgba(16,66,105,0.5)] hover:shadow-[0_20px_36px_-18px_rgba(16,66,105,0.65)] focus-visible:outline-primary-deep",
       ].join(" ")
     : [
-        // One left-aligned line; the arrow is pinned to the right edge, so
-        // the right padding keeps the label clear of it.
-        "group relative flex items-center justify-start",
-        "min-h-16 py-4 pl-5 pr-14 sm:pl-7 sm:pr-16",
+        hero
+          ? // Same box as the hero CTA (min-h-14 / md py-3.5 pl-7 pr-3.5),
+            // arrow right after the label from `md`.
+            "group inline-flex w-full min-h-14 items-center justify-between py-2.5 pl-[18px] pr-2.5 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:py-3 md:pl-[26px] md:pr-3"
+          : // One left-aligned line; the arrow is pinned to the right edge,
+            // so the right padding keeps the label clear of it.
+            "group relative flex items-center justify-start min-h-16 py-4 pl-5 pr-14 sm:pl-7 sm:pr-16",
         "rounded-2xl border-2 bg-surface",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -130,15 +141,19 @@ export function ApplyBanner({
   ) : (
     <>
       <span
-        className="text-left text-base font-bold leading-snug [text-wrap:balance] sm:text-xl"
+        className={`text-left font-bold leading-snug [text-wrap:balance] ${
+          hero ? "text-base" : "text-base sm:text-xl"
+        }`}
       >
         <PhraseText text={label} />
       </span>
       <span
         aria-hidden="true"
-        className={`absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 shrink-0 items-center justify-center rounded-full text-white transition duration-200 motion-reduce:transition-none ${
-          accent ? "bg-accent-deep" : "bg-primary-deep"
-        }`}
+        className={`flex shrink-0 items-center justify-center rounded-full text-white transition duration-200 motion-reduce:transition-none ${
+          hero
+            ? "h-8 w-8"
+            : "absolute right-4 top-1/2 h-10 w-10 -translate-y-1/2"
+        } ${accent ? "bg-accent-deep" : "bg-primary-deep"}`}
       >
         <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
       </span>
