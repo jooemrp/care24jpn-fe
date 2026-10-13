@@ -171,6 +171,14 @@ async function main(): Promise<void> {
     // Desktop keeps the same 2xl corner as the apply banners, not a pill.
     assert.match(html, /md:rounded-2xl md:bg-accent md:py-3\.5 md:pl-7 md:pr-3\.5 /);
     assert.doesNotMatch(html, /md:rounded-full/);
+    // The returning-user button sits under the hero CTA, before the area badge.
+    const heroHtml = html.slice(0, html.indexOf('data-about-intro'));
+    const ctaAt = heroHtml.indexOf("data-hero-cta");
+    const returningAt = heroHtml.indexOf(content.apply.userRepeat.label.en);
+    assert.ok(
+      ctaAt > -1 && returningAt > ctaAt,
+      "hero should show the returning-user button after the main CTA",
+    );
     assert.match(html, /focus-visible:outline-2/);
     assert.match(html, /data-about-intro="true"/);
     assert.doesNotMatch(html, /min-h-\[30rem\]/);

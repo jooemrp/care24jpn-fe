@@ -55,7 +55,7 @@ export function HomeApplyButtons({
   );
 }
 
-function ApplyBanner({
+export function ApplyBanner({
   href,
   eyebrow,
   label,
@@ -95,7 +95,7 @@ function ApplyBanner({
         // One left-aligned line; the arrow is pinned to the right edge, so
         // the right padding keeps the label clear of it.
         "group relative flex items-center justify-start",
-        "min-h-16 pl-7 pr-16 py-4",
+        "min-h-16 py-4 pl-5 pr-14 sm:pl-7 sm:pr-16",
         "rounded-2xl border-2 bg-surface",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -130,7 +130,7 @@ function ApplyBanner({
   ) : (
     <>
       <span
-        className="text-left text-lg font-bold leading-snug [text-wrap:balance] sm:text-xl"
+        className="text-left text-base font-bold leading-snug [text-wrap:balance] sm:text-xl"
       >
         <PhraseText text={label} />
       </span>
