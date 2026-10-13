@@ -17,26 +17,18 @@ import { PhraseText } from "@/components/PhraseText";
 export function HomeApplyButtons({
   content,
   lang,
-  size = "default",
-  className = "",
 }: {
   content: HomeContent["apply"];
   lang: Lang;
-  size?: "default" | "compact";
-  className?: string;
 }) {
-  const compact = size === "compact";
   return (
-    <div
-      className={`grid md:grid-cols-2 ${compact ? "gap-3" : "gap-4"} ${className}`}
-    >
+    <div className="grid gap-4 md:grid-cols-2">
       <ApplyBanner
         href={content.user.href}
         eyebrow={t(content.user.eyebrow, lang)}
         label={t(content.user.label, lang)}
         tone="accent"
         external={isSafeExternalHref(content.user.href)}
-        size={size}
         lang={lang}
         delay={0}
       />
@@ -46,7 +38,6 @@ export function HomeApplyButtons({
         tone="accent"
         emphasis="secondary"
         external={isSafeExternalHref(content.userRepeat.href)}
-        size={size}
         lang={lang}
         delay={40}
       />
@@ -56,7 +47,6 @@ export function HomeApplyButtons({
         label={t(content.staff.label, lang)}
         tone="primary"
         external={isSafeExternalHref(content.staff.href)}
-        size={size}
         lang={lang}
         delay={80}
         className="md:col-start-2 md:row-start-1"
@@ -65,15 +55,13 @@ export function HomeApplyButtons({
   );
 }
 
-export function ApplyBanner({
+function ApplyBanner({
   href,
   eyebrow,
   label,
   tone,
   emphasis = "primary",
   external = false,
-  size = "default",
-  shape = "card",
   lang,
   delay,
   className: extraClassName = "",
@@ -85,24 +73,16 @@ export function ApplyBanner({
   tone: "accent" | "primary";
   emphasis?: "primary" | "secondary";
   external?: boolean;
-  size?: "default" | "compact";
-  /** `pill` is fully rounded, as the hero's original CTA was. Primary emphasis only. */
-  shape?: "card" | "pill";
   lang: Lang;
   delay: number;
   className?: string;
 }) {
   const accent = tone === "accent";
   const isPrimary = emphasis === "primary";
-  const compact = size === "compact";
   const className = isPrimary
     ? [
         "group grid grid-cols-[minmax(0,1fr)_auto] items-start gap-y-2",
-        shape === "pill"
-          ? "gap-x-4 rounded-full py-3.5 pl-8 pr-4"
-          : compact
-            ? "gap-x-3 rounded-2xl px-4 py-5"
-            : "gap-x-5 rounded-2xl px-7 py-8",
+        "gap-x-5 rounded-2xl px-7 py-8",
         "text-white ring-1 ring-inset ring-white/15",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -115,7 +95,7 @@ export function ApplyBanner({
         // One left-aligned line; the arrow is pinned to the right edge, so
         // the right padding keeps the label clear of it.
         "group relative flex items-center justify-start",
-        compact ? "min-h-14 pl-5 pr-14 py-3" : "min-h-16 pl-7 pr-16 py-4",
+        "min-h-16 pl-7 pr-16 py-4",
         "rounded-2xl border-2 bg-surface",
         "animate-fade-up transition duration-200 motion-safe:hover:-translate-y-0.5",
         "motion-reduce:transition-none",
@@ -129,26 +109,18 @@ export function ApplyBanner({
   const children = isPrimary ? (
     <>
       <span
-        className={`col-start-1 row-start-1 self-end ${
-          compact ? "text-xs sm:text-sm" : "text-base"
-        } font-semibold leading-relaxed text-white [text-wrap:balance]`}
+        className="col-start-1 row-start-1 self-end text-base font-semibold leading-relaxed text-white [text-wrap:balance]"
       >
         {eyebrow}
       </span>
       <span
-        className={`col-start-1 row-start-2 self-end ${
-          compact ? "text-[1.0625rem]" : "text-xl"
-        } font-bold leading-tight tracking-tight [text-wrap:balance]${
-          compact ? "" : " sm:text-2xl lg:text-[1.875rem]"
-        }`}
+        className="col-start-1 row-start-2 self-end text-xl font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-2xl lg:text-[1.875rem]"
       >
         <PhraseText text={label} />
       </span>
       <span
         aria-hidden="true"
-        className={`col-start-2 row-start-1 row-span-2 flex shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none ${
-          compact ? "h-9 w-9" : "h-12 w-12"
-        } ${
+        className={`col-start-2 row-start-1 row-span-2 flex shrink-0 items-center justify-center self-center rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition duration-200 group-hover:bg-white group-hover:ring-white motion-reduce:transition-none h-12 w-12 ${
           accent ? "group-hover:text-accent-deep" : "group-hover:text-primary-deep"
         }`}
       >
@@ -158,15 +130,13 @@ export function ApplyBanner({
   ) : (
     <>
       <span
-        className={`text-left font-bold leading-snug [text-wrap:balance] ${
-          compact ? "text-[0.9375rem]" : "text-lg sm:text-xl"
-        }`}
+        className="text-left text-lg font-bold leading-snug [text-wrap:balance] sm:text-xl"
       >
         <PhraseText text={label} />
       </span>
       <span
         aria-hidden="true"
-        className={`absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 shrink-0 items-center justify-center rounded-full text-white transition duration-200 motion-reduce:transition-none ${
+        className={`absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 shrink-0 items-center justify-center rounded-full text-white transition duration-200 motion-reduce:transition-none ${
           accent ? "bg-accent-deep" : "bg-primary-deep"
         }`}
       >

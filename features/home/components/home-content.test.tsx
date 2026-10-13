@@ -164,12 +164,13 @@ async function main(): Promise<void> {
     assert.match(html, /data-hero-accent="true"/);
     assert.match(html, /data-hero-area="true"/);
     assert.match(html, /border-l-2 border-primary/);
-    // The old single hero CTA is replaced by the new-user apply banner.
-    assert.doesNotMatch(html, /data-hero-cta/);
-    const heroCopy = html.slice(html.indexOf('data-hero-copy="true"'));
-    const heroCopyBeforeAbout = heroCopy.slice(0, heroCopy.indexOf('data-about-intro'));
-    assert.match(heroCopyBeforeAbout, /ご登録・お申込みはこちら|Register \/ Apply here|apply/i);
-    assert.doesNotMatch(heroCopyBeforeAbout, /md:col-start-2 md:row-start-1/);
+    assert.match(html, /data-hero-cta="true"/);
+    assert.match(html, /w-full min-h-14 items-center justify-between rounded-2xl/);
+    // The arrow circle sits as far from the right edge as from top/bottom.
+    assert.match(html, /py-3 pl-5 pr-3 /);
+    // Desktop keeps the same 2xl corner as the apply banners, not a pill.
+    assert.match(html, /md:rounded-2xl md:bg-accent md:py-3\.5 md:pl-7 md:pr-3\.5 /);
+    assert.doesNotMatch(html, /md:rounded-full/);
     assert.match(html, /focus-visible:outline-2/);
     assert.match(html, /data-about-intro="true"/);
     assert.doesNotMatch(html, /min-h-\[30rem\]/);
@@ -180,8 +181,8 @@ async function main(): Promise<void> {
     );
     assert.match(
       html,
-      /order-2 flex w-full max-w-sm.*data-hero-area.*order-1 w-full max-w-sm/,
-      "mobile should visually place the apply buttons before the supported area",
+      /order-1 inline-flex w-full min-h-14.*md:order-1.*data-hero-cta/,
+      "mobile should visually place the CTA before the supported area",
     );
   });
 

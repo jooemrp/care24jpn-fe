@@ -32,7 +32,7 @@ export function HomeContentView({
   return (
     <>
       <div data-first-view>
-        <HomeHeroSection content={content.hero} apply={content.apply} lang={lang} />
+        <HomeHeroSection content={content.hero} lang={lang} />
       </div>
       <HomeAboutSection content={content.about} lang={lang} emptyLabel={emptyLabel} />
       <HomeProblemsSection content={content.problems} lang={lang} emptyLabel={emptyLabel} />
