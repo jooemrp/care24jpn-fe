@@ -173,6 +173,9 @@ async function main(): Promise<void> {
     assert.doesNotMatch(html, /md:rounded-full/);
     // The returning-user button sits under the hero CTA, before the area badge.
     const heroHtml = html.slice(0, html.indexOf('data-about-intro'));
+    // The main hero CTA mirrors the apply section's new-user button.
+    assert.ok(heroHtml.includes(content.apply.user.label.en));
+    assert.ok(!heroHtml.includes(content.hero.ctaPrimary.en));
     const ctaAt = heroHtml.indexOf("data-hero-cta");
     const returningAt = heroHtml.indexOf(content.apply.userRepeat.label.en);
     assert.ok(

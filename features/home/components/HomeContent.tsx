@@ -34,7 +34,7 @@ export function HomeContentView({
       <div data-first-view>
         <HomeHeroSection
           content={content.hero}
-          returningUser={content.apply.userRepeat}
+          apply={content.apply}
           lang={lang}
         />
       </div>

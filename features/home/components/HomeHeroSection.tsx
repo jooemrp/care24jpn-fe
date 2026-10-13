@@ -11,20 +11,24 @@ import { PhraseText } from "@/components/PhraseText";
 
 export function HomeHeroSection({
   content,
-  returningUser,
+  apply,
   lang,
 }: {
   content: HomeContent["hero"];
-  /** Same CMS block as the returning-user button in the apply section. */
-  returningUser: HomeContent["apply"]["userRepeat"];
+  /**
+   * The hero buttons mirror the apply section's (same label and link, one
+   * place to edit): the main CTA is `apply.user`, the second `apply.userRepeat`.
+   */
+  apply: HomeContent["apply"];
   lang: Lang;
 }) {
-  const external = isSafeExternalHref(content.ctaPrimaryHref);
-  const href = safeLocalizedHref(content.ctaPrimaryHref, lang);
+  const returningUser = apply.userRepeat;
+  const external = isSafeExternalHref(apply.user.href);
+  const href = safeLocalizedHref(apply.user.href, lang);
 
   const cta = (
     <>
-      <PhraseText text={t(content.ctaPrimary, lang)} />
+      <PhraseText text={t(apply.user.label, lang)} />
       <span
         aria-hidden="true"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
