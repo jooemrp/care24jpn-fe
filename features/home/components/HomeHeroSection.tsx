@@ -5,22 +5,30 @@ import Link from "next/link";
 import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
 import { t, type Lang } from "@/features/lang/i18n";
 import type { HomeContent } from "../types";
+import { ApplyBanner } from "./HomeApplyButtons";
 import { isSafeExternalHref, safeLocalizedHref } from "./HomeLinks";
 import { PhraseText } from "@/components/PhraseText";
 
 export function HomeHeroSection({
   content,
+  apply,
   lang,
 }: {
   content: HomeContent["hero"];
+  /**
+   * The hero buttons mirror the apply section's (same label and link, one
+   * place to edit): the main CTA is `apply.user`, the second `apply.userRepeat`.
+   */
+  apply: HomeContent["apply"];
   lang: Lang;
 }) {
-  const external = isSafeExternalHref(content.ctaPrimaryHref);
-  const href = safeLocalizedHref(content.ctaPrimaryHref, lang);
+  const returningUser = apply.userRepeat;
+  const external = isSafeExternalHref(apply.user.href);
+  const href = safeLocalizedHref(apply.user.href, lang);
 
   const cta = (
     <>
-      <PhraseText text={t(content.ctaPrimary, lang)} />
+      <PhraseText text={t(apply.user.label, lang)} />
       <span
         aria-hidden="true"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
@@ -98,25 +106,37 @@ export function HomeHeroSection({
               </p>
             </div>
 
-            {external ? (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-2xl md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
-                data-hero-cta
-              >
-                {cta}
-              </a>
-            ) : (
-              <Link
-                href={href}
-                className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-2xl md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
-                data-hero-cta
-              >
-                {cta}
-              </Link>
-            )}
+            <div className="order-1 flex w-full flex-col items-start gap-3 md:order-1">
+              {external ? (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-2xl md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
+                  data-hero-cta
+                >
+                  {cta}
+                </a>
+              ) : (
+                <Link
+                  href={href}
+                  className="order-1 inline-flex w-full min-h-14 items-center justify-between rounded-2xl bg-accent-deep py-3 pl-5 pr-3 font-medium text-white shadow-[0_12px_24px_-14px_rgba(181,58,103,0.7)] transition-[background-color,box-shadow,opacity] duration-200 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent motion-reduce:transition-none md:order-1 md:w-auto md:min-h-0 md:justify-start md:gap-3 md:rounded-2xl md:bg-accent md:py-3.5 md:pl-7 md:pr-3.5 md:shadow-lg md:shadow-accent/25 md:hover:opacity-90"
+                  data-hero-cta
+                >
+                  {cta}
+                </Link>
+              )}
+              <ApplyBanner
+                href={returningUser.href}
+                label={t(returningUser.label, lang)}
+                tone="accent"
+                emphasis="secondary"
+                external={isSafeExternalHref(returningUser.href)}
+                lang={lang}
+                delay={40}
+                className="order-2 w-full md:order-2 md:w-auto"
+              />
+            </div>
           </div>
         </div>
       </div>
