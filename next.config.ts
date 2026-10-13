@@ -92,7 +92,8 @@ const nextConfig: NextConfig = {
   // were missing, and /robots.txt shipped Access-Control-Allow-Origin: *.
   // Applied here (Vercel/Next), not Apache/Nginx. CSP keeps 'unsafe-inline'
   // for style + script because the app uses React style={{}} and inline
-  // JSON-LD; 'unsafe-eval' is intentionally omitted.
+  // JSON-LD; 'unsafe-eval' is intentionally omitted. GTM (+ GA4 collect
+  // endpoints) is allow-listed; add hosts here if the container gains tags.
   async headers() {
     const contentSecurityPolicy = [
       "default-src 'self'",
@@ -100,11 +101,12 @@ const nextConfig: NextConfig = {
       "object-src 'none'",
       "frame-ancestors 'none'",
       "form-action 'self'",
-      "img-src 'self' data: blob: https://horizoon.s3.ap-southeast-1.amazonaws.com",
+      "img-src 'self' data: blob: https://horizoon.s3.ap-southeast-1.amazonaws.com https://www.googletagmanager.com https://*.google-analytics.com",
       "font-src 'self'",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline'",
-      "connect-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+      "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+      "frame-src https://www.googletagmanager.com",
     ].join("; ");
 
     return [

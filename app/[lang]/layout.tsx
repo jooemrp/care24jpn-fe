@@ -6,6 +6,10 @@ import { notoSansJP } from "../fonts";
 import AppShell from "@/components/AppShell";
 import Providers from "@/components/providers";
 import JsonLd, { organizationJsonLd } from "@/components/JsonLd";
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoScript,
+} from "@/components/GoogleTagManager";
 import { SITE_URL } from "@/constants/site";
 import { isLang, LANGS } from "@/features/lang/i18n";
 import { getSite } from "@/features/cms/site";
@@ -133,6 +137,8 @@ export default async function RootLayout({
       className={`${notoSansJP.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-body">
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
         <JsonLd data={organizationJsonLd(site)} />
         {/* Thin top loading bar — feedback that a client-side navigation is
             in flight. Every route under [lang] is force-dynamic and fetches
