@@ -27,6 +27,12 @@ export function HomeAboutSection({
         <h2 className="mb-1 text-[1.75rem] leading-tight tracking-[-0.025em] text-heading md:text-3xl md:tracking-normal">
           <PhraseText text={t(content.heading, lang)} />
         </h2>
+        <p
+          data-about-intro-text
+          className="mt-3 max-w-3xl text-base leading-relaxed text-body"
+        >
+          <PhraseText text={t(content.intro, lang)} />
+        </p>
       </header>
       <p className="max-w-3xl text-xl font-semibold leading-relaxed text-heading md:text-2xl">
         <PhraseText text={t(content.catchphrase, lang)} />

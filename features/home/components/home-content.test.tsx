@@ -400,6 +400,29 @@ async function main(): Promise<void> {
       /<p class="mt-2 text-\[13px\] leading-relaxed text-body md:text-base"><span class="md:hidden whitespace-pre-line">Custom body<\/span>/,
     );
   });
+
+  test("about intro renders under the heading and above the catchphrase in both languages", () => {
+    for (const lang of ["ja", "en"] as const) {
+      const html = renderToStaticMarkup(
+        React.createElement(HomeContentView, {
+          content,
+          lang,
+          contactCta: cta.contact,
+          emptyLabel: "There is no content to display yet.",
+        }),
+      );
+      const text = stripPhraseMarkup(html);
+      const headingAt = text.indexOf(content.about.heading[lang]);
+      const introAt = text.indexOf(content.about.intro[lang]);
+      const catchphraseAt = text.indexOf(content.about.catchphrase[lang]);
+      assert.ok(introAt > -1, `${lang}: intro paragraph should render`);
+      assert.ok(
+        headingAt > -1 && headingAt < introAt && introAt < catchphraseAt,
+        `${lang}: intro should sit between the heading and the catchphrase`,
+      );
+      assert.match(html, /data-about-intro-text/);
+    }
+  });
 }
 
 void main();

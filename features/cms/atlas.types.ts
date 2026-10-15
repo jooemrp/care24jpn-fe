@@ -97,6 +97,7 @@ export interface HomePricingSummary {
 /** Home — About (Care24Japanとは) (content type: "home-about") */
 export interface HomeAbout {
   heading?: string; // localizable
+  intro?: string; // localizable
   catchphrase?: string; // localizable
   body?: string; // localizable
   card_titles?: string; // localizable

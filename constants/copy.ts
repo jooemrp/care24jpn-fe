@@ -253,6 +253,10 @@ export const home = {
 
   about: {
     heading: { ja: "Care24Japanとは", en: "What is Care24Japan?" } satisfies Bilingual,
+    intro: {
+      ja: "医療法人社団 悠翔会とともに20年以上在宅医療を手掛けているメディカルインフォマティクス㈱が10年前からインドで1日1,000人近くの自費訪問看護・介護を提供している『Care24』のノウハウを使って日本で始めたサービスです。",
+      en: "A service launched in Japan using the know-how of “Care24,” which MedicalInformatics Co.,Ltd.—a company that has worked in home healthcare for more than 20 years together with Yushokai Medical Corporation—has operated in India for the past 10 years, providing self-pay home-visit nursing and caregiving to nearly 1,000 people every day.",
+    } satisfies Bilingual,
     catchphrase: {
       ja: "保険では足りない時間を、有資格者がサポートします。",
       en: "Certified Specialists Filling the Care Gap Beyond Standard Insurance.",
