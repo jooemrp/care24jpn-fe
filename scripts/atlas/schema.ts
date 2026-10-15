@@ -211,6 +211,9 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "card_body_1", label: "Card 1 body", field_type: "textarea", localizable: true, required: false, sort_order: 9 },
       { name: "card_body_2", label: "Card 2 body", field_type: "textarea", localizable: true, required: false, sort_order: 10 },
       { name: "card_body_3", label: "Card 3 body", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
+      // Client revision (websiterevisions, row 1): paragraph directly under the
+      // "Care24Japanとは" heading, above the catchphrase.
+      { name: "intro", label: "Intro (under heading)", field_type: "textarea", localizable: true, required: false, sort_order: 12 },
     ],
   },
   {

@@ -214,6 +214,7 @@ async function main(): Promise<void> {
     const cardTitles = biJoin(home.about.cards.map((c) => c.title));
     const split = splitBilingual({
       heading: home.about.heading,
+      intro: home.about.intro,
       catchphrase: home.about.catchphrase,
       body: home.about.body,
       card_titles: cardTitles,

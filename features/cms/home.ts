@@ -199,6 +199,7 @@ function mapHome(blocks: CmsBlock[]): MappedHome {
   );
   const about: HomeContent["about"] = {
     heading: requiredBi(aboutBlock.data, "heading", "home/home-about"),
+    intro: requiredBi(aboutBlock.data, "intro", "home/home-about"),
     catchphrase: requiredBi(aboutBlock.data, "catchphrase", "home/home-about"),
     body: requiredBi(aboutBlock.data, "body", "home/home-about"),
     illustration: requiredImageUrl(aboutBlock.data, "illustration", "home/home-about"),
