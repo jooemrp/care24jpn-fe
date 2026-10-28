@@ -32,7 +32,7 @@ import { getManifestContent } from "@/features/cms/site-manifest";
  * route renders per request like every other CMS-driven surface here.
  *
  * `name`/`short_name` both use the same `site/site-brand.name`
- * ("Care 24 Japan") already used everywhere else in the app — not a shortened/invented
+ * ("Care24Japan") already used everywhere else in the app — not a shortened/invented
  * variant. Web App Manifest's `short_name` is only used when space is
  * constrained (e.g. a home-screen icon label); reusing the one real brand
  * string the site has is safer than making up an abbreviation nobody

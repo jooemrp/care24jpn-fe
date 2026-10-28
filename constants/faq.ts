@@ -1,7 +1,7 @@
 /**
- * Care 24 Japan — FAQ dataset (bilingual).
+ * Care24Japan — FAQ dataset (bilingual).
  *
- * Source: "【English explanation】Care 24 Japan Webpage revision 26th Aug 2026.pdf"
+ * Source: "【English explanation】Care24Japan Webpage revision 26th Aug 2026.pdf"
  * Section 5 — FAQ Accordion Implementation Specification & Dataset.
  *
  * LOCKED values (do NOT change without a documented content decision):

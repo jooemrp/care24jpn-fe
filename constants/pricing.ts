@@ -1,5 +1,5 @@
 /**
- * Care 24 Japan — Seed/type shapes for pricing data.
+ * Care24Japan — Seed/type shapes for pricing data.
  *
  * RULES:
  * - Never hardcode ¥ values inside components. Runtime components receive

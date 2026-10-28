@@ -1,5 +1,5 @@
 /**
- * Care 24 Japan — canonical site origin.
+ * Care24Japan — canonical site origin.
  *
  * Single source of truth for the deployed base URL. No trailing slash.
  * Used by metadata (metadataBase), sitemap.ts, robots.txt/route, and JSON-LD.

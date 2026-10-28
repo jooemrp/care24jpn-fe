@@ -1,5 +1,5 @@
 /**
- * Care 24 Japan — legal document contents.
+ * Care24Japan — legal document contents.
  *
  * GENERATED from the client-provided .docx files (29 July 2026, legal-checked),
  * preserving document order, list structure and tables, with heading structure

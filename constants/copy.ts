@@ -1,5 +1,5 @@
 /**
- * Care 24 Japan — Seed and type-shape copy.
+ * Care24Japan — Seed and type-shape copy.
  *
  * RULES:
  * - Japanese (`ja`) is primary; English (`en`) renders beneath as a small
@@ -17,10 +17,10 @@ export type Bilingual = {
 
 /** Brand-level strings. */
 export const brand = {
-  name: "Care 24 Japan",
+  name: "Care24Japan",
   logoAlt: {
     ja: "ケア24ジャパン ロゴ",
-    en: "Care 24 Japan logo",
+    en: "Care24Japan logo",
   } satisfies Bilingual,
   tagline: {
     ja: "ご自宅で、心安らぐ24時間の在宅ケアを",
@@ -912,8 +912,8 @@ export const useCase = {
   hero: {
     heading: { ja: "ご利用シーン", en: "Use cases" } satisfies Bilingual,
     body: {
-      ja: "Care 24 Japan は、さまざまな暮らしの場面に寄り添います。",
-      en: "Care 24 Japan adapts to the moments that matter most.",
+      ja: "Care24Japan は、さまざまな暮らしの場面に寄り添います。",
+      en: "Care24Japan adapts to the moments that matter most.",
     } satisfies Bilingual,
     // Verbatim from app/[lang]/use-case/page.tsx's closing CTA — non-localizable
     // relative path, resolved through `localizeHref()` at render time same as
@@ -931,8 +931,8 @@ export const useCase = {
         en: "Nursing and daily-living support during recovery at home.",
       } satisfies Bilingual,
       detail: {
-        ja: "入院中は医療スタッフに囲まれた環境で過ごされますが、退院後はご自宅でのリハビリや生活支援が重要になります。Care 24 Japan では、退院直後から看護師と介護福祉士が連携し、服薬管理・創傷ケア・食事・入浴・移動など、回復期に必要なあらゆるサポートをご提供します。ご家族の不安を和らげながら、安心して在宅療養できる環境を整えます。",
-        en: "Leaving hospital can feel daunting. Care 24 Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home.",
+        ja: "入院中は医療スタッフに囲まれた環境で過ごされますが、退院後はご自宅でのリハビリや生活支援が重要になります。Care24Japan では、退院直後から看護師と介護福祉士が連携し、服薬管理・創傷ケア・食事・入浴・移動など、回復期に必要なあらゆるサポートをご提供します。ご家族の不安を和らげながら、安心して在宅療養できる環境を整えます。",
+        en: "Leaving hospital can feel daunting. Care24Japan deploys a coordinated team of nurses and certified caregivers from day one — covering medication management, wound care, meals, bathing, and mobility support. We work closely with your family and discharging hospital to ensure a seamless, safe transition back to the comfort of home.",
       } satisfies Bilingual,
       highlights: [
         { ja: "退院当日からの対応が可能", en: "Available from the day of discharge" } satisfies Bilingual,
@@ -977,8 +977,8 @@ export const useCase = {
         en: "Temporary cover so family caregivers can rest.",
       } satisfies Bilingual,
       detail: {
-        ja: "日々介護を担うご家族は、心身ともに大きな負担を抱えています。Care 24 Japan のレスパイトケアでは、数時間から数日間、ご家族に代わって専門スタッフがご自宅でのケアを引き受けます。ご家族がリフレッシュし、自分自身の時間を持てるよう、安心してお任せいただける体制を整えています。",
-        en: "Family caregivers give everything — and they deserve to rest. Care 24 Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind.",
+        ja: "日々介護を担うご家族は、心身ともに大きな負担を抱えています。Care24Japan のレスパイトケアでは、数時間から数日間、ご家族に代わって専門スタッフがご自宅でのケアを引き受けます。ご家族がリフレッシュし、自分自身の時間を持てるよう、安心してお任せいただける体制を整えています。",
+        en: "Family caregivers give everything — and they deserve to rest. Care24Japan steps in for a few hours or several days, providing the same high-quality care your loved one is used to. Whether you need a short break, a medical appointment, or a holiday, we ensure continuity of care so you can recharge with complete peace of mind.",
       } satisfies Bilingual,
       highlights: [
         { ja: "数時間から数日間まで柔軟に対応", en: "Flexible from a few hours to several days" } satisfies Bilingual,
@@ -1000,8 +1000,8 @@ export const useCase = {
         en: "Compassionate support to spend final days at home.",
       } satisfies Bilingual,
       detail: {
-        ja: "人生の最終段階を、住み慣れたご自宅で穏やかに過ごしたいというご本人・ご家族の願いに、Care 24 Japan は全力で寄り添います。痛みや不快感を最小限にする身体ケア、精神的なサポート、そしてご家族が大切な時間を共に過ごせる環境づくりをお手伝いします。医療機関とも連携し、安心できる看取りの場を整えます。",
-        en: "When the time comes, most people wish to be at home — surrounded by those they love. Care 24 Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible.",
+        ja: "人生の最終段階を、住み慣れたご自宅で穏やかに過ごしたいというご本人・ご家族の願いに、Care24Japan は全力で寄り添います。痛みや不快感を最小限にする身体ケア、精神的なサポート、そしてご家族が大切な時間を共に過ごせる環境づくりをお手伝いします。医療機関とも連携し、安心できる看取りの場を整えます。",
+        en: "When the time comes, most people wish to be at home — surrounded by those they love. Care24Japan provides dignified, gentle end-of-life care that prioritises comfort and respects the wishes of the individual and their family. We coordinate closely with palliative care teams and GPs to ensure pain is managed and every moment is as peaceful as possible.",
       } satisfies Bilingual,
       highlights: [
         { ja: "緩和ケアチームとの医療連携", en: "Coordination with palliative care teams" } satisfies Bilingual,
@@ -1197,8 +1197,8 @@ export const footer = {
     | { href: string; key: "tokushoho" }
   )[],
   legal: {
-    ja: "© 2026 Care 24 Japan. All rights reserved.",
-    en: "© 2026 Care 24 Japan. All rights reserved.",
+    ja: "© 2026 Care24Japan. All rights reserved.",
+    en: "© 2026 Care24Japan. All rights reserved.",
   } satisfies Bilingual,
 };
 

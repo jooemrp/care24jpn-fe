@@ -1,6 +1,6 @@
 Copy
 
-# Care 24 Japan — Design System
+# Care24Japan — Design System
 
 ## Logo
 File: /public/images/logo.png (intrinsic 427×160, ~2.67:1 aspect ratio)
@@ -8,7 +8,7 @@ Always render via next/image. Minimum width 120px. Never recolor or crop.
 
 ## Aesthetic Direction
 Clean, friendly, trustworthy Japanese healthcare.
-Inspired directly by the Care 24 Japan logo:
+Inspired directly by the Care24Japan logo:
 rounded forms, blue-dominant palette, sakura accent, modern sans-serif.
 NOT warm/beige. NOT serif-heavy. NOT dark.
 
