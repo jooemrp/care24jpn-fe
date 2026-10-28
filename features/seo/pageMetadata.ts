@@ -126,9 +126,10 @@ export function withBrandSuffix(title: string, brandName: string): string {
 /**
  * True when `title` already carries `brandName` somewhere in it — matched
  * loosely (whitespace-insensitive, case-insensitive) because the CMS titles
- * this guards against spell the brand two different ways in the same
- * workspace: `site.brand.name` is "Care 24 Japan" (spaced), but 4 legal
- * pages' Atlas `seo.title` carries "Care24Japan" (no space) as part of the
+ * this guards against may spell the brand with different spacing in the
+ * same workspace: `site.brand.name` was historically "Care 24 Japan"
+ * (spaced), while 4 legal pages' Atlas `seo.title` carries "Care24Japan"
+ * (no space) as part of the
  * client's legally-reviewed document name (see `care 24 update.xlsx`:
  * "Care24Japan ケアサポーター報酬規程_リーガルチェック済"). A plain `===`/
  * `includes()` check would miss that pairing entirely.

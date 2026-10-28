@@ -1,5 +1,5 @@
 /**
- * Care 24 Japan — SEO seed metadata and generated-asset manifest.
+ * Care24Japan — SEO seed metadata and generated-asset manifest.
  *
  * RULES (per project convention, same as every other seed-only `constants/*.ts`):
  * - This file is seed/tooling input only. It is deliberately NOT imported by
@@ -51,8 +51,8 @@ export const seoRoutes = {
     // `title.template` (`%s | ${brand.name}`) is that sub-task's concern,
     // not this literal's.
     title: {
-      ja: "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
-      en: "Care 24 Japan — Premium 24-hour in-home care",
+      ja: "Care24Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
+      en: "Care24Japan — Premium 24-hour in-home care",
     },
     // ST-09: synced to the description approved in
     // output/meta-descriptions-review.md Bagian 1 #6 and now live on
@@ -79,8 +79,8 @@ export const seoRoutes = {
     // price figure for exactly that reason, so this is not just a ¥/JPY
     // wording fix, it also removes the drift risk.
     description: {
-      ja: "入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare 24 Japanの料金ページ。",
-      en: "Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care 24 Japan pricing for users.",
+      ja: "入会金・登録料は無料、最低利用2時間からご利用いただける、わかりやすい税込料金体系です。内容により変動する場合があるCare24Japanの料金ページ。",
+      en: "Transparent, all-inclusive pricing. No membership or registration fee, minimum usage 2 hours, all prices tax included. Care24Japan pricing for users.",
     },
   },
   "service-flow": {
@@ -92,8 +92,8 @@ export const seoRoutes = {
     // purpose (see that doc) so this description doesn't go stale if an
     // editor adds/removes a `service-flow-step` block in Atlas.
     description: {
-      ja: "ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare 24 Japanのご利用の流れです。",
-      en: "From member registration through your care supporter's home visit to the completion report — how Care 24 Japan's service flow works, step by step.",
+      ja: "ご登録からケアサポーターとのご予約確定、ご自宅への訪問、サービス終了後のご報告レポートまで、順を追ってご案内するCare24Japanのご利用の流れです。",
+      en: "From member registration through your care supporter's home visit to the completion report — how Care24Japan's service flow works, step by step.",
     },
   },
   company: {
@@ -103,8 +103,8 @@ export const seoRoutes = {
     // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #3 / now
     // live on page.seo.description.
     description: {
-      ja: "メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care 24 Japan運営会社の会社概要をご案内します。",
-      en: "Company profile of MedicalInformatics Co., Ltd., the operator of Care 24 Japan — trade name, head office, establishment date, capital and representative.",
+      ja: "メディカルインフォマティクス株式会社の商号・本社所在地・設立年月日・資本金・代表者など、Care24Japan運営会社の会社概要をご案内します。",
+      en: "Company profile of MedicalInformatics Co., Ltd., the operator of Care24Japan — trade name, head office, establishment date, capital and representative.",
     },
   },
   fees: {
@@ -122,13 +122,13 @@ export const seoRoutes = {
     },
     // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #4 / now
     // live on page.seo.description. Also closes the ¥-leaks-to-EN-readers
-    // finding (ST-U1): the old literal used "Care 24 Japan" prose with no
+    // finding (ST-U1): the old literal used "Care24Japan" prose with no
     // ¥/JPY figure, so there was nothing to convert here — the description
     // itself changed for the "no stale price" reason above, not a
     // ¥->JPY substitution.
     description: {
-      ja: "介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare 24 Japanケアサポーター時給・給与体系ページです。",
-      en: "Care 24 Japan's hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.",
+      ja: "介護コース・看護コースの1時間あたりの単価を税込表記でご案内する、登録料無料のCare24Japanケアサポーター時給・給与体系ページです。",
+      en: "Care24Japan's hourly wage and salary system for care supporters, showing tax-included hourly rates for the caregiving and nursing courses.",
     },
   },
   "use-case": {
@@ -138,8 +138,8 @@ export const seoRoutes = {
     // ST-09: synced to output/meta-descriptions-review.md Bagian 1 #5 / now
     // live on page.seo.description.
     description: {
-      ja: "退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care 24 Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。",
-      en: "After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care 24 Japan's in-home care helps with.",
+      ja: "退院後の生活支援、認知症ケア、ご家族のためのレスパイトケア、終末期ケアなど、Care24Japanの在宅ケアが役立つさまざまな暮らしの場面をご紹介します。",
+      en: "After hospital discharge, dementia care, respite for family caregivers, and end-of-life support — situations Care24Japan's in-home care helps with.",
     },
   },
   privacy: {

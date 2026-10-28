@@ -42,7 +42,7 @@
  *
  *   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
  *
- *   'Pricing for users - Care 24 Japan' !== 'Pricing for users | Care 24 Japan'
+ *   'Pricing for users - Care24Japan' !== 'Pricing for users | Care24Japan'
  *
  * The hand-typed change was reverted immediately after capturing the
  * AssertionError above — this file never ships that regression, it only
@@ -71,7 +71,7 @@ async function main() {
     TITLE_BRAND_SEPARATOR,
   } = (await import(pageMetadataPath)) as typeof PageMetadataModule;
 
-  const BRAND = "Care 24 Japan";
+  const BRAND = "Care24Japan";
 
   // ---------------------------------------------------------------------
   // TITLE_BRAND_SEPARATOR: the one string both sides read.
@@ -115,11 +115,11 @@ async function main() {
 
   // ---------------------------------------------------------------------
   // Brand-already-in-title routes (CMS audit 0820, ST-U2 Tugas 2): 4 legal
-  // pages' Atlas `seo.title` already carries "Care24Japan"/"Care 24 Japan"
+  // pages' Atlas `seo.title` already carries "Care24Japan"
   // (the client's legally-reviewed document name — see `care 24
-  // update.xlsx`), so letting `title.template` append the brand a THIRD
-  // time (it's spelled two different ways already) would render two
-  // spellings of the brand side by side in the browser tab. `titleContainsBrand`
+  // update.xlsx`), so letting `title.template` append the brand again
+  // would render it twice side by side in the browser tab (possibly
+  // spelled with different spacing). `titleContainsBrand`
   // detects this from the resolved title itself — never a hardcoded route
   // list — and `buildPageMetadataFields` renders those titles as
   // `title.absolute`, which `generate-metadata.md`'s own "absolute" section

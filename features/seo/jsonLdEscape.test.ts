@@ -79,7 +79,7 @@ async function main() {
   test("ordinary ASCII content with no special characters is unaffected", () => {
     const payload = {
       "@type": "LocalBusiness",
-      name: "Care 24 Japan",
+      name: "Care24Japan",
       telephone: "0120-000-000",
     };
     const out = escapeJsonForScript(payload);

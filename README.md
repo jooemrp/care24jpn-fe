@@ -1,6 +1,6 @@
-# Care 24 Japan — Frontend
+# Care24Japan — Frontend
 
-The marketing/informational site for Care 24 Japan, built with Next.js (App Router), React 19, TypeScript, and Tailwind CSS 4. All page content is served from Atlas CMS.
+The marketing/informational site for Care24Japan, built with Next.js (App Router), React 19, TypeScript, and Tailwind CSS 4. All page content is served from Atlas CMS.
 
 ## Prerequisites
 

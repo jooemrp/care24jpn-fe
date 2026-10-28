@@ -92,7 +92,7 @@ async function main() {
   const { buildOrganizationJsonLd } = (await import(organizationPath)) as typeof OrganizationModule;
 
   const baseInput = {
-    brandName: "Care 24 Japan",
+    brandName: "Care24Japan",
     telephone: "0120-000-000",
     logoUrl: "https://cdn.example.com/logo.png",
     siteUrl: "https://care24jpn.vercel.app",
@@ -349,7 +349,7 @@ async function main() {
 
   test("name, url and telephone are exactly the caller-supplied values", () => {
     const result = buildOrganizationJsonLd({ ...baseInput, companyRows: COMPANY_ROWS_A });
-    assert.equal(result.name, "Care 24 Japan");
+    assert.equal(result.name, "Care24Japan");
     assert.equal(result.url, "https://care24jpn.vercel.app");
     assert.equal(result.telephone, "0120-000-000");
     assert.equal(result["@context"], "https://schema.org");

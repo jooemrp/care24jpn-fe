@@ -496,12 +496,12 @@ async function main(): Promise<void> {
   // is not written by a script of its own.
   const og = ogImageForSlug(pageSlug);
   const seo = {
-    title: "Care 24 Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
+    title: "Care24Japan — ご自宅で、心安らぐ24時間の在宅ケアを",
     ...(og ? { og_image: og.ja } : {}),
   };
   const seoTranslations = {
     en: {
-      title: "Care 24 Japan — Premium 24-hour in-home care",
+      title: "Care24Japan — Premium 24-hour in-home care",
       ...(og ? { og_image: og.en } : {}),
     },
   };
