@@ -1,8 +1,8 @@
 import "server-only";
 
-import { fetchPublicPage } from "./bff-core";
+import { fetchPublicEntries, fetchPublicPage } from "./bff-core";
 import type { ApiResult } from "./api";
-import type { RawPageResponse } from "@/features/cms/types";
+import type { RawEntry, RawPageResponse } from "@/features/cms/types";
 
 /**
  * Next.js inlines `process.env.FOO` at build time. Copying `process.env`
@@ -26,4 +26,9 @@ function atlasDeliveryEnv(): { baseUrl: string | undefined; apiKey: string | und
  */
 export async function getPublicPage(slug: string): Promise<ApiResult<RawPageResponse>> {
   return fetchPublicPage(slug, atlasDeliveryEnv());
+}
+
+/** Published entries of a single content type, with locale resolved by Atlas. */
+export async function getPublicEntries(type: string, locale: string): Promise<ApiResult<RawEntry[]>> {
+  return fetchPublicEntries(type, locale, atlasDeliveryEnv());
 }

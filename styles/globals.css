@@ -304,3 +304,221 @@ h4 {
     animation: none !important;
   }
 }
+
+/* ------------------------------------------------------------------
+   Articles — long-form reading.
+
+   `.article-prose` is the reading column. Its size is driven by one
+   variable (`--reader-scale`) that the reader's text-size control flips via
+   `data-size` on an ancestor, so every measure in the column (type, rhythm,
+   list markers) scales together. Headings carry a running section number
+   from a CSS counter, so the numerals can never drift from the content.
+   ------------------------------------------------------------------ */
+.article-reader {
+  --reader-scale: 1;
+}
+.article-reader[data-size="s"] {
+  --reader-scale: 0.93;
+}
+.article-reader[data-size="l"] {
+  --reader-scale: 1.2;
+}
+
+.article-prose {
+  --ink: color-mix(in oklab, var(--color-heading) 84%, transparent);
+  counter-reset: section;
+  font-size: calc(1.0625rem * var(--reader-scale));
+  line-height: 2;
+  color: var(--ink);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+@media (width >= 768px) {
+  .article-prose {
+    font-size: calc(1.125rem * var(--reader-scale));
+  }
+}
+
+.article-prose > p {
+  margin-block: 0 1.5em;
+}
+
+.article-prose > :is(h2, h3) {
+  text-wrap: balance;
+  scroll-margin-top: 9.5rem;
+}
+
+.article-prose > h2 {
+  counter-increment: section;
+  position: relative;
+  margin-block: 3.75rem 1.25rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-border);
+  font-size: calc(1.5rem * var(--reader-scale));
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+}
+.article-prose > h2::before {
+  content: counter(section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+}
+.article-prose > :is(h2, h3):first-child {
+  margin-top: 0;
+}
+
+.article-prose > h3 {
+  margin-block: 2.5rem 0.75rem;
+  font-size: calc(1.1875rem * var(--reader-scale));
+  line-height: 1.5;
+}
+
+/* Emphasis reads as a highlighter stroke rather than just heavier type. */
+.article-prose strong {
+  font-weight: 700;
+  color: var(--color-heading);
+  background: linear-gradient(
+    transparent 62%,
+    color-mix(in oklab, var(--color-accent) 20%, transparent) 62%
+  );
+}
+
+.article-prose :is(ul, ol) {
+  margin-block: 0 1.75em;
+  padding: 0;
+  list-style: none;
+}
+.article-prose :is(ul, ol) > li {
+  position: relative;
+  margin-block: 0.75em;
+}
+.article-prose ul > li {
+  padding-left: 1.5em;
+}
+.article-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.2em;
+  top: calc(1em - 0.1em);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+.article-prose ol {
+  counter-reset: step;
+}
+.article-prose ol > li {
+  counter-increment: step;
+  padding-left: 2.5em;
+}
+.article-prose ol > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  display: grid;
+  place-items: center;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary-deep);
+  font-size: 0.85em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Tables: scroll sideways on tablets+, stack into labelled cards on phones
+   so a four-column comparison is still readable without panning. */
+.article-prose .table-wrap {
+  margin-block: 0.5em 2.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+.article-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375em;
+  line-height: 1.7;
+  text-align: left;
+}
+.article-prose th {
+  padding: 0.75rem 1rem;
+  background: var(--color-primary-light);
+  color: var(--color-heading);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.article-prose td {
+  padding: 0.875rem 1rem;
+  border-top: 1px solid var(--color-border);
+  vertical-align: top;
+  white-space: pre-line;
+}
+@media (width < 40rem) {
+  .article-prose .table-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+  .article-prose table,
+  .article-prose tbody,
+  .article-prose tr,
+  .article-prose td {
+    display: block;
+  }
+  .article-prose thead {
+    display: none;
+  }
+  .article-prose tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .article-prose td {
+    border-top: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+  }
+  .article-prose td:first-child {
+    border-top: 0;
+    background: var(--color-primary-light);
+    font-weight: 700;
+  }
+  .article-prose td[data-label]:not(:first-child)::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8125em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-primary-deep);
+  }
+}
+
+/* The block currently being read aloud. */
+.article-prose .is-reading {
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  box-shadow:
+    -0.6rem 0 0 color-mix(in oklab, var(--color-primary) 10%, transparent),
+    0.6rem 0 0 color-mix(in oklab, var(--color-primary) 10%, transparent);
+  transition: background-color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.article-reader) {
+    scroll-behavior: smooth;
+  }
+}

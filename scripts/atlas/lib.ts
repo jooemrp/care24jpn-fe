@@ -21,6 +21,7 @@ import { resolve } from "node:path";
 import type {
   ManagementClient,
   CreatePageInput,
+  CreateEntryInput,
   UpdatePageInput,
 } from "@latellu/atlas-sdk/management";
 
@@ -239,6 +240,7 @@ export interface ContentTypeFieldInput {
   field_type: AtlasFieldType;
   localizable: boolean;
   required: boolean;
+  filterable?: boolean;
   sort_order: number;
 }
 
@@ -554,7 +556,7 @@ export async function ensureContentType(
  * than cosmetic drift. `label` and `sort_order` are deliberately excluded:
  * both are editable from the dashboard, neither changes the shape of the
  * value a seed script writes or a loader parses. */
-const COMPARED_FIELD_ATTRS = ["field_type", "localizable", "required"] as const;
+const COMPARED_FIELD_ATTRS = ["field_type", "localizable", "required", "filterable"] as const;
 
 /**
  * Fails loudly when a live field disagrees with the spec in `schema.ts` on
@@ -574,7 +576,7 @@ function assertFieldMatches(
   spec: ContentTypeFieldInput,
   live: ContentTypeField,
 ): void {
-  const mismatches = COMPARED_FIELD_ATTRS.filter((attr) => live[attr] !== spec[attr]).map(
+  const mismatches = COMPARED_FIELD_ATTRS.filter((attr) => spec[attr] !== undefined && live[attr] !== spec[attr]).map(
     (attr) => `${attr}: expected ${JSON.stringify(spec[attr])}, found ${JSON.stringify(live[attr])}`,
   );
 
@@ -897,4 +899,60 @@ export async function ensurePublishedPage(
   const published = await publishIfNeeded(client, slug, existing?.status);
 
   return { created: existing === null, published };
+}
+
+// Entry migration operations absent from the management SDK stay here alongside
+// schema REST helpers. Runtime code never imports this module.
+export async function reorderArticleEntries(env: AtlasScriptEnv, order: string[]): Promise<void> {
+  await mgmtFetchVoid(env, "/content-types/article/entries/reorder", { method: "PATCH", body: { order } });
+}
+
+/** Refresh entry data idempotently; apply seed publication state only on creation.
+ * Existing statuses belong to editors. Atlas creates new entries as drafts;
+ * no SEO belongs on an entry. */
+export async function ensureArticleEntry(
+  client: ManagementClient<Record<string, unknown>>,
+  input: CreateEntryInput,
+  published: boolean,
+): Promise<{ id: string; created: boolean }> {
+  const writer = client.entries("article");
+  let entry: unknown;
+  let created = false;
+  try {
+    entry = await writer.update(input.slug, { data: input.data });
+  } catch (error) {
+    if (errorStatus(error) !== 404) throw error;
+    entry = await writer.create(input);
+    created = true;
+  }
+  if (!entry || typeof entry !== "object" || !("id" in entry) || !("status" in entry) || typeof entry.id !== "string" || typeof entry.status !== "string") {
+    throw new Error(`Invalid management response for article entry "${input.slug}".`);
+  }
+  if (created) {
+    if (entry.status !== "draft" && entry.status !== "published") {
+      throw new Error(`New article entry "${input.slug}" has unexpected status "${entry.status}".`);
+    }
+    if (published && entry.status !== "published") await writer.publish(input.slug);
+    if (!published && entry.status === "published") await writer.unpublish(input.slug);
+  }
+  return { id: entry.id, created };
+}
+
+export interface BlockTypeUsage {
+  is_block: boolean;
+  count: number;
+  pages: { slug: string }[];
+}
+
+export async function getBlockTypeUsage(env: AtlasScriptEnv, slug: string): Promise<BlockTypeUsage> {
+  const usage = await mgmtFetchOptional<BlockTypeUsage>(env, `/content-types/${normalizeSlug(slug)}/block-usage`);
+  if (!usage || !usage.is_block || !Number.isInteger(usage.count) || usage.count < 0 || !Array.isArray(usage.pages) || usage.pages.length !== usage.count) {
+    throw new Error(`Invalid block usage response for ${slug}; refusing deletion.`);
+  }
+  return usage;
+}
+
+/** The backend also rejects deleting a type still embedded in any page. */
+export async function deleteContentType(env: AtlasScriptEnv, slug: string): Promise<void> {
+  await mgmtFetchVoid(env, `/content-types/${normalizeSlug(slug)}`, { method: "DELETE" });
 }

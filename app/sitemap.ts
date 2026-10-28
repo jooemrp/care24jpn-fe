@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/constants/site";
 import { seoRoutes, type SeoRouteEntry } from "@/constants/seo-routes";
+import { getArticleEntries } from "@/features/cms/articles";
+import { buildArticleSitemapEntries } from "@/features/articles/sitemap-fields";
 import { getPageMeta } from "@/features/cms/client";
 import { DEFAULT_LANG, LANGS, localizeHref, type Lang } from "@/features/lang/i18n";
 
@@ -57,14 +59,13 @@ async function lastModifiedFor(entry: SeoRouteEntry): Promise<Date | undefined> 
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const withLastModified = await Promise.all(
-    routeEntries.map(async (entry) => ({
-      entry,
-      lastModified: await lastModifiedFor(entry),
-    })),
-  );
-
-  return withLastModified.flatMap(({ entry, lastModified }) => {
+  const [articles, staticEntries] = await Promise.all([
+    getArticleEntries(),
+    Promise.all(routeEntries.map(async (entry) => ({ entry, lastModified: await lastModifiedFor(entry) }))),
+  ]);
+  // Published entries are independent of the hub; timestamps come from entries,
+  // never a retired article page or a fabricated build date.
+  const staticUrls = staticEntries.flatMap(({ entry, lastModified }) => {
     const languages = Object.fromEntries(
       LANGS.map((lang) => [lang, localizedUrl(lang, entry.route)]),
     ) as Record<Lang, string>;
@@ -84,4 +85,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates,
     }));
   });
+  return [
+    ...staticUrls,
+    ...articles.flatMap((entry) => entry.ok ? buildArticleSitemapEntries(entry.article) : []),
+  ];
 }

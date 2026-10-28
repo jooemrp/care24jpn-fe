@@ -302,7 +302,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
         <div className="hidden md:block border-t border-border/70">
           <nav>
             <ul
-              className={`mx-auto flex max-w-6xl flex-nowrap items-center gap-0 overflow-hidden px-4 md:gap-0.5 lg:gap-1 lg:px-6 xl:gap-1.5 ${MOTION} ${
+              className={`mx-auto flex max-w-6xl flex-nowrap items-center gap-0 overflow-x-auto px-4 md:gap-0.5 lg:gap-1 lg:px-6 xl:gap-1.5 ${MOTION} ${
                 condensed ? "h-11" : "h-12"
               }`}
             >
@@ -331,7 +331,7 @@ export default function Navbar({ lang, site }: { lang: Lang; site: SiteContent }
 
         {/* Mobile menu */}
         {open && (
-          <div className="md:hidden border-t border-border bg-surface">
+          <div className="md:hidden max-h-[calc(100dvh-81px)] overflow-y-auto border-t border-border bg-surface">
             <nav>
               <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
                 {site.nav.map((item) => {

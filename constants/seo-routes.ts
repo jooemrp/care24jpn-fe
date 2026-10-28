@@ -14,6 +14,7 @@ type RuntimeSeoRoute = {
   titleFrom?: "legal-heading";
 };
 
+// Dynamic article detail routes are read from published entries, not page SEO.
 export const seoRoutes = {
   home: { route: "/", atlasSlug: "home" },
   pricing: { route: "/pricing", atlasSlug: "pricing" },
@@ -56,6 +57,7 @@ export const seoRoutes = {
     atlasSlug: "legal-cancellation-policy",
     titleFrom: "legal-heading",
   },
+  articles: { route: "/helpful-information", atlasSlug: "articles" },
   faq: { route: "/faq", atlasSlug: "faq" },
   contact: { route: "/contact", atlasSlug: "contact" },
 } satisfies Record<string, RuntimeSeoRoute>;
