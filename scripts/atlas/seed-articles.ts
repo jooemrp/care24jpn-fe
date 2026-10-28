@@ -14,6 +14,8 @@ import {
   createScriptManagementClient,
   ensurePublishedPage,
   ensureArticleEntry,
+  getArticleEntry,
+  type ArticleEntryDetail,
   reorderArticleEntries,
   getContentType,
   loadEnv,
@@ -102,12 +104,14 @@ const split = (bi: Record<string, Bi>) => ({
 export async function seedArticleEntries(
   client: ManagementClient<Record<string, unknown>>,
   reorder: (ids: string[]) => Promise<void>,
+  readEntry: (slug: string) => Promise<ArticleEntryDetail | null>,
 ): Promise<void> {
   const ids: string[] = [];
   for (const article of articles) {
     const result = await ensureArticleEntry(client, {
       slug: article.slug,
-      data: {
+      data: { cta_href: article.cta.href },
+      translations: { ja: { data: {
         title: article.title,
         category: article.category,
         summary: article.summary,
@@ -115,9 +119,8 @@ export async function seedArticleEntries(
         body: blocksToHtml(article.body),
         cta_body: blocksToHtml(article.cta.body),
         cta_label: article.cta.label,
-        cta_href: article.cta.href,
-      },
-    }, article.slug === "what-insurance-cannot-cover");
+      } } },
+    }, article.slug === "what-insurance-cannot-cover", readEntry);
     ids.push(result.id);
     console.log(`${result.created ? "+" : "="} entry ${article.slug}`);
   }
@@ -148,7 +151,7 @@ async function main(): Promise<void> {
   // The management API has no entry list reader. These eleven upsert IDs are
   // the complete intended collection; Atlas rejects reorder if extra entries
   // exist, rather than silently moving or deleting editor-created content.
-  await seedArticleEntries(client, (ids) => reorderArticleEntries(env, ids));
+  await seedArticleEntries(client, (ids) => reorderArticleEntries(env, ids), (slug) => getArticleEntry(env, slug));
 
   const labels = split(LABELS);
   const hubSeo = (lang: "ja" | "en") => ({

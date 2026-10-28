@@ -907,23 +907,46 @@ export async function reorderArticleEntries(env: AtlasScriptEnv, order: string[]
   await mgmtFetchVoid(env, "/content-types/article/entries/reorder", { method: "PATCH", body: { order } });
 }
 
-/** Refresh entry data idempotently; apply seed publication state only on creation.
- * Existing statuses belong to editors. Atlas creates new entries as drafts;
- * no SEO belongs on an entry. */
+export interface ArticleEntryDetail {
+  entry: { data: string; updated_at: string };
+  translations: { locale: string; data: string }[];
+}
+
+/** Read the complete management detail because updates replace all translations. */
+export async function getArticleEntry(env: AtlasScriptEnv, slug: string): Promise<ArticleEntryDetail | null> {
+  return mgmtFetchOptional<ArticleEntryDetail>(env, `/content-types/article/entries/${encodeURIComponent(slug)}`);
+}
+
+/** Refresh seed-owned fields while preserving editor-owned SEO and translations.
+ * Existing publication statuses belong to editors; new entries start as drafts. */
 export async function ensureArticleEntry(
   client: ManagementClient<Record<string, unknown>>,
-  input: CreateEntryInput,
+  input: CreateEntryInput & { translations: { ja: { data: Record<string, unknown> } } },
   published: boolean,
+  readEntry: (slug: string) => Promise<ArticleEntryDetail | null>,
 ): Promise<{ id: string; created: boolean }> {
   const writer = client.entries("article");
+  const existing = await readEntry(input.slug);
   let entry: unknown;
-  let created = false;
-  try {
-    entry = await writer.update(input.slug, { data: input.data });
-  } catch (error) {
-    if (errorStatus(error) !== 404) throw error;
+  const created = existing === null;
+  if (existing) {
+    const parseData = (value: string): Record<string, unknown> => {
+      const parsed: unknown = JSON.parse(value);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error(`Invalid data for article entry "${input.slug}".`);
+      }
+      return parsed as Record<string, unknown>;
+    };
+    const data = parseData(existing.entry.data);
+    for (const key of Object.keys(input.translations.ja.data)) delete data[key];
+    const translations: Record<string, { data: Record<string, unknown> }> = {};
+    for (const row of existing.translations) translations[row.locale] = { data: parseData(row.data) };
+    translations.ja = { data: { ...translations.ja?.data, ...input.translations.ja.data } };
+    entry = await writer.update(input.slug, {
+      data: { ...data, ...input.data }, translations, updatedAt: existing.entry.updated_at,
+    });
+  } else {
     entry = await writer.create(input);
-    created = true;
   }
   if (!entry || typeof entry !== "object" || !("id" in entry) || !("status" in entry) || typeof entry.id !== "string" || typeof entry.status !== "string") {
     throw new Error(`Invalid management response for article entry "${input.slug}".`);

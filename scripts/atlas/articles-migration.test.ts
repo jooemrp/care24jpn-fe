@@ -8,34 +8,35 @@ import { seedArticleEntries } from "./seed-articles";
 import type { ManagementClient } from "@latellu/atlas-sdk/management";
 
 test("seed creates eleven entries in seed order and publishes only the launch entry", async () => {
-  const created: { slug: string; data: Record<string, unknown> }[] = [];
+  const created: { slug: string; data: Record<string, unknown>; translations: { ja: { data: Record<string, unknown> } } }[] = [];
   const published: string[] = [];
   const writer = {
     update: async () => { throw { status: 404 }; },
-    create: async (input: { slug: string; data: Record<string, unknown> }) => { created.push(input); return { id: input.slug, status: "draft" }; },
+    create: async (input: typeof created[number]) => { created.push(input); return { id: input.slug, status: "draft" }; },
     publish: async (slug: string) => { published.push(slug); return {}; },
   };
   const client = { entries: (type: string) => { assert.equal(type, "article"); return writer; } } as unknown as ManagementClient<Record<string, unknown>>;
   const orders: string[][] = [];
-  await seedArticleEntries(client, async (ids) => { orders.push(ids); });
+  await seedArticleEntries(client, async (ids) => { orders.push(ids); }, async () => null);
   const seed = JSON.parse(readFileSync(new URL("./articles.seed.json", import.meta.url), "utf8")) as { slug: string }[];
   assert.equal(created.length, 11);
   assert.deepEqual(created.map((item) => item.slug), seed.map((item) => item.slug));
   assert.deepEqual(orders, [seed.map((item) => item.slug)]);
   assert.deepEqual(published, ["what-insurance-cannot-cover"]);
-  assert.match(String(created[0].data.body), /<p>/);
-  assert.match(String(created[0].data.cta_body), /<h2>/);
-  assert.equal("seo" in created[0], false);
+  assert.match(String(created[0].translations.ja.data.body), /<p>/);
+  assert.match(String(created[0].translations.ja.data.cta_body), /<h2>/);
+  assert.deepEqual(Object.keys(created[0].data), ["cta_href"]);
+  assert.deepEqual(Object.keys(created[0].translations.ja.data), ["title", "category", "summary", "lead", "body", "cta_body", "cta_label"]);
 });
 
 for (const status of ["draft", "published", "scheduled", "archived"]) {
   for (const published of [false, true]) {
     test(`existing ${status} entry keeps its status when seed publication preference is ${published}`, async () => {
-      const refreshed: { slug: string; data: Record<string, unknown> }[] = [];
+      const refreshed: unknown[] = [];
       const statusChanges: string[] = [];
       const writer = {
-        update: async (slug: string, input: { data: Record<string, unknown> }) => {
-          refreshed.push({ slug, data: input.data });
+        update: async (slug: string, input: unknown) => {
+          refreshed.push({ slug, input });
           return { id: "existing-id", status };
         },
         create: async () => { throw new Error("must not duplicate an existing entry"); },
@@ -43,10 +44,12 @@ for (const status of ["draft", "published", "scheduled", "archived"]) {
         unpublish: async () => { statusChanges.push("unpublish"); return {}; },
       };
       const client = { entries: () => writer } as unknown as ManagementClient<Record<string, unknown>>;
-      const data = { title: "Refreshed seed title" };
-      const result = await ensureArticleEntry(client, { slug: "demo", data }, published);
+      const data = { cta_href: "/contact" };
+      const translations = { ja: { data: { title: "Refreshed seed title" } } };
+      const existing = { entry: { data: JSON.stringify({ og_image: "image-id", title: "old" }), updated_at: "2026-01-01T00:00:00Z" }, translations: [{ locale: "ja", data: JSON.stringify({ title: "old", seo_title: "Editor SEO", seo_description: "Description" }) }, { locale: "en", data: JSON.stringify({ title: "English" }) }] };
+      const result = await ensureArticleEntry(client, { slug: "demo", data, translations }, published, async () => existing);
       assert.deepEqual(result, { id: "existing-id", created: false });
-      assert.deepEqual(refreshed, [{ slug: "demo", data }]);
+      assert.deepEqual(refreshed, [{ slug: "demo", input: { data: { og_image: "image-id", cta_href: "/contact" }, translations: { ja: { data: { title: "Refreshed seed title", seo_title: "Editor SEO", seo_description: "Description" } }, en: { data: { title: "English" } } }, updatedAt: existing.entry.updated_at } }]);
       assert.deepEqual(statusChanges, []);
     });
   }
@@ -65,7 +68,7 @@ test("re-running the seed refreshes all existing entries without changing editor
   };
   const client = { entries: () => writer } as unknown as ManagementClient<Record<string, unknown>>;
   const orders: string[][] = [];
-  await seedArticleEntries(client, async (ids) => { orders.push(ids); });
+  await seedArticleEntries(client, async (ids) => { orders.push(ids); }, async () => ({ entry: { data: "{}", updated_at: "2026-01-01T00:00:00Z" }, translations: [] }));
   const seed = JSON.parse(readFileSync(new URL("./articles.seed.json", import.meta.url), "utf8")) as { slug: string }[];
   assert.deepEqual(refreshed, seed.map((item) => item.slug));
   assert.deepEqual(orders, [refreshed]);
@@ -122,7 +125,7 @@ test("article schema is regular, orderable, filterable by category and contains 
   assert.deepEqual(
     type.fields.filter((field) => field.required && field.localizable).map((field) => field.name),
     [],
-    "Base-data seeding must not require locale translation overlays",
+    "Optional fields allow incomplete entries to be diagnosed by the loader",
   );
   assert.equal(type.fields.find((field) => field.name === "category")?.filterable, true);
   assert.ok(type.fields.filter((field) => !["cta_href", "og_image"].includes(field.name)).every((field) => field.localizable));

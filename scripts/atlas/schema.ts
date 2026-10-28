@@ -547,8 +547,7 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
     name: "Article",
     is_block: false,
     orderable: true,
-    // Required localizable fields demand a translations row in Atlas. Keep
-    // base-data article content free of overlays; the loader diagnoses gaps.
+    // Fields remain optional so the loader can diagnose incomplete entries.
     fields: [
       { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "category", label: "Category", field_type: "text", localizable: true, required: false, filterable: true, sort_order: 1 },
