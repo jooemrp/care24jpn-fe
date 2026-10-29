@@ -46,6 +46,7 @@ export const nav: { href: string; label: Bilingual; shortLabel?: Bilingual }[] =
     label: { ja: "ご利用料金", en: "Usage Fees" },
     shortLabel: { ja: "料金", en: "Fees" },
   },
+  { href: "/helpful-information", label: { ja: "お役立ち情報", en: "Helpful Information" } },
   { href: "/faq", label: { ja: "よくあるご質問", en: "FAQ" } },
   { href: "/contact", label: { ja: "お問い合わせ", en: "Contact Us" } },
 ];

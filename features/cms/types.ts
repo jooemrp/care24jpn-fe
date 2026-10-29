@@ -258,3 +258,17 @@ export type MergedBlockData<T> = {
 
 /** `MergedBlockData` for a given content-type slug — convenience alias. */
 export type MergedBlockDataFor<K extends CmsBlockTypeId> = MergedBlockData<AtlasContentTypes[K]>;
+
+/** Public entries contain a single server-resolved locale blob, never overlays.
+ * Keep data unknown until the content mapper can report its precise field path. */
+export interface RawEntry {
+  id: string;
+  slug: string;
+  status: string;
+  position: number;
+  data: unknown;
+  updated_at?: string;
+  published_at?: string | null;
+  /** Public list delivery resolves locale data and exposes this per entry. */
+  is_fallback?: boolean;
+}

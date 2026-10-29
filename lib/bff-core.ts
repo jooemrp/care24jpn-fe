@@ -1,5 +1,5 @@
 import { apiFailure, apiSuccess, type ApiFieldErrors, type ApiResult } from "./api";
-import type { RawPageResponse } from "../features/cms/types";
+import type { RawEntry, RawPageResponse } from "../features/cms/types";
 
 export const DEFAULT_BFF_TIMEOUT_MS = 8_000;
 const MAX_TRANSIENT_ATTEMPTS = 2;
@@ -93,25 +93,18 @@ function isRawPageResponse(value: unknown): value is RawPageResponse {
   return isRecord(value) && Array.isArray(value.blocks);
 }
 
-function pageUrl(baseUrl: string, slug: string): string {
-  return `${baseUrl.replace(/\/+$/, "")}/api/v1/public/pages/${encodeURIComponent(slug)}`;
-}
-
-/**
- * Calls the one public CMS resource this app needs.
- *
- * This is intentionally a page-specific adapter, not a pass-through proxy:
- * callers cannot provide an arbitrary upstream path or request method.
- */
-async function fetchPublicPageOnce(
-  slug: string,
+/** Shared read-only delivery policy; resource paths are built by adapters below. */
+async function fetchDeliveryOnce<T>(
+  path: string,
+  validate: (value: unknown) => value is T,
+  resource: string,
   {
     baseUrl,
     apiKey,
     timeoutMs = DEFAULT_BFF_TIMEOUT_MS,
     fetchImpl = fetch,
   }: BffRequestOptions,
-): Promise<ApiResult<RawPageResponse>> {
+): Promise<ApiResult<T>> {
   const normalizedBaseUrl = baseUrl?.trim();
   const normalizedApiKey = apiKey?.trim();
   if (!normalizedBaseUrl || !normalizedApiKey) {
@@ -129,7 +122,7 @@ async function fetchPublicPageOnce(
   let response: Response;
   let bodyText: string;
   try {
-    response = await fetchImpl(pageUrl(normalizedBaseUrl, slug), {
+    response = await fetchImpl(`${normalizedBaseUrl.replace(/\/+$/, "")}${path}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -175,9 +168,9 @@ async function fetchPublicPageOnce(
   }
 
   const traceId = traceIdFrom(response, body);
-  if (!isRawPageResponse(body.data)) {
+  if (!validate(body.data)) {
     return invalidResponse(
-      "The CMS returned a successful response with an invalid page payload.",
+      `The CMS returned a successful response with an invalid ${resource} payload.`,
       traceId,
     );
   }
@@ -190,12 +183,14 @@ async function fetchPublicPageOnce(
  * every successful render still comes from the current Atlas response, and a
  * second failure remains a structured CMS error for the caller to display.
  */
-export async function fetchPublicPage(
-  slug: string,
+async function fetchDelivery<T>(
+  path: string,
+  validate: (value: unknown) => value is T,
+  resource: string,
   options: BffRequestOptions,
-): Promise<ApiResult<RawPageResponse>> {
+): Promise<ApiResult<T>> {
   for (let attempt = 1; attempt <= MAX_TRANSIENT_ATTEMPTS; attempt++) {
-    const result = await fetchPublicPageOnce(slug, options);
+    const result = await fetchDeliveryOnce(path, validate, resource, options);
     if (result.success) return result;
     if (
       attempt === MAX_TRANSIENT_ATTEMPTS ||
@@ -212,4 +207,43 @@ export async function fetchPublicPage(
     message: "The CMS service could not be reached.",
     status: 502,
   });
+}
+
+export async function fetchPublicPage(
+  slug: string,
+  options: BffRequestOptions,
+): Promise<ApiResult<RawPageResponse>> {
+  return fetchDelivery(`/api/v1/public/pages/${encodeURIComponent(slug)}`, isRawPageResponse, "page", options);
+}
+
+function isRawEntries(value: unknown): value is RawEntry[] {
+  return Array.isArray(value) && value.every((entry) =>
+    isRecord(entry) && typeof entry.id === "string" &&
+    typeof entry.slug === "string" && entry.slug.trim() !== "" &&
+    !/[\s/?#]/.test(entry.slug) && typeof entry.status === "string" &&
+    typeof entry.position === "number" && Number.isFinite(entry.position),
+  );
+}
+
+/** Only typed collections are exposed: /entries/:slug is not type-scoped.
+ * Atlas caps limit at 100. Keep paging until a short page, so publication of
+ * later entries never requires a code change or a new hardcoded slug list. */
+export async function fetchPublicEntries(
+  type: string,
+  locale: string,
+  options: BffRequestOptions,
+): Promise<ApiResult<RawEntry[]>> {
+  const entries: RawEntry[] = [];
+  const seen = new Set<string>();
+  for (let page = 1; ; page++) {
+    const query = new URLSearchParams({ type, locale, limit: "100", sort: "position:asc", page: String(page) });
+    const result = await fetchDelivery(`/api/v1/public/entries?${query}`, isRawEntries, "entries", options);
+    if (!result.success) return result;
+    for (const entry of result.data) {
+      if (seen.has(entry.slug)) return invalidResponse("The CMS entries list repeated an entry across pages.", result.traceId);
+      seen.add(entry.slug);
+      entries.push(entry);
+    }
+    if (result.data.length < 100) return apiSuccess(entries, result.traceId);
+  }
 }

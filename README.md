@@ -36,7 +36,7 @@ Two gates fail the build on purpose rather than shipping a silently-broken site:
 - [next.config.ts](next.config.ts) throws when `ATLAS_BASE_URL` or `ATLAS_API_KEY` is missing **on Vercel** (set both for Production and Preview).
 - [constants/site.ts](constants/site.ts) throws when `NEXT_PUBLIC_SITE_URL` is missing in a production build, so canonical URLs can never fall back to whatever host the build ran on.
 
-Note that `.env.example` ships a working Vercel preview URL for `NEXT_PUBLIC_SITE_URL`. Because `cp` copies it verbatim, production **must** override it in the Vercel dashboard once the final domain is decided.
+The production domain is `https://www.care24.jp`. Set `NEXT_PUBLIC_SITE_URL=https://www.care24.jp` in the Vercel project environment; `.env.example` is only a local configuration example.
 
 ## Scripts
 

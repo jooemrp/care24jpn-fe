@@ -1,5 +1,5 @@
 /**
- * Creates all CMS block content types (and their fields) on the live
+ * Creates CMS content types (and their fields) on the live
  * Atlas workspace. This file IS the specification — every block type and
  * field below is the single authoritative source the seed-*.ts scripts write
  * against and the features/cms/*.ts loaders read back.
@@ -26,6 +26,7 @@ interface BlockFieldSpec {
   field_type: AtlasFieldType;
   localizable: boolean;
   required: boolean;
+  filterable?: boolean;
   sort_order: number;
 }
 
@@ -33,10 +34,11 @@ interface BlockTypeSpec {
   slug: string;
   name: string;
   is_block: boolean;
+  orderable?: boolean;
   fields: BlockFieldSpec[];
 }
 
-const BLOCK_TYPES: BlockTypeSpec[] = [
+export const CONTENT_TYPES: BlockTypeSpec[] = [
   {
     slug: "page_hero",
     name: "Page Hero",
@@ -539,6 +541,78 @@ const BLOCK_TYPES: BlockTypeSpec[] = [
       { name: "body", label: "Body", field_type: "richtext", localizable: true, required: false, sort_order: 1 },
     ],
   },
+  // --- Articles: dynamic content uses entries; only hub UI remains in Pages. ---
+  {
+    slug: "article",
+    name: "Article",
+    is_block: false,
+    orderable: true,
+    // Fields remain optional so the loader can diagnose incomplete entries.
+    fields: [
+      { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 0 },
+      { name: "category", label: "Category", field_type: "text", localizable: true, required: false, filterable: true, sort_order: 1 },
+      { name: "summary", label: "Summary (card + SEO excerpt)", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
+      { name: "lead", label: "Lead paragraphs (blank line between paragraphs)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "body", label: "Body", field_type: "richtext", localizable: true, required: false, sort_order: 4 },
+      { name: "cta_body", label: "CTA body", field_type: "richtext", localizable: true, required: false, sort_order: 5 },
+      { name: "cta_label", label: "CTA label", field_type: "text", localizable: true, required: false, sort_order: 6 },
+      { name: "cta_href", label: "CTA href", field_type: "text", localizable: false, required: false, sort_order: 7 },
+      { name: "seo_title", label: "SEO title (optional)", field_type: "text", localizable: true, required: false, sort_order: 8 },
+      { name: "seo_description", label: "SEO description (optional)", field_type: "textarea", localizable: true, required: false, sort_order: 9 },
+      { name: "og_image", label: "OG image (optional)", field_type: "image", localizable: false, required: false, sort_order: 10 },
+    ],
+  },
+  {
+    slug: "article_ui_labels",
+    name: "Article — UI labels",
+    is_block: true,
+    fields: [
+      ...[
+        ["all_categories", "All-categories chip"],
+        ["search_label", "Search field label"],
+        ["search_placeholder", "Search placeholder"],
+        ["result_count", "Result count ({count})"],
+        ["no_results", "No-results message"],
+        ["reset_filters", "Reset filters"],
+        ["featured_badge", "Featured badge"],
+        ["read_more", "Read-more label"],
+        ["reading_time", "Reading time ({minutes})"],
+        ["outline_heading", "Outline heading"],
+        ["toc_title", "Contents title"],
+        ["toc_open", "Open contents"],
+        ["toc_close", "Close contents"],
+        ["progress_label", "Progress label"],
+        ["time_left", "Time left ({minutes})"],
+        ["finished", "Finished"],
+        ["reader_tools", "Reader tools label"],
+        ["text_size", "Text size"],
+        ["size_small", "Size small"],
+        ["size_medium", "Size medium"],
+        ["size_large", "Size large"],
+        ["listen_start", "Listen"],
+        ["listen_pause", "Pause"],
+        ["listen_resume", "Resume"],
+        ["listen_stop", "Stop"],
+        ["listen_speed", "Speed"],
+        ["listen_unsupported", "Listening unsupported"],
+        ["copy_link", "Copy link"],
+        ["link_copied", "Link copied"],
+        ["published_on", "Published on"],
+        ["back_to_list", "Back to list"],
+        ["prev_article", "Previous article"],
+        ["next_article", "Next article"],
+        ["related_heading", "Related heading"],
+        ["breadcrumb_home", "Breadcrumb home"],
+      ].map(([name, label], sort_order): BlockFieldSpec => ({
+        name,
+        label,
+        field_type: "text",
+        localizable: true,
+        required: false,
+        sort_order,
+      })),
+    ],
+  },
 ];
 
 async function main(): Promise<void> {
@@ -549,13 +623,17 @@ async function main(): Promise<void> {
   let fieldsCreated = 0;
   let fieldsSkipped = 0;
 
-  for (const spec of BLOCK_TYPES) {
+  for (const spec of CONTENT_TYPES) {
     const { value: contentType, created } = await ensureContentType(env, {
       name: spec.name,
       slug: spec.slug,
       is_block: spec.is_block,
-      orderable: false,
+      orderable: spec.orderable ?? false,
     });
+
+    if (contentType.is_block !== spec.is_block || contentType.orderable !== (spec.orderable ?? false)) {
+      throw new Error(`Schema drift on ${spec.slug}: expected is_block=${spec.is_block}, orderable=${spec.orderable ?? false}. Migrate the content type before seeding.`);
+    }
 
     if (created) {
       typesCreated += 1;
@@ -587,11 +665,11 @@ async function main(): Promise<void> {
 
   console.log("");
   console.log("Summary");
-  console.log(`  content types: ${typesCreated} created, ${typesSkipped} skipped (${BLOCK_TYPES.length} total)`);
+  console.log(`  content types: ${typesCreated} created, ${typesSkipped} skipped (${CONTENT_TYPES.length} total)`);
   console.log(`  fields:        ${fieldsCreated} created, ${fieldsSkipped} skipped`);
 }
 
-main().catch((error) => {
+if (require.main === module) main().catch((error) => {
   console.error("[atlas:schema] failed:", error);
   process.exitCode = 1;
 });

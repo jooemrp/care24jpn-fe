@@ -431,8 +431,64 @@ export interface PageHero {
   cta_href?: string;
 }
 
+/** Article — UI labels (content type: "article-ui-labels") */
+export interface ArticleUiLabels {
+  all_categories?: string; // localizable
+  search_label?: string; // localizable
+  search_placeholder?: string; // localizable
+  result_count?: string; // localizable
+  no_results?: string; // localizable
+  reset_filters?: string; // localizable
+  featured_badge?: string; // localizable
+  read_more?: string; // localizable
+  reading_time?: string; // localizable
+  outline_heading?: string; // localizable
+  toc_title?: string; // localizable
+  toc_open?: string; // localizable
+  toc_close?: string; // localizable
+  progress_label?: string; // localizable
+  time_left?: string; // localizable
+  finished?: string; // localizable
+  reader_tools?: string; // localizable
+  text_size?: string; // localizable
+  size_small?: string; // localizable
+  size_medium?: string; // localizable
+  size_large?: string; // localizable
+  listen_start?: string; // localizable
+  listen_pause?: string; // localizable
+  listen_resume?: string; // localizable
+  listen_stop?: string; // localizable
+  listen_speed?: string; // localizable
+  listen_unsupported?: string; // localizable
+  copy_link?: string; // localizable
+  link_copied?: string; // localizable
+  published_on?: string; // localizable
+  back_to_list?: string; // localizable
+  prev_article?: string; // localizable
+  next_article?: string; // localizable
+  related_heading?: string; // localizable
+  breadcrumb_home?: string; // localizable
+}
+
+/** Article (regular entry content type: "article"). Maintained by hand. */
+export interface Article {
+  title?: string; // localizable
+  category?: string; // localizable, filterable
+  summary?: string; // localizable
+  lead?: string; // localizable
+  body?: string; // localizable
+  cta_body?: string; // localizable
+  cta_label?: string; // localizable
+  cta_href?: string;
+  seo_title?: string; // localizable
+  seo_description?: string; // localizable
+  og_image?: string; // image media ID; public delivery expands it to a URL
+}
+
 /** Maps each content-type slug to its entry interface. */
 export interface AtlasContentTypes {
+  "article-ui-labels": ArticleUiLabels;
+  article: Article;
   "site-global-error-labels": SiteGlobalErrorLabels;
   "contact-category": ContactCategory;
   "contact-form-fields": ContactFormFields;

@@ -21,6 +21,7 @@ import { resolve } from "node:path";
 import type {
   ManagementClient,
   CreatePageInput,
+  CreateEntryInput,
   UpdatePageInput,
 } from "@latellu/atlas-sdk/management";
 
@@ -239,6 +240,7 @@ export interface ContentTypeFieldInput {
   field_type: AtlasFieldType;
   localizable: boolean;
   required: boolean;
+  filterable?: boolean;
   sort_order: number;
 }
 
@@ -554,7 +556,7 @@ export async function ensureContentType(
  * than cosmetic drift. `label` and `sort_order` are deliberately excluded:
  * both are editable from the dashboard, neither changes the shape of the
  * value a seed script writes or a loader parses. */
-const COMPARED_FIELD_ATTRS = ["field_type", "localizable", "required"] as const;
+const COMPARED_FIELD_ATTRS = ["field_type", "localizable", "required", "filterable"] as const;
 
 /**
  * Fails loudly when a live field disagrees with the spec in `schema.ts` on
@@ -574,7 +576,7 @@ function assertFieldMatches(
   spec: ContentTypeFieldInput,
   live: ContentTypeField,
 ): void {
-  const mismatches = COMPARED_FIELD_ATTRS.filter((attr) => live[attr] !== spec[attr]).map(
+  const mismatches = COMPARED_FIELD_ATTRS.filter((attr) => spec[attr] !== undefined && live[attr] !== spec[attr]).map(
     (attr) => `${attr}: expected ${JSON.stringify(spec[attr])}, found ${JSON.stringify(live[attr])}`,
   );
 
@@ -897,4 +899,83 @@ export async function ensurePublishedPage(
   const published = await publishIfNeeded(client, slug, existing?.status);
 
   return { created: existing === null, published };
+}
+
+// Entry migration operations absent from the management SDK stay here alongside
+// schema REST helpers. Runtime code never imports this module.
+export async function reorderArticleEntries(env: AtlasScriptEnv, order: string[]): Promise<void> {
+  await mgmtFetchVoid(env, "/content-types/article/entries/reorder", { method: "PATCH", body: { order } });
+}
+
+export interface ArticleEntryDetail {
+  entry: { data: string; updated_at: string };
+  translations: { locale: string; data: string }[];
+}
+
+/** Read the complete management detail because updates replace all translations. */
+export async function getArticleEntry(env: AtlasScriptEnv, slug: string): Promise<ArticleEntryDetail | null> {
+  return mgmtFetchOptional<ArticleEntryDetail>(env, `/content-types/article/entries/${encodeURIComponent(slug)}`);
+}
+
+/** Refresh seed-owned fields while preserving editor-owned SEO and translations.
+ * Existing publication statuses belong to editors; new entries start as drafts. */
+export async function ensureArticleEntry(
+  client: ManagementClient<Record<string, unknown>>,
+  input: CreateEntryInput & { translations: { ja: { data: Record<string, unknown> } } },
+  published: boolean,
+  readEntry: (slug: string) => Promise<ArticleEntryDetail | null>,
+): Promise<{ id: string; created: boolean }> {
+  const writer = client.entries("article");
+  const existing = await readEntry(input.slug);
+  let entry: unknown;
+  const created = existing === null;
+  if (existing) {
+    const parseData = (value: string): Record<string, unknown> => {
+      const parsed: unknown = JSON.parse(value);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error(`Invalid data for article entry "${input.slug}".`);
+      }
+      return parsed as Record<string, unknown>;
+    };
+    const data = parseData(existing.entry.data);
+    for (const key of Object.keys(input.translations.ja.data)) delete data[key];
+    const translations: Record<string, { data: Record<string, unknown> }> = {};
+    for (const row of existing.translations) translations[row.locale] = { data: parseData(row.data) };
+    translations.ja = { data: { ...translations.ja?.data, ...input.translations.ja.data } };
+    entry = await writer.update(input.slug, {
+      data: { ...data, ...input.data }, translations, updatedAt: existing.entry.updated_at,
+    });
+  } else {
+    entry = await writer.create(input);
+  }
+  if (!entry || typeof entry !== "object" || !("id" in entry) || !("status" in entry) || typeof entry.id !== "string" || typeof entry.status !== "string") {
+    throw new Error(`Invalid management response for article entry "${input.slug}".`);
+  }
+  if (created) {
+    if (entry.status !== "draft" && entry.status !== "published") {
+      throw new Error(`New article entry "${input.slug}" has unexpected status "${entry.status}".`);
+    }
+    if (published && entry.status !== "published") await writer.publish(input.slug);
+    if (!published && entry.status === "published") await writer.unpublish(input.slug);
+  }
+  return { id: entry.id, created };
+}
+
+export interface BlockTypeUsage {
+  is_block: boolean;
+  count: number;
+  pages: { slug: string }[];
+}
+
+export async function getBlockTypeUsage(env: AtlasScriptEnv, slug: string): Promise<BlockTypeUsage> {
+  const usage = await mgmtFetchOptional<BlockTypeUsage>(env, `/content-types/${normalizeSlug(slug)}/block-usage`);
+  if (!usage || !usage.is_block || !Number.isInteger(usage.count) || usage.count < 0 || !Array.isArray(usage.pages) || usage.pages.length !== usage.count) {
+    throw new Error(`Invalid block usage response for ${slug}; refusing deletion.`);
+  }
+  return usage;
+}
+
+/** The backend also rejects deleting a type still embedded in any page. */
+export async function deleteContentType(env: AtlasScriptEnv, slug: string): Promise<void> {
+  await mgmtFetchVoid(env, `/content-types/${normalizeSlug(slug)}`, { method: "DELETE" });
 }
