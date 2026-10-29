@@ -87,7 +87,7 @@ export function ArticleBlocks({
       out.push(
         <ListTag key={`l-${i}`}>
           {items.map(({ text, align }, n) => (
-            <li key={n} data-reader-block style={alignStyle(align)}>
+            <li key={n} data-reader-block data-align={align} style={alignStyle(align)}>
               {renderInline(text, `li-${i}-${n}`, lang)}
             </li>
           ))}
@@ -134,7 +134,13 @@ export function ArticleBlocks({
     if (block.type === "h2" || block.type === "h3") {
       const Heading = block.type;
       out.push(
-        <Heading key={`h-${i}`} id={`${idPrefix}-${i}`} data-reader-block style={alignStyle(block.align)}>
+        <Heading
+          key={`h-${i}`}
+          id={`${idPrefix}-${i}`}
+          data-reader-block
+          data-align={block.align}
+          style={alignStyle(block.align)}
+        >
           <PhraseText text={block.text.replace(/\*\*/g, "")} />
         </Heading>,
       );
@@ -143,7 +149,7 @@ export function ArticleBlocks({
     }
 
     out.push(
-      <p key={`p-${i}`} data-reader-block style={alignStyle(block.align)}>
+      <p key={`p-${i}`} data-reader-block data-align={block.align} style={alignStyle(block.align)}>
         {renderInline(block.text, `p-${i}`, lang)}
       </p>,
     );

@@ -89,6 +89,15 @@ body {
   text-wrap: balance;
 }
 
+/* Justified text (set in the CMS editor): inline-block phrases are atomic, so
+   the browser cannot stretch the gaps between them and every line ends
+   ragged. Inline + nowrap still keeps each phrase unbreakable (lines break
+   only at <wbr>) while letting justification spread space across the line. */
+[data-align="justify"] .jp-phrase > span {
+  display: inline;
+  white-space: nowrap;
+}
+
 /* Auto table layout sizes columns from min-content, which `anywhere` would
    shrink to one character (ケアサポ/ーター). In cells a phrase keeps its real
    width; `break-word` still rescues one wider than the whole table. */
