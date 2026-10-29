@@ -51,7 +51,7 @@
  * {@link parseListItems}.
  */
 
-import type { LegalBlock, LegalTableCell } from "@/constants/legal";
+import type { LegalAlign, LegalBlock, LegalTableCell } from "@/constants/legal";
 
 /** Escapes text for use as HTML element content (not attribute content). */
 function escapeHtml(text: string): string {
@@ -197,14 +197,20 @@ export function blocksToHtml(blocks: LegalBlock[]): string {
 
     if (block.type === "li") {
       const kind = block.list;
-      const items: string[] = [];
+      const items: { text: string; align?: LegalAlign }[] = [];
       while (i < blocks.length) {
         const next = blocks[i];
         if (next.type !== "li" || next.list !== kind) break;
-        items.push(next.text);
+        items.push({ text: next.text, align: next.align });
         i++;
       }
-      const itemsHtml = items.map((text) => `<li>${serializeInlineText(text)}</li>`).join("");
+      const itemsHtml = items
+        .map(({ text, align }) =>
+          align
+            ? `<li><p${alignAttr(align)}>${serializeInlineText(text)}</p></li>`
+            : `<li>${serializeInlineText(text)}</li>`,
+        )
+        .join("");
       parts.push(`<${kind}>${itemsHtml}</${kind}>`);
       continue;
     }
@@ -221,12 +227,26 @@ export function blocksToHtml(blocks: LegalBlock[]): string {
     }
 
     // h2 | h3 | p share the same { type, text } shape.
-    parts.push(`<${block.type}>${serializeInlineText(block.text)}</${block.type}>`);
+    parts.push(`<${block.type}${alignAttr(block.align)}>${serializeInlineText(block.text)}</${block.type}>`);
     i++;
   }
 
   return parts.join("\n");
 }
+
+/** `style="text-align: ..."` as the CMS editor writes it, for a block with an alignment. */
+function alignAttr(align: LegalAlign | undefined): string {
+  return align ? ` style="text-align: ${align};"` : "";
+}
+
+/** Alignment a foreign tag's attributes ask for; `left` is the default, so it is not kept. */
+function alignFromAttrs(attrs: string): LegalAlign | undefined {
+  const match = /text-align\s*:\s*(left|center|right|justify)/i.exec(attrs);
+  const value = match?.[1].toLowerCase();
+  return value === "center" || value === "right" || value === "justify" ? value : undefined;
+}
+
+const ALIGN_MARK = /^<p(?: data-align="(center|right|justify)")?>/;
 
 /** Top-level block tags {@link htmlToBlocks} recognizes, checked in this
  * order at each scan position (order doesn't affect matching — a given
@@ -395,6 +415,10 @@ function normalizeForeignHtml(html: string): string {
       if (slash === "" && (lower === "th" || lower === "td")) {
         return `<${lower}${cellSpanAttrs(attrs)}>`;
       }
+      if (slash === "" && HEADING_OR_P_TAGS.has(lower as TopLevelTag)) {
+        const align = alignFromAttrs(attrs);
+        if (align) return `<${lower} data-align="${align}">`;
+      }
       return `<${slash}${lower}>`;
     },
   );
@@ -422,7 +446,9 @@ function cellSpanAttrs(attrs: string): string {
  * editor) are joined with `\n` rather than concatenated with no separator.
  */
 function unwrapParagraphs(html: string): string {
-  return html.replace(/<\/p>\s*<p>/g, "\n").replace(/^<p>|<\/p>$/g, "");
+  return html
+    .replace(/<\/p>\s*<p(?: data-align="\w+")?>/g, "\n")
+    .replace(/^<p(?: data-align="\w+")?>|<\/p>$/g, "");
 }
 
 /**
@@ -591,7 +617,13 @@ function parseListItems(listContent: string, kind: "ul" | "ol", blocks: LegalBlo
     cursor = closeIndex + "</li>".length;
 
     const { ownText, nestedLists } = splitOwnTextAndNestedLists(rawLiContent);
-    blocks.push({ type: "li", list: kind, text: unescapeHtml(unwrapParagraphs(ownText)) });
+    const align = ALIGN_MARK.exec(ownText.trimStart())?.[1] as LegalAlign | undefined;
+    blocks.push({
+      type: "li",
+      list: kind,
+      text: unescapeHtml(unwrapParagraphs(ownText)),
+      ...(align ? { align } : {}),
+    });
     for (const nested of nestedLists) {
       parseListItems(nested.content, kind, blocks);
     }
@@ -626,11 +658,17 @@ export function htmlToBlocks(html: string): LegalBlock[] {
     // `<ul>` doesn't truncate the match at the first `</ul>` (gap 2).
     let bestIndex = -1;
     let bestTag: TopLevelTag | null = null;
+    let bestOpenLength = 0;
+    let bestAlign: LegalAlign | undefined;
     for (const tag of TOP_LEVEL_TAGS) {
-      const index = normalized.indexOf(`<${tag}>`, cursor);
-      if (index !== -1 && (bestIndex === -1 || index < bestIndex)) {
-        bestIndex = index;
+      const open = new RegExp(`<${tag}(?: data-align="(center|right|justify)")?>`, "g");
+      open.lastIndex = cursor;
+      const found = open.exec(normalized);
+      if (found && (bestIndex === -1 || found.index < bestIndex)) {
+        bestIndex = found.index;
         bestTag = tag;
+        bestOpenLength = found[0].length;
+        bestAlign = found[1] as LegalAlign | undefined;
       }
     }
 
@@ -640,13 +678,17 @@ export function htmlToBlocks(html: string): LegalBlock[] {
     }
 
     pushOrphanText(normalized.slice(cursor, bestIndex), blocks);
-    const contentStart = bestIndex + `<${bestTag}>`.length;
+    const contentStart = bestIndex + bestOpenLength;
     const closeIndex = findMatchingClose(normalized, bestTag, contentStart);
     const content = normalized.slice(contentStart, closeIndex);
     cursor = closeIndex + `</${bestTag}>`.length;
 
     if (HEADING_OR_P_TAGS.has(bestTag)) {
-      blocks.push({ type: bestTag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p", text: unescapeHtml(content) });
+      blocks.push({
+        type: bestTag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p",
+        text: unescapeHtml(content),
+        ...(bestAlign ? { align: bestAlign } : {}),
+      });
     } else if (bestTag === "ul" || bestTag === "ol") {
       parseListItems(content, bestTag, blocks);
     } else {

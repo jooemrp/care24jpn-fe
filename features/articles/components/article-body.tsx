@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { PhraseText } from "@/components/PhraseText";
 import Link from "next/link";
-import type { LegalBlock } from "@/constants/legal";
+import type { LegalAlign, LegalBlock } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
 function cellText(cell: string | { text: string }): string {
@@ -49,6 +49,10 @@ function renderInline(text: string, keyPrefix: string, lang: Lang): ReactNode {
   return parts;
 }
 
+/** Alignment chosen in the CMS editor; undefined keeps the stylesheet default. */
+const alignStyle = (align: LegalAlign | undefined): CSSProperties | undefined =>
+  align ? { textAlign: align } : undefined;
+
 /**
  * Renders article blocks. Heading ids use the block index (`sec-<i>`) so the
  * table of contents from `articleToc` always points at the right section.
@@ -72,18 +76,18 @@ export function ArticleBlocks({
 
     if (block.type === "li") {
       const kind = block.list;
-      const items: string[] = [];
+      const items: { text: string; align?: LegalAlign }[] = [];
       while (i < blocks.length) {
         const next = blocks[i];
         if (next.type !== "li" || next.list !== kind) break;
-        items.push(next.text);
+        items.push({ text: next.text, align: next.align });
         i++;
       }
       const ListTag = kind;
       out.push(
         <ListTag key={`l-${i}`}>
-          {items.map((text, n) => (
-            <li key={n} data-reader-block>
+          {items.map(({ text, align }, n) => (
+            <li key={n} data-reader-block style={alignStyle(align)}>
               {renderInline(text, `li-${i}-${n}`, lang)}
             </li>
           ))}
@@ -130,7 +134,7 @@ export function ArticleBlocks({
     if (block.type === "h2" || block.type === "h3") {
       const Heading = block.type;
       out.push(
-        <Heading key={`h-${i}`} id={`${idPrefix}-${i}`} data-reader-block>
+        <Heading key={`h-${i}`} id={`${idPrefix}-${i}`} data-reader-block style={alignStyle(block.align)}>
           <PhraseText text={block.text.replace(/\*\*/g, "")} />
         </Heading>,
       );
@@ -139,7 +143,7 @@ export function ArticleBlocks({
     }
 
     out.push(
-      <p key={`p-${i}`} data-reader-block>
+      <p key={`p-${i}`} data-reader-block style={alignStyle(block.align)}>
         {renderInline(block.text, `p-${i}`, lang)}
       </p>,
     );
