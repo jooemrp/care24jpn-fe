@@ -187,7 +187,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
           {outline.length > 0 && (
             <nav
               aria-label={t(l.outline_heading, lang)}
-              className="mt-10 rounded-3xl border border-border bg-surface p-5 shadow-sm md:p-7"
+              className="mt-10 rounded-3xl border border-border bg-surface p-5 md:p-7"
             >
               <p className="mb-4 text-sm font-bold text-heading">{t(l.outline_heading, lang)}</p>
               <ol className="grid gap-2 sm:grid-cols-2">
@@ -227,7 +227,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
           {ArticleBlocks({ blocks: body, lang })}
         </div>
 
-        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface shadow-sm lg:mx-0">
+        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface lg:mx-0">
           <div lang={contentLang} className="article-prose p-6 text-base md:p-9 md:text-[1.0625rem]">
             {ArticleBlocks({ blocks: article.cta.body[lang], lang, idPrefix: "cta" })}
           </div>
@@ -253,7 +253,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
             {prev ? (
               <Link
                 href={localizeHref(`/helpful-information/${prev.slug}`, lang)}
-                className="group rounded-2xl border border-border bg-surface p-5 transition hover:border-primary hover:shadow-md"
+                className="group rounded-2xl border border-border bg-surface p-5 transition hover:border-primary"
               >
                 <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-muted">
                   <IconArrowLeft size={15} aria-hidden="true" />
@@ -269,7 +269,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
             {next && (
               <Link
                 href={localizeHref(`/helpful-information/${next.slug}`, lang)}
-                className="group rounded-2xl border border-border bg-surface p-5 text-right transition hover:border-primary hover:shadow-md"
+                className="group rounded-2xl border border-border bg-surface p-5 text-right transition hover:border-primary"
               >
                 <span className="flex items-center justify-end gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-muted">
                   {t(l.next_article, lang)}
@@ -291,7 +291,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
             <ul className="grid gap-6 md:grid-cols-3">
               {related.map((item) => (
                 <li key={item.slug} className="flex">
-                  <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                  <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition duration-200 hover:-translate-y-0.5 hover:border-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                     <span lang={contentLang} className="mx-6 mt-6 text-sm font-bold text-primary-deep">
                       {t(item.category, lang)}
                     </span>
