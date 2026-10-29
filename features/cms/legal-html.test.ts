@@ -95,6 +95,25 @@ async function main(): Promise<void> {
     assert.deepEqual(htmlToBlocks('<h2 id="a">Judul</h2>'), [{ type: "h2", text: "Judul" }]);
   });
 
+  test("htmlToBlocks: editor text-align survives on headings, paragraphs and list items", () => {
+    const html =
+      '<h2 style="text-align: justify;">見出し</h2>' +
+      '<p style="text-align: justify;">本文</p>' +
+      '<p style="text-align: center;">中央</p>' +
+      '<p style="text-align: left;">左</p>' +
+      '<ul><li><p style="text-align: justify;"><strong>対象：</strong> 公的保険</p></li><li><p>左のまま</p></li></ul>';
+    const expected = [
+      { type: "h2", text: "見出し", align: "justify" },
+      { type: "p", text: "本文", align: "justify" },
+      { type: "p", text: "中央", align: "center" },
+      { type: "p", text: "左" },
+      { type: "li", list: "ul", text: "**対象：** 公的保険", align: "justify" },
+      { type: "li", list: "ul", text: "左のまま" },
+    ];
+    assert.deepEqual(htmlToBlocks(html), expected);
+    assert.deepEqual(htmlToBlocks(blocksToHtml(htmlToBlocks(html))), expected);
+  });
+
   test("htmlToBlocks: inline <strong> survives as the **bold** marker (st-14 WYSIWYG)", () => {
     // Was: bold stripped to plain text, because LegalDocPage rendered `text`
     // as a plain string. st-14 changed both sides together — LegalDocPage now

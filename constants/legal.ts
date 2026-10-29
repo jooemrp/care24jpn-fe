@@ -67,9 +67,12 @@ import type { Bilingual } from "./copy";
  */
 export type LegalTableCell = string | { text: string; colspan?: number; rowspan?: number };
 
+/** Horizontal alignment set in the CMS editor; absent means the default (left). */
+export type LegalAlign = "center" | "right" | "justify";
+
 export type LegalBlock =
-  | { type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"; text: string }
-  | { type: "li"; list: "ul" | "ol"; text: string }
+  | { type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"; text: string; align?: LegalAlign }
+  | { type: "li"; list: "ul" | "ol"; text: string; align?: LegalAlign }
   | { type: "table"; rows: LegalTableCell[][] };
 
 export type LegalDoc = {
