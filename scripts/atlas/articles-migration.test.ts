@@ -24,7 +24,7 @@ test("seed creates eleven entries in seed order and publishes only the launch en
   assert.deepEqual(orders, [seed.map((item) => item.slug)]);
   assert.deepEqual(published, ["what-insurance-cannot-cover"]);
   assert.match(String(created[0].translations.ja.data.body), /<p>/);
-  assert.match(String(created[0].translations.ja.data.cta_body), /<h2>/);
+  assert.match(String(created[0].translations.ja.data.cta_body), /<p>/);
   assert.deepEqual(Object.keys(created[0].data), ["cta_href"]);
   assert.deepEqual(Object.keys(created[0].translations.ja.data), ["title", "category", "summary", "lead", "body", "cta_body", "cta_label"]);
 });

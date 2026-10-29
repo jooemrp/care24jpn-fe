@@ -21,7 +21,7 @@ import { localizeHref, t, type Lang } from "@/features/lang/i18n";
 import { fillTemplate } from "@/lib/fill-template";
 import { formatDate } from "../format";
 import { ArticleBlocks } from "./article-body";
-import ArticleReader, { type ReaderLabels } from "./article-reader";
+import ArticleReader from "./article-reader";
 import CopyLinkButton from "./copy-link-button";
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
@@ -57,26 +57,6 @@ export default async function ArticleView({ article, lang }: { article: Article;
     ...ok.filter((a) => a.slug !== article.slug && t(a.category, lang) === category),
     ...ok.filter((a) => a.slug !== article.slug && t(a.category, lang) !== category),
   ].slice(0, 3);
-
-  const labels: ReaderLabels = {
-    tocTitle: t(l.toc_title, lang),
-    tocOpen: t(l.toc_open, lang),
-    tocClose: t(l.toc_close, lang),
-    progress: t(l.progress_label, lang),
-    timeLeft: t(l.time_left, lang),
-    finished: t(l.finished, lang),
-    readerTools: t(l.reader_tools, lang),
-    textSize: t(l.text_size, lang),
-    sizeSmall: t(l.size_small, lang),
-    sizeMedium: t(l.size_medium, lang),
-    sizeLarge: t(l.size_large, lang),
-    listenStart: t(l.listen_start, lang),
-    listenPause: t(l.listen_pause, lang),
-    listenResume: t(l.listen_resume, lang),
-    listenStop: t(l.listen_stop, lang),
-    listenSpeed: t(l.listen_speed, lang),
-    listenUnsupported: t(l.listen_unsupported, lang),
-  };
 
   const seo = articleSeoFields(article, meta, lang);
   const seoDiagnostics = [
@@ -190,7 +170,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
               className="mt-10 rounded-3xl border border-border bg-surface p-5 md:p-7"
             >
               <p className="mb-4 text-sm font-bold text-heading">{t(l.outline_heading, lang)}</p>
-              <ol className="grid gap-2 sm:grid-cols-2">
+              <ol className="grid gap-2">
                 {outline.map((item, index) => (
                   <li key={item.id}>
                     <a
@@ -213,21 +193,16 @@ export default async function ArticleView({ article, lang }: { article: Article;
         </div>
       </header>
 
-      <ArticleReader
-        toc={toc}
-        totalMinutes={minutes}
-        labels={labels}
-        speechLang={contentLang === "ja" ? "ja-JP" : "en-US"}
-      >
+      <ArticleReader progressLabel={t(l.progress_label, lang)}>
         <div
           id="article-body"
           lang={contentLang}
-          className="article-prose mx-auto max-w-[40rem] pb-4 pt-6 lg:mx-0"
+          className="article-prose mx-auto max-w-[40rem] pb-4 pt-6"
         >
           {ArticleBlocks({ blocks: body, lang })}
         </div>
 
-        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface lg:mx-0">
+        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface">
           <div lang={contentLang} className="article-prose p-6 text-base md:p-9 md:text-[1.0625rem]">
             {ArticleBlocks({ blocks: article.cta.body[lang], lang, idPrefix: "cta" })}
           </div>
@@ -249,7 +224,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
         </aside>
 
         {(prev || next) && (
-          <nav className="mx-auto mt-12 grid max-w-[40rem] gap-4 sm:grid-cols-2 lg:mx-0">
+          <nav className="mx-auto mt-12 grid max-w-[40rem] gap-4 sm:grid-cols-2">
             {prev ? (
               <Link
                 href={localizeHref(`/helpful-information/${prev.slug}`, lang)}

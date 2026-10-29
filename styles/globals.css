@@ -311,8 +311,7 @@ h4 {
    `.article-prose` is the reading column. Its size is driven by one
    variable (`--reader-scale`) that the reader's text-size control flips via
    `data-size` on an ancestor, so every measure in the column (type, rhythm,
-   list markers) scales together. Headings carry a running section number
-   from a CSS counter, so the numerals can never drift from the content.
+   list markers) scales together.
    ------------------------------------------------------------------ */
 .article-reader {
   --reader-scale: 1;
@@ -326,7 +325,6 @@ h4 {
 
 .article-prose {
   --ink: color-mix(in oklab, var(--color-heading) 84%, transparent);
-  counter-reset: section;
   font-size: calc(1.0625rem * var(--reader-scale));
   line-height: 2;
   color: var(--ink);
@@ -350,7 +348,6 @@ h4 {
 }
 
 .article-prose > h2 {
-  counter-increment: section;
   position: relative;
   margin-block: 3.75rem 1.25rem;
   padding-top: 1.75rem;
@@ -358,16 +355,6 @@ h4 {
   font-size: calc(1.5rem * var(--reader-scale));
   line-height: 1.45;
   letter-spacing: -0.005em;
-}
-.article-prose > h2::before {
-  content: counter(section, decimal-leading-zero);
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-accent);
 }
 .article-prose > :is(h2, h3):first-child {
   margin-top: 0;
