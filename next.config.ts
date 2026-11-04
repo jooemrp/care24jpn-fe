@@ -101,11 +101,14 @@ const nextConfig: NextConfig = {
       "object-src 'none'",
       "frame-ancestors 'none'",
       "form-action 'self'",
-      "img-src 'self' data: blob: https://horizoon.s3.ap-southeast-1.amazonaws.com https://www.googletagmanager.com https://*.google-analytics.com",
+      // CSP cannot wildcard a TLD (`https://www.google.*` is an invalid source
+      // expression), so the Google domains GA4/Ads pixels hit are listed out.
+      "img-src 'self' data: blob: https://horizoon.s3.ap-southeast-1.amazonaws.com https://*.googletagmanager.com https://*.google-analytics.com https://www.google.com https://www.google.co.jp",
       "font-src 'self'",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
-      "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+      "script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://googleads.g.doubleclick.net",
+      "script-src-elem 'self' 'unsafe-inline' https://*.googletagmanager.com https://googleads.g.doubleclick.net",
+      "connect-src 'self' https://*.googletagmanager.com https://analytics.google.com https://*.analytics.google.com https://*.google-analytics.com https://stats.g.doubleclick.net https://ad.doubleclick.net https://*.google.com",
       "frame-src https://www.googletagmanager.com",
     ].join("; ");
 
