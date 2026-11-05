@@ -98,6 +98,15 @@ body {
   white-space: nowrap;
 }
 
+/* Justified article text: a line ending in 。 or 、 looks short because the
+   glyph's right half is empty, so the ink stops ~0.5em before the edge.
+   `halt` (half-width alternates) drops that blank half, so every line ends
+   flush. Chrome has no text-spacing-trim end-of-line trimming, nor
+   hanging-punctuation, so this is the cross-browser route. */
+.article-prose [data-align="justify"] {
+  font-feature-settings: "halt";
+}
+
 /* Auto table layout sizes columns from min-content, which `anywhere` would
    shrink to one character (ケアサポ/ーター). In cells a phrase keeps its real
    width; `break-word` still rescues one wider than the whole table. */
