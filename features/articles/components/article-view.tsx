@@ -156,9 +156,11 @@ export default async function ArticleView({ article, lang }: { article: Article;
             />
           </div>
 
+          {/* `.article-prose` sizes its type from --reader-scale, which only exists
+              inside ArticleReader; the lead sits outside it, so pin the body default. */}
           <div
             lang={contentLang}
-            className="article-prose mt-9 text-[1.0625rem] md:text-lg"
+            className="article-prose mt-9 [--reader-scale:1]"
           >
             {ArticleBlocks({ blocks: article.lead[lang], lang, idPrefix: "lead" })}
           </div>
