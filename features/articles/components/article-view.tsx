@@ -156,18 +156,11 @@ export default async function ArticleView({ article, lang }: { article: Article;
             />
           </div>
 
-          <div lang={contentLang} className="mt-9 space-y-5">
-            {article.lead[lang].map((paragraph, index) => (
-              // The lead is plain text with no CMS alignment, so it follows the
-              // justified article body.
-              <p
-                key={index}
-                data-align="justify"
-                className="text-justify text-[1.0625rem] leading-[1.95] text-heading/85 md:text-lg"
-              >
-                <PhraseText text={paragraph} />
-              </p>
-            ))}
+          <div
+            lang={contentLang}
+            className="article-prose mt-9 text-[1.0625rem] md:text-lg"
+          >
+            {ArticleBlocks({ blocks: article.lead[lang], lang, idPrefix: "lead" })}
           </div>
 
           {outline.length > 0 && (

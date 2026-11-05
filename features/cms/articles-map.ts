@@ -75,7 +75,7 @@ export type Article = {
   title: Bilingual;
   category: Bilingual;
   summary: Bilingual;
-  lead: { ja: string[]; en: string[] };
+  lead: { ja: LegalBlock[]; en: LegalBlock[] };
   body: { ja: LegalBlock[]; en: LegalBlock[] };
   cta: {
     body: { ja: LegalBlock[]; en: LegalBlock[] };
@@ -179,13 +179,6 @@ function entryText(data: Record<string, unknown>, key: string, context: string):
   return { ja: text, en: text };
 }
 
-function paragraphs(value: string): string[] {
-  return value
-    .split(/\n{2,}/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-}
-
 function optionalEntryText(data: Record<string, unknown>, key: string, context: string): string | undefined {
   const value = data[key];
   if (value === undefined || value === null || value === "") return undefined;
@@ -204,7 +197,8 @@ function mapResolvedArticle(entry: RawEntry): Article {
   const lead = text("lead");
   const body = parseBody(text("body").ja, `${context}.body`);
   const ctaBody = parseBody(text("cta_body").ja, `${context}.cta_body`);
-  const parsedLead = { ja: paragraphs(lead.ja), en: paragraphs(lead.en) };
+  const leadBlocks = parseBody(lead.ja, `${context}.lead`);
+  const parsedLead = { ja: leadBlocks, en: leadBlocks };
   const optionalBi = (key: string) => {
     const value = optionalEntryText(data, key, context);
     return value === undefined ? undefined : { ja: value, en: value };
@@ -228,8 +222,8 @@ function mapResolvedArticle(entry: RawEntry): Article {
       href: requiredUrlOrFieldError({ cta_href: typeof data.cta_href === "string" ? data.cta_href : undefined }, "cta_href", context, "article.cta.href"),
     },
     readingMinutes: {
-      ja: estimateReadingMinutes(`${parsedLead.ja.join("\n")}\n${plainText(body)}`, "ja"),
-      en: estimateReadingMinutes(`${parsedLead.en.join("\n")}\n${plainText(body)}`, "en"),
+      ja: estimateReadingMinutes(`${plainText(parsedLead.ja)}\n${plainText(body)}`, "ja"),
+      en: estimateReadingMinutes(`${plainText(parsedLead.en)}\n${plainText(body)}`, "en"),
     },
   };
 }
@@ -247,7 +241,7 @@ export function mapArticle(entry: RawEntry, englishEntry?: RawEntry): Article {
     if (!(error instanceof CmsContentError)) throw error;
     return { ...ja, translationDiagnostics: [cmsFieldErrorMarker(`article/${entry.slug}.en.data`)] };
   }
-  const core = (article: Article) => [article.title.ja, article.summary.ja, article.lead.ja.join("\n"), plainText(article.body.ja)];
+  const core = (article: Article) => [article.title.ja, article.summary.ja, plainText(article.lead.ja), plainText(article.body.ja)];
   const keys = ["title", "summary", "lead", "body"];
   const translated = core(en);
   const translationDiagnostics = translated.flatMap((value, index) =>
