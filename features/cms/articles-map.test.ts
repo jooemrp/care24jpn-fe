@@ -8,7 +8,7 @@ import type { CmsBlock, RawEntry } from "./types";
 
 const bi = (ja: string, en = ja) => ({ ja, en });
 const data = () => ({
-  title: "題名", category: "基礎知識", summary: "要約", lead: "導入1\n\n導入2",
+  title: "題名", category: "基礎知識", summary: "要約", lead: "<p>導入1</p><p>導入2</p>",
   body: "<h2>見出し</h2><p>本文</p><h3>小見出し</h3><ul><li>a</li></ul>",
   cta_body: "<p>相談</p>", cta_label: "相談する", cta_href: "/contact",
 });
@@ -20,7 +20,7 @@ test("maps a locale-resolved entry, mirroring Japanese into the bilingual view m
   const article = mapArticle(entry());
   assert.equal(article.slug, "demo");
   assert.deepEqual(article.title, bi("題名"));
-  assert.deepEqual(article.lead, { ja: ["導入1", "導入2"], en: ["導入1", "導入2"] });
+  assert.deepEqual(article.lead.ja, [{ type: "p", text: "導入1" }, { type: "p", text: "導入2" }]);
   assert.deepEqual(article.body.ja, article.body.en);
   assert.equal(article.cta.href, "/contact");
   assert.equal(article.updatedAt, "2026-10-01T00:00:00Z");
@@ -42,7 +42,7 @@ test("article SEO fields are optional and publication comes from published_at", 
   assert.equal(mapArticle({ ...entry(), published_at: "invalid" }).publishedAt, undefined);
 });
 
-const english = () => ({ ...data(), title: "Title", summary: "Summary", lead: "Introduction", body: "<h2>Heading</h2><p>English body</p>", category: "Basics", cta_body: "<p>Contact us</p>", cta_label: "Contact" });
+const english = () => ({ ...data(), title: "Title", summary: "Summary", lead: "<p>Introduction</p>", body: "<h2>Heading</h2><p>English body</p>", category: "Basics", cta_body: "<p>Contact us</p>", cta_label: "Contact" });
 
 test("resolved English is rendered and becomes indexable without changing code", () => {
   const article = mapArticle(entry(), { ...entry(), is_fallback: false, data: JSON.stringify(english()) });
@@ -52,7 +52,7 @@ test("resolved English is rendered and becomes indexable without changing code",
   const paragraph = article.body.en[1];
   assert.ok(paragraph.type === "p");
   assert.equal(paragraph.text, "English body");
-  assert.equal(article.lead.en[0], "Introduction");
+  assert.deepEqual(article.lead.en[0], { type: "p", text: "Introduction" });
 });
 
 test("fallback, base-only, partial and malformed translations cannot be indexed as English", () => {

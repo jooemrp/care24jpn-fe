@@ -33,8 +33,8 @@ async function main() {
   });
 
   test("translated English restores self canonical, hreflang and article metadata with CMS overrides", () => {
-    const ja = { id: "demo", slug: "demo", status: "published", position: 0, published_at: "2026-01-01T00:00:00Z", updated_at: "2026-02-01T00:00:00Z", data: { title: "題名", summary: "要約", lead: "導入", body: "<p>本文</p>" } };
-    const translated = mapArticle(ja, { ...ja, is_fallback: false, data: { title: "Title", summary: "Summary", lead: "Intro", body: "<p>Body</p>", seo_title: "Search title", seo_description: "Search description", og_image: "https://cms.test/article.jpg" } });
+    const ja = { id: "demo", slug: "demo", status: "published", position: 0, published_at: "2026-01-01T00:00:00Z", updated_at: "2026-02-01T00:00:00Z", data: { title: "題名", summary: "要約", lead: "<p>導入</p>", body: "<p>本文</p>" } };
+    const translated = mapArticle(ja, { ...ja, is_fallback: false, data: { title: "Title", summary: "Summary", lead: "<p>Intro</p>", body: "<p>Body</p>", seo_title: "Search title", seo_description: "Search description", og_image: "https://cms.test/article.jpg" } });
     const meta = buildArticleMetadata(translated, {}, "Care", "en");
     assert.equal(meta.title, "Search title");
     assert.equal(meta.description, "Search description");
@@ -103,12 +103,12 @@ async function main() {
 
   test("sitemap excludes untranslated English and restores both locales and reciprocal alternates after translation", async () => {
     const { buildArticleSitemapEntries } = await import("./sitemap-fields");
-    const ja = { id: "demo", slug: "demo", status: "published", position: 0, updated_at: "2026-02-01T00:00:00Z", data: { title: "題名", summary: "要約", lead: "導入", body: "<p>本文</p>" } };
+    const ja = { id: "demo", slug: "demo", status: "published", position: 0, updated_at: "2026-02-01T00:00:00Z", data: { title: "題名", summary: "要約", lead: "<p>導入</p>", body: "<p>本文</p>" } };
     const untranslated = buildArticleSitemapEntries(mapArticle(ja));
     assert.equal(untranslated.length, 1);
     assert.equal(untranslated[0].url, "https://example.com/helpful-information/demo");
     assert.equal(untranslated[0].alternates?.languages?.en, undefined);
-    const translated = buildArticleSitemapEntries(mapArticle(ja, { ...ja, is_fallback: false, data: { title: "Title", summary: "Summary", lead: "Intro", body: "<p>Body</p>" } }));
+    const translated = buildArticleSitemapEntries(mapArticle(ja, { ...ja, is_fallback: false, data: { title: "Title", summary: "Summary", lead: "<p>Intro</p>", body: "<p>Body</p>" } }));
     assert.equal(translated.length, 2);
     assert.equal(translated[1].url, "https://example.com/en/helpful-information/demo");
     assert.deepEqual(translated[0].alternates, translated[1].alternates);

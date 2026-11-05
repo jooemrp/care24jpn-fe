@@ -552,7 +552,7 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
       { name: "title", label: "Title", field_type: "text", localizable: true, required: false, sort_order: 0 },
       { name: "category", label: "Category", field_type: "text", localizable: true, required: false, filterable: true, sort_order: 1 },
       { name: "summary", label: "Summary (card + SEO excerpt)", field_type: "textarea", localizable: true, required: false, sort_order: 2 },
-      { name: "lead", label: "Lead paragraphs (blank line between paragraphs)", field_type: "textarea", localizable: true, required: false, sort_order: 3 },
+      { name: "lead", label: "Lead", field_type: "richtext", localizable: true, required: false, sort_order: 3 },
       { name: "body", label: "Body", field_type: "richtext", localizable: true, required: false, sort_order: 4 },
       { name: "cta_body", label: "CTA body", field_type: "richtext", localizable: true, required: false, sort_order: 5 },
       { name: "cta_label", label: "CTA label", field_type: "text", localizable: true, required: false, sort_order: 6 },

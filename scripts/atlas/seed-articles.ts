@@ -115,7 +115,7 @@ export async function seedArticleEntries(
         title: article.title,
         category: article.category,
         summary: article.summary,
-        lead: article.lead.join("\n\n"),
+        lead: blocksToHtml(article.lead.map((text) => ({ type: "p" as const, text }))),
         body: blocksToHtml(article.body),
         cta_body: blocksToHtml(article.cta.body),
         cta_label: article.cta.label,
