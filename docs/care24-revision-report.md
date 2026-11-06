@@ -104,6 +104,21 @@ Breaks are written with `/`. Mobile values are at 375px (iPhone SE) and desktop 
 | Course item list (SP / tablet) | `イベントへの出 / 席`, `ケアマネジャー / との連携` | One column on phones and at `md`, so every item fits on one line | A two-column list is ~150px per column, too narrow for these phrases. |
 | Care/nursing price (320px) | `/時間` alone on a line | `税抜 /時間` wraps as one group | Prevents an orphan on the smallest phones. |
 
+### Exception: article body (CARE-85, PR #46)
+
+J16 keeps every phrase whole. For **paragraphs and list items inside article bodies** (`.article-prose`) the client later asked for text that fills the full line width like a news site, because phrase blocks left a wide ragged gap on the right. This is the only place where J16 is intentionally relaxed.
+
+| Item | Before | After | Why |
+|---|---|---|---|
+| Article paragraphs and list items (SP + PC) | Each phrase was an atomic block, so lines ended early (`…高齢者向けの / 支援サービス全般のことです。`) | Phrases render inline; lines may break between any two characters, and the line is filled to the edge | Client request. `word-break: normal` is used instead of the client's `break-all` so Latin and number tokens (`ISO27001`, `1〜2`) are not split. `line-break: strict` still keeps `、。）ー` and small kana off the start of a line. |
+| Last phrase of a paragraph | Could end on `ます。` alone | Final phrase stays whole | Keeps the no-orphan rule in `AGENTS.md`. |
+| CTA box under the article | Phrase-whole | Unchanged | Short copy; the client asked for this exception. |
+| Headings, tables, all other pages | Phrase-whole | Unchanged | J16 still applies. |
+
+Where it lives: `styles/globals.css` (rules under `.article-prose :is(p, li) .jp-phrase`), guarded by `features/articles/components/article-phrase-css.test.ts`. Do not "fix" the article body back to phrase blocks.
+
+Known trade-off: at 320px a number or bracket can separate from the word before it (`要支援 / 1〜2`).
+
 ## Screenshot evidence
 
 All screenshots are in [`docs/revision-7/`](./revision-7/). Before = live site, After = this branch.
