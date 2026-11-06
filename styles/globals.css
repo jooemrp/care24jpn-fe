@@ -98,6 +98,56 @@ body {
   white-space: nowrap;
 }
 
+/* Article body (client request, CARE-85): phrase blocks left a wide ragged
+   gap on the right, so paragraphs and list items fill the full line like a
+   news site. Phrases become plain inline text; Japanese may break between any
+   two characters, `line-break: strict` still keeps 、。）ー and small kana off
+   the start of a line, and `normal` (not `break-all`) keeps Latin/number
+   tokens such as ISO27001 or 1〜2 whole. Specificity (0,2,1)/(0,2,2) beats
+   the base and justify rules above, so justified text may wrap too. Headings
+   (balanced, phrase-whole) and table cells are untouched. */
+.article-prose :is(p, li) .jp-phrase {
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+
+.article-prose :is(p, li) .jp-phrase > span {
+  display: inline;
+  max-width: none;
+  white-space: normal;
+  text-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Orphan guard: with free breaking a paragraph can end on 「ます。」 alone.
+   The final phrase moves down as one block instead (max-width still lets one
+   wider than the line wrap inside itself). */
+.article-prose :is(p, li) .jp-phrase > span:last-of-type {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* The CTA box below the article reuses `.article-prose`; keep its short copy
+   phrase-whole (no mid-word cuts). Justified spans stay inline so spacing can
+   still stretch. */
+aside .article-prose :is(p, li) .jp-phrase {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+aside .article-prose :is(p, li) .jp-phrase > span {
+  display: inline-block;
+  max-width: 100%;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+aside .article-prose [data-align="justify"] .jp-phrase > span {
+  display: inline;
+  white-space: nowrap;
+}
+
 /* Justified article text: a line ending in 。 or 、 looks short because the
    glyph's right half is empty, so the ink stops ~0.5em before the edge.
    `halt` (half-width alternates) drops that blank half, so every line ends
