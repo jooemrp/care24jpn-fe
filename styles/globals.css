@@ -180,6 +180,17 @@ h4 {
   color: var(--color-heading);
 }
 
+/* Heading balance (client request, 10 Nov): the parent heading balances its
+   lines and lets Chromium break at phrase boundaries (`auto-phrase`, ignored
+   elsewhere); the `.jp-phrase > span` children stay inline-block so a phrase
+   still moves as one unit. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  word-break: auto-phrase;
+}
+
 /* ------------------------------------------------------------------
    Legal document body (privacy policy, terms, ...).
 

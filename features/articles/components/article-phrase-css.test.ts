@@ -33,6 +33,15 @@ test("CTA aside keeps phrases whole and out of the body rule", () => {
   assert.match(rule("aside .article-prose :is(p, li) .jp-phrase > span"), /display: inline-block;/);
 });
 
+test("h1-h3 balance their lines and break by phrase at the parent", () => {
+  const start = css.indexOf("h1,\nh2,\nh3 {");
+  assert.notEqual(start, -1, "missing h1,h2,h3 rule");
+  const heading = css.slice(start, css.indexOf("}", start));
+  assert.match(heading, /text-wrap: balance;/);
+  assert.match(heading, /word-break: auto-phrase;/);
+  assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
+});
+
 test("headings and table cells keep their phrase-whole rules", () => {
   assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
   assert.match(rule(":is(td, th) .jp-phrase > span"), /overflow-wrap: break-word;/);
