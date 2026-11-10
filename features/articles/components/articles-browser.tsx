@@ -171,9 +171,11 @@ export default function ArticlesBrowser({
             return (
               <li key={card.slug} className="border-b border-border">
                 <article className="group relative grid gap-x-10 gap-y-3 py-8 md:grid-cols-[11rem_1fr] md:py-11">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm md:flex-col md:items-start md:gap-y-2">
+                  <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm md:flex-col md:items-start md:gap-y-2 ${
+                      lead ? "md:pt-1.5" : "md:pt-1"
+                    }`}>
                     {lead && (
-                      <span className="text-xs font-bold tracking-[0.14em] text-accent-deep">
+                      <span className="text-xs font-bold tracking-normal text-accent-deep">
                         {labels.featured}
                       </span>
                     )}
@@ -189,7 +191,7 @@ export default function ArticlesBrowser({
                     <Heading
                       lang={contentLang}
                       className={`font-bold leading-snug text-heading ${
-                        lead ? "text-2xl md:text-[1.75rem]" : "text-xl md:text-2xl"
+                        lead ? "text-[1.375rem] min-[360px]:text-2xl md:text-[1.75rem]" : "text-xl md:text-2xl"
                       }`}
                     >
                       <Link
