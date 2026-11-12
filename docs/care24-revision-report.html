@@ -169,6 +169,16 @@
 <tr><td>Course item list (SP / tablet)</td><td><code>イベントへの出 / 席</code>, <code>ケアマネジャー / との連携</code></td><td>One column on phones and at <code>md</code>, so every item fits on one line</td><td>A two-column list is ~150px per column, too narrow for these phrases.</td></tr>
 <tr><td>Care/nursing price (320px)</td><td><code>/時間</code> alone on a line</td><td><code>税抜 /時間</code> wraps as one group</td><td>Prevents an orphan on the smallest phones.</td></tr>
 </tbody></table></div>
+<h3>Exception: article body (CARE-85, PR #46)</h3>
+<p>J16 keeps every phrase whole. For <strong>paragraphs and list items inside article bodies</strong> (<code>.article-prose</code>) the client later asked for text that fills the full line width like a news site, because phrase blocks left a wide ragged gap on the right. This is the only place where J16 is intentionally relaxed.</p>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Before</th><th>After</th><th>Why</th></tr></thead><tbody>
+<tr><td>Article paragraphs and list items (SP + PC)</td><td>Each phrase was an atomic block, so lines ended early (<code>…高齢者向けの / 支援サービス全般のことです。</code>)</td><td>Phrases render inline; lines may break between any two characters, and the line is filled to the edge</td><td>Client request. <code>word-break: normal</code> is used instead of the client's <code>break-all</code> so Latin and number tokens (<code>ISO27001</code>, <code>1〜2</code>) are not split. <code>line-break: strict</code> still keeps <code>、。）ー</code> and small kana off the start of a line.</td></tr>
+<tr><td>Last phrase of a paragraph</td><td>Could end on <code>ます。</code> alone</td><td>Final phrase stays whole</td><td>Keeps the no-orphan rule in <code>AGENTS.md</code>.</td></tr>
+<tr><td>CTA box under the article</td><td>Phrase-whole</td><td>Unchanged</td><td>Short copy; the client asked for this exception.</td></tr>
+<tr><td>Headings, tables, all other pages</td><td>Phrase-whole</td><td>Unchanged</td><td>J16 still applies.</td></tr>
+</tbody></table></div>
+<p>Where it lives: <code>styles/globals.css</code> (rules under <code>.article-prose :is(p, li) .jp-phrase</code>), guarded by <code>features/articles/components/article-phrase-css.test.ts</code>. Do not "fix" the article body back to phrase blocks.</p>
+<p>Known trade-off: at 320px a number or bracket can separate from the word before it (<code>要支援 / 1〜2</code>).</p>
 </section>
 <section><h2>Screenshot evidence</h2>
 <p>All screenshots are in <a href="revision-7/"><code>docs/revision-7/</code></a>. Before = live site, After = this branch.</p>
