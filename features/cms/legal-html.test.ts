@@ -425,6 +425,26 @@ async function main(): Promise<void> {
     assert.match(html, /<a[^>]*href="\/en\/pricing"[^>]*>link<\/a>/, "link marker must render as a real <a>");
   });
 
+  test("render proof: a bold h2 never leaks literal ** into the heading or the TOC, anchors stay put", () => {
+    const body = [
+      { type: "h2" as const, text: "**1. 契約当事者**" },
+      { type: "p" as const, text: "本文" },
+      { type: "h2" as const, text: "**2. 契約の性質**" },
+      { type: "h2" as const, text: "3. 通常の見出し" },
+    ];
+    const doc: LegalDoc = {
+      heading: { ja: "Judul", en: "Title" },
+      body: { ja: body, en: body },
+    };
+
+    const html = renderDoc(doc, "ja");
+    assert.doesNotMatch(html, /\*\*/, "no literal ** may remain anywhere in the rendered page");
+    assert.match(html, /<h2 id="sec-0">1\. 契約当事者<\/h2>/);
+    assert.match(html, /<h2 id="sec-2">2\. 契約の性質<\/h2>/);
+    assert.match(html, /<h2 id="sec-3">3\. 通常の見出し<\/h2>/);
+    assert.match(html, />1\. 契約当事者<\/span>/, "TOC label must be the clean text too");
+  });
+
   test("render proof: an internal link from the CMS stays language-aware (EN page -> /en/..., JA page -> no prefix)", () => {
     const doc: LegalDoc = {
       heading: { ja: "Judul", en: "Title" },

@@ -5,6 +5,7 @@ import TableOfContents, { type TocItem } from "@/components/TableOfContents";
 import type { LegalBlock, LegalDoc, LegalTableCell } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 import { CmsContentError } from "@/features/cms/errors";
+import { stripInlineMarks } from "@/features/cms/inline-marks";
 
 /**
  * Renders a legal block's text, turning the small set of inline markers
@@ -151,15 +152,14 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
     }
 
     if (block.type === "h2") {
-      // Deliberately rendered as plain text, not renderInlineText(): its
-      // raw block.text also feeds TableOfContents.tsx's sidebar label
-      // (tocItems below), which is out of this component's scope and shows
-      // whatever string it's given as-is. A bold/link mark inside a section
-      // title would then desync from its TOC entry, so section headings
-      // don't carry inline marks in this format — only body text does.
+      // Deliberately rendered as plain text, not renderInlineText(): the same
+      // text feeds TableOfContents.tsx's sidebar label (tocItems below), which
+      // shows whatever string it's given as-is. Inline markers an editor
+      // applied to a title (`<h2><strong>…`) are stripped for BOTH, so the
+      // heading and its TOC entry always match and never show a literal `**`.
       out.push(
         <h2 key={out.length} id={`sec-${i}`}>
-          {block.text}
+          {stripInlineMarks(block.text)}
         </h2>,
       );
     } else if (block.type === "h3") {
@@ -241,7 +241,7 @@ export default function LegalDocPage({
   const blocks = doc.body[lang];
 
   const tocItems: TocItem[] = blocks.flatMap((block, i) =>
-    block.type === "h2" ? [{ id: `sec-${i}`, text: block.text }] : [],
+    block.type === "h2" ? [{ id: `sec-${i}`, text: stripInlineMarks(block.text) }] : [],
   );
   const showToc = tocItems.length > 2;
 
