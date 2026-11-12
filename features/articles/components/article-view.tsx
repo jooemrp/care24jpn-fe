@@ -179,7 +179,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
                       lang={contentLang}
                       className="group flex min-h-11 items-start gap-3 rounded-2xl px-3 py-2 transition hover:bg-primary-light focus-visible:outline-2 focus-visible:outline-primary"
                     >
-                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary-light text-xs font-bold tabular-nums text-primary-deep transition group-hover:bg-primary group-hover:text-white">
+                      <span className="-mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary-light text-xs font-bold tabular-nums text-primary-deep transition group-hover:bg-primary group-hover:text-white">
                         {index + 1}
                       </span>
                       <span className="text-sm font-medium leading-snug text-heading">
