@@ -1,5 +1,5 @@
 /**
- * Care24Japan — FAQ dataset (bilingual).
+ * Care24 Japan — FAQ dataset (bilingual).
  *
  * Source: "【English explanation】Care24Japan Webpage revision 26th Aug 2026.pdf"
  * Section 5 — FAQ Accordion Implementation Specification & Dataset.
@@ -99,8 +99,8 @@ export const faqItems: FaqItem[] = [
     id: "Q1",
     category: "01",
     question: {
-      ja: "Care24Japanとはどのようなサービスですか？",
-      en: "What kind of service is Care24Japan?",
+      ja: "Care24 Japanとはどのようなサービスですか？",
+      en: "What kind of service is Care24 Japan?",
     },
     answer: {
       ja: "介護保険や医療保険では対応しきれない生活・介護・看護のニーズを、有資格者がサポートする保険外（自費）サービスです。",
@@ -115,8 +115,8 @@ export const faqItems: FaqItem[] = [
       en: "What is the difference from public long-term care insurance services?",
     },
     answer: {
-      ja: "介護保険では利用できる内容や時間に制限があります。Care24Japanでは、保険ではカバーしきれない時間や生活上のご希望に柔軟に対応します。",
-      en: "Public nursing care insurance has restrictions on service scope and duration. Care24Japan flexibly accommodates schedule preferences and lifestyle requests that public insurance cannot cover.",
+      ja: "介護保険では利用できる内容や時間に制限があります。Care24 Japanでは、保険ではカバーしきれない時間や生活上のご希望に柔軟に対応します。",
+      en: "Public nursing care insurance has restrictions on service scope and duration. Care24 Japan flexibly accommodates schedule preferences and lifestyle requests that public insurance cannot cover.",
     },
   },
   {
@@ -176,8 +176,8 @@ export const faqItems: FaqItem[] = [
       en: "Can I use the service if I haven't received official nursing care certification?",
     },
     answer: {
-      ja: "はい、ご利用いただけます。Care24Japanは介護保険を利用しない自費サービスです。",
-      en: "Yes, absolutely. Care24Japan is a private service that does not require public long-term care insurance certification.",
+      ja: "はい、ご利用いただけます。Care24 Japanは介護保険を利用しない自費サービスです。",
+      en: "Yes, absolutely. Care24 Japan is a private service that does not require public long-term care insurance certification.",
     },
   },
   {
@@ -214,8 +214,8 @@ export const faqItems: FaqItem[] = [
       en: "Are the qualifications and background of care supporters verified?",
     },
     answer: {
-      ja: "はい。登録時に資格・経験等を確認し、Care24Japan独自の品質基準に沿ってサービスを提供します。",
-      en: "Yes. Qualifications and background experience are verified during registration, and services are provided according to Care24Japan's proprietary quality standards.",
+      ja: "はい。登録時に資格・経験等を確認し、Care24 Japan独自の品質基準に沿ってサービスを提供します。",
+      en: "Yes. Qualifications and background experience are verified during registration, and services are provided according to Care24 Japan's proprietary quality standards.",
     },
   },
   {
@@ -226,8 +226,8 @@ export const faqItems: FaqItem[] = [
       en: "What training do care supporters receive?",
     },
     answer: {
-      ja: "接遇・マナーや安全に関する基準を設け、Care24Japan Quality Standard（CQS）に基づいて品質管理を行っています。",
-      en: "We maintain strict standards regarding etiquette, hospitality, and safety, managing service quality based on the Care24Japan Quality Standard (CQS).",
+      ja: "接遇・マナーや安全に関する基準を設け、Care24 Japan Quality Standard（CQS）に基づいて品質管理を行っています。",
+      en: "We maintain strict standards regarding etiquette, hospitality, and safety, managing service quality based on the Care24 Japan Quality Standard (CQS).",
     },
   },
   {
@@ -260,12 +260,12 @@ export const faqItems: FaqItem[] = [
     id: "Q14",
     category: "03",
     question: {
-      ja: "訪問看護とCare24Japanの看護サービスは何が違いますか？",
-      en: "How does Care24Japan nursing differ from standard home visit nursing?",
+      ja: "訪問看護とCare24 Japanの看護サービスは何が違いますか？",
+      en: "How does Care24 Japan nursing differ from standard home visit nursing?",
     },
     answer: {
-      ja: "訪問看護は公的保険制度に基づくサービス、Care24Japanは保険外（自費）のサービスです。保険では対応しにくい時間や生活上のニーズにも対応します。",
-      en: "Standard home nursing is bound by public insurance rules. Care24Japan is a private service that provides flexible support during hours and lifestyle scenarios difficult for public insurance to cover.",
+      ja: "訪問看護は公的保険制度に基づくサービス、Care24 Japanは保険外（自費）のサービスです。保険では対応しにくい時間や生活上のニーズにも対応します。",
+      en: "Standard home nursing is bound by public insurance rules. Care24 Japan is a private service that provides flexible support during hours and lifestyle scenarios difficult for public insurance to cover.",
     },
   },
 
@@ -365,8 +365,8 @@ export const faqItems: FaqItem[] = [
       en: "What should be done if an accident or trouble occurs during service?",
     },
     answer: {
-      ja: "まず安全確保を最優先に対応し、必要に応じてCare24Japanへご連絡ください（お電話：0120-001-224）。",
-      en: "Ensuring immediate safety is top priority. As necessary, contact Care24Japan emergency line immediately (Phone: 0120-001-224).",
+      ja: "まず安全確保を最優先に対応し、必要に応じてCare24 Japanへご連絡ください（お電話：0120-001-224）。",
+      en: "Ensuring immediate safety is top priority. As necessary, contact Care24 Japan emergency line immediately (Phone: 0120-001-224).",
     },
   },
   {

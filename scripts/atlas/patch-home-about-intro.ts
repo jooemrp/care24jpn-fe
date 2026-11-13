@@ -1,6 +1,6 @@
 /**
  * Client revision (websiterevisions, row 1): the paragraph under the
- * "Care24Japanとは" heading on the TOP page.
+ * "Care24 Japanとは" heading on the TOP page.
  *
  * Writes `intro` (ja + en) onto the single `home-about` block of the published
  * `home` page. The live homepage can contain dashboard edits, so this reads the

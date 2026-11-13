@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import JsonLd, { websiteJsonLd } from "@/components/JsonLd";
 import CmsQueryBoundary from "@/components/query/CmsQueryBoundary";
 import { queryKeys } from "@/lib/query-keys";
 import { getHome } from "@/features/cms/home";
@@ -29,11 +30,14 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const [home, site] = await Promise.all([getHome(), getSite()]);
 
   return (
-    <CmsQueryBoundary
-      queryKey={queryKeys.home}
-      queryFn={() => Promise.resolve(home)}
-    >
-      <HomeView lang={lang} contactCta={site.cta.contact} />
-    </CmsQueryBoundary>
+    <>
+      <JsonLd data={websiteJsonLd(site, lang)} />
+      <CmsQueryBoundary
+        queryKey={queryKeys.home}
+        queryFn={() => Promise.resolve(home)}
+      >
+        <HomeView lang={lang} contactCta={site.cta.contact} />
+      </CmsQueryBoundary>
+    </>
   );
 }

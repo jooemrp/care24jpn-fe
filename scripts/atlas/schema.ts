@@ -194,7 +194,7 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
   },
   {
     slug: "home_about",
-    name: "Home — About (Care24Japanとは)",
+    name: "Home — About (Care24 Japanとは)",
     is_block: true,
     fields: [
       { name: "heading", label: "Heading", field_type: "text", localizable: true, required: false, sort_order: 0 },
@@ -214,7 +214,7 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
       { name: "card_body_2", label: "Card 2 body", field_type: "textarea", localizable: true, required: false, sort_order: 10 },
       { name: "card_body_3", label: "Card 3 body", field_type: "textarea", localizable: true, required: false, sort_order: 11 },
       // Client revision (websiterevisions, row 1): paragraph directly under the
-      // "Care24Japanとは" heading, above the catchphrase.
+      // "Care24 Japanとは" heading, above the catchphrase.
       { name: "intro", label: "Intro (under heading)", field_type: "textarea", localizable: true, required: false, sort_order: 12 },
     ],
   },

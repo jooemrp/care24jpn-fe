@@ -46,8 +46,8 @@ const HUB = {
   },
   seoTitle: { ja: "お役立ち情報", en: "Helpful Information" },
   seoDescription: {
-    ja: "介護保険外（自費）サービスの基礎知識、費用相場、サービスの選び方、ご利用の流れまで、ご家族の疑問に答えるCare24Japanの記事一覧です。",
-    en: "Care24Japan articles on out-of-pocket care: the basics, typical costs, how to choose a provider and how to get started.",
+    ja: "介護保険外（自費）サービスの基礎知識、費用相場、サービスの選び方、ご利用の流れまで、ご家族の疑問に答えるCare24 Japanの記事一覧です。",
+    en: "Care24 Japan articles on out-of-pocket care: the basics, typical costs, how to choose a provider and how to get started.",
   },
 } satisfies Record<string, Bi>;
 

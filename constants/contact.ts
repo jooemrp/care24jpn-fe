@@ -1,5 +1,5 @@
 /**
- * Care24Japan — Contact page copy & form configuration.
+ * Care24 Japan — Contact page copy & form configuration.
  *
  * Source: "【English explanation】Care24Japan Webpage revision 26th Aug 2026.pdf"
  * Section 6 — Contact page + Image Ref 7 two-column layout.

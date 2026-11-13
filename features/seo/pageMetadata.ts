@@ -128,10 +128,10 @@ export function withBrandSuffix(title: string, brandName: string): string {
  * loosely (whitespace-insensitive, case-insensitive) because the CMS titles
  * this guards against may spell the brand with different spacing in the
  * same workspace: `site.brand.name` was historically "Care 24 Japan"
- * (spaced), while 4 legal pages' Atlas `seo.title` carries "Care24Japan"
+ * (spaced), while 4 legal pages' Atlas `seo.title` carries "Care24 Japan"
  * (no space) as part of the
  * client's legally-reviewed document name (see `care 24 update.xlsx`:
- * "Care24Japan ケアサポーター報酬規程_リーガルチェック済"). A plain `===`/
+ * "Care24 Japan ケアサポーター報酬規程_リーガルチェック済"). A plain `===`/
  * `includes()` check would miss that pairing entirely.
  *
  * Used by `buildPageMetadataFields` below to render such a title as
@@ -253,8 +253,8 @@ export function buildPageMetadataFields({
   // live
   // for `terms-for-users`, `terms-for-care-supporters`, `compensation`,
   // `cancellation-policy` (their Atlas titles are literal legal-document
-  // names starting with "Care24Japan"). Templating those would print the
-  // brand a second time, spelled a second way ("Care24Japan ... | Care 24
+  // names starting with "Care24 Japan"). Templating those would print the
+  // brand a second time, spelled a second way ("Care24 Japan ... | Care 24
   // Japan"). This is intentionally NOT a hardcoded route check — see
   // `titleContainsBrand`'s own comment — so it also protects any OTHER
   // route whose title starts carrying the brand later.

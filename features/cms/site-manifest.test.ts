@@ -29,15 +29,15 @@ async function main(): Promise<void> {
     assert.deepEqual(
       mapSiteManifest([
         block("site-brand", 0, {
-          name: "Care24Japan",
+          name: "Care24 Japan",
           tagline: { ja: "ご自宅で、心安らぐケアを", en: "" },
         }),
         block("site-footer", 1, {
-          legal: "© Care24Japan",
+          legal: "© Care24 Japan",
         }),
       ]),
       {
-        name: "Care24Japan",
+        name: "Care24 Japan",
         description: "ご自宅で、心安らぐケアを",
       },
     );
@@ -47,11 +47,11 @@ async function main(): Promise<void> {
     assert.deepEqual(
       mapSiteManifest([
         block("site-brand", 0, {
-          name: "Care24Japan",
+          name: "Care24 Japan",
         }),
       ]),
       {
-        name: "Care24Japan",
+        name: "Care24 Japan",
         description: "[missing: site/site-brand.tagline]",
       },
     );
