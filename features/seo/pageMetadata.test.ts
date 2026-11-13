@@ -42,7 +42,7 @@
  *
  *   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
  *
- *   'Pricing for users - Care24Japan' !== 'Pricing for users | Care24Japan'
+ *   'Pricing for users - Care24 Japan' !== 'Pricing for users | Care24 Japan'
  *
  * The hand-typed change was reverted immediately after capturing the
  * AssertionError above — this file never ships that regression, it only
@@ -71,7 +71,7 @@ async function main() {
     TITLE_BRAND_SEPARATOR,
   } = (await import(pageMetadataPath)) as typeof PageMetadataModule;
 
-  const BRAND = "Care24Japan";
+  const BRAND = "Care24 Japan";
 
   // ---------------------------------------------------------------------
   // TITLE_BRAND_SEPARATOR: the one string both sides read.
@@ -115,7 +115,7 @@ async function main() {
 
   // ---------------------------------------------------------------------
   // Brand-already-in-title routes (CMS audit 0820, ST-U2 Tugas 2): 4 legal
-  // pages' Atlas `seo.title` already carries "Care24Japan"
+  // pages' Atlas `seo.title` already carries "Care24 Japan"
   // (the client's legally-reviewed document name — see `care 24
   // update.xlsx`), so letting `title.template` append the brand again
   // would render it twice side by side in the browser tab (possibly
@@ -129,13 +129,13 @@ async function main() {
   // ---------------------------------------------------------------------
 
   test("titleContainsBrand: matches regardless of spacing between the brand's words", () => {
-    assert.equal(titleContainsBrand("Care24Japan プラットフォーム利用規約", BRAND), true);
+    assert.equal(titleContainsBrand("Care24 Japan プラットフォーム利用規約", BRAND), true);
     assert.equal(titleContainsBrand("Care 24 Japan Cancellation Policy", BRAND), true);
     assert.equal(titleContainsBrand("Pricing for users", BRAND), false);
   });
 
   test("buildPageMetadataFields: a title that already contains the brand renders as title.absolute, not a plain string, so title.template cannot double-append the brand", () => {
-    const title = "Care24Japan プラットフォーム利用規約（ご利用者様向け）";
+    const title = "Care24 Japan プラットフォーム利用規約（ご利用者様向け）";
     const meta = buildPageMetadataFields({
       route: "/terms-for-users",
       lang: "ja",
@@ -148,7 +148,7 @@ async function main() {
   });
 
   test("buildPageMetadataFields: og:title for a brand-already-in-title route equals the bare title (no second brand suffix)", () => {
-    const title = "Care24Japan Cancellation Policy";
+    const title = "Care24 Japan Cancellation Policy";
     const meta = buildPageMetadataFields({
       route: "/cancellation-policy",
       lang: "en",

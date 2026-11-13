@@ -39,7 +39,7 @@ type Asset = {
 };
 
 const BRAND =
-  "Care24Japan home-care brand. Bright, airy, FRESH Japanese in-home nursing aesthetic. " +
+  "Care24 Japan home-care brand. Bright, airy, FRESH Japanese in-home nursing aesthetic. " +
   "Cool-neutral daylight (cool white / soft blue sky light — NOT yellow, NOT amber, NOT sepia, NOT golden-hour). " +
   "Clean modern Tokyo apartment, white and light-gray walls, crisp whites, high-key, cheerful. " +
   "STRICTLY NO text, NO letters, NO kanji, NO hiragana, NO katakana, NO numbers, NO logos, NO watermarks, NO typography in the image.";
@@ -47,7 +47,7 @@ const BRAND =
 const LINEART =
   "Minimal flat line-art illustration, thin light strokes only, bright brand primary blue outlines (#4A9AD4) on pure WHITE background, " +
   "absolutely no black background, no green, no teal, no heavy filled silhouettes, no gradients, no photorealism, " +
-  "airy Japanese brochure style matching Care24Japan, generous white padding, centered, cheerful and clean.";
+  "airy Japanese brochure style matching Care24 Japan, generous white padding, centered, cheerful and clean.";
 
 
 const ASSETS: Asset[] = [
@@ -134,7 +134,7 @@ const ASSETS: Asset[] = [
     outWidth: 960,
     prompt:
       `${LINEART} Wide simple line drawing of multi-generational family with two care staff standing side by side, ` +
-      `friendly silhouettes, for a "What is Care24Japan" section footer illustration.`,
+      `friendly silhouettes, for a "What is Care24 Japan" section footer illustration.`,
   },
   {
     id: "about-qualified",

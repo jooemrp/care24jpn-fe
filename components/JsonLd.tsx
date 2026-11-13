@@ -3,6 +3,7 @@ import { getCompanyContent } from "@/features/cms/pages";
 import type { SiteContent } from "@/features/cms/site";
 import { escapeJsonForScript } from "@/features/seo/jsonLdEscape";
 import { buildOrganizationJsonLd } from "@/features/seo/organization";
+import { buildWebSiteJsonLd } from "@/features/seo/website";
 
 type JsonLdProps = {
   /**
@@ -73,5 +74,21 @@ export async function organizationJsonLd(site: SiteContent): Promise<Record<stri
     logoUrl: site.brand.logo,
     siteUrl: SITE_URL,
     companyRows: company.rows,
+  });
+}
+
+/**
+ * Home-page WebSite schema. Google reads `WebSite.name` on the home page to
+ * pick the site name it shows in search results, so this is rendered by the
+ * home route only (`app/[lang]/page.tsx`), not site-wide like LocalBusiness.
+ * The name is the CMS-backed `site.brand.name`; the pure builder
+ * (`features/seo/website.ts`) throws on a missing value instead of falling
+ * back to bundled copy.
+ */
+export function websiteJsonLd(site: SiteContent, lang: string): Record<string, unknown> {
+  return buildWebSiteJsonLd({
+    brandName: site.brand.name,
+    siteUrl: SITE_URL,
+    lang,
   });
 }

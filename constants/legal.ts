@@ -1,5 +1,5 @@
 /**
- * Care24Japan — legal document contents.
+ * Care24 Japan — legal document contents.
  *
  * GENERATED from the client-provided .docx files (29 July 2026, legal-checked),
  * preserving document order, list structure and tables, with heading structure
@@ -95,13 +95,13 @@ export const legalDocs = {
         { type: "h2", text: "2. 個人情報の利用目的" },
         { type: "p", text: "当社は、お客様から個人情報をご提供頂く場合、予め個人情報の利用目的を明示し、その利用目的の範囲内で利用します。 予め明示した利用目的の範囲を超えて、お客様の個人情報を利用する必要が生じた場合は、お客様にその旨をご連絡し、お客様の同意を頂いた上で利用します。 当社が保有する個人情報の利用目的は下記の通りです。" },
         // 2026-09 legal-checked docx: Care24-only purposes (removed お取引先様 / 取材 / 採用).
-        { type: "h3", text: "⑴ Care24Japanの利用者に関する個人情報" },
+        { type: "h3", text: "⑴ Care24 Japanの利用者に関する個人情報" },
         { type: "li", list: "ul", text: "本サービスにおけるマッチング、本人確認、及びサービスの提供" },
         { type: "li", list: "ul", text: "ご利用料金の請求、決済、及びそれに伴う事務手続き" },
         { type: "li", list: "ul", text: "本サービスに関するカスタマーサポート、メンテナンスの提供、及びお問い合わせ・ご相談への対応" },
         { type: "li", list: "ul", text: "本サービスに関するご案内、広告及び資料の送付" },
         { type: "li", list: "ul", text: "規約変更等、本サービスに関する重要なお知らせの通知" },
-        { type: "h3", text: "⑵ Care24Japanのケアサポーター（登録ワーカー）に関する個人情報" },
+        { type: "h3", text: "⑵ Care24 Japanのケアサポーター（登録ワーカー）に関する個人情報" },
         { type: "li", list: "ul", text: "登録審査、スキル・資格の確認、及び本人確認" },
         { type: "li", list: "ul", text: "プラットフォーム上でのマッチング、及び利用者へのプロフィール等の情報開示" },
         { type: "li", list: "ul", text: "報酬の支払い、お振込み事務、及びそれに伴う事務手続き" },
@@ -155,13 +155,13 @@ export const legalDocs = {
         { type: "h2", text: "2. Purpose of Use of Personal Information" },
         { type: "p", text: "When the Company asks customers to provide personal information, we will specify the purpose of use in advance and use it within the scope of that purpose. If it becomes necessary to use a customer's personal information beyond the scope of the purpose of use specified in advance, we will notify the customer to that effect and obtain their consent before using it. The purposes of use of personal information held by the Company are as follows:" },
         // Mirrors 2026-09 JA legal-checked docx (Care24-only purpose categories).
-        { type: "h3", text: "(1) Personal information regarding users of Care24Japan" },
+        { type: "h3", text: "(1) Personal information regarding users of Care24 Japan" },
         { type: "li", list: "ul", text: "Matching, identity verification, and provision of services in this service" },
         { type: "li", list: "ul", text: "Billing and settlement of usage fees, and related administrative procedures" },
         { type: "li", list: "ul", text: "Providing customer support and maintenance for this service, and responding to inquiries and consultations" },
         { type: "li", list: "ul", text: "Sending information, advertisements, and materials regarding this service" },
         { type: "li", list: "ul", text: "Notification of important notices related to this service, such as changes to the terms of service" },
-        { type: "h3", text: "(2) Personal information regarding care supporters (registered workers) of Care24Japan" },
+        { type: "h3", text: "(2) Personal information regarding care supporters (registered workers) of Care24 Japan" },
         { type: "li", list: "ul", text: "Registration screening, confirmation of skills/qualifications, and identity verification" },
         { type: "li", list: "ul", text: "Matching on the platform and disclosure of information such as profiles to users" },
         { type: "li", list: "ul", text: "Payment of remuneration, bank transfer administration, and related administrative procedures" },
@@ -270,10 +270,10 @@ export const legalDocs = {
     },
   },
   terms: {
-    heading: { ja: "Care24Japan プラットフォーム利用規約（ケアサポーター向け）", en: "Care24Japan Platform Terms & Conditions (For Care Supporters)" },
+    heading: { ja: "Care24 Japan プラットフォーム利用規約（ケアサポーター向け）", en: "Care24 Japan Platform Terms & Conditions (For Care Supporters)" },
     body: {
       ja: [
-        { type: "p", text: "本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外在宅支援マッチングプラットフォーム「Care24Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスに登録する看護師・介護士等のワーカー（以下「ケアサポーター」といいます。）は、本規約に同意の上、本サービスを利用するものとします。" },
+        { type: "p", text: "本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外在宅支援マッチングプラットフォーム「Care24 Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスに登録する看護師・介護士等のワーカー（以下「ケアサポーター」といいます。）は、本規約に同意の上、本サービスを利用するものとします。" },
         { type: "h2", text: "第1条（目的および当社の立ち位置）" },
         { type: "li", list: "ol", text: "本サービスは、訪問介護・在宅支援サービスおよび訪問看護サービス（以下総称して「ケアサービス」といいます。）の提供を希望する利用者（以下「契約者」といいます。）と、所定の資格を有するケアサポーターをマッチングするプラットフォームです。" },
         { type: "li", list: "ol", text: "当社は、契約者とケアサポーターとの間のマッチングおよび個別契約締結の場、ならびに本システムを通じた決済手段（集金代行窓口）を提供すると共に、契約者とケアサポーターに対するサポート・フォロー等を行う役割を担うものであり、契約者に対するケアサービスそのものの提供主体ではなく、またケアサポーターの雇用主でもありません。" },
@@ -321,7 +321,7 @@ export const legalDocs = {
         { type: "p", text: "2026年［〇］月［〇］日 制定" },
       ],
       en: [
-        { type: "p", text: "These Terms of Use stipulate the conditions for using the out-of-pocket home care support matching platform \"Care24Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Workers such as nurses and caregivers who register for this Service (hereinafter referred to as \"Care Supporters\") shall use this Service after agreeing to these Terms." },
+        { type: "p", text: "These Terms of Use stipulate the conditions for using the out-of-pocket home care support matching platform \"Care24 Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Workers such as nurses and caregivers who register for this Service (hereinafter referred to as \"Care Supporters\") shall use this Service after agreeing to these Terms." },
         { type: "h2", text: "Article 1 (Purpose and the Company's Position)" },
         { type: "li", list: "ul", text: "This Service is a platform that matches users (hereinafter referred to as \"Contractors\") who wish to receive home visiting care/home support services and visiting nursing services (hereinafter collectively referred to as \"Care Services\") with Care Supporters who possess prescribed qualifications." },
         { type: "li", list: "ul", text: "The Company plays the role of providing a place for matching and concluding individual contracts between Contractors and Care Supporters, as well as providing a payment method (payment collection agency window) through this system, and providing support and follow-up for Contractors and Care Supporters. The Company is not the entity providing the Care Service itself to the Contractor, nor is it the employer of the Care Supporter." },
@@ -375,10 +375,10 @@ export const legalDocs = {
     // title) while the client-locked footer label for this document reads
     // "Terms & Conditions (For Users)" — the divergence is intentional, see
     // docblock deviation (d) above. Do not "align" one to match the other.
-    heading: { ja: "Care24Japan プラットフォーム利用規約（ご利用者様向け）", en: "Care24Japan Platform Terms of Service (For Users)" },
+    heading: { ja: "Care24 Japan プラットフォーム利用規約（ご利用者様向け）", en: "Care24 Japan Platform Terms of Service (For Users)" },
     body: {
       ja: [
-        { type: "p", text: "本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外サービスマッチングプラットフォーム「Care24Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスの利用者（以下「契約者」といいます。）は、本規約に同意の上、本サービスを利用するものとします。" },
+        { type: "p", text: "本規約は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する保険外サービスマッチングプラットフォーム「Care24 Japan」（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスの利用者（以下「契約者」といいます。）は、本規約に同意の上、本サービスを利用するものとします。" },
         { type: "h2", text: "第1条（目的および当社の立ち位置）" },
         { type: "li", list: "ol", text: "本サービスは、訪問介護・在宅支援サービスおよび訪問看護サービス（以下総称して「ケアサービス」といいます。）の提供を希望する契約者（被介護者・被看護者を含みます。）と、所定の資格を有する看護師または介護士（以下「ケアサポーター」といいます。）をマッチングするプラットフォームです。" },
         { type: "li", list: "ol", text: "当社は、契約者とケアサポーターとの間のマッチングおよび契約締結の場、ならびに本システムを通じた決済手段を提供すると共に、契約者とケアサポーターに対するサポート・フォロー等を行う役割を担うものであり、契約者に対するケアサービスそのものの提供主体ではありません。" },
@@ -431,7 +431,7 @@ export const legalDocs = {
         { type: "p", text: "2026年8月3日 制定" },
       ],
       en: [
-        { type: "p", text: "These Terms of Service (hereinafter referred to as the \"Terms\") stipulate the terms and conditions for using the non-insurance care service matching platform \"Care24Japan\" (hereinafter referred to as the \"Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Users of the Service (hereinafter referred to as \"Contractors\") shall use the Service upon agreeing to these Terms." },
+        { type: "p", text: "These Terms of Service (hereinafter referred to as the \"Terms\") stipulate the terms and conditions for using the non-insurance care service matching platform \"Care24 Japan\" (hereinafter referred to as the \"Service\") operated by Medical Informatics Co., Ltd. (hereinafter referred to as the \"Company\"). Users of the Service (hereinafter referred to as \"Contractors\") shall use the Service upon agreeing to these Terms." },
         { type: "h2", text: "Article 1 (Purpose and Our Position)" },
         { type: "li", list: "ul", text: "The Service is a platform that matches Contractors (including care receivers and nursing care receivers) who wish to be provided with visiting care/in-home support services and visiting nursing services (hereinafter collectively referred to as \"Care Services\") with nurses or caregivers possessing prescribed qualifications (hereinafter referred to as \"Care Supporters\")." },
         { type: "li", list: "ul", text: "The Company assumes the role of providing a venue for matching and contract conclusion between the Contractor and the Care Supporter, providing a payment method through this system, and providing support and follow-up for the Contractor and the Care Supporter. The Company is not the direct provider of the Care Services to the Contractor." },
@@ -484,11 +484,11 @@ export const legalDocs = {
     },
   },
   cancellationPolicy: {
-    heading: { ja: "Care24Japan キャンセルポリシー", en: "Care24Japan Cancellation Policy" },
+    heading: { ja: "Care24 Japan キャンセルポリシー", en: "Care24 Japan Cancellation Policy" },
     body: {
       ja: [
         { type: "h2", text: "第1条（目的）" },
-        { type: "p", text: "本キャンセルポリシーは、メディカルインフォマティクス株式会社（以下「当社」という）が運営する「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）が予約確定した訪問介護・訪問看護・リハビリ等のマッチングサービス（以下「予約業務」という）を変更またはキャンセルする場合の条件およびキャンセル料について定めるものである。" },
+        { type: "p", text: "本キャンセルポリシーは、メディカルインフォマティクス株式会社（以下「当社」という）が運営する「Care24 Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）が予約確定した訪問介護・訪問看護・リハビリ等のマッチングサービス（以下「予約業務」という）を変更またはキャンセルする場合の条件およびキャンセル料について定めるものである。" },
         { type: "h2", text: "第2条（キャンセル料の発生基準および割合）" },
         { type: "p", text: "利用者の都合により予約業務をキャンセルまたは変更する場合、予約日時を基準とした以下のタイミングに応じてキャンセル料が発生するものとする。なお、判定基準となる時刻はすべて「15:00」を区切りとする。" },
         { type: "table", rows: [["キャンセル・変更の申し出タイミング", "キャンセル料の割合"], ["予約日の3日前の15:00以降のキャンセル・変更", "予約料金の 50％"], ["予約日の前々日の15:00以降のキャンセル・変更", "予約料金の 75％"], ["予約日の前日の15:00以降のキャンセル・変更", "予約料金の 100％（全額負担）"], ["上記（予約日3日前の15:00）より前のキャンセル・変更", "キャンセル料なし（無料）"]] },
@@ -507,7 +507,7 @@ export const legalDocs = {
       ],
       en: [
         { type: "h2", text: "Article 1 (Purpose)" },
-        { type: "p", text: "The purpose of this Cancellation Policy is to establish the conditions and cancellation fees when a service user (hereinafter referred to as the \"User\") changes or cancels a confirmed matching service reservation for visiting care, visiting nursing, rehabilitation, etc. (hereinafter referred to as the \"Reserved Work\") on \"Care24Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\")." },
+        { type: "p", text: "The purpose of this Cancellation Policy is to establish the conditions and cancellation fees when a service user (hereinafter referred to as the \"User\") changes or cancels a confirmed matching service reservation for visiting care, visiting nursing, rehabilitation, etc. (hereinafter referred to as the \"Reserved Work\") on \"Care24 Japan\" (hereinafter referred to as \"this Service\") operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\")." },
         { type: "h2", text: "Article 2 (Cancellation Fee Accrual Standards and Ratios)" },
         { type: "p", text: "If the Reserved Work is canceled or changed due to the User's convenience, a cancellation fee shall accrue depending on the following timing based on the reservation date and time. Furthermore, the base time for all judgments shall be cut off at \"15:00\"." },
         { type: "table", rows: [["Timing of Cancellation/Change Request", "Ratio of Cancellation Fee"], ["Cancellation/change after 15:00 three days prior to the reservation date", "50% of the reservation fee"], ["Cancellation/change after 15:00 two days prior to the reservation date", "75% of the reservation fee"], ["Cancellation/change after 15:00 the day before the reservation date", "100% of the reservation fee (full burden)"], ["Cancellation/change prior to the above (before 15:00 three days prior to the reservation date)", "No cancellation fee (Free)"]] },
@@ -527,11 +527,11 @@ export const legalDocs = {
     },
   },
   compensation: {
-    heading: { ja: "Care24Japan ケアサポーター報酬規程", en: "Care24Japan Care Supporter Remuneration Regulations" },
+    heading: { ja: "Care24 Japan ケアサポーター報酬規程", en: "Care24 Japan Care Supporter Remuneration Regulations" },
     body: {
       ja: [
         { type: "h2", text: "第1条（目的）" },
-        { type: "p", text: "本規程は、メディカルインフォマティクス株式会社（以下「当社」という）が運営する保険外訪問看護・訪問介護マッチングプラットフォーム「Care24Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）と準委任契約（以下「個別契約」という）を締結し、独立した請負人として業務を提供するケアサポーター（以下「サポーター」という）に対する報酬の支払いに関する基本事項を定めることを目的とする。" },
+        { type: "p", text: "本規程は、メディカルインフォマティクス株式会社（以下「当社」という）が運営する保険外訪問看護・訪問介護マッチングプラットフォーム「Care24 Japan」（以下「本サービス」という）において、サービス利用者（以下「利用者」という）と準委任契約（以下「個別契約」という）を締結し、独立した請負人として業務を提供するケアサポーター（以下「サポーター」という）に対する報酬の支払いに関する基本事項を定めることを目的とする。" },
         { type: "h2", text: "第2条（契約関係）" },
         { type: "p", text: "サポーターは、本規程のほか、当社が定めるプラットフォーム利用規約を遵守しなければならない。サポーターと利用者との間に成立する法律関係は準委任契約であり、サポーターは独立した事業者として自己の裁量と責任において業務を遂行するものとし、当社とサポーターとの間に雇用契約その他指揮命令関係は存在しない。" },
         { type: "h2", text: "第3条（報酬の基本構成）" },
@@ -562,7 +562,7 @@ export const legalDocs = {
       ],
       en: [
         { type: "h2", text: "Article 1 (Purpose)" },
-        { type: "p", text: "The purpose of these Regulations is to establish the basic matters regarding the payment of remuneration to care supporters (hereinafter referred to as \"Supporters\") who conclude a quasi-mandate contract (hereinafter referred to as \"Individual Contract\") with service users (hereinafter referred to as \"Users\") and provide services as independent contractors on the non-insurance visiting nursing and home care matching platform \"Care24Japan\" (hereinafter referred to as \"the Service\") operated by Medical Informatics Inc. (hereinafter referred to as \"the Company\")." },
+        { type: "p", text: "The purpose of these Regulations is to establish the basic matters regarding the payment of remuneration to care supporters (hereinafter referred to as \"Supporters\") who conclude a quasi-mandate contract (hereinafter referred to as \"Individual Contract\") with service users (hereinafter referred to as \"Users\") and provide services as independent contractors on the non-insurance visiting nursing and home care matching platform \"Care24 Japan\" (hereinafter referred to as \"the Service\") operated by Medical Informatics Inc. (hereinafter referred to as \"the Company\")." },
         { type: "h2", text: "Article 2 (Contractual Relationship)" },
         { type: "p", text: "Supporters must comply with the platform terms of use established by the Company in addition to these Regulations. The legal relationship established between a Supporter and a User is a quasi-mandate contract, and the Supporter shall execute the work at their own discretion and responsibility as an independent business operator, and no employment contract or other direct-and-order relationship exists between the Company and the Supporter." },
         { type: "h2", text: "Article 3 (Basic Structure of Remuneration)" },
@@ -596,12 +596,12 @@ export const legalDocs = {
     heading: { ja: "ケアサービス準委任契約書", en: "Care Service Quasi-Mandate Contract" },
     body: {
       ja: [
-        { type: "p", text: "本通知（書面）は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する「Care24Japan」プラットフォーム利用規約に基づき、以下の契約者とケアサポーターとの間で直接成立した個別準委任契約の内容を証明するものです。" },
+        { type: "p", text: "本通知（書面）は、メディカルインフォマティクス株式会社（以下「当社」といいます。）が運営する「Care24 Japan」プラットフォーム利用規約に基づき、以下の契約者とケアサポーターとの間で直接成立した個別準委任契約の内容を証明するものです。" },
         { type: "h2", text: "1. 契約当事者" },
         { type: "li", list: "ul", text: "委託者（契約者）： ［利用者の氏名］（住所：［利用者の登録住所］）" },
         { type: "li", list: "ul", text: "受託者（ケアサポーター）： ［ケアサポーターの氏名］（資格：［看護師 / 介護福祉士 等］）" },
         { type: "h2", text: "2. 契約の性質および準拠規約" },
-        { type: "p", text: "本契約は、民法第656条に基づく「準委任契約」であり、両当事者は、それぞれが当社に対して同意した「Care24Japan プラットフォーム利用規約（契約者向けおよびケアギバー向け）」のすべての条項（直接契約の禁止、免責事項、秘密保持等を含みますが、これらに限られません）が本契約に適用され、本契約の一部を構成することに合意します。" },
+        { type: "p", text: "本契約は、民法第656条に基づく「準委任契約」であり、両当事者は、それぞれが当社に対して同意した「Care24 Japan プラットフォーム利用規約（契約者向けおよびケアギバー向け）」のすべての条項（直接契約の禁止、免責事項、秘密保持等を含みますが、これらに限られません）が本契約に適用され、本契約の一部を構成することに合意します。" },
         { type: "h2", text: "3. 委託業務（予約）内容" },
         { type: "p", text: "本契約に基づき、受託者が委託者に対して提供する業務の詳細は以下の通りです。" },
         { type: "li", list: "ul", text: "マッチング成立日時： 2026年［〇］月［〇］日 ［〇］時［〇］分" },
@@ -627,12 +627,12 @@ export const legalDocs = {
         { type: "p", text: "（本通知はシステムより自動配信されているため、署名・捺印は省略されます）" },
       ],
       en: [
-        { type: "p", text: "This notice (document) certifies the details of the individual quasi-mandate contract established directly between the following Contractor and Care Supporter, based on the Terms of Use of the \"Care24Japan\" platform operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\")." },
+        { type: "p", text: "This notice (document) certifies the details of the individual quasi-mandate contract established directly between the following Contractor and Care Supporter, based on the Terms of Use of the \"Care24 Japan\" platform operated by Medical Informatics Inc. (hereinafter referred to as the \"Company\")." },
         { type: "h2", text: "1. Contracting Parties" },
         { type: "li", list: "ul", text: "Trustor (Contractor): [User's Name] (Address: [User's Registered Address])" },
         { type: "li", list: "ul", text: "Trustee (Care Supporter): [Care Supporter's Name] (Qualification: [Nurse / Certified Care Worker, etc.])" },
         { type: "h2", text: "2. Nature of Contract and Governing Terms" },
-        { type: "p", text: "This contract is a \"Quasi-Mandate Contract\" pursuant to Article 656 of the Civil Code, and both parties agree that all provisions of the \"Care24Japan Platform Terms of Use (for Contractors and Caregivers)\" agreed upon by each party with the Company (including, but not limited to, the prohibition of direct contracting, disclaimers, and confidentiality) shall apply to this contract and form a part of it." },
+        { type: "p", text: "This contract is a \"Quasi-Mandate Contract\" pursuant to Article 656 of the Civil Code, and both parties agree that all provisions of the \"Care24 Japan Platform Terms of Use (for Contractors and Caregivers)\" agreed upon by each party with the Company (including, but not limited to, the prohibition of direct contracting, disclaimers, and confidentiality) shall apply to this contract and form a part of it." },
         { type: "h2", text: "3. Details of Outsourced Work (Reservation)" },
         { type: "p", text: "The details of the work to be provided by the Trustee to the Trustor based on this contract are as follows:" },
         { type: "li", list: "ul", text: "Matching Establishment Date and Time: [Month] [Day], 2026, [Hour]:[Minute]" },

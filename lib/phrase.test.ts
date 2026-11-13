@@ -36,8 +36,8 @@ test("approved break positions from sheet (7) are phrase boundaries", () => {
     "メディカルインフォマティクス株式会社は/情報セキュリティマネジメントシステム（ISMS）の国際規格である/「ISO27001」を取得しております。",
   );
   assertBreaksAt(
-    "Care24Japanが、あなたのお困りごとをサポートします。",
-    "Care24Japanが、/あなたのお困りごとを/サポートします。",
+    "Care24 Japanが、あなたのお困りごとをサポートします。",
+    "Care24 Japanが、/あなたのお困りごとを/サポートします。",
   );
   assertBreaksAt(
     "※お電話での登録や予約のご対応は午前9時〜午後6時となります。",
@@ -86,7 +86,7 @@ test("never breaks inside words the client flagged", () => {
 test("short modifiers stay with the phrase they modify", () => {
   // Sheet (7) rows 29/30/31/33 all keep these pairs on one line.
   assert.match(breaks("24時間365日お気軽にご相談ください"), /お気軽にご相談ください/);
-  assert.match(breaks("Care24Japanが、あなたのお困りごとをサポートします。"), /あなたのお困りごとを/);
+  assert.match(breaks("Care24 Japanが、あなたのお困りごとをサポートします。"), /あなたのお困りごとを/);
   assert.match(breaks("ご挨拶、お話、近隣のお散歩、休憩"), /近隣のお散歩、休憩/);
   assert.match(breaks("お急ぎの場合はお電話がスムーズです。"), /お急ぎの場合は/);
   // A long の-phrase is a phrase of its own, not a modifier to glue.
