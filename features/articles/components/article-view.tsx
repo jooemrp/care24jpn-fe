@@ -41,9 +41,9 @@ function CtaLabel({ text, lang }: { text: string; lang: string }) {
   return (
     <span lang={lang}>
       {lead && <span className="block whitespace-nowrap sm:inline">{lead}</span>}
-      {/* 「 is a full-width glyph whose ink sits in its right half; pull the second
-          line back by half an em so its ink lines up with the lead-in above. */}
-      <span className={lead ? "block -ml-[0.5em] sm:ml-0 sm:inline" : undefined}>
+      {/* 「 is a full-width glyph whose ink sits in its right half; pull the first
+          line of this block back by half an em (text-indent, so wrapped lines stay put). */}
+      <span className={lead ? "block [text-indent:-0.5em] [&_span]:[text-indent:0] sm:[text-indent:0] sm:inline" : undefined}>
         {head && <PhraseText text={head} />}
         {tail && <span className="inline-block whitespace-nowrap">{tail}</span>}
       </span>
