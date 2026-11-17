@@ -595,8 +595,6 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
         ["listen_stop", "Stop"],
         ["listen_speed", "Speed"],
         ["listen_unsupported", "Listening unsupported"],
-        ["copy_link", "Copy link"],
-        ["link_copied", "Link copied"],
         ["published_on", "Published on"],
         ["back_to_list", "Back to list"],
         ["prev_article", "Previous article"],

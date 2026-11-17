@@ -22,9 +22,23 @@ import { fillTemplate } from "@/lib/fill-template";
 import { formatDate } from "../format";
 import { ArticleBlocks } from "./article-body";
 import ArticleReader from "./article-reader";
-import CopyLinkButton from "./copy-link-button";
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+/** Closing call to action such as 「詳細はこちら」; it must never split across lines. */
+const CTA_TAIL = /(?:詳細は|詳しくは)?こちら$/;
+
+/** CTA button label: phrase-wrapped, with the closing 「…こちら」 kept whole. */
+function CtaLabel({ text, lang }: { text: string; lang: string }) {
+  const tail = CTA_TAIL.exec(text)?.[0];
+  const head = tail ? text.slice(0, text.length - tail.length) : text;
+  return (
+    <span lang={lang}>
+      {head && <PhraseText text={head} />}
+      {tail && <span className="inline-block whitespace-nowrap">{tail}</span>}
+    </span>
+  );
+}
 
 /** One article: hero, outline, reading column with reader tools, CTA, and onward links. */
 export default async function ArticleView({ article, lang }: { article: Article; lang: Lang }) {
@@ -66,7 +80,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
   const ctaHref = article.cta.href;
   const ctaLabel = t(article.cta.label, lang);
   const ctaClass =
-    "inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-primary-deep px-8 py-3 text-base font-bold text-white shadow-sm transition hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
+    "inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-primary-deep px-4 py-3 text-center text-[0.9375rem] font-bold max-[359px]:text-[0.8125rem] sm:text-base leading-snug text-white shadow-sm transition sm:w-auto sm:px-8 hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 
   const url = `${SITE_URL}${articlePath}`;
   const jsonLd = [
@@ -149,11 +163,6 @@ export default async function ArticleView({ article, lang }: { article: Article;
                 <time dateTime={meta.updatedAt}>{updated}</time>
               </span>
             )}
-            <CopyLinkButton
-              path={articlePath}
-              label={t(l.copy_link, lang)}
-              copiedLabel={t(l.link_copied, lang)}
-            />
           </div>
 
           {/* `.article-prose` sizes its type from --reader-scale, which only exists
@@ -203,22 +212,22 @@ export default async function ArticleView({ article, lang }: { article: Article;
           {ArticleBlocks({ blocks: body, lang })}
         </div>
 
-        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface">
-          <div lang={contentLang} className="article-prose p-6 text-base md:p-9 md:text-[1.0625rem]">
+        <aside className="mx-auto mt-8 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface md:mt-14">
+          <div lang={contentLang} className="article-prose p-5 pb-4 text-base md:p-9 md:pb-6 md:text-[1.0625rem] [&>:last-child]:mb-0">
             {ArticleBlocks({ blocks: article.cta.body[lang], lang, idPrefix: "cta" })}
           </div>
-          <div className="px-6 pb-8 md:px-9 md:pb-10">
+          <div className="px-5 pb-6 md:px-9 md:pb-10">
             {isCmsFieldErrorMarker(ctaHref) ? (
               <CmsContractNotice details={ctaHref} />
             ) : isExternal(ctaHref) ? (
               <a href={ctaHref} target="_blank" rel="noopener noreferrer" className={ctaClass}>
-                {ctaLabel}
-                <IconArrowRight size={20} aria-hidden="true" />
+                <CtaLabel text={ctaLabel} lang={contentLang} />
+                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
               </a>
             ) : (
               <Link href={localizeHref(ctaHref, lang)} className={ctaClass}>
-                {ctaLabel}
-                <IconArrowRight size={20} aria-hidden="true" />
+                <CtaLabel text={ctaLabel} lang={contentLang} />
+                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
               </Link>
             )}
           </div>

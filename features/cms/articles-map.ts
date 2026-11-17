@@ -41,8 +41,6 @@ export const ARTICLE_LABEL_KEYS = [
   "listen_stop",
   "listen_speed",
   "listen_unsupported",
-  "copy_link",
-  "link_copied",
   "published_on",
   "back_to_list",
   "prev_article",
