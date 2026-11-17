@@ -65,7 +65,7 @@ export default function ArticleReader({
         />
       </div>
 
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="min-w-0">{children}</div>
       </div>
     </div>

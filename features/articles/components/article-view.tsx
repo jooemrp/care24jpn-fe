@@ -22,9 +22,34 @@ import { fillTemplate } from "@/lib/fill-template";
 import { formatDate } from "../format";
 import { ArticleBlocks } from "./article-body";
 import ArticleReader from "./article-reader";
-import CopyLinkButton from "./copy-link-button";
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+/** Closing call to action such as 「詳細はこちら」; it must never split across lines. */
+const CTA_TAIL = /(?:詳細は|詳しくは)?こちら$/;
+
+/** CTA button label. On phones the brand lead-in ("Care24 Japanの") sits on its own
+ * line and the rest follows on the next; the closing 「…こちら」 stays whole. */
+const CTA_LEAD = /^(.+?の)(「.+)$/;
+
+function CtaLabel({ text, lang }: { text: string; lang: string }) {
+  const split = CTA_LEAD.exec(text);
+  const lead = split?.[1];
+  const rest = split ? split[2] : text;
+  const tail = CTA_TAIL.exec(rest)?.[0];
+  const head = tail ? rest.slice(0, rest.length - tail.length) : rest;
+  return (
+    <span lang={lang}>
+      {lead && <span className="block whitespace-nowrap sm:inline">{lead}</span>}
+      {/* 「 is a full-width glyph whose ink sits in its right half; pull the first
+          line of this block back by half an em (text-indent, so wrapped lines stay put). */}
+      <span className={lead ? "block [text-indent:-0.5em] [&_span]:[text-indent:0] sm:[text-indent:0] sm:inline" : undefined}>
+        {head && <PhraseText text={head} />}
+        {tail && <span className="inline-block whitespace-nowrap">{tail}</span>}
+      </span>
+    </span>
+  );
+}
 
 /** One article: hero, outline, reading column with reader tools, CTA, and onward links. */
 export default async function ArticleView({ article, lang }: { article: Article; lang: Lang }) {
@@ -66,7 +91,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
   const ctaHref = article.cta.href;
   const ctaLabel = t(article.cta.label, lang);
   const ctaClass =
-    "inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-primary-deep px-8 py-3 text-base font-bold text-white shadow-sm transition hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
+    "inline-flex min-h-13 w-full items-center justify-between gap-2 rounded-full bg-primary-deep sm:justify-center px-3 py-3 text-left text-[0.875rem] font-bold sm:text-center max-[359px]:text-[0.8125rem] sm:text-base leading-snug text-white shadow-sm transition sm:w-auto sm:px-8 hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 
   const url = `${SITE_URL}${articlePath}`;
   const jsonLd = [
@@ -105,7 +130,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
         >
           <div className="absolute -right-28 -top-28 h-96 w-96 rounded-full bg-accent-light blur-3xl" />
         </div>
-        <div className="mx-auto max-w-3xl px-6 pb-10 pt-8 md:pb-14 md:pt-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 pb-10 pt-8 md:pb-14 md:pt-12">
           <nav aria-label="breadcrumb" className="mb-6 text-sm text-muted">
             <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
               <li>
@@ -149,11 +174,6 @@ export default async function ArticleView({ article, lang }: { article: Article;
                 <time dateTime={meta.updatedAt}>{updated}</time>
               </span>
             )}
-            <CopyLinkButton
-              path={articlePath}
-              label={t(l.copy_link, lang)}
-              copiedLabel={t(l.link_copied, lang)}
-            />
           </div>
 
           {/* `.article-prose` sizes its type from --reader-scale, which only exists
@@ -203,22 +223,22 @@ export default async function ArticleView({ article, lang }: { article: Article;
           {ArticleBlocks({ blocks: body, lang })}
         </div>
 
-        <aside className="mx-auto mt-14 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface">
-          <div lang={contentLang} className="article-prose p-6 text-base md:p-9 md:text-[1.0625rem]">
+        <aside className="mx-auto mt-8 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface md:mt-14">
+          <div lang={contentLang} className="article-prose p-5 pb-4 text-base md:p-9 md:pb-6 md:text-[1.0625rem] [&>:last-child]:mb-0">
             {ArticleBlocks({ blocks: article.cta.body[lang], lang, idPrefix: "cta" })}
           </div>
-          <div className="px-6 pb-8 md:px-9 md:pb-10">
+          <div className="px-5 pb-6 md:px-9 md:pb-10">
             {isCmsFieldErrorMarker(ctaHref) ? (
               <CmsContractNotice details={ctaHref} />
             ) : isExternal(ctaHref) ? (
               <a href={ctaHref} target="_blank" rel="noopener noreferrer" className={ctaClass}>
-                {ctaLabel}
-                <IconArrowRight size={20} aria-hidden="true" />
+                <CtaLabel text={ctaLabel} lang={contentLang} />
+                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
               </a>
             ) : (
               <Link href={localizeHref(ctaHref, lang)} className={ctaClass}>
-                {ctaLabel}
-                <IconArrowRight size={20} aria-hidden="true" />
+                <CtaLabel text={ctaLabel} lang={contentLang} />
+                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
               </Link>
             )}
           </div>
@@ -262,7 +282,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
 
       {related.length > 0 && (
         <section className="mt-20 border-t border-border bg-surface py-14 md:py-20">
-          <div className="mx-auto max-w-5xl px-6">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
             <h2 className="mb-8 text-2xl font-bold text-heading">{t(l.related_heading, lang)}</h2>
             <ul className="grid gap-6 md:grid-cols-3">
               {related.map((item) => (

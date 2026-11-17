@@ -85,8 +85,6 @@ const LABELS: Record<string, Bi> = {
     ja: "お使いのブラウザは音声の読み上げに対応していません。",
     en: "Your browser does not support read-aloud.",
   },
-  copy_link: { ja: "リンクをコピー", en: "Copy link" },
-  link_copied: { ja: "コピーしました", en: "Copied" },
   published_on: { ja: "更新日", en: "Updated" },
   back_to_list: { ja: "記事一覧へ戻る", en: "Back to articles" },
   prev_article: { ja: "前の記事", en: "Previous" },

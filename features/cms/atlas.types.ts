@@ -460,8 +460,6 @@ export interface ArticleUiLabels {
   listen_stop?: string; // localizable
   listen_speed?: string; // localizable
   listen_unsupported?: string; // localizable
-  copy_link?: string; // localizable
-  link_copied?: string; // localizable
   published_on?: string; // localizable
   back_to_list?: string; // localizable
   prev_article?: string; // localizable
