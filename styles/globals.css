@@ -128,21 +128,9 @@ body {
   max-width: 100%;
 }
 
-/* The CTA box below the article reuses `.article-prose`; keep its short copy
-   phrase-whole (no mid-word cuts). Justified spans stay inline so spacing can
-   still stretch. */
-aside .article-prose :is(p, li) .jp-phrase {
-  word-break: keep-all;
-  overflow-wrap: break-word;
-}
-
-aside .article-prose :is(p, li) .jp-phrase > span {
-  display: inline-block;
-  max-width: 100%;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-
+/* The CTA box below the article reuses `.article-prose`, so its copy fills the
+   full line width like the body (client request, 17 Nov); the orphan guard
+   above still keeps the last phrase whole. Justified spans stay inline. */
 aside .article-prose [data-align="justify"] .jp-phrase > span {
   display: inline;
   white-space: nowrap;

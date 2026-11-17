@@ -28,9 +28,9 @@ test("article body breaks by character without splitting Latin tokens", () => {
   assert.doesNotMatch(phrase, /break-all/);
 });
 
-test("CTA aside keeps phrases whole and out of the body rule", () => {
-  assert.match(rule("aside .article-prose :is(p, li) .jp-phrase"), /word-break: keep-all;/);
-  assert.match(rule("aside .article-prose :is(p, li) .jp-phrase > span"), /display: inline-block;/);
+test("CTA aside copy follows the article body rule and fills the line", () => {
+  assert.throws(() => rule("aside .article-prose :is(p, li) .jp-phrase"));
+  assert.throws(() => rule("aside .article-prose :is(p, li) .jp-phrase > span"));
 });
 
 test("h1-h3 balance their lines and break by phrase at the parent", () => {
