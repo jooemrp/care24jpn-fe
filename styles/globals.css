@@ -120,20 +120,46 @@ body {
   overflow-wrap: anywhere;
 }
 
-/* Orphan guard: with free breaking a paragraph can end on 「ます。」 alone.
-   The final phrase moves down as one block instead (max-width still lets one
-   wider than the line wrap inside itself). */
-.article-prose :is(p, li) .jp-phrase > span:last-of-type {
-  display: inline-block;
-  max-width: 100%;
+/* Orphan guard (CARE-505): with free breaking a block can end on 「ます。」 or a
+   single character. `PhraseText keepTail` wraps the last 3 characters of a
+   text run in `.jp-tail`; they never split, so the final line keeps at least
+   3 characters while everything before them still breaks freely. The old guard
+   made the whole last phrase one atomic block, which under `text-align:
+   justify` pushed it to the next line and stretched the line above it
+   character by character. */
+.article-prose .jp-tail {
+  white-space: nowrap;
 }
 
-/* The CTA box below the article reuses `.article-prose`, so its copy fills the
-   full line width like the body (client request, 17 Nov); the orphan guard
-   above still keeps the last phrase whole. Justified spans stay inline. */
+/* Justified headings (CMS editor) and the CTA box copy: a nowrap phrase that
+   does not fit drops to the next line and justification spreads the leftover
+   space between every character (自　費　介　護…, CARE-505). Same fix as the
+   article body (CARE-85): phrases are plain inline text so lines fill the
+   width; the heading's `text-wrap: balance` keeps the last line from being a
+   stray character. Left-aligned headings keep their phrase-whole rule (J16). */
+.article-prose :is(h2, h3)[data-align="justify"] .jp-phrase,
+aside .article-prose [data-align="justify"] .jp-phrase {
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+
+/* `balance` narrows every line to the same width, then justify stretches all
+   but the last line to the full box: 14 + 14 characters became
+   自　費　介　護… on line one (CARE-505). Justified headings fill the line
+   instead and use `pretty` to avoid a stray last line. */
+.article-prose :is(h2, h3)[data-align="justify"] {
+  text-wrap: pretty;
+  word-break: normal;
+}
+
+.article-prose :is(h2, h3)[data-align="justify"] .jp-phrase > span,
 aside .article-prose [data-align="justify"] .jp-phrase > span {
   display: inline;
-  white-space: nowrap;
+  max-width: none;
+  white-space: normal;
+  text-wrap: wrap;
+  overflow-wrap: anywhere;
 }
 
 /* Justified article text: a line ending in 。 or 、 looks short because the

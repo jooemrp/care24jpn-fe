@@ -4,6 +4,9 @@ import Link from "next/link";
 import type { LegalAlign, LegalBlock } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
+/** Characters kept together at the end of a text run so a block never ends on a stray 1-2 (CARE-505). */
+const TAIL = 3;
+
 function cellText(cell: string | { text: string }): string {
   return typeof cell === "string" ? cell : cell.text;
 }
@@ -22,7 +25,7 @@ function renderInline(text: string, keyPrefix: string, lang: Lang): ReactNode {
   let match: RegExpExecArray | null;
   while ((match = pattern.exec(text)) !== null) {
     if (match.index > last) {
-      parts.push(<PhraseText key={`${keyPrefix}-t${n}`} text={text.slice(last, match.index)} />);
+      parts.push(<PhraseText key={`${keyPrefix}-t${n}`} text={text.slice(last, match.index)} keepTail={TAIL} />);
     }
     const [, label, href, bold, italic] = match;
     const key = `${keyPrefix}-${n++}`;
@@ -44,7 +47,7 @@ function renderInline(text: string, keyPrefix: string, lang: Lang): ReactNode {
     last = pattern.lastIndex;
   }
   if (last < text.length) {
-    parts.push(<PhraseText key={`${keyPrefix}-t${n}`} text={text.slice(last)} />);
+    parts.push(<PhraseText key={`${keyPrefix}-t${n}`} text={text.slice(last)} keepTail={TAIL} />);
   }
   return parts;
 }
@@ -52,7 +55,6 @@ function renderInline(text: string, keyPrefix: string, lang: Lang): ReactNode {
 /** Alignment chosen in the CMS editor; undefined keeps the stylesheet default. */
 const alignStyle = (align: LegalAlign | undefined): CSSProperties | undefined =>
   align ? { textAlign: align } : undefined;
-
 /**
  * Renders article blocks. Heading ids use the block index (`sec-<i>`) so the
  * table of contents from `articleToc` always points at the right section.
@@ -141,7 +143,7 @@ export function ArticleBlocks({
           data-align={block.align}
           style={alignStyle(block.align)}
         >
-          <PhraseText text={block.text.replace(/\*\*/g, "")} />
+          <PhraseText text={block.text.replace(/\*\*/g, "")} keepTail={TAIL} />
         </Heading>,
       );
       i++;
