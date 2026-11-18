@@ -17,8 +17,32 @@ test("article body phrases are plain inline text so lines fill the width", () =>
   assert.doesNotMatch(span, /nowrap/);
 });
 
-test("the final phrase stays whole so no paragraph ends on a stray ます。", () => {
-  assert.match(rule(".article-prose :is(p, li) .jp-phrase > span:last-of-type"), /display: inline-block;/);
+test("the last 3 characters stay together instead of the whole last phrase going atomic (CARE-505)", () => {
+  assert.match(rule(".article-prose .jp-tail"), /white-space: nowrap;/);
+  // An atomic last phrase pushes itself to the next line under justify and
+  // stretches the line above it character by character.
+  assert.doesNotMatch(css, /span:last-of-type\s*\{/);
+});
+
+test("justified headings and CTA copy break like the body instead of stretching (CARE-505)", () => {
+  const span = rule('aside .article-prose [data-align="justify"] .jp-phrase > span');
+  assert.match(span, /display: inline;/);
+  assert.match(span, /white-space: normal;/);
+  assert.doesNotMatch(span, /nowrap/);
+  assert.match(css, /\.article-prose :is\(h2, h3\)\[data-align="justify"\] \.jp-phrase > span,/);
+  const phrase = rule('aside .article-prose [data-align="justify"] .jp-phrase');
+  assert.match(phrase, /word-break: normal;/);
+  assert.match(phrase, /line-break: strict;/);
+});
+
+test("justified headings do not balance, or justify stretches the narrowed lines (CARE-505)", () => {
+  const heading = rule('.article-prose :is(h2, h3)[data-align="justify"]');
+  assert.match(heading, /text-wrap: pretty;/);
+  assert.doesNotMatch(heading, /balance/);
+});
+
+test("left-aligned headings keep their phrase-whole rule", () => {
+  assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
 });
 
 test("article body breaks by character without splitting Latin tokens", () => {

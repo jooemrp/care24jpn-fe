@@ -4,6 +4,12 @@ import { isJapanese, phraseUnits } from "@/lib/phrase";
 type PhraseTextProps = {
   text: string;
   className?: string;
+  /**
+   * Wraps the last N characters in `.jp-tail` (nowrap inside `.article-prose`)
+   * so a justified block can end on at least N characters without the whole
+   * last phrase becoming one atomic block that stretches the line above it.
+   */
+  keepTail?: number;
 };
 
 /**
@@ -12,7 +18,7 @@ type PhraseTextProps = {
  * text renders unchanged. CMS `\n` still needs `whitespace-pre-line` on the
  * caller when it should be honoured.
  */
-export function PhraseText({ text, className = "" }: PhraseTextProps) {
+export function PhraseText({ text, className = "", keepTail = 0 }: PhraseTextProps) {
   if (!isJapanese(text)) {
     return className ? <span className={className}>{text}</span> : <>{text}</>;
   }
@@ -33,7 +39,9 @@ export function PhraseText({ text, className = "" }: PhraseTextProps) {
               {phrases.map((phrase, inner) => (
                 <Fragment key={inner}>
                   {inner > 0 && <wbr />}
-                  {phrase}
+                  {keepTail > 0 && index === units.length - 1 && inner === phrases.length - 1
+                    ? withTail(phrase, keepTail)
+                    : phrase}
                 </Fragment>
               ))}
             </span>
@@ -42,5 +50,17 @@ export function PhraseText({ text, className = "" }: PhraseTextProps) {
         );
       })}
     </span>
+  );
+}
+
+/** Splits off the last `count` characters into a `.jp-tail` span. */
+function withTail(phrase: string, count: number) {
+  const chars = Array.from(phrase);
+  if (chars.length <= count) return <span className="jp-tail">{phrase}</span>;
+  return (
+    <>
+      {chars.slice(0, -count).join("")}
+      <span className="jp-tail">{chars.slice(-count).join("")}</span>
+    </>
   );
 }
