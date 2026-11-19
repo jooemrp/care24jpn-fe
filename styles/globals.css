@@ -374,6 +374,14 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 
+/* Bulleted list inside a table cell (ClickUp #5): tight, like the cell text. */
+.legal-body :is(td, th) ul {
+  margin-block: 0.25em 0;
+}
+.legal-body :is(td, th) li {
+  margin-block: 0.25em;
+}
+
 /* Zebra banding — rows carry long text, and the eye loses the row halfway
    across a multi-column table without it. */
 .legal-body tbody tr:nth-child(odd) {
@@ -561,6 +569,15 @@ h3 {
   border-top: 1px solid var(--color-border);
   vertical-align: top;
   white-space: pre-line;
+}
+
+/* A bulleted list typed inside a table cell in the CMS (ClickUp #5) sits
+   tight in the cell instead of taking the body list's paragraph spacing. */
+.article-prose :is(td, th) ul {
+  margin-block: 0.25em 0;
+}
+.article-prose :is(td, th) ul > li {
+  margin-block: 0.25em;
 }
 @media (width < 40rem) {
   .article-prose .table-wrap {

@@ -52,6 +52,7 @@
  */
 
 import type { LegalAlign, LegalBlock, LegalTableCell } from "@/constants/legal";
+import { CELL_BULLET } from "./cell-lines";
 
 /** Escapes text for use as HTML element content (not attribute content). */
 function escapeHtml(text: string): string {
@@ -491,6 +492,47 @@ function splitParagraphs(text: string): string[] {
   return parts.length ? parts : [""];
 }
 
+/**
+ * A table cell's text. A cell is a single string (see {@link LegalTableCell}),
+ * so a `<ul>`/`<ol>` the editor put inside it (ClickUp #5) becomes one line
+ * per item instead of leaking `<ul><li>` into the page as literal text:
+ * `ul` items start with {@link CELL_BULLET}, which the renderers turn back
+ * into a real `<ul>` (features/cms/cell-lines.ts); `ol` items are numbered
+ * `1. `, `2. `, ... and shown as text lines. Text around a list stays in
+ * place on its own line. A cell with no list is parsed exactly as before.
+ */
+function cellContentToText(content: string): string {
+  if (!/<(?:ul|ol)>/.test(content)) return unescapeHtml(unwrapParagraphs(content));
+
+  const lines: string[] = [];
+  const pushText = (fragment: string) => {
+    const text = unescapeHtml(unwrapParagraphs(fragment.trim())).replace(/^\n+|\n+$/g, "");
+    if (text.trim()) lines.push(text);
+  };
+  let rest = content;
+  while (true) {
+    const ul = rest.indexOf("<ul>");
+    const ol = rest.indexOf("<ol>");
+    const tag: "ul" | "ol" | null = ul !== -1 && (ol === -1 || ul < ol) ? "ul" : ol !== -1 ? "ol" : null;
+    if (tag === null) {
+      pushText(rest);
+      break;
+    }
+    const index = tag === "ul" ? ul : ol;
+    pushText(rest.slice(0, index));
+    const contentStart = index + `<${tag}>`.length;
+    const closeIndex = findMatchingClose(rest, tag, contentStart);
+    const items: LegalBlock[] = [];
+    parseListItems(rest.slice(contentStart, closeIndex), tag, items);
+    items.forEach((item, n) => {
+      if (item.type !== "li") return;
+      lines.push(tag === "ul" ? `${CELL_BULLET}${item.text}` : `${n + 1}. ${item.text}`);
+    });
+    rest = rest.slice(closeIndex + `</${tag}>`.length);
+  }
+  return lines.join("\n");
+}
+
 /** Extracts every `<th>`/`<td>` cell within one `<tr>`'s inner HTML, as a
  * plain string (no `colspan`/`rowspan`) or `{text, colspan, rowspan}`
  * object per {@link LegalTableCell} — see {@link CELL_PATTERN}. */
@@ -500,7 +542,7 @@ function extractCells(rowHtml: string): LegalTableCell[] {
   let match: RegExpExecArray | null;
   while ((match = CELL_PATTERN.exec(rowHtml)) !== null) {
     const [, attrs, content] = match;
-    const text = unescapeHtml(unwrapParagraphs(content));
+    const text = cellContentToText(content);
     const colspanMatch = /colspan="(\d+)"/.exec(attrs);
     const rowspanMatch = /rowspan="(\d+)"/.exec(attrs);
     if (colspanMatch || rowspanMatch) {
