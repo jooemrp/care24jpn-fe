@@ -26,6 +26,12 @@ test("maps a locale-resolved entry, mirroring Japanese into the bilingual view m
   assert.equal(article.updatedAt, "2026-10-01T00:00:00Z");
 });
 
+test("maps the optional phone CTA label; unset or blank stays undefined (ClickUp #2)", () => {
+  assert.deepEqual(mapArticle(entry("demo", 0, { ...data(), cta_label_short: "自費介護サービスの詳細はこちら" })).cta.labelShort, bi("自費介護サービスの詳細はこちら"));
+  assert.equal(mapArticle(entry()).cta.labelShort, undefined);
+  assert.equal(mapArticle(entry("demo", 0, { ...data(), cta_label_short: "  " })).cta.labelShort, undefined);
+});
+
 test("a lead split with line breaks in the editor keeps its paragraphs (ClickUp #6)", () => {
   const lead = "<p>導入一段落目。<br><br>導入二段落目。<br>同じ段落の二行目。</p>";
   const article = mapArticle(entry("demo", 0, { ...data(), lead }));

@@ -120,7 +120,8 @@ test("article schema is regular, orderable, filterable by category and contains 
   const type = CONTENT_TYPES.find((item) => item.slug === "article")!;
   assert.equal(type.is_block, false);
   assert.equal(type.orderable, true);
-  assert.deepEqual(type.fields.map((field) => field.name), ["title", "category", "summary", "lead", "body", "cta_body", "cta_label", "cta_href", "seo_title", "seo_description", "og_image"]);
+  assert.deepEqual(type.fields.map((field) => field.name), ["title", "category", "summary", "lead", "body", "cta_body", "cta_label", "cta_href", "seo_title", "seo_description", "og_image", "cta_label_short"]);
+  assert.equal(type.fields.find((field) => field.name === "cta_label_short")?.required, false);
   assert.equal(type.fields.find((field) => field.name === "title")?.required, false);
   assert.deepEqual(
     type.fields.filter((field) => field.required && field.localizable).map((field) => field.name),

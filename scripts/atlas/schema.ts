@@ -560,6 +560,9 @@ export const CONTENT_TYPES: BlockTypeSpec[] = [
       { name: "seo_title", label: "SEO title (optional)", field_type: "text", localizable: true, required: false, sort_order: 8 },
       { name: "seo_description", label: "SEO description (optional)", field_type: "textarea", localizable: true, required: false, sort_order: 9 },
       { name: "og_image", label: "OG image (optional)", field_type: "image", localizable: false, required: false, sort_order: 10 },
+      // Shorter CTA button label for phones (ClickUp #2). Optional: empty keeps
+      // `cta_label` on every screen size.
+      { name: "cta_label_short", label: "CTA label – phone (optional)", field_type: "text", localizable: true, required: false, sort_order: 11 },
     ],
   },
   {

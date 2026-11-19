@@ -22,34 +22,7 @@ import { fillTemplate } from "@/lib/fill-template";
 import { formatDate } from "../format";
 import { ArticleBlocks } from "./article-body";
 import ArticleReader from "./article-reader";
-
-const isExternal = (href: string) => /^https?:\/\//.test(href);
-
-/** Closing call to action such as 「詳細はこちら」; it must never split across lines. */
-const CTA_TAIL = /(?:詳細は|詳しくは)?こちら$/;
-
-/** CTA button label. On phones the brand lead-in ("Care24Japanの") sits on its own
- * line and the rest follows on the next; the closing 「…こちら」 stays whole. */
-const CTA_LEAD = /^(.+?の)(「.+)$/;
-
-function CtaLabel({ text, lang }: { text: string; lang: string }) {
-  const split = CTA_LEAD.exec(text);
-  const lead = split?.[1];
-  const rest = split ? split[2] : text;
-  const tail = CTA_TAIL.exec(rest)?.[0];
-  const head = tail ? rest.slice(0, rest.length - tail.length) : rest;
-  return (
-    <span lang={lang}>
-      {lead && <span className="block whitespace-nowrap sm:inline">{lead}</span>}
-      {/* 「 is a full-width glyph whose ink sits in its right half; pull the first
-          line of this block back by half an em (text-indent, so wrapped lines stay put). */}
-      <span className={lead ? "block [text-indent:-0.5em] [&_span]:[text-indent:0] sm:[text-indent:0] sm:inline" : undefined}>
-        {head && <PhraseText text={head} />}
-        {tail && <span className="inline-block whitespace-nowrap">{tail}</span>}
-      </span>
-    </span>
-  );
-}
+import { ArticleCta } from "./article-cta";
 
 /** One article: hero, outline, reading column with reader tools, CTA, and onward links. */
 export default async function ArticleView({ article, lang }: { article: Article; lang: Lang }) {
@@ -88,10 +61,6 @@ export default async function ArticleView({ article, lang }: { article: Article;
     ...[seo.title, seo.description, seo.image].filter(isCmsFieldErrorMarker),
     ...(lang === "en" ? article.translationDiagnostics ?? [] : []),
   ];
-  const ctaHref = article.cta.href;
-  const ctaLabel = t(article.cta.label, lang);
-  const ctaClass =
-    "inline-flex min-h-13 w-full items-center justify-between gap-2 rounded-full bg-primary-deep sm:justify-center px-3 py-3 text-left text-[0.875rem] font-bold sm:text-center max-[359px]:text-[0.8125rem] sm:text-base leading-snug text-white shadow-sm transition sm:w-auto sm:px-8 hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 
   const url = `${SITE_URL}${articlePath}`;
   const jsonLd = [
@@ -223,26 +192,14 @@ export default async function ArticleView({ article, lang }: { article: Article;
           {ArticleBlocks({ blocks: body, lang })}
         </div>
 
-        <aside className="mx-auto mt-8 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface md:mt-14">
-          <div lang={contentLang} className="article-prose p-5 pb-4 text-base md:p-9 md:pb-6 md:text-[1.0625rem] [&>:last-child]:mb-0">
-            {ArticleBlocks({ blocks: article.cta.body[lang], lang, idPrefix: "cta" })}
-          </div>
-          <div className="px-5 pb-6 md:px-9 md:pb-10">
-            {isCmsFieldErrorMarker(ctaHref) ? (
-              <CmsContractNotice details={ctaHref} />
-            ) : isExternal(ctaHref) ? (
-              <a href={ctaHref} target="_blank" rel="noopener noreferrer" className={ctaClass}>
-                <CtaLabel text={ctaLabel} lang={contentLang} />
-                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
-              </a>
-            ) : (
-              <Link href={localizeHref(ctaHref, lang)} className={ctaClass}>
-                <CtaLabel text={ctaLabel} lang={contentLang} />
-                <IconArrowRight size={20} aria-hidden="true" className="shrink-0" />
-              </Link>
-            )}
-          </div>
-        </aside>
+        <ArticleCta
+          body={article.cta.body[lang]}
+          label={t(article.cta.label, lang)}
+          labelShort={article.cta.labelShort?.[lang]}
+          href={article.cta.href}
+          lang={lang}
+          contentLang={contentLang}
+        />
 
         {(prev || next) && (
           <nav className="mx-auto mt-12 grid max-w-[40rem] gap-4 sm:grid-cols-2">
