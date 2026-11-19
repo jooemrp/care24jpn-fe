@@ -26,6 +26,15 @@ test("maps a locale-resolved entry, mirroring Japanese into the bilingual view m
   assert.equal(article.updatedAt, "2026-10-01T00:00:00Z");
 });
 
+test("a lead split with line breaks in the editor keeps its paragraphs (ClickUp #6)", () => {
+  const lead = "<p>導入一段落目。<br><br>導入二段落目。<br>同じ段落の二行目。</p>";
+  const article = mapArticle(entry("demo", 0, { ...data(), lead }));
+  assert.deepEqual(article.lead.ja, [
+    { type: "p", text: "導入一段落目。" },
+    { type: "p", text: "導入二段落目。\n同じ段落の二行目。" },
+  ]);
+});
+
 test("also accepts the JSON-encoded resolved data delivered by Atlas", () => {
   assert.equal(mapArticle(entry("demo", 0, JSON.stringify(data()))).title.en, "題名");
 });
