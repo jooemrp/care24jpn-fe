@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ArticleCta, CTA_BUTTON_CLASS } from "./article-cta";
+import { ArticleCta, CTA_BUTTON_CLASS, justifyCtaBlocks } from "./article-cta";
 import { fixDoubledKochira, shortLabel } from "../../../scripts/atlas/patch-article-cta-label";
 
 const body = [{ type: "p" as const, text: "「Care24Japan」では、プロのスタッフがサポートします。" }];
@@ -49,4 +49,15 @@ test("CMS label fixes: doubled こちら and the client's phone rule", () => {
   assert.equal(shortLabel("Care24Japanの「自費介護サービス」の詳細はこちらこちら"), "自費介護サービスの詳細はこちら");
   assert.equal(shortLabel("Care24 Japanへの無料相談・お問い合わせはこちらこちら"), "無料相談・お問い合わせはこちら");
   assert.equal(shortLabel("Care 24 Japanの詳しい料金プラン・時間単価のご確認はこちら"), "詳しい料金プラン・時間単価のご確認はこちら");
+});
+
+test("CTA copy is justified so it fills the box; headings and chosen alignments are kept", () => {
+  assert.match(render(), /<p [^>]*data-align="justify"/);
+  const out = justifyCtaBlocks([
+    { type: "p", text: "a" },
+    { type: "p", text: "b", align: "center" },
+    { type: "li", list: "ul", text: "c" },
+    { type: "h2", text: "d" },
+  ]);
+  assert.deepEqual(out.map((b) => ("align" in b ? b.align : undefined)), ["justify", "center", "justify", undefined]);
 });

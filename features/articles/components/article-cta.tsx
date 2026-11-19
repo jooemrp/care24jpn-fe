@@ -36,6 +36,20 @@ export function CtaLabel({ text, lang }: { text: string; lang: string }) {
 }
 
 /**
+ * CTA copy fills the full box width (client request, ClickUp #2: the right
+ * side looked blank and unbalanced). The editor stores `text-align: left`, which
+ * leaves the line ends ragged by one or two characters; paragraphs and list
+ * items are rendered justified here instead, using the same justified-text
+ * rules as the article body (`aside .article-prose [data-align="justify"]`).
+ * Headings, tables and any non-left alignment an editor chose are kept.
+ */
+export function justifyCtaBlocks(blocks: readonly LegalBlock[]): LegalBlock[] {
+  return blocks.map((block) =>
+    (block.type === "p" || block.type === "li") && !block.align ? { ...block, align: "justify" as const } : block,
+  );
+}
+
+/**
  * Button styling (client request, ClickUp #2). Phones: full width, centred
  * text, `px-3`, and a softer `rounded-xl` corner, which suits a two-line
  * label better than a pill. From `sm` up: the original centred pill.
@@ -85,7 +99,7 @@ export function ArticleCta({
   return (
     <aside className="mx-auto mt-8 max-w-[40rem] overflow-hidden rounded-3xl border border-border bg-surface md:mt-14">
       <div lang={contentLang} className="article-prose p-5 pb-4 text-base md:p-9 md:pb-6 md:text-[1.0625rem] [&>:last-child]:mb-0">
-        {ArticleBlocks({ blocks: body, lang, idPrefix: "cta" })}
+        {ArticleBlocks({ blocks: justifyCtaBlocks(body), lang, idPrefix: "cta" })}
       </div>
       <div className="px-5 pb-6 md:px-9 md:pb-10">
         {isCmsFieldErrorMarker(href) ? (
