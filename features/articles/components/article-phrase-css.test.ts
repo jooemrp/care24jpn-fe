@@ -66,6 +66,16 @@ test("h1-h3 balance their lines and break by phrase at the parent", () => {
   assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
 });
 
+test("heading phrases do not balance themselves; only the heading does (ClickUp #3)", () => {
+  const span = rule(":is(h1, h2, h3) .jp-phrase > span");
+  assert.match(span, /text-wrap: pretty;/);
+  assert.doesNotMatch(span, /balance|display/, "spans stay inline-block from the base rule");
+  // Must come after the base span rule so equal-or-higher specificity wins.
+  assert.ok(css.indexOf(":is(h1, h2, h3) .jp-phrase > span {") > css.indexOf(".jp-phrase > span {"));
+  // Justified headings still switch their spans to plain inline text.
+  assert.match(rule('aside .article-prose [data-align="justify"] .jp-phrase > span'), /text-wrap: wrap;/);
+});
+
 test("headings and table cells keep their phrase-whole rules", () => {
   assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
   assert.match(rule(":is(td, th) .jp-phrase > span"), /overflow-wrap: break-word;/);

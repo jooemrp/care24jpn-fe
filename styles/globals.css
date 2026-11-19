@@ -205,6 +205,17 @@ h3 {
   word-break: auto-phrase;
 }
 
+/* Balance lives on the heading only (ClickUp #3, 19 Nov). A balanced
+   inline-block phrase that has to wrap inside itself narrows its own lines
+   but keeps its full width, so a blank gap opens on its right and the next
+   phrase drops to a new line. Heading phrases stay inline-block (a phrase
+   still moves as one unit); `pretty` only keeps a phrase that must wrap from
+   ending on a 1–2 character line. Justified headings keep their own rule
+   (CARE-505, `.article-prose :is(h2, h3)[data-align="justify"]` below). */
+:is(h1, h2, h3) .jp-phrase > span {
+  text-wrap: pretty;
+}
+
 /* ------------------------------------------------------------------
    Legal document body (privacy policy, terms, ...).
 
