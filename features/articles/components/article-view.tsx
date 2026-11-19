@@ -28,7 +28,7 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 /** Closing call to action such as 「詳細はこちら」; it must never split across lines. */
 const CTA_TAIL = /(?:詳細は|詳しくは)?こちら$/;
 
-/** CTA button label. On phones the brand lead-in ("Care24 Japanの") sits on its own
+/** CTA button label. On phones the brand lead-in ("Care24Japanの") sits on its own
  * line and the rest follows on the next; the closing 「…こちら」 stays whole. */
 const CTA_LEAD = /^(.+?の)(「.+)$/;
 
