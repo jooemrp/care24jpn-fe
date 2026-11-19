@@ -477,6 +477,7 @@ export interface Article {
   body?: string; // localizable
   cta_body?: string; // localizable
   cta_label?: string; // localizable
+  cta_label_short?: string; // localizable
   cta_href?: string;
   seo_title?: string; // localizable
   seo_description?: string; // localizable

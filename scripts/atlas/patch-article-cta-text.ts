@@ -15,7 +15,7 @@ import { resolve } from "node:path";
 import { blocksToHtml } from "../../features/cms/legal-html";
 import { createScriptManagementClient, loadEnv, requireAtlasEnv } from "./lib";
 
-const LOCALIZABLE = ["title", "category", "summary", "lead", "body", "cta_body", "cta_label", "seo_title", "seo_description"];
+const LOCALIZABLE = ["title", "category", "summary", "lead", "body", "cta_body", "cta_label", "cta_label_short", "seo_title", "seo_description"];
 const apply = process.argv[2] === "apply";
 
 type Row = { slug: string; updated_at: string; is_fallback?: boolean; data: string | Record<string, unknown> };

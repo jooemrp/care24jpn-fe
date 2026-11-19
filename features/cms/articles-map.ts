@@ -78,6 +78,8 @@ export type Article = {
   cta: {
     body: { ja: LegalBlock[]; en: LegalBlock[] };
     label: Bilingual;
+    /** Optional shorter button label for phones (`cta_label_short`); unset keeps `label`. */
+    labelShort?: { ja?: string; en?: string };
     href: string;
   };
   readingMinutes: { ja: number; en: number };
@@ -217,6 +219,7 @@ function mapResolvedArticle(entry: RawEntry): Article {
     cta: {
       body: { ja: ctaBody, en: ctaBody },
       label: text("cta_label"),
+      labelShort: optionalBi("cta_label_short"),
       href: requiredUrlOrFieldError({ cta_href: typeof data.cta_href === "string" ? data.cta_href : undefined }, "cta_href", context, "article.cta.href"),
     },
     readingMinutes: {
@@ -262,7 +265,12 @@ export function mapArticle(entry: RawEntry, englishEntry?: RawEntry): Article {
     summary: { ja: ja.summary.ja, en: en.summary.ja },
     lead: { ja: ja.lead.ja, en: en.lead.ja },
     body: { ja: ja.body.ja, en: en.body.ja },
-    cta: { ...ja.cta, label: { ja: ja.cta.label.ja, en: en.cta.label.ja }, body: { ja: ja.cta.body.ja, en: en.cta.body.ja } },
+    cta: {
+      ...ja.cta,
+      label: { ja: ja.cta.label.ja, en: en.cta.label.ja },
+      labelShort: ja.cta.labelShort || en.cta.labelShort ? { ja: ja.cta.labelShort?.ja, en: en.cta.labelShort?.ja } : undefined,
+      body: { ja: ja.cta.body.ja, en: en.cta.body.ja },
+    },
     readingMinutes: { ja: ja.readingMinutes.ja, en: en.readingMinutes.en },
     seo: { title: seoText("title"), description: seoText("description"), ogImage: ja.seo.ogImage ?? en.seo.ogImage },
   };
