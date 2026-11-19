@@ -1,8 +1,13 @@
 /**
- * Brand spelling: every CMS string that still says "Care 24 Japan" (with
- * spaces) becomes "Care24Japan". The site reads brand name, footer legal line,
- * logo alt, page SEO and body copy from Atlas, so this is the only place the
- * rename can take effect for them — constants in code only cover the seeds.
+ * Brand spelling (client request 2026-11-19, ClickUp "1. Google visibility"):
+ * every CMS string that spells the brand with spaces ("Care24 Japan",
+ * "Care 24 Japan") becomes "Care24Japan". Supersedes the 2026-11-13 decision
+ * (and its patch-brand-care24-japan.ts, now removed) that wrote "Care24 Japan".
+ * Articles are entries, not pages: run patch-article-brand-name.ts too.
+ *
+ * The site reads brand name, footer legal line, logo alt, page SEO and body
+ * copy from Atlas, so this is the only place the rename can take effect for
+ * them — constants in code only cover the seeds.
  *
  * Walks every published page and rewrites, in JA base and EN translations:
  *   - block data (strings, recursively, incl. JSON-encoded string fields)
