@@ -23,7 +23,7 @@ async function load(): Promise<typeof WebsiteModule> {
 test("builds a WebSite object from the CMS brand name, in a fixed key order", async () => {
   const { buildWebSiteJsonLd } = await load();
   const out = buildWebSiteJsonLd({
-    brandName: "Care24 Japan",
+    brandName: "Care24Japan",
     siteUrl: "https://www.care24.jp",
     lang: "ja",
   });
@@ -31,7 +31,7 @@ test("builds a WebSite object from the CMS brand name, in a fixed key order", as
   assert.deepEqual(out, {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Care24 Japan",
+    name: "Care24Japan",
     url: "https://www.care24.jp",
     inLanguage: "ja",
   });
@@ -50,7 +50,7 @@ test("the name follows the CMS value, not a hardcoded brand", async () => {
 test("url is the site origin even when the input carries a path or trailing slash", async () => {
   const { buildWebSiteJsonLd } = await load();
   const out = buildWebSiteJsonLd({
-    brandName: "Care24 Japan",
+    brandName: "Care24Japan",
     siteUrl: "https://www.care24.jp/",
     lang: "en",
   });
@@ -72,11 +72,11 @@ test("a missing or blank brand name throws instead of falling back", async () =>
 test("a malformed or non-http site URL throws", async () => {
   const { buildWebSiteJsonLd } = await load();
   assert.throws(
-    () => buildWebSiteJsonLd({ brandName: "Care24 Japan", siteUrl: "not a url", lang: "ja" }),
+    () => buildWebSiteJsonLd({ brandName: "Care24Japan", siteUrl: "not a url", lang: "ja" }),
     /absolute site URL/,
   );
   assert.throws(
-    () => buildWebSiteJsonLd({ brandName: "Care24 Japan", siteUrl: "javascript:alert(1)", lang: "ja" }),
+    () => buildWebSiteJsonLd({ brandName: "Care24Japan", siteUrl: "javascript:alert(1)", lang: "ja" }),
     /http\(s\)/,
   );
 });
@@ -84,7 +84,7 @@ test("a malformed or non-http site URL throws", async () => {
 test("a blank language code throws", async () => {
   const { buildWebSiteJsonLd } = await load();
   assert.throws(
-    () => buildWebSiteJsonLd({ brandName: "Care24 Japan", siteUrl: "https://www.care24.jp", lang: " " }),
+    () => buildWebSiteJsonLd({ brandName: "Care24Japan", siteUrl: "https://www.care24.jp", lang: " " }),
     /language/,
   );
 });

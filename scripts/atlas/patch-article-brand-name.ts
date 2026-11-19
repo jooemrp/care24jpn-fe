@@ -1,7 +1,9 @@
 /**
- * Brand spelling (decision 2026-11-13): "Care24Japan" / "Care 24 Japan" becomes
- * "Care24 Japan" in every live article entry (ja translation fields).
- * Companion to patch-brand-care24-japan.ts, which only walks pages.
+ * Brand spelling (client request 2026-11-19, ClickUp "1. Google visibility"):
+ * "Care24 Japan" / "Care 24 Japan" becomes "Care24Japan" (no spaces) in every
+ * live article entry (ja translation fields). Supersedes the 2026-11-13
+ * decision that wrote "Care24 Japan". Companion to patch-brand-name.ts, which
+ * only walks pages (incl. the `site` and `faq` pages).
  *
  * Same write shape as patch-article-cta-text.ts: data is read from the delivery
  * API (locale=ja) and written back with the SDK in the editor shape
@@ -9,14 +11,14 @@
  * entry already has a real en translation. Only entries with a hit are written.
  *
  * Usage (dry run by default; BACKUP_FILE is written before any write):
- *   BACKUP_FILE=<path.json> npx tsx scripts/atlas/patch-article-brand-care24-japan.ts [apply]
+ *   BACKUP_FILE=<path.json> npx tsx scripts/atlas/patch-article-brand-name.ts [apply]
  */
 import { writeFileSync } from "node:fs";
 import { createScriptManagementClient, loadEnv, requireAtlasEnv } from "./lib";
 
 const LOCALIZABLE = ["title", "category", "summary", "lead", "body", "cta_body", "cta_label", "seo_title", "seo_description"];
 const BRAND_RE = /Care[  　]*24[  　]*Japan/g;
-const BRAND = "Care24 Japan";
+const BRAND = "Care24Japan";
 const apply = process.argv[2] === "apply";
 
 type Row = { slug: string; updated_at: string; is_fallback?: boolean; data: string | Record<string, unknown> };
@@ -101,6 +103,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error("[atlas:patch-article-brand-care24-japan] failed:", error);
+  console.error("[atlas:patch-article-brand-name] failed:", error);
   process.exit(1);
 });
