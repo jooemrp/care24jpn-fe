@@ -116,3 +116,41 @@ test("non-Japanese text passes through as one segment", () => {
   assert.deepEqual(phraseSegments("For details, click here."), ["For details, click here."]);
   assert.deepEqual(phraseSegments(""), []);
 });
+
+test("article titles: compounds BudouX cuts in two stay whole (ClickUp #3)", () => {
+  const cases: Array<[string, string]> = [
+    ["高齢者の見守りサービス完全ガイド｜一人暮らし・同居家族の安心を支える選び方", "一人暮らし"],
+    ["高齢の親と外出・旅行を楽しむには？付き添いサービスの活用方法と準備", "付き添いサービス"],
+    ["プロに頼ることは「手を抜くこと」ではない", "手を抜く"],
+  ];
+  for (const [text, word] of cases) {
+    assert.ok(phraseUnits(text).flat().some((phrase) => phrase.includes(word)), `"${word}" was split: ${breaks(text)}`);
+  }
+});
+
+test("dependent words never open a line: あたり, 際, and おく/もらう after a て-form", () => {
+  assert.match(breaks("【料金相場】1時間あたりの費用目安"), /1時間あたりの/);
+  assert.match(breaks("通院付き添いを依頼する際の事前準備と注意点"), /依頼する際の/);
+  assert.match(breaks("会社に頼る！知っておくべき両立支援制度"), /\/知っておくべき\/両立支援制度/);
+  assert.match(breaks("スタッフに自宅に来てもらい、"), /来てもらい、/);
+  for (const text of ["【料金相場】1時間あたりの費用目安", "通院付き添いを依頼する際の事前準備と注意点", "会社に頼る！知っておくべき両立支援制度"]) {
+    assert.ok(phraseUnits(text).flat().every((phrase) => !/^(?:あたり|際|おく)/.test(phrase)), breaks(text));
+  }
+});
+
+test("the title separator ｜ starts the subtitle's line and never ends a line", () => {
+  assert.match(breaks("自費介護サービスの利用方法｜相談から予約・当日までの流れをわかりやすく解説"), /利用方法\/｜相談から/);
+  assert.match(breaks("介護保険ではできないこと一覧｜家事・外出・付き添いを頼みたいときの選択肢"), /こと一覧\/｜家事/);
+  for (const text of ["安心できるプロの基準｜自費サービスを選定する5つのポイント", "高齢者の見守りサービス完全ガイド｜一人暮らし・同居家族の安心を支える選び方"]) {
+    assert.ok(phraseUnits(text).flat().every((phrase) => !phrase.endsWith("｜")), breaks(text));
+  }
+});
+
+test("a phrase too long for a phone line gets fallback breaks between words, kept in one unit", () => {
+  // 13 characters: wider than a 320px heading line; without a fallback the box broke before の.
+  assert.deepEqual(phraseUnits("後悔しない！介護保険外サービス事業者の選び方と利用手順")[1], ["介護保険外サービス", "事業者の"]);
+  // After a 【label】 only as a fallback, so 【目的別】自費の stays one unit.
+  assert.deepEqual(phraseUnits("【目的別】自費の外出サポート活用シーン")[0], ["【目的別】", "自費の"]);
+  // Kanji followed by katakana is never split (client-flagged 情報セキュリティ).
+  assert.ok(phraseUnits("情報セキュリティマネジメントシステム").flat().some((p) => p.includes("情報セキュリティ")));
+});

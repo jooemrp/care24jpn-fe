@@ -27,14 +27,84 @@ export function isJapanese(text: string): boolean {
  */
 const GLUE_TO_PREVIOUS = /^(?:なります|ください|いたします|です|ます)/;
 
+/**
+ * Words that depend on the phrase before them and read as a broken word when
+ * they open a line (article titles, ClickUp #3): 「1時間/あたりの」,
+ * 「依頼する/際の」. After a て/で verb form, an auxiliary verb such as
+ * おく/しまう/みる is likewise part of the verb (「知って/おくべき」).
+ */
+const DEPENDENT_START = /^(?:あたり|際(?![立限])|ごと(?=[のに]))/;
+const TE_AUXILIARY = /^(?:おく|おき|おい|しまう|しまい|しまっ|みる|みて|みた|もらう|もらい|もらえ)/;
+
+function gluesToPrevious(previous: string, phrase: string): boolean {
+  if (GLUE_TO_PREVIOUS.test(phrase) || DEPENDENT_START.test(phrase)) return true;
+  return /[てで]$/.test(previous) && TE_AUXILIARY.test(phrase);
+}
+
+/**
+ * Words BudouX cuts in two (`一人|暮らし`, `付き添い|サービス`, `手を|抜く`).
+ * When a phrase boundary falls inside one of these, the two phrases are
+ * joined, so the word never splits. Add to this list rather than to CSS.
+ */
+const NEVER_SPLIT = ["一人暮らし", "付き添いサービス", "手を抜く"];
+
+function joinSplitWords(phrases: string[]): string[] {
+  const out: string[] = [];
+  for (const phrase of phrases) {
+    const last = out[out.length - 1];
+    if (last !== undefined) {
+      const joined = last + phrase;
+      const crosses = NEVER_SPLIT.some((word) => {
+        for (let at = joined.indexOf(word); at !== -1; at = joined.indexOf(word, at + 1)) {
+          if (at < last.length && at + word.length > last.length) return true;
+        }
+        return false;
+      });
+      if (crosses) {
+        out[out.length - 1] = joined;
+        continue;
+      }
+    }
+    out.push(phrase);
+  }
+  return out;
+}
+
+/** Longer than this, a phrase gets fallback break points (see {@link fallbackPieces}). */
+const LONG_PHRASE = 12;
+
+/**
+ * Break points used only when a whole phrase does not fit on one line, so it
+ * wraps between words instead of wherever the box ends (「介護保険外サービス
+ * 事業者/の」 at 320px): after a 【label】 (`【料金相場】/1時間あたりの`), and,
+ * in a phrase over {@link LONG_PHRASE} characters, where a katakana word is
+ * followed by a kanji word (`介護保険外サービス/事業者の`). Kanji followed by
+ * katakana is never split, so 情報セキュリティ stays whole. The pieces stay
+ * in one unit: they move to the next line together whenever they fit.
+ */
+function fallbackPieces(phrase: string): string[] {
+  return phrase
+    .split(/(?<=】)(?=.)/)
+    .flatMap((piece) => (piece.length > LONG_PHRASE ? piece.split(/(?<=[ァ-ヺー])(?=[一-龯々])/) : [piece]));
+}
+
+/**
+ * Title separator 「｜」 (`メイン｜サブ`): a line may always break right
+ * before it and never right after it, so the subtitle starts its own line
+ * when the title wraps instead of 「｜」 sitting mid-line or at a line end.
+ */
+const TITLE_SEPARATOR = /(?=｜)/;
+
 /** A closing phrase this short would read as an orphan (`1日の|流れ`). */
 const MAX_ORPHAN_LENGTH = 2;
 
 /**
- * Case particle BudouX sometimes fuses with the next phrase
- * (`お電話にてお気軽に`); the client wants the break after it (sheet row 33).
+ * Endings BudouX sometimes fuses with the next phrase: the case particle
+ * にて (`お電話にてお気軽に`, sheet row 33) and the auxiliary べき before a
+ * noun (`おくべき両立支援制度`, ClickUp #3), which is otherwise one phrase too
+ * long for a phone line.
  */
-const SPLIT_AFTER = /(にて)(?=.)/;
+const SPLIT_AFTER = /(にて|べき)(?=.)/;
 
 function splitAfterParticle(phrase: string): string[] {
   const match = SPLIT_AFTER.exec(phrase);
@@ -66,19 +136,27 @@ type Unit = string[];
  * (`着替えの/お手伝い`), so a glue never forces a mid-word split.
  */
 function segmentLine(line: string): Unit[] {
+  const parts = line.split(TITLE_SEPARATOR).filter(Boolean);
+  if (parts.length > 1) return parts.flatMap(segmentLine);
+
   const units: Unit[] = [];
   let pending: Unit | null = null;
-  for (const phrase of parser.parse(line).flatMap(splitAfterParticle)) {
+  // The last whole phrase, before fallback pieces: glue rules read phrases,
+  // so a piece such as 「事業者の」 never counts as a short modifier.
+  let lastPhrase = "";
+  for (const phrase of joinSplitWords(parser.parse(line).flatMap(splitAfterParticle))) {
     const last = units[units.length - 1];
-    if (!pending && last && GLUE_TO_PREVIOUS.test(phrase)) {
+    if (!pending && last && gluesToPrevious(lastPhrase, phrase)) {
       // Never a break point, not even a fallback one.
       last[last.length - 1] += phrase;
+      lastPhrase += phrase;
     } else {
-      units.push(pending ? [...pending, phrase] : [phrase]);
+      const pieces = fallbackPieces(phrase);
+      units.push(pending ? [...pending, ...pieces] : pieces);
+      lastPhrase = phrase;
     }
     pending = null;
-    const current = units[units.length - 1]!;
-    if (gluesToNext(current[current.length - 1]!)) pending = units.pop()!;
+    if (gluesToNext(lastPhrase)) pending = units.pop()!;
   }
   if (pending) units.push(pending);
 
