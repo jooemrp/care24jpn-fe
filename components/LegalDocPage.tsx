@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Section from "@/components/ui/Section";
 import TableOfContents, { type TocItem } from "@/components/TableOfContents";
@@ -6,6 +6,7 @@ import type { LegalBlock, LegalDoc, LegalTableCell } from "@/constants/legal";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 import { CmsContentError } from "@/features/cms/errors";
 import { stripInlineMarks } from "@/features/cms/inline-marks";
+import { cellSegments } from "@/features/cms/cell-lines";
 
 /**
  * Renders a legal block's text, turning the small set of inline markers
@@ -75,6 +76,26 @@ function cellText(cell: LegalTableCell): string {
   return typeof cell === "string" ? cell : cell.text;
 }
 
+/** A table cell's text, with a bulleted list typed inside the cell drawn as
+ * a real `<ul>` instead of literal text (ClickUp #5, features/cms/cell-lines.ts). */
+function renderCell(text: string, keyPrefix: string, lang: Lang): ReactNode {
+  const segments = cellSegments(text);
+  if (segments.length === 1 && segments[0].type === "text") {
+    return renderInlineText(segments[0].text, keyPrefix, lang);
+  }
+  return segments.map((segment, s) =>
+    segment.type === "ul" ? (
+      <ul key={`${keyPrefix}-u${s}`}>
+        {segment.items.map((item, n) => (
+          <li key={n}>{renderInlineText(item, `${keyPrefix}-u${s}-${n}`, lang)}</li>
+        ))}
+      </ul>
+    ) : (
+      <Fragment key={`${keyPrefix}-s${s}`}>{renderInlineText(segment.text, `${keyPrefix}-s${s}`, lang)}</Fragment>
+    ),
+  );
+}
+
 /** `colSpan`/`rowSpan` React props for a cell — empty for a plain string
  * cell, so it renders byte-identical to before this ever existed. */
 function cellSpanProps(cell: LegalTableCell): { colSpan?: number; rowSpan?: number } {
@@ -127,7 +148,7 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
                 <tr>
                   {headerRow.map((cell, ci) => (
                     <th key={ci} scope="col" {...cellSpanProps(cell)}>
-                      {renderInlineText(cellText(cell), `th-${out.length}-${ci}`, lang)}
+                      {renderCell(cellText(cell), `th-${out.length}-${ci}`, lang)}
                     </th>
                   ))}
                 </tr>
@@ -138,7 +159,7 @@ function renderBlocks(blocks: LegalBlock[], lang: Lang): ReactNode[] {
                 <tr key={ri}>
                   {row.map((cell, ci) => (
                     <td key={ci} {...cellSpanProps(cell)}>
-                      {renderInlineText(cellText(cell), `td-${out.length}-${ri}-${ci}`, lang)}
+                      {renderCell(cellText(cell), `td-${out.length}-${ri}-${ci}`, lang)}
                     </td>
                   ))}
                 </tr>

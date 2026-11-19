@@ -220,6 +220,20 @@ async function main(): Promise<void> {
     }
   });
 
+  test("htmlToBlocks: a bulleted list inside a table cell becomes bullet lines, never literal <ul><li> (ClickUp #5)", () => {
+    const html =
+      "<table><tbody><tr><th><p>サービス</p></th><th><p>例</p></th></tr>" +
+      "<tr><td><p>頼めないこと</p></td><td><p>主に次のとおり</p><ul><li><p>庭の草むしり</p></li><li><p>ペットの<strong>世話</strong></p></li></ul></td></tr>" +
+      "<tr><td><p>手順</p></td><td><ol><li><p>申込</p></li><li><p>訪問</p></li></ol></td></tr></tbody></table>";
+    const [table] = htmlToBlocks(html);
+    assert.equal(table.type, "table");
+    assert.deepEqual(table.type === "table" ? table.rows : null, [
+      ["サービス", "例"],
+      ["頼めないこと", "主に次のとおり\n• 庭の草むしり\n• ペットの**世話**"],
+      ["手順", "1. 申込\n2. 訪問"],
+    ]);
+  });
+
   test("htmlToBlocks: a realistic Tiptap-edited legal document loses zero blocks", () => {
     // Take one real legal document, serialize it, then simulate what Tiptap's
     // editor does on every save: attributes appear on block tags (class on
@@ -459,6 +473,30 @@ async function main(): Promise<void> {
     assert.match(html, /<strong>bold<\/strong>/, "bold marker must render as a real <strong>");
     assert.match(html, /<em>italic<\/em>/, "italic marker must render as a real <em>");
     assert.match(html, /<a[^>]*href="\/en\/pricing"[^>]*>link<\/a>/, "link marker must render as a real <a>");
+  });
+
+  test("render proof: a list inside a table cell renders as a real <ul> on legal and article pages (ClickUp #5)", async () => {
+    const rows = [["サービス", "例"], ["頼めないこと", "主に次のとおり\n• 庭の草むしり\n• ペットの**世話**"]];
+    const body: LegalBlock[] = [
+      { type: "h2", text: "S1" },
+      { type: "h2", text: "S2" },
+      { type: "h2", text: "S3" },
+      { type: "table", rows },
+    ];
+    const legal = renderDoc({ heading: { ja: "規約", en: "Terms" }, body: { ja: body, en: body } }, "ja");
+    assert.match(legal, /<td>主に次のとおり<ul><li>庭の草むしり<\/li><li>ペットの<strong>世話<\/strong><\/li><\/ul><\/td>/);
+    assert.doesNotMatch(legal, /&lt;(ul|li)|• /, "no literal list markup or bullet characters");
+
+    const { ArticleBlocks } = (await import("../articles/components/article-body" + ".tsx")) as {
+      ArticleBlocks: (props: { blocks: readonly LegalBlock[]; lang: "ja" | "en" }) => unknown[];
+    };
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    const { createElement, Fragment } = await import("react");
+    const article = renderToStaticMarkup(
+      createElement(Fragment, null, ...(ArticleBlocks({ blocks: [{ type: "table", rows }], lang: "ja" }) as never[])),
+    );
+    assert.match(article, /<td data-label="例">(?:(?!<\/td>)[\s\S])*<ul><li>(?:(?!<\/li>)[\s\S])*むしり(?:(?!<\/li>)[\s\S])*<\/li><li>(?:(?!<\/li>)[\s\S])*<strong>(?:(?!<\/li>)[\s\S])*世話(?:(?!<\/li>)[\s\S])*<\/li><\/ul><\/td>/);
+    assert.doesNotMatch(article, /&lt;(ul|li)|• /);
   });
 
   test("render proof: a bold h2 never leaks literal ** into the heading or the TOC, anchors stay put", () => {

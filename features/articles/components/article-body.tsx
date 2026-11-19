@@ -1,7 +1,8 @@
-import type { CSSProperties, ReactNode } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { PhraseText } from "@/components/PhraseText";
 import Link from "next/link";
 import type { LegalAlign, LegalBlock } from "@/constants/legal";
+import { cellSegments } from "@/features/cms/cell-lines";
 import { localizeHref, type Lang } from "@/features/lang/i18n";
 
 /** Characters kept together at the end of a text run so a block never ends on a stray 1-2 (CARE-505). */
@@ -50,6 +51,21 @@ function renderInline(text: string, keyPrefix: string, lang: Lang): ReactNode {
     parts.push(<PhraseText key={`${keyPrefix}-t${n}`} text={text.slice(last)} keepTail={TAIL} />);
   }
   return parts;
+}
+
+/** A table cell's text, with a bulleted list typed inside the cell drawn as a real `<ul>` (ClickUp #5). */
+function renderCell(text: string, keyPrefix: string, lang: Lang): ReactNode {
+  return cellSegments(text).map((segment, s) =>
+    segment.type === "ul" ? (
+      <ul key={`${keyPrefix}-u${s}`}>
+        {segment.items.map((item, n) => (
+          <li key={n}>{renderInline(item, `${keyPrefix}-u${s}-${n}`, lang)}</li>
+        ))}
+      </ul>
+    ) : (
+      <Fragment key={`${keyPrefix}-s${s}`}>{renderInline(segment.text, `${keyPrefix}-s${s}`, lang)}</Fragment>
+    ),
+  );
 }
 
 /** Alignment chosen in the CMS editor; undefined keeps the stylesheet default. */
@@ -120,7 +136,7 @@ export function ArticleBlocks({
                 <tr key={ri} data-reader-block>
                   {row.map((cell, ci) => (
                     <td key={ci} data-label={headers[ci]}>
-                      {renderInline(cellText(cell), `td-${i}-${ri}-${ci}`, lang)}
+                      {renderCell(cellText(cell), `td-${i}-${ri}-${ci}`, lang)}
                     </td>
                   ))}
                 </tr>
