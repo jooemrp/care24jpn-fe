@@ -184,6 +184,42 @@ async function main(): Promise<void> {
     assert.equal(warned, true, "unmapped markup must be logged, not silently dropped");
   });
 
+  test("htmlToBlocks: a Shift+Enter line break stays inside the paragraph as \\n (numbered clauses, ClickUp #4)", () => {
+    const html = "<p>（1）利用者は、本サービスを利用できます。<br>（2）当社は、内容を変更できます。<br />（3）その他。</p>";
+    assert.deepEqual(htmlToBlocks(html), [
+      { type: "p", text: "（1）利用者は、本サービスを利用できます。\n（2）当社は、内容を変更できます。\n（3）その他。" },
+    ]);
+  });
+
+  test("htmlToBlocks: a blank line (<br><br>) is a paragraph break, so it gets paragraph spacing (ClickUp #6)", () => {
+    const html = '<p style="text-align: justify">一段落目です。<br><br>二段落目です。<br>\n<br>三段落目です。</p>';
+    assert.deepEqual(htmlToBlocks(html), [
+      { type: "p", text: "一段落目です。", align: "justify" },
+      { type: "p", text: "二段落目です。", align: "justify" },
+      { type: "p", text: "三段落目です。", align: "justify" },
+    ]);
+  });
+
+  test("htmlToBlocks: line breaks at a paragraph's edges are dropped; an empty <p> keeps its block", () => {
+    assert.deepEqual(htmlToBlocks("<p><br>本文<br></p><p></p>"), [
+      { type: "p", text: "本文" },
+      { type: "p", text: "" },
+    ]);
+  });
+
+  test("htmlToBlocks: a plain-text value with blank lines becomes one paragraph per block of text", () => {
+    const originalWarn = console.warn;
+    console.warn = () => {};
+    try {
+      assert.deepEqual(htmlToBlocks("一段落目です。\n二行目です。\n\n二段落目です。"), [
+        { type: "p", text: "一段落目です。\n二行目です。" },
+        { type: "p", text: "二段落目です。" },
+      ]);
+    } finally {
+      console.warn = originalWarn;
+    }
+  });
+
   test("htmlToBlocks: a realistic Tiptap-edited legal document loses zero blocks", () => {
     // Take one real legal document, serialize it, then simulate what Tiptap's
     // editor does on every save: attributes appear on block tags (class on

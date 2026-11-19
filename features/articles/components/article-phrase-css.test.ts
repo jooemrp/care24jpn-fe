@@ -70,3 +70,11 @@ test("headings and table cells keep their phrase-whole rules", () => {
   assert.match(rule(".jp-phrase > span"), /display: inline-block;/);
   assert.match(rule(":is(td, th) .jp-phrase > span"), /overflow-wrap: break-word;/);
 });
+
+test("CMS line breaks (\\n from <br>) show in article and legal text instead of collapsing (ClickUp #4, #6)", () => {
+  assert.match(rule(".article-prose :is(p, li, th, td)"), /white-space: pre-line;/);
+  assert.match(rule(".legal-body :is(p, li, th, td)"), /white-space: pre-line;/);
+  // The \n sits inside `.jp-phrase` but outside its spans, so `.jp-phrase`
+  // must not reset white-space or the break would collapse again.
+  assert.doesNotMatch(rule(".jp-phrase"), /white-space/);
+});

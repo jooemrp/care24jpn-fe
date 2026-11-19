@@ -357,11 +357,11 @@ function isSafeHref(href: string): boolean {
  *     typed in the dashboard survives as a real `<strong>`/`<em>` element
  *     on the page (LegalDocPage.tsx#renderInlineText) instead of being
  *     stripped to plain text.
- *  4. `<br>` (any attributes/self-close spelling) -> `\n`. `text` still has
- *     no way to reproduce a forced line break visually (renderInlineText
- *     does not turn `\n` into a `<br>`), so a literal `\n` at least keeps
- *     the fact that a break existed instead of the two sides silently
- *     running together.
+ *  4. `<br>` (any attributes/self-close spelling) -> `\n`. The page shows it
+ *     as a line break through `white-space: pre-line` on the text elements
+ *     of `.article-prose` and `.legal-body` (globals.css), and a blank line
+ *     (`<br><br>`) becomes a paragraph break in {@link htmlToBlocks} via
+ *     {@link splitParagraphs}.
  *  5. Every remaining tag: if its name is a {@link STRUCTURAL_TAGS} member,
  *     keep it but drop its attributes (`<p class="x">` -> `<p>`) — this is
  *     also what strips a stray `on*` handler or any other attribute Tiptap
@@ -468,7 +468,27 @@ function pushOrphanText(fragment: string, blocks: LegalBlock[]): void {
     `[legal-html] htmlToBlocks: unrecognized markup kept as a paragraph: ` +
       JSON.stringify(fragment.slice(0, 200)),
   );
-  blocks.push({ type: "p", text });
+  for (const paragraph of splitParagraphs(text)) blocks.push({ type: "p", text: paragraph });
+}
+
+/**
+ * Paragraph text an editor broke up by hand. A `<br>` reaches `text` as `\n`
+ * (see {@link normalizeForeignHtml} pass 4) and a plain-text value keeps its
+ * own newlines. A blank line (`<br><br>`, or `\n\n` in plain text) is a
+ * paragraph break, so it becomes its own `p` block and gets the same spacing
+ * as any other paragraph; a single `\n` stays inside the text as a line break
+ * (rendered by `white-space: pre-line` on `.article-prose`/`.legal-body`).
+ * Newlines at either edge (`<p><br>text</p>`) are dropped. Text with no blank
+ * line comes back as the one string it was, so an empty `<p></p>` and every
+ * body in constants/legal.ts keep their block count.
+ */
+function splitParagraphs(text: string): string[] {
+  if (!/\n[ \t 　]*\n/.test(text)) return [text.replace(/^\n+|\n+$/g, "")];
+  const parts = text
+    .split(/\n[ \t 　]*\n\s*/)
+    .map((part) => part.replace(/^\n+|\n+$/g, ""))
+    .filter((part) => part.trim() !== "");
+  return parts.length ? parts : [""];
 }
 
 /** Extracts every `<th>`/`<td>` cell within one `<tr>`'s inner HTML, as a
@@ -683,9 +703,13 @@ export function htmlToBlocks(html: string): LegalBlock[] {
     const content = normalized.slice(contentStart, closeIndex);
     cursor = closeIndex + `</${bestTag}>`.length;
 
-    if (HEADING_OR_P_TAGS.has(bestTag)) {
+    if (bestTag === "p") {
+      for (const text of splitParagraphs(unescapeHtml(content))) {
+        blocks.push({ type: "p", text, ...(bestAlign ? { align: bestAlign } : {}) });
+      }
+    } else if (HEADING_OR_P_TAGS.has(bestTag)) {
       blocks.push({
-        type: bestTag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p",
+        type: bestTag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
         text: unescapeHtml(content),
         ...(bestAlign ? { align: bestAlign } : {}),
       });
