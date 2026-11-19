@@ -32,6 +32,15 @@ test("maps the optional phone CTA label; unset or blank stays undefined (ClickUp
   assert.equal(mapArticle(entry("demo", 0, { ...data(), cta_label_short: "  " })).cta.labelShort, undefined);
 });
 
+test("a lead split with line breaks in the editor keeps its paragraphs (ClickUp #6)", () => {
+  const lead = "<p>導入一段落目。<br><br>導入二段落目。<br>同じ段落の二行目。</p>";
+  const article = mapArticle(entry("demo", 0, { ...data(), lead }));
+  assert.deepEqual(article.lead.ja, [
+    { type: "p", text: "導入一段落目。" },
+    { type: "p", text: "導入二段落目。\n同じ段落の二行目。" },
+  ]);
+});
+
 test("also accepts the JSON-encoded resolved data delivered by Atlas", () => {
   assert.equal(mapArticle(entry("demo", 0, JSON.stringify(data()))).title.en, "題名");
 });

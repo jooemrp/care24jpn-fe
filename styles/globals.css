@@ -205,6 +205,17 @@ h3 {
   word-break: auto-phrase;
 }
 
+/* Balance lives on the heading only (ClickUp #3, 19 Nov). A balanced
+   inline-block phrase that has to wrap inside itself narrows its own lines
+   but keeps its full width, so a blank gap opens on its right and the next
+   phrase drops to a new line. Heading phrases stay inline-block (a phrase
+   still moves as one unit); `pretty` only keeps a phrase that must wrap from
+   ending on a 1–2 character line. Justified headings keep their own rule
+   (CARE-505, `.article-prose :is(h2, h3)[data-align="justify"]` below). */
+:is(h1, h2, h3) .jp-phrase > span {
+  text-wrap: pretty;
+}
+
 /* ------------------------------------------------------------------
    Legal document body (privacy policy, terms, ...).
 
@@ -241,6 +252,13 @@ h3 {
 
 .legal-body > p {
   margin-block: 0 1.25em;
+}
+
+/* A line break typed in the CMS editor (Shift+Enter, `<br>`) reaches the
+   text as `\n` (features/cms/legal-html.ts); show it instead of folding
+   numbered clauses like (1)…(5) into one paragraph. */
+.legal-body :is(p, li, th, td) {
+  white-space: pre-line;
 }
 
 .legal-body > :last-child {
@@ -433,6 +451,13 @@ h3 {
 
 .article-prose > p {
   margin-block: 0 1.5em;
+}
+
+/* CMS line breaks (`\n` from `<br>` or a plain-text lead) are shown, not
+   collapsed into one wall of text. `PhraseText` emits each `\n` outside its
+   phrase spans, so the break lands between phrases. */
+.article-prose :is(p, li, th, td) {
+  white-space: pre-line;
 }
 
 .article-prose > :is(h2, h3) {
