@@ -88,3 +88,13 @@ test("CMS line breaks (\\n from <br>) show in article and legal text instead of 
   // must not reset white-space or the break would collapse again.
   assert.doesNotMatch(rule(".jp-phrase"), /white-space/);
 });
+
+test("mobile headings break between any two characters and stay balanced (ClickUp #3)", () => {
+  const start = css.indexOf("@media (width < 768px) {\n  :is(h1, h2, h3) .jp-phrase {");
+  assert.notEqual(start, -1, "missing mobile heading rule");
+  const block = css.slice(start, css.indexOf("\n}\n", start));
+  assert.match(block, /word-break: normal;/);
+  assert.match(block, /overflow-wrap: anywhere;/);
+  assert.match(block, /display: inline;/);
+  assert.doesNotMatch(block, /text-wrap/);
+});
