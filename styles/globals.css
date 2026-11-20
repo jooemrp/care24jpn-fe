@@ -216,22 +216,24 @@ h3 {
   text-wrap: pretty;
 }
 
-/* Mobile headings (client decision, ClickUp #3, Maryna Hretska / Ishihara-san):
-   the "break anywhere + balance" prototype replaced the phrase-whole rules
-   above. Under 768px a heading may break between any two characters and the
-   parent's `text-wrap: balance` evens the lines, so no line is left short;
-   split words (完 / 全ガイド) are accepted. Phrases become plain inline text
-   (an inline-block cannot be split across lines); `line-break: strict` still
-   keeps 、。）ー and small kana off the start of a line. Desktop keeps the
-   phrase-whole rules. */
+/* Mobile article headings (client decision, ClickUp #3, Maryna Hretska /
+   Ishihara-san): the "break anywhere + balance" prototype replaced the
+   phrase-whole rules above. Scoped to the article page title (`.article-title`)
+   and the headings inside `.article-prose`; other headings keep phrase-whole
+   wrapping. Under 768px a heading may break between any two characters and
+   the parent's `text-wrap: balance` evens the lines, so no line is left
+   short; split words (完 / 全ガイド) are accepted. Phrases become plain inline
+   text (an inline-block cannot be split across lines); `line-break: strict`
+   still keeps 、。）ー and small kana off the start of a line. Desktop keeps
+   the phrase-whole rules. */
 @media (width < 768px) {
-  :is(h1, h2, h3) .jp-phrase {
+  :is(.article-title, .article-prose :is(h2, h3)) .jp-phrase {
     word-break: normal;
     overflow-wrap: anywhere;
     line-break: strict;
   }
 
-  :is(h1, h2, h3) .jp-phrase > span {
+  :is(.article-title, .article-prose :is(h2, h3)) .jp-phrase > span {
     display: inline;
     max-width: none;
     white-space: normal;

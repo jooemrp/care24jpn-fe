@@ -90,11 +90,19 @@ test("CMS line breaks (\\n from <br>) show in article and legal text instead of 
 });
 
 test("mobile headings break between any two characters and stay balanced (ClickUp #3)", () => {
-  const start = css.indexOf("@media (width < 768px) {\n  :is(h1, h2, h3) .jp-phrase {");
+  const start = css.indexOf("@media (width < 768px) {\n  :is(.article-title, .article-prose :is(h2, h3)) .jp-phrase {");
   assert.notEqual(start, -1, "missing mobile heading rule");
   const block = css.slice(start, css.indexOf("\n}\n", start));
   assert.match(block, /word-break: normal;/);
   assert.match(block, /overflow-wrap: anywhere;/);
   assert.match(block, /display: inline;/);
   assert.doesNotMatch(block, /text-wrap/);
+});
+
+test("mobile break-anywhere is scoped to article headings, not every h1-h3 (ClickUp #3)", () => {
+  const start = css.indexOf("@media (width < 768px) {\n  :is(.article-title");
+  assert.notEqual(start, -1, "missing scoped mobile heading rule");
+  const block = css.slice(start, css.indexOf("\n}\n", start));
+  assert.doesNotMatch(block, /:is\(h1, h2, h3\)/);
+  assert.match(readFileSync(new URL("./article-view.tsx", import.meta.url), "utf8"), /className="article-title /);
 });
