@@ -126,7 +126,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
 
           <h1
             lang={contentLang}
-            className="mt-5 animate-fade-up text-[clamp(1.2rem,6.4vw,1.75rem)] font-bold leading-[1.45] text-heading md:text-4xl md:leading-[1.4]"
+            className="article-title mt-5 animate-fade-up text-[clamp(1.2rem,6.4vw,1.75rem)] font-bold leading-[1.45] text-heading md:text-4xl md:leading-[1.4]"
           >
             <PhraseText text={title} />
           </h1>
