@@ -190,9 +190,7 @@ export default function ArticlesBrowser({
                   <div className="max-w-2xl">
                     <Heading
                       lang={contentLang}
-                      className={`article-title font-bold leading-snug text-heading ${
-                        lead ? "text-[1.375rem] min-[360px]:text-2xl md:text-[1.75rem]" : "text-xl md:text-2xl"
-                      }`}
+                      className="article-title text-xl font-bold leading-snug text-heading md:text-2xl"
                     >
                       <Link
                         href={card.href}
