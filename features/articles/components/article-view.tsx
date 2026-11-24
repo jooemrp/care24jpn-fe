@@ -248,7 +248,7 @@ export default async function ArticleView({ article, lang }: { article: Article;
                     <span lang={contentLang} className="mx-6 mt-6 text-sm font-bold text-primary-deep">
                       {t(item.category, lang)}
                     </span>
-                    <h3 lang={contentLang} className="p-6 pt-3 text-base font-bold leading-snug text-heading">
+                    <h3 lang={contentLang} className="article-title p-6 pt-3 text-base font-bold leading-snug text-heading">
                       <Link
                         href={localizeHref(`/helpful-information/${item.slug}`, lang)}
                         className="after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
