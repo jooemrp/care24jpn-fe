@@ -124,9 +124,11 @@ export default async function ArticleView({ article, lang }: { article: Article;
             {category}
           </Link>
 
+          {/* Under 768px the title has the list card's size and width, so both wrap
+              on the same lines (ClickUp #3). */}
           <h1
             lang={contentLang}
-            className="article-title mt-5 animate-fade-up text-[clamp(1.2rem,6.4vw,1.75rem)] font-bold leading-[1.45] text-heading md:text-4xl md:leading-[1.4]"
+            className="article-title mt-5 animate-fade-up text-xl font-bold leading-snug text-heading max-md:max-w-2xl max-sm:pr-4 md:text-4xl md:leading-[1.4]"
           >
             <PhraseText text={title} />
           </h1>
